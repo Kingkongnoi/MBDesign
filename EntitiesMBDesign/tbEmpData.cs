@@ -1,0 +1,32 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace EntitiesMBDesign
+{
+    public class tbEmpData
+    {
+        [Key]
+        public int id { get; set; }
+        public string empId { get; set; } = string.Empty;
+        public string empFirstName { get; set; } = string.Empty;
+        public string empLastName { get; set; } = string.Empty;
+        public int departmentId { get; set; }
+        public int positionId { get;}
+        public string salaryType { get; set; } = string.Empty;
+        public decimal salary { get; set;}
+        public DateTime hiringDate { get; set; }
+        public string signatureFileName { get; set; } = string.Empty;
+        public bool timeStampType { get; set; } = true;
+        public bool status { get; set; } = true;
+        public DateTime createDate { get; set; }
+        public string createBy { get; set; } = string.Empty;
+        public DateTime? updateDate { get; set; }
+        public string? updateby { get; set; }
+        public bool isDeleted { get; set; } = false;
+
+    }
+}

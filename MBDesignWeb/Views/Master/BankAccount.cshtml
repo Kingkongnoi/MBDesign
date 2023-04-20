@@ -1,0 +1,232 @@
+﻿@{
+    ViewData["Title"] = "ข้อมูลหลัก";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/master/bankAccount.js"></script>
+
+<div class="row">
+    <h4>ข้อมูลหลัก</h4>
+
+    <div class="col-sm-12">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Employee">ข้อมูลพนักงาน</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Product">ตั้งค่าราคาสินค้า</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ตั้งค่าสูตรคำนวณ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลคลังสินค้า</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-area="" asp-controller="Master" asp-action="BankAccount">ข้อมูลบัญชีรับเงิน</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลรถขนส่ง</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+    <div class="col-sm-12 mt-2">
+        <div class="container-fluid">
+            <div class="row mt-2">
+                <form>
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>ชื่อธนาคาร</label>
+                            <select class="form-control" id="select-bank-name">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>ชื่อบัญชี</label>
+                            <input type="text" class="form-control" id="input-search-account-name" placeholder="">
+                        </div>
+                        <div class="col-sm-2">
+                            <label>เลขบัญชี</label>
+                            <input type="text" class="form-control" id="input-search-account-number" placeholder="">
+                        </div>
+                        <div class="col-sm-2">
+                            <label>รูปแบบบัญชี</label>
+                            <select class="form-control" id="select-search-account-category">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>สถานะ</label>
+                            <select class="form-control" id="select-search-account-status">
+                                <option></option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-2 mt-4 text-end">
+                            <button type="button" class="btn btn-light btn-clear-search-account">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-account">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-2 mt-2">
+                <button type="button" class="btn btn-primary btn-add-account">เพิ่มบัญชี</button>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-account-list">
+                    <thead>
+                        <tr>
+                            <th><span>ชื่อธนาคาร</span></th>
+                            <th><span>ชื่อบัญชี</span></th>
+                            <th><span>เลขบัญชี</span></th>
+                            <th><span>จำนวนครั้งที่ใช้งาน</span></th>
+                            <th><span>รูปแบบบัญชี</span></th>
+                            <th><span>วันที่สร้าง</span></th>
+                            <th><span>ผู้สร้าง</span></th>
+                            <th><span>วันที่แก้ไขล่าสุด</span></th>
+                            <th><span>ผู้แก้ไขล่าสุด</span></th>
+                            <th><span>สถานะ</span></th>
+                            <th><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create account*@
+<div id="modal-createAccount" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มข้อมูลบัญชี</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    @*<div class="col-sm-12">*@
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-bank-name" data-selected="" name="select-bank-name"></select>
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-account-name" name="input-account-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-account-status" data-selected="" name="select-account-status"></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-account-category" data-selected="" name="select-account-category"></select>
+
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">เลชบัญชี<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-account-number" name="input-account-number" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row col-sm-12" id="divAccountInformation">
+                    <span class="text-danger">
+                        การเปิดใช้งานบัญชี สามารถเลือกใช้งานได้เพียงรูปแบบละ 1 บัญชีเท่านั้น<br/>
+                        - บัญชีนามบริษัท 1 บัญชี<br />
+                        - บัญชีส่วนบุคคล 1 บัญชี
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-account"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view account*@
+<div id="modal-viewAccount" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มข้อมูลบัญชี</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    @*<div class="col-sm-12">*@
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-bank-name" data-selected="" name="select-bank-name"></select>
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-account-name" name="input-account-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-account-status" data-selected="" name="select-account-status"></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-account-category" data-selected="" name="select-account-category"></select>
+
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">เลชบัญชี<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-account-number" name="input-account-number" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row col-sm-12" id="divAccountInformation">
+                    <span class="text-danger">
+                        การเปิดใช้งานบัญชี สามารถเลือกใช้งานได้เพียงรูปแบบละ 1 บัญชีเท่านั้น<br />
+                        - บัญชีนามบริษัท 1 บัญชี<br />
+                        - บัญชีส่วนบุคคล 1 บัญชี
+                    </span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿body {
+}
+
+.btn-circle-xs {
+    border-radius: 100% !important;
+    height: 40px;
+    width: 40px;
+    padding: 0 !important;
+    box-shadow: 2px 3px 5px 0 rgba(0,0,0,.14);
+}

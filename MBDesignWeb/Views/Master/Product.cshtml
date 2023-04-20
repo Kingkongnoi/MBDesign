@@ -1,0 +1,529 @@
+﻿@{
+    ViewData["Title"] = "ข้อมูลหลัก";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/master/product.js"></script>
+
+<div class="row">
+    <h4>ข้อมูลหลัก</h4>
+
+    <div class="col-sm-12">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Employee">ข้อมูลพนักงาน</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" asp-area="" asp-controller="Master" asp-action="Product">ตั้งค่าราคาสินค้า</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ตั้งค่าสูตรคำนวณ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลคลังสินค้า</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="BankAccount">ข้อมูลบัญชีรับเงิน</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลรถขนส่ง</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    </div>
+
+    <div class="col-sm-12 mt-2">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab-master-product" role="tablist">
+                <button class="nav-link active" id="nav-master-productData-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productData" type="button" role="tab" aria-controls="nav-master-productData" aria-selected="true">ข้อมูลสินค้า</button>
+                <button class="nav-link" id="nav-master-productCategory-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productCategory" type="button" role="tab" aria-controls="nav-master-productCategory" aria-selected="false">ตั้งค่าหมวดหมู่</button>
+                <button class="nav-link" id="nav-master-productStyle-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productStyle" type="button" role="tab" aria-controls="nav-master-productStyle" aria-selected="false">ตั้งค่าสไตล์</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tab-master-product-tabContent">
+            <div class="tab-pane fade show active" id="nav-master-productData" role="tabpanel" aria-labelledby="nav-master-productData-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form>
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>รหัสสินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-product-code" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>หมวดหมู่</label>
+                                    <select class="form-control" id="select-search-product-category">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>Items</label>
+                                    <input type="text" class="form-control" id="input-search-product-items" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-control" id="select-search-product-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-4 mt-4 text-end">
+                                    <button type="button" class="btn btn-light btn-clear-search-product">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-product">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn btn-primary btn-add-product">เพิ่มสินค้า</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-product-list">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสสินค้า</span></th>
+                                    <th><span>หมวดหมู่</span></th>
+                                    <th><span>Items</span></th>
+                                    <th><span>ราคาต่อเมตร</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-productCategory" role="tabpanel" aria-labelledby="nav-master-productCategory-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form>
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>รหัสหมวดหมู่</label>
+                                    <input type="text" class="form-control" id="input-search-category-code" placeholder="">
+                                </div>
+
+                                <div class="col-sm-2">
+                                    <label>หมวดหมู่</label>
+                                    <input type="text" class="form-control" id="input-search-category-name" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-control" id="select-search-category-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 mt-4 text-end">
+                                    <button type="button" class="btn btn-light btn-clear-search-category">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-category">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn btn-primary btn-add-category">เพิ่มหมวดหมู่</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-category-list">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสหมวดหมู่</span></th>
+                                    <th><span>หมวดหมู่</span></th>
+                                    <th><span>ราคาต่อเมตร</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span">สถานะ</span></th>
+                                    <th><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-productStyle" role="tabpanel" aria-labelledby="nav-master-productStyle-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form>
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>รหัสสไตล์</label>
+                                    <input type="text" class="form-control" id="input-search-style-code" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สไตล์</label>
+                                    <input type="text" class="form-control" id="input-search-style-name" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-control" id="select-search-style-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-6 mt-4 text-end">
+                                    <button type="button" class="btn btn-light btn-clear-search-style">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-style">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn btn-primary btn-add-style">เพิ่มสไตล์</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-style-list">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสสไตล์</span></th>
+                                    <th><span>สไตล์</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*modal for create product*@
+<div id="modal-createProduct" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มข้อมูลสินค้า (Items)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    @*<div class="col-sm-12">*@
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-code" name="input-product-code" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-name" name="input-product-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-product-status" data-selected="" name="select-product-status"></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-product-category" data-selected="" name="select-product-category"></select>
+
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-price" name="input-product-price" />
+                            </div>
+                        </div>
+
+                        @*</div>*@
+                    </div>
+
+                </div>
+
+                <div class="row col-sm-12" id="divProductOptions">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-product"><i class="fas fa-save" aria-hidden="true"></i></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view product*@
+<div id="modal-viewProduct" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มข้อมูลสินค้า (Items)</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    @*<div class="col-sm-12">*@
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-code" name="input-product-code" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-name" name="input-product-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-product-status" data-selected="" name="select-product-status"></select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                <select class="form-control" id="select-product-category" data-selected="" name="select-product-category"></select>
+
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-product-price" name="input-product-price" />
+                            </div>
+                        </div>
+
+                        @*</div>*@
+                    </div>
+
+                </div>
+
+                <div class="row col-sm-12" id="divProductOptions">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create category*@
+<div id="modal-createCategory" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มหมวดหมู่</h4>
+            </div>
+            <div class="modal-body">
+               <div class="row d-sm-flex">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รหัสหมวดหมู่<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-code" name="input-category-code" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ราคาต่อเมตร<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-price" name="input-category-name" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-name" name="input-category-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-category-status" data-selected="" name="select-category-status"></select>
+                            </div>
+                        </div>
+
+                        @*</div>*@
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-category"><i class="fa fa-floppy-o" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view category*@
+<div id="modal-viewCategory" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มหมวดหมู่</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">รหัสหมวดหมู่<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-code" name="input-category-code" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ราคาต่อเมตร<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-price" name="input-category-name" />
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row">
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                <input class="form-control" type="text" id="input-category-name" name="input-category-name" />
+                            </div>
+                            <div class="col-sm-12 mb-2">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-control" id="select-category-status" data-selected="" name="select-category-status"></select>
+                            </div>
+                        </div>
+
+                        @*</div>*@
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create style*@
+<div id="modal-createStyle" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center"><span id="styleHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสสไตล์<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-style-code" name="input-style-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-control" id="select-style-status" data-selected="" name="select-style-status"></select>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อสไตล์<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-style-name" name="input-style-name" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-style"><i class="fa fa-floppy-o" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view style*@
+<div id="modal-viewStyle" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">เพิ่มสไตล์</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row d-sm-flex">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสสไตล์<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-style-code" name="input-style-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-control" id="select-style-status" data-selected="" name="select-style-status"></select>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อสไตล์<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-style-name" name="input-style-name" />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
