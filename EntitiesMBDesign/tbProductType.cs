@@ -10,8 +10,7 @@ namespace EntitiesMBDesign
     public class tbProductType
     {
         [Key]
-        public int id { get; set; }
-        public string typeId { get; set; } = string.Empty;
+        public int typeId { get; set; }
         public string typeName { get; set; } = string.Empty;
         public decimal length { get; set; }
         public decimal depth { get; set; }
@@ -24,5 +23,13 @@ namespace EntitiesMBDesign
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
+    }
+
+    public class ProductTypeModel
+    {
+        public int typeId { get; set; }
+        public string typeName { get; set; } = string.Empty;
+        public decimal typePrice { get; set; }
+        public bool status { get; set; } = true;
     }
 }

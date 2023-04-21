@@ -30,18 +30,18 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.styleName, obj.updateDate, obj.updateBy, obj.status, obj.styleId }, transaction: trans);
         }
 
-        public List<tbProductStyle> GetAll(string styleId, string styleName, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<tbProductStyle> GetAll(/*string styleId, */string styleName, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(styleId) && styleId != "%%")
-            {
-                condition += string.Format(" and styleId = {0}", styleId);
-            }
+            //if (!string.IsNullOrEmpty(styleId) && styleId != "%%")
+            //{
+            //    condition += string.Format(" and styleId = {0}", styleId);
+            //}
 
             if (!string.IsNullOrEmpty(styleName) && styleName != "%%")
             {
-                condition += string.Format(" and styleName like N'%{0}%'", styleId);
+                condition += string.Format(" and styleName like N'%{0}%'", styleName);
             }
 
             if (!string.IsNullOrEmpty(status) && status != "%%")
@@ -82,7 +82,7 @@ namespace DataLayerMBDesign
 
         public tbProductStyle GetFirstById(int styleId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select top 1 select [styleId]
+            string queryString = @"select top 1 [styleId]
                                 ,[styleName]
                                 ,[status]
                                 ,[createDate]
@@ -99,7 +99,7 @@ namespace DataLayerMBDesign
 
         public tbProductStyle GetFirstByName(string styleName, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = string.Format(@"select [styleId]
+            string queryString = string.Format(@"select top 1 [styleId]
                                 ,[styleName]
                                 ,[status]
                                 ,[createDate]

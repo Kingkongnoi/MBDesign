@@ -8,5 +8,6 @@ namespace DataLayerMBDesign
 {
     public class ProductItemRepository
     {
+
     }
 }
