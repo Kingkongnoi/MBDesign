@@ -3,7 +3,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<script src="~/scripts/config.js"></script>
 <script src="~/scripts/master/bankAccount.js"></script>
+
+
+<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .account-details {
+        cursor: pointer !important;
+    }
+</style>
 
 <div class="row">
     <h4>ข้อมูลหลัก</h4>
@@ -45,11 +57,11 @@
     <div class="col-sm-12 mt-2">
         <div class="container-fluid">
             <div class="row mt-2">
-                <form>
+                <form id="form-search-bankAccount">
                     <div class="row col-sm-12">
                         <div class="col-sm-2">
                             <label>ชื่อธนาคาร</label>
-                            <select class="form-control" id="select-bank-name">
+                            <select class="form-select" id="select-search-bank-name">
                                 <option></option>
                             </select>
                         </div>
@@ -63,13 +75,13 @@
                         </div>
                         <div class="col-sm-2">
                             <label>รูปแบบบัญชี</label>
-                            <select class="form-control" id="select-search-account-category">
+                            <select class="form-select" id="select-search-account-type">
                                 <option></option>
                             </select>
                         </div>
                         <div class="col-sm-2">
                             <label>สถานะ</label>
-                            <select class="form-control" id="select-search-account-status">
+                            <select class="form-select" id="select-search-account-status">
                                 <option></option>
                             </select>
                         </div>
@@ -116,44 +128,46 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-center">เพิ่มข้อมูลบัญชี</h4>
+                <h4 class="modal-title text-center"><span id="accountHeader"></span></h4>
             </div>
             <div class="modal-body">
-                <div class="row d-sm-flex">
-                    @*<div class="col-sm-12">*@
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-bank-name" data-selected="" name="select-bank-name"></select>
+                <form id="form-createAccount">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-bank-name" data-selected="" name="select-bank-name"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-account-name" name="input-account-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-account-status" data-selected="" name="select-account-status"></select>
+                                </div>
                             </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-account-name" name="input-account-name" />
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">สถานะ</label>
-                                <select class="form-control" id="select-account-status" data-selected="" name="select-account-status"></select>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-account-type" data-selected="" name="select-account-type"></select>
+
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เลขบัญชี<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-account-number" name="input-account-number" />
+                                </div>
                             </div>
                         </div>
 
                     </div>
-
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-account-category" data-selected="" name="select-account-category"></select>
-
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">เลชบัญชี<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-account-number" name="input-account-number" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                </form>
 
                 <div class="row col-sm-12" id="divAccountInformation">
                     <span class="text-danger">
@@ -180,41 +194,43 @@
                 <h4 class="modal-title text-center">เพิ่มข้อมูลบัญชี</h4>
             </div>
             <div class="modal-body">
-                <div class="row d-sm-flex">
-                    @*<div class="col-sm-12">*@
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-bank-name" data-selected="" name="select-bank-name"></select>
+                <form id="form-createAccount">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อธนาคาร<span class="text-danger">*</span></label>
+                                    <select class="form-control" id="select-bank-name" data-selected="" name="select-bank-name" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-account-name" name="input-account-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-account-status" data-selected="" name="select-account-status" disabled></select>
+                                </div>
                             </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อบัญชี<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-account-name" name="input-account-name" />
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">สถานะ</label>
-                                <select class="form-control" id="select-account-status" data-selected="" name="select-account-status"></select>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-account-type" data-selected="" name="select-account-type" disabled></select>
+
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เลชบัญชี<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-account-number" name="input-account-number" disabled/>
+                                </div>
                             </div>
                         </div>
 
                     </div>
-
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">รูปแบบบัญชี<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-account-category" data-selected="" name="select-account-category"></select>
-
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">เลชบัญชี<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-account-number" name="input-account-number" />
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+                </form>
 
                 <div class="row col-sm-12" id="divAccountInformation">
                     <span class="text-danger">
@@ -225,7 +241,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i>ปิดหน้าจอ</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
             </div>
         </div>
     </div>

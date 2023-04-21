@@ -1,4 +1,19 @@
 ﻿$(document).ready(function () {
+
+    callSelect2Status('#form-createHoliday #select-holiday-status');
+    callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
+
+    callSelect2Status('#form-createDepartment #select-department-status');
+    callSelect2Status('#form-search-department #select-search-department-status', true);
+
+    callSelect2Status('#form-createPosition #select-position-status');
+    callSelect2Status('#form-search-position #select-search-position-status', true);
+
+    callSelect2HolidayDay(false);
+    callSelect2HolidayDay(true);
+
+    callSelect2SearchHolidayYear();
+
     $('#nav-master-empData .btn-add-employee').on('click', function () {
         $('#modal-createEmployee').modal('show');
     });
@@ -19,14 +34,11 @@
         $(`#${_modal_holiday_name} #holidayHeader`).text('แก้ไขวันหยุด');
         $(`#${_modal_holiday_name}`).modal('show');
         _holiday_action = 'edit';
-        callSelect2Status('#form-createHoliday #select-holiday-status');
         callGetHolidayById($(this).data('id'));
     });
 
     $(`#${_modal_holiday_name}`).on('show.bs.modal', function () {
         clearForm(_modal_holiday_name);
-        callSelect2HolidayDay(false);
-        callSelect2Status('#form-createHoliday #select-holiday-status');
         if (_holiday_action == 'add') { callGetLastestHolidayId(); }
     });
 
@@ -40,9 +52,6 @@
 
     $('#form-search-holiday .btn-clear-search-holiday').on('click', function () {
         clearSearchForm("holiday");
-        callSelect2SearchHolidayYear();
-        callSelect2HolidayDay(true);
-        callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
         callGetHolidayList();
     });
 
@@ -53,7 +62,6 @@
         $(`#modal-viewHoliday`).modal('show');
         _holiday_action = 'view';
         clearForm(_modal_holiday_name);
-        callSelect2Status('#form-createHoliday #select-holiday-status');
         callGetHolidayById(id);
     });
     /* End Holiday */
@@ -69,13 +77,11 @@
         $(`#${_modal_department_name} #departmentHeader`).text('แก้ไขแผนก');
         $(`#${_modal_department_name}`).modal('show');
         _department_action = 'edit';
-        callSelect2Status('#form-createDepartment #select-department-status');
         callGetDepartmentById($(this).data('id'));
     });
 
     $(`#${_modal_department_name}`).on('show.bs.modal', function () {
         clearForm(_modal_department_name);
-        callSelect2Status('#form-createDepartment #select-department-status');
         if (_department_action == 'add') { callGetLastestDepartmentId(); }
     });
 
@@ -89,7 +95,6 @@
 
     $('#form-search-department .btn-clear-search-department').on('click', function () {
         clearSearchForm("department");
-        callSelect2Status('#form-search-department #select-search-department-status', true);
         callGetDepartmentList();
     });
 
@@ -100,7 +105,6 @@
         $(`#modal-viewDepartment`).modal('show');
         _department_action = 'view';
         clearForm(_modal_department_name);
-        callSelect2Status('#form-createDepartment #select-department-status');
         callGetDepartmentById(id);
     });
     /* End Department */
@@ -116,13 +120,12 @@
         $(`#${_modal_position_name} #positionHeader`).text('แก้ไขตำแหน่ง');
         $(`#${_modal_position_name}`).modal('show');
         _position_action = 'edit';
-        callSelect2Status('#form-createPosition #select-position-status');
+        
         callGetPositionById($(this).data('id'));
     });
 
     $(`#${_modal_position_name}`).on('show.bs.modal', function () {
         clearForm(_modal_position_name);
-        callSelect2Status('#form-createPosition #select-position-status');
         if (_position_action == 'add') { callGetLastestPositionId(); }
     });
 
@@ -136,7 +139,6 @@
 
     $('#form-search-position .btn-clear-search-position').on('click', function () {
         clearSearchForm("position");
-        callSelect2Status('#form-search-position #select-search-position-status', true);
         callGetPositionList();
     });
 
@@ -147,7 +149,6 @@
         $(`#modal-viewPosition`).modal('show');
         _position_action = 'view';
         clearForm(_modal_department_name);
-        callSelect2Status('#form-createPosition #select-position-status');
         callGetPositionById(id);
     });
     /* End Position */
@@ -156,19 +157,19 @@
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-master-holiday") {
             clearSearchForm("holiday");
-            callSelect2SearchHolidayYear();
-            callSelect2HolidayDay(true);
-            callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
+            //callSelect2SearchHolidayYear();
+            //callSelect2HolidayDay(true);
+            //callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
             callGetHolidayList();
         }
         else if (target == "#nav-master-department") {
             clearSearchForm("department");
-            callSelect2Status('#form-search-department #select-search-department-status', true);
+            //callSelect2Status('#form-search-department #select-search-department-status', true);
             callGetDepartmentList();
         }
         else if (target == "#nav-master-position") {
             clearSearchForm("position");
-            callSelect2Status('#form-search-position #select-search-position-status', true);
+            //callSelect2Status('#form-search-position #select-search-position-status', true);
             callGetPositionList();
         }
     });
@@ -209,19 +210,19 @@ function callSelect2Status(id, isSearch = false) {
 function clearSearchForm(area) {
     switch (area) {
         case "holiday":
-            $('#form-search-holiday #select-search-holiday-year').empty();
-            $('#form-search-holiday #select-search-holiday-day').empty();
+            $('#form-search-holiday #select-search-holiday-year').val('').trigger('change');
+            $('#form-search-holiday #select-search-holiday-day').val('').trigger('change');
             $('#form-search-holiday #input-search-holiday-date').val('');
             $('#form-search-holiday #input-search-holiday-name').val('');
-            $('#form-search-holiday #select-search-holiday-status').empty();
+            $('#form-search-holiday #select-search-holiday-status').val('').trigger('change');
             break;
         case "department":
             $('#form-search-department #input-search-department').val('');
-            $('#form-search-department #select-search-department-status').empty();
+            $('#form-search-department #select-search-department-status').val('').trigger('change');
             break;
         case "position":
             $('#form-search-position #input-search-position').val('');
-            $('#form-search-position #select-search-position-status').empty();
+            $('#form-search-position #select-search-position-status').val('').trigger('change');
             break;
     }
 }
