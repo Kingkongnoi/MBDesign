@@ -10,7 +10,7 @@ namespace EntitiesMBDesign
     public class tbProductItemOptions
     {
         [Key]
-        public int id { get; set; }
+        public int optionsId { get; set; }
         public string options { get; set; } = string.Empty;
         public decimal optionsPrice { get; set; }
         public string itemId { get; set; } = string.Empty;

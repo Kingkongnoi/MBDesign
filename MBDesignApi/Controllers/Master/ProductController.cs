@@ -17,6 +17,94 @@ namespace MBDesignApi.Controllers.Master
             _productService = new ProductService(_configuration);
         }
 
+        #region productItem
+
+        #region GET
+        [HttpGet]
+        public JsonResult GetLastestItemId()
+        {
+            var data = _productService.GetFirstLastestItemId();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetItemList(string itemName, int typeId, string status)
+        {
+            var data = _productService.GetProductItemList(itemName, typeId, status);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetItemByItemId(int itemId)
+        {
+            var data = _productService.GetProductItemByItemId(itemId);
+
+            return new JsonResult(data);
+        }
+        #endregion GET
+
+        #region POST
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult AddItem([FromBody] ProductItemModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _productService.AddProductItem(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+
+            return new JsonResult(returnData);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult UpdateItem([FromBody] ProductItemModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _productService.UpdateProductItem(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+
+            return new JsonResult(returnData);
+        }
+        #endregion POST
+
+        #endregion productItem
+
         #region productType
 
         #region GET
@@ -40,6 +128,14 @@ namespace MBDesignApi.Controllers.Master
         public JsonResult GetTypeByTypeId(int typeId)
         {
             var data = _productService.GetProductTypeByTypeId(typeId);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetTypeSelect2()
+        {
+            var data = _productService.GetProductTypeSelect2();
 
             return new JsonResult(data);
         }

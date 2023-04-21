@@ -30,6 +30,114 @@ namespace BusinessLogicMBDesign.Master
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
         }
 
+        #region product item
+        public tbProductItem GetFirstLastestItemId()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemRepository.GetLastestId(conn);
+            }
+
+        }
+
+        public List<ProductItemView> GetProductItemList(string itemName, int typeId, string status)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemRepository.GetAll(itemName, typeId, status, conn);
+            }
+        }
+
+        public tbProductItem GetProductItemByItemId(int itemId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemRepository.GetFirstById(itemId, conn);
+            }
+
+        }
+
+        public int? AddProductItem(ProductItemModel model)
+        {
+            int? added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                var exists = _productItemRepository.GetFirstByName(model.itemName, conn, transaction);
+                if (exists != null) { return -1; }
+
+                try
+                {
+                    var addedObject = new tbProductItem
+                    {
+                        itemName = model.itemName,
+                        typeId= model.typeId,
+                        itemPrice = model.itemPrice,
+                        status = model.status,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999"
+                    };
+                    added = _productItemRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+
+        public int UpdateProductItem(ProductItemModel model)
+        {
+            int updated = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                var exists = _productItemRepository.GetFirstByName(model.itemName, conn, transaction);
+                if (exists != null) { if (exists.itemId != model.itemId) { return -1; } }
+
+                try
+                {
+                    var updatedObject = new tbProductItem
+                    {
+                        itemId = model.itemId,
+                        itemName = model.itemName,
+                        itemPrice = model.itemPrice,
+                        typeId = model.typeId,
+                        status = model.status,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999"
+                    };
+                    updated = _productItemRepository.Update(updatedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return updated;
+        }
+
+        #endregion product item
+
         #region product type
         public tbProductType GetFirstLastestTypeId()
         {
@@ -132,6 +240,17 @@ namespace BusinessLogicMBDesign.Master
             }
 
             return updated;
+        }
+
+        public List<tbProductType> GetProductTypeSelect2()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productTypeRepository.GetProductTypeSelect2(conn);
+            }
+
         }
 
         #endregion product type

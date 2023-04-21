@@ -1,7 +1,54 @@
 ﻿$(function () {
+    renderFirstTab();
+    /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
+        _product_item_action = 'add';
+        $(`#modal-createProduct #itemHeader`).text('เพิ่มข้อมูลสินค้า (Items)');
         $('#modal-createProduct').modal('show');
     });
+
+    $(document).on('click', '.btn-edit-product', function () {
+        $(`#modal-createProduct #itemHeader`).text('แก้ไขข้อมูลสินค้า (Items)');
+        $(`#modal-createProduct`).modal('show');
+        _product_item_action = 'edit';
+        //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+        callSelect2Status('#form-createProduct #select-product-status');
+        callGetItemById($(this).data('id'), $(this).data('typeid'));
+    });
+
+    $(`#modal-createProduct`).on('show.bs.modal', function () {
+        clearForm("modal-createProduct");
+        callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+        callSelect2Status('#form-createProduct #select-product-status');
+        if (_product_item_action == 'add') { callGetLastestItemId(); }
+    });
+
+    $('.btn-modal-save-product').on('click', function () {
+        DoAddOrUpdateItem("modal-createProduct");
+    });
+
+    $('#form-search-product .btn-search-product').on('click', function () {
+        callGetItemList();
+    });
+
+    $('#form-search-product .btn-clear-search-product').on('click', function () {
+        clearSearchForm("item");
+        //callProductTypeSelect2('#form-search-product #select-search-product-type', 'ทั้งหมด')
+        callSelect2Status('#form-search-product #select-search-product-status', true);
+        callGetItemList();
+    });
+
+    $('#tb-product-list').on('click', 'td.item-details', function () {
+        var tr = $(this).closest('tr');
+
+        var id = tr.data('id');
+        $(`#modal-viewProduct`).modal('show');
+        _product_item_action = 'view';
+        clearForm('modal-createProduct');
+        callSelect2Status('#form-createProduct #select-product-status');
+        callGetItemById(id);
+    });
+    /* End ProductItem */
 
     /* Begin ProductType */
     $('#nav-master-productType .btn-add-type').on('click', function () {
@@ -99,12 +146,8 @@
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
-        if (target == "#nav-master-holiday") {
-            clearSearchForm("holiday");
-            callSelect2SearchHolidayYear();
-            callSelect2HolidayDay(true);
-            callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
-            callGetHolidayList();
+        if (target == "#nav-master-productData") {
+            renderFirstTab();
         }
         else if (target == "#nav-master-productType") {
             clearSearchForm("type");
@@ -126,7 +169,14 @@ let _modal_default_color_code = "#EFEFEF";
 
 let _product_style_action = 'add';
 let _product_type_action = 'add';
+let _product_item_action = 'add';
 
+function renderFirstTab() {
+    clearSearchForm("item");
+    callProductTypeSelect2('#form-search-product #select-search-product-type', 'ทั้งหมด')
+    callSelect2Status('#select-search-product-status', true);
+    callGetItemList();
+}
 function callSelect2Status(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
@@ -137,12 +187,10 @@ function callSelect2Status(id, isSearch = false) {
 }
 function clearSearchForm(area) {
     switch (area) {
-        case "holiday":
-            $('#form-search-holiday #select-search-holiday-year').empty();
-            $('#form-search-holiday #select-search-holiday-day').empty();
-            $('#form-search-holiday #input-search-holiday-date').val('');
-            $('#form-search-holiday #input-search-holiday-name').val('');
-            $('#form-search-holiday #select-search-holiday-status').empty();
+        case "item":
+            $('#form-search-product #input-search-product-items').val('');
+            $('#form-search-product #select-search-product-type').empty();
+            $('#form-search-product #select-search-product-status').empty();
             break;
         case "type":
             $('#form-search-type #input-search-type-code').val('');
@@ -158,12 +206,12 @@ function clearSearchForm(area) {
 }
 function clearForm(modal) {
     switch (modal) {
-        case "modal-createHoliday":
-            $('#form-createHoliday input[name="input-holiday-code"]').val('');
-            $('#form-createHoliday #select-holiday-day').val('').trigger('change');
-            $('#form-createHoliday input[name="input-holiday-date"]').val('');
-            $('#form-createHoliday input[name="input-holiday-name"]').val('');
-            $('#form-createHoliday #select-holiday-status').val(0).trigger('change');
+        case "modal-createProduct":
+            $('#form-createProduct input[name="input-product-code"]').val('');
+            $('#form-createProduct #select-product-type').val('').trigger('change');
+            $('#form-createProduct input[name="input-product-name"]').val('');
+            $('#form-createProduct input[name="input-product-price"]').val('');
+            $('#form-createProduct #select-product-status').val(0).trigger('change');
             break;
         case "modal-createType":
             $('#form-createType input[name="input-type-code"]').val('');
@@ -180,56 +228,56 @@ function clearForm(modal) {
 }
 let validateInput = function (modal) {
     switch (modal) {
-        case "":
-            if ($('#form-createHoliday #input-holiday-code').val() == "") {
+        case "modal-createProduct":
+            if ($('#form-createProduct #input-product-code').val() == "") {
                 Swal.fire({
-                    text: "กรุณารอระบบ generate ลำดับ",
+                    text: "กรุณารอระบบ generate รหัสสินค้า",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
                     //cancelButtonColor: _modal_default_color_code,
                     confirmButtonText: 'ตกลง'
                 }).then((result) => {
-                    $('#form-createHoliday #input-holiday-code').focus();
+                    $('#form-createProduct #input-product-code').focus();
                 });
                 return false;
             }
-            else if ($('#form-createHoliday #select-holiday-day').val() == "") {
+            else if ($('#form-createProduct #select-product-type').val() == "") {
                 Swal.fire({
-                    text: "กรุณาเลือกวัน",
+                    text: "กรุณาเลือกชื่อหมวดหมู่",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
                     //cancelButtonColor: _modal_default_color_code,
                     confirmButtonText: 'ตกลง'
                 }).then((result) => {
-                    $('#form-createHoliday #select-holiday-day').focus();
+                    $('#form-createProduct #select-product-type').focus();
                 });
                 return false;
             }
-            else if ($('#form-createHoliday #input-holiday-date').val() == "") {
+            else if ($('#form-createProduct #input-product-name').val() == "") {
                 Swal.fire({
-                    text: "กรุณาเลือกวันที่",
+                    text: "กรุณากรอก Items",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
                     //cancelButtonColor: _modal_default_color_code,
                     confirmButtonText: 'ตกลง'
                 }).then((result) => {
-                    $('#form-createHoliday #input-holiday-date').focus();
+                    $('#form-createProduct #input-product-name').focus();
                 });
                 return false;
             }
-            else if ($('#form-createHoliday #input-holiday-name').val() == "") {
+            else if ($('#form-createProduct #input-product-price').val() == "" || $('#form-createProduct #input-product-price').val() == "0") {
                 Swal.fire({
-                    text: "กรุณากรอกวันหยุด",
+                    text: "กรุณากรอกราคาต่อเมตร",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
                     //cancelButtonColor: _modal_default_color_code,
                     confirmButtonText: 'ตกลง'
                 }).then((result) => {
-                    $('#form-createHoliday #input-holiday-name').focus();
+                    $('#form-createProduct #input-product-price').focus();
                 });
                 return false;
             }
@@ -309,6 +357,221 @@ let validateInput = function (modal) {
     }
 
 };
+
+/* ProductItem */
+function callProductTypeSelect2(select2Id, select2FirstText) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetTypeSelect2`,
+        success: function (data) {
+            renderProductTypeSelect2(select2Id, select2FirstText, data);
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderProductTypeSelect2(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.typeId}">${v.typeName}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
+}
+function DoAddOrUpdateItem(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateItem(_product_item_action);
+        }
+    });
+}
+function callAddOrUpdateItem() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Product/AddItem` : `${app_settings.api_url}/api/Product/UpdateItem`;
+
+    var obj = {
+        itemId: $('#input-product-code').val(),
+        itemName: $('#input-product-name').val(),
+        typeId: $('#form-createProduct #select-product-type').val(),
+        itemPrice: $('#input-product-price').val(),
+        status: ($('#form-createProduct #select-product-status').val() == "1") ? true : false
+    };
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $(`#modal-createProduct`).modal('hide');
+                callGetItemList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "ชื่อสินค้ามีอยู่แล้ว กรุณากรอกชื่อสินค้าอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createProduct #input-product-name').focus();
+                    });
+                }
+            }
+        },
+        error: () => {
+        }
+    });
+
+}
+function callGetLastestItemId() {
+    let url = `${app_settings.api_url}/api/Product/GetLastestItemId`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: (res) => {
+            $('#form-createProduct input[name="input-product-code"]').val(res.itemId);
+        },
+        error: () => {
+        }
+    });
+}
+function callGetItemList() {
+    let itemName = ($('#form-search-product #input-search-product-items').val() == '' || $('#form-search-product #input-search-product-items').val() == undefined) ? "%%" : $('#form-search-product #input-search-product-items').val();
+    let typeId = ($('#form-search-product #select-search-product-type').val() == '' || $('#form-search-product #select-search-product-type').val() == null) ? "0" : $('#form-search-product #select-search-product-type').val();
+    let status = ($('#form-search-product #select-search-product-status').val() == '' || $('#form-search-product #select-search-product-status').val() == undefined) ? "%%" : $('#form-search-product #select-search-product-status').val();
+
+    let loaded = $('#tb-product-list');
+
+    loaded.prepend(loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetItemList?itemName=${itemName}&typeId=${typeId}&status=${status}`,
+        success: function (data) {
+            renderGetItemList(data);
+            loaded.find(loader).remove();
+        },
+        error: function (err) {
+            loaded.find(loader).remove();
+        }
+    });
+}
+function renderGetItemList(data) {
+    $('#tb-product-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bfrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.itemId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'itemId',
+                    className: "item-details",
+                },
+                {
+                    targets: 1,
+                    data: 'typeName',
+                },
+                {
+                    targets: 2,
+                    data: 'itemName',
+                },
+                {
+                    targets: 3,
+                    data: 'price',
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'createBy'
+                },
+                {
+                    targets: 6,
+                    data: 'updateDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'updateBy'
+                },
+                {
+                    targets: 8,
+                    data: 'status',
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 9,
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-product" data-id="${row.itemId}" data-typeid="${row.typeId}"  title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function callGetItemById(id, typeId) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetItemByItemId?itemId=${id}`,
+        success: function (data) {
+            renderItemForm(data, typeId);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderItemForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createProduct #select-product-type').val("").trigger('change');
+    $('#form-createProduct #select-product-type').val(typeId).trigger('change');
+    $('#form-createProduct input[name="input-product-code"]').val(data.itemId);
+    $('#form-createProduct input[name="input-product-name"]').val(data.itemName);
+    $('#form-createProduct input[name="input-product-price"]').val(data.itemPrice);
+    $('#form-createProduct #select-product-status').val(status).trigger('change');
+}
+/* ProductItem */
 
 /* ProductType */
 function DoAddOrUpdateType(modal) {

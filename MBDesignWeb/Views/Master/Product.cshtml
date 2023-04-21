@@ -11,7 +11,7 @@
         z-index: 10000;
     }
 
-    .style-details, .type-details {
+    .style-details, .type-details, .item-details {
         cursor:pointer !important; 
     }
 </style>
@@ -65,30 +65,30 @@
             <div class="tab-pane fade show active" id="nav-master-productData" role="tabpanel" aria-labelledby="nav-master-productData-tab">
                 <div class="container-fluid">
                     <div class="row mt-2">
-                        <form>
+                        <form id="form-search-product">
                             <div class="row col-sm-12">
-                                <div class="col-sm-2">
+                               @* <div class="col-sm-2">
                                     <label>รหัสสินค้า</label>
                                     <input type="text" class="form-control" id="input-search-product-code" placeholder="">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>หมวดหมู่</label>
-                                    <select class="form-control" id="select-search-product-category">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2">
+                                </div>*@
+                                 <div class="col-sm-2">
                                     <label>Items</label>
                                     <input type="text" class="form-control" id="input-search-product-items" placeholder="">
                                 </div>
                                 <div class="col-sm-2">
+                                    <label>หมวดหมู่</label>
+                                    <select class="form-select" id="select-search-product-type">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
                                     <label>สถานะ</label>
-                                    <select class="form-control" id="select-search-product-status">
+                                    <select class="form-select" id="select-search-product-status">
                                         <option></option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-4 mt-4 text-end">
+                                <div class="col-sm-6 mt-4 text-end">
                                     <button type="button" class="btn btn-light btn-clear-search-product">ล้างข้อมูล</button>
                                     <button type="button" class="btn btn-primary btn-search-product">ค้นหา</button>
                                 </div>
@@ -237,46 +237,49 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-center">เพิ่มข้อมูลสินค้า (Items)</h4>
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
             </div>
             <div class="modal-body">
-                <div class="row d-sm-flex">
-                    @*<div class="col-sm-12">*@
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                <form id="form-createProduct">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-name" name="input-product-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status"></select>
+                                </div>
                             </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-product-name" name="input-product-name" />
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type"></select>
+
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" />
+                                </div>
                             </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">สถานะ</label>
-                                <select class="form-control" id="select-product-status" data-selected="" name="select-product-status"></select>
-                            </div>
+
+                            @*</div>*@
                         </div>
 
                     </div>
+                </form>
 
-                    <div class="col-sm-6">
-                        <div class="row">
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-product-category" data-selected="" name="select-product-category"></select>
-
-                            </div>
-                            <div class="col-sm-12 mb-2">
-                                <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
-                                <input class="form-control" type="text" id="input-product-price" name="input-product-price" />
-                            </div>
-                        </div>
-
-                        @*</div>*@
-                    </div>
-
-                </div>
 
                 <div class="row col-sm-12" id="divProductOptions">
 
@@ -299,7 +302,8 @@
                 <h4 class="modal-title text-center">เพิ่มข้อมูลสินค้า (Items)</h4>
             </div>
             <div class="modal-body">
-                <div class="row d-sm-flex">
+                <form id="form-createProduct">
+                    <div class="row d-sm-flex">
                     @*<div class="col-sm-12">*@
                     <div class="col-sm-6">
                         <div class="row">
@@ -313,7 +317,7 @@
                             </div>
                             <div class="col-sm-12 mb-2">
                                 <label class="control-label">สถานะ</label>
-                                <select class="form-control" id="select-product-status" data-selected="" name="select-product-status" disabled></select>
+                                <select class="form-select" id="select-product-status" data-selected="" name="select-product-status" disabled></select>
                             </div>
                         </div>
 
@@ -323,7 +327,7 @@
                         <div class="row">
                             <div class="col-sm-12 mb-2">
                                 <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
-                                <select class="form-control" id="select-product-category" data-selected="" name="select-product-category" disabled></select>
+                                <select class="form-select" id="select-product-category" data-selected="" name="select-product-category" disabled></select>
 
                             </div>
                             <div class="col-sm-12 mb-2">
@@ -336,7 +340,7 @@
                     </div>
 
                 </div>
-
+                </form>
                 <div class="row col-sm-12" id="divProductOptions">
                 </div>
             </div>
