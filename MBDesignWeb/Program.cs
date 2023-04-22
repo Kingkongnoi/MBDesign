@@ -25,6 +25,6 @@ app.MapControllerRoute(name: "area", pattern: "{area:exists}/{controller=Home}/{
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Master}/{action=Index}/{id?}");
 
 app.Run();
