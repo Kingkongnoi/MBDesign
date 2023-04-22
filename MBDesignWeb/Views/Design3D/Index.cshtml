@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "การออกแบบ 3D";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/design3d/design3d-control.js"></script>
+<script src="~/scripts/design3d/design3d-function.js"></script>
+
+<div class="row">
+    <h4>การออกแบบ 3D</h4>
+
+    <div class="col-sm-12">
+
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-design3d-queue-tab">คิวงานตามใบเสนอราคา</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-design3d-queue-tab">@Html.Partial("_Design3DQueue.cshtml")</div>
+        </div>
+
+    </div>
+</div>

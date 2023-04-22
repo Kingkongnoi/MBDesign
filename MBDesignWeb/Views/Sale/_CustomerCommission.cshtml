@@ -1,5 +1,6 @@
 ﻿<div class="container-fluid">
-    <div class="card-body">
+    <div class="card mt-4">
+        <div class="card-body">
         <div class="row mt-2">
             <form id="form-search-commission">
                 <div class="row col-sm-12">
@@ -50,4 +51,71 @@
             </table>
         </div>
     </div>
+    </div>
+</div>
+
+@*modal for view commission*@
+<div id="modal-viewCommission" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">ข้อมูลค่าคอมมิชชั่น</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-viewCommission">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            <div class="col-sm-6">
+                                <div class="row">
+
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">เดือน/ปี</label>
+                                        <input class="form-control" type="text" id="input-commission-dateYear" name="input-commission-dateYear" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ค่าคอมมิชชั่น</label>
+                                        <input class="form-control" type="text" id="input-commission" name="input-commission" disabled />
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ยอดขายทั้งเดือน</label>
+                                        <input class="form-control" type="text" id="input-commission-salesMonth" name="input-commission-salesMonth" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">โบนัส</label>
+                                        <input class="form-control" type="text" id="input-commission-bonus" name="input-commission-bonus" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+                <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-commission-detail-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>เลขที่ใบเสนอราคา</span></th>
+                                    <th><span>ยอดขายต่อใบเสนอราคา</span></th>
+                                    <th><span>สถานะการเก็บเงิน</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+
 </div>

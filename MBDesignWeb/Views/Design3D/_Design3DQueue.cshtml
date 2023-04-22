@@ -1,0 +1,107 @@
+﻿<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+        <div class="row mt-2">
+            <form id="form-search-3d-queue">
+                <div class="row col-sm-12">
+                    <div class="col-sm-2">
+                        <label>เลขที่ใบเสนอราคา</label>
+                        <input type="text" class="form-control" id="input-search-3d-quotation-number" name="input-search-3d-quotation-number" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>ผู้รับผิดชอบออกแบบ 3D</label>
+                        <input type="text" class="form-control" id="input-search-3d-design-name" name="input-search-3d-design-name" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>สถานะ Checklist</label>
+                        <select class="form-select" id="select-search-3d-checklist-status">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>วันที่พร้อมติดตั้ง</label>
+                        <input type="date" class="form-control" id="input-search-3d-install-date" name="input-search-3d-install-date" />
+                    </div>
+                    <div class="col-sm-4 mt-4 text-end">
+                        <button type="button" class="btn btn-light btn-clear-search-cus-doc">ล้างข้อมูล</button>
+                        <button type="button" class="btn btn-primary btn-search-cus-doc">ค้นหา</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row col-sm-12 mt-2">
+            <table class="table no-footer" id="tb-3d-queue-list" width="100%">
+                <thead>
+                    <tr>
+                        <th><span>เลขที่ใบเสนอราคา</span></th>
+                        <th><span>วันที่พร้อมติดตั้ง</span></th>
+                        <th><span>ผู้รับผิดชอบออกแบบ 3D</span></th>
+                        <th><span>วันกำหนดส่งงาน</span></th>
+                        <th><span>สถานะ Checklist</span></th>
+                        <th><span>วันที่แก้ไขล่าสุด</span></th>
+                        <th><span>ผู้แก้ไขล่าสุด</span></th>
+                        <th><span>แก้ไข</span></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</div>
+
+@*modal for create 3d*@
+<div id="modal-editDesign3D" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center"><span id="departmentHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-editDesign3D">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">เลขที่ใบเสนอราคา</label>
+                                        <input class="form-control" type="text" id="input-edit-3d-quotation" name="input-edit-3d-quotation" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ผู้รับผิดชอบออกแบบ 3D</label>
+                                        <select class="select2-container form-select" id="select-edit-3d-designName">
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันที่พร้อมติดตั้ง</label>
+                                        <input class="form-control" type="text" id="input-edit-3d-install-date" name="input-edit-3d-install-date" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันที่กำหนดส่งงาน</label>
+                                        <input class="form-control" type="date" id="input-edit-3d-due-date" name="input-edit-3d-due-date" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-department"><i class="fa fa-floppy-o" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
