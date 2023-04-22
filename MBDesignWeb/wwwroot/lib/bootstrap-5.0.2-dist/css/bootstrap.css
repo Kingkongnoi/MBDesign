@@ -3901,9 +3901,9 @@ textarea.form-control-lg {
 }
 
 .nav-pills .nav-link {
-  background: none;
+  background: #F09723;
   border: 0;
-  border-radius: 0.25rem;
+  /*border-radius: 0.25rem;*/
 }
 .nav-pills .nav-link.active,
 .nav-pills .show > .nav-link {

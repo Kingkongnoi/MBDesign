@@ -8,4 +8,49 @@
 <link href="~/assets/fontawesome/css/brands.css" rel="stylesheet">
 <link href="~/assets/fontawesome/css/solid.css" rel="stylesheet">*@
 
-@*<script src="~/scripts/master/master.js"></script>*@
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/master/master-function.js"></script>
+<script src="~/scripts/master/master-control.js"></script>
+
+<div class="row">
+    <h4>ข้อมูลหลัก</h4>
+
+    <div class="col-sm-12">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-mas-empData-tab">ข้อมูลพนักงาน</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-product-tab">ตั้งค่าราคาสินค้า</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-calculate-tab">ตั้งค่าสูตรคำนวณ</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-inventory-tab">ข้อมูลคลังสินค้า</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-account-tab">ข้อมูลบัญชีรับเงิน</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-transpotation-tab">ข้อมูลรถขนส่ง</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-mas-empData-tab">@Html.Partial("_Employee.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-mas-product-tab">@Html.Partial("_Product.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-mas-calculate-tab"></div>
+
+            <div class="tab-pane fade" id="nav-mas-inventory-tab"></div>
+
+            <div class="tab-pane fade" id="nav-mas-account-tab">@Html.Partial("_BankAccount.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-mas-transpotation-tab"></div>
+        </div>
+    </div>
+</div>

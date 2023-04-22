@@ -3,312 +3,50 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="~/scripts/sale/sale.js"></script>
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/sale/sale-control.js"></script>
+<script src="~/scripts/sale/sale-function.js"></script>
 
 <div class="row">
     <h4>การขาย</h4>
 
-    <div class="col-sm-12 mt-2">
-        <nav>
-            <div class="nav nav-tabs" id="nav-tab-sale" role="tablist">
-                <button class="nav-link active" id="nav-sale-empData-tab" data-bs-toggle="tab" data-bs-target="#nav-sale-empData" type="button" role="tab" aria-controls="nav-sale-empData" aria-selected="true">ข้อมูลลูกค้าใหม่</button>
-                <button class="nav-link" id="nav-sale-style-tab" data-bs-toggle="tab" data-bs-target="#nav-sale-style" type="button" role="tab" aria-controls="nav-sale-style" aria-selected="false">รายละเอียดสไตล์และชิ้นงาน</button>
-                <button class="nav-link" id="nav-sale-calculate-tab" data-bs-toggle="tab" data-bs-target="#nav-sale-calculate" type="button" role="tab" aria-controls="nav-sale-calculate" aria-selected="false">การคำนวณราคา</button>
-                <button class="nav-link" id="nav-sale-fileUpload-tab" data-bs-toggle="tab" data-bs-target="#nav-sale-fileUpload" type="button" role="tab" aria-controls="nav-sale-fileUpload" aria-selected="false">อัพโหลดรูปแปลนและรูป ref</button>
-                <button class="nav-link" id="nav-sale-document-tab" data-bs-toggle="tab" data-bs-target="#nav-sale-document" type="button" role="tab" aria-controls="nav-sale-document" aria-selected="false">รายการใบเสนอราคา</button>
-            </div>
-        </nav>
-        <div class="tab-content" id="nav-tab-sale-tabContent">
-            <div class="tab-pane fade show active" id="nav-sale-empData" role="tabpanel" aria-labelledby="nav-sale-empData-tab">
-                <div class="container-fluid">
-                    
-                    <div class="card mt-4">
-                        <div class="card-header">
-                            <h6>ข้อมูลลูกค้าใหม่</h6>
-                        </div>
+    <div class="col-sm-12">
 
-                        <div class="card-body">
-                            <div class="row d-sm-flex">
-                                
-                                <div class="col-sm-6">
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">ชื่อลูกค้า</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" />
-                                        </div>
-                                    </div>
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-sale-empData-tab">ข้อมูลลูกค้าใหม่</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-style-tab">รายละเอียดสไตล์และชิ้นงาน</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-calculate-tab">การคำนวณราคา</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-fileUpload-tab">อัพโหลดรูปแปลนและรูป ref</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-quotation-tab">รายการใบเสนอราคา</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-document-tab">รายการเอกสารสัญญา</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-commission-tab">ค่าคอมมิชชั่น</a>
+            </li>
+        </ul>
 
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">ชื่อเล่น</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="text" id="input-emp-nickname" name="input-emp-nickname" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">LINE ID</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="text" id="input-emp-lineId" name="input-emp-lineId" />
-                                        </div>
-                                    </div>
-
-                                </div>
-                               
-                                <div class="col-sm-6">
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">นามสกุล</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">เบอร์โทรศัพท์</label>
-                                        <div class="col-sm-9">
-                                            <input class="form-control" type="text" id="input-emp-tel" name="input-emp-tel" />
-                                        </div>
-                                    </div>
-
-                                    <div class="row col-sm-12 mb-2">
-                                        <label class="col-sm-3 col-form-label text-end">วันที่พร้อมติดตั้ง</label>
-                                        <div class="col-sm-9">
-                                            <div class="input-group date" id="datepicker">
-                                                <input type="text" class="form-control" id="input-setting-date" />
-                                                <span class="input-group-append">
-                                                    <span class="input-group-text bg-light d-block">
-                                                        <i class="far fa-calendar-alt" aria-hidden="true"></i>
-                                                    </span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-master-role" role="tabpanel" aria-labelledby="nav-master-role-tab">
-                <div class="container-fluid">
-                    <div class="row mt-2">
-                        <form>
-                            <div class="row col-sm-12">
-                                <div class="col-sm-2">
-                                    <label>ชื่อบทบาท</label>
-                                    <input type="text" class="form-control" id="input-search-role" placeholder="">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>สถานะ</label>
-                                    <select class="form-control" id="select-search-role-status">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-8 mt-4 text-end">
-                                    <button type="button" class="btn btn-light btn-clear-search-role">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-role">ค้นหา</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn btn-primary btn-add-role">เพิ่มบทบาท</button>
-                    </div>
-
-                    <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-role-list">
-                            <thead>
-                                <tr>
-                                    <th><span>รหัสบทบาท</span></th>
-                                    <th><span>ชื่อบทบาท</span></th>
-                                    <th><span>วันที่สร้าง</span></th>
-                                    <th><span>ผู้สร้าง</span></th>
-                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
-                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
-                                    <th><span">สถานะ</span></th>
-                                    <th><span>แก้ไข</span></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-master-holiday" role="tabpanel" aria-labelledby="nav-master-holiday-tab">
-                <div class="container-fluid">
-                    <div class="row mt-2">
-                        <form>
-                            <div class="row col-sm-12">
-                                <div class="col-sm-2">
-                                    <label>ปี</label>
-                                    <select class="form-control" id="select-search-holiday-year">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>วัน</label>
-                                    <select class="form-control" id="select-search-holiday-day">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>วันที่</label>
-                                    <div class="input-group date" id="datepicker">
-                                        <input type="text" class="form-control" id="input-search-holiday-date" />
-                                        <span class="input-group-append">
-                                            <span class="input-group-text bg-light d-block">
-                                                <i class="fa fa-calendar"></i>
-                                            </span>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>วันหยุด</label>
-                                    <input type="text" class="form-control" id="input-search-holiday-name" placeholder="">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>สถานะ</label>
-                                    <select class="form-control" id="select-search-holiday-status">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 mt-4 text-end">
-                                    <button type="button" class="btn btn-light btn-clear-search-holiday">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-holiday">ค้นหา</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn btn-primary btn-add-holiday">เพิ่มวันหยุด</button>
-                    </div>
-
-                    <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-empployee-list">
-                            <thead>
-                                <tr>
-                                    <th><span>ลำดับ</span></th>
-                                    <th><span>วัน</span></th>
-                                    <th><span>วันที่</span></th>
-                                    <th><span>วันหยุด</span></th>
-                                    <th><span>วันที่สร้าง</span></th>
-                                    <th><span>ผู้สร้าง</span></th>
-                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
-                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
-                                    <th><span>สถานะ</span></th>
-                                    <th><span>แก้ไข</span></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-master-department" role="tabpanel" aria-labelledby="nav-master-department-tab">
-                <div class="container-fluid">
-                    <div class="row mt-2">
-                        <form>
-                            <div class="row col-sm-12">
-                                <div class="col-sm-2">
-                                    <label>ชื่อแผนก</label>
-                                    <input type="text" class="form-control" id="input-search-department" placeholder="">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>สถานะ</label>
-                                    <select class="form-control" id="select-search-department-status">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-8 mt-4 text-end">
-                                    <button type="button" class="btn btn-light btn-clear-search-department">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-department">ค้นหา</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn btn-primary btn-add-department">เพิ่มแผนก</button>
-                    </div>
-
-                    <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-department-list">
-                            <thead>
-                                <tr>
-                                    <th><span>รหัสแผนก</span></th>
-                                    <th><span>ชื่อแผนก</span></th>
-                                    <th><span>วันที่สร้าง</span></th>
-                                    <th><span>ผู้สร้าง</span></th>
-                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
-                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
-                                    <th><span>สถานะ</span></th>
-                                    <th><span>แก้ไข</span></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-master-position" role="tabpanel" aria-labelledby="nav-master-position-tab">
-                <div class="container-fluid">
-                    <div class="row mt-2">
-                        <form>
-                            <div class="row col-sm-12">
-                                <div class="col-sm-2">
-                                    <label>ชื่อตำแหน่ง</label>
-                                    <input type="text" class="form-control" id="input-search-position" placeholder="">
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>สถานะ</label>
-                                    <select class="form-control" id="select-search-position-status">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-8 mt-4 text-end">
-                                    <button type="button" class="btn btn-light btn-clear-search-position">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-position">ค้นหา</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-
-                    <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn btn-primary btn-add-position">เพิ่มตำแหน่ง</button>
-                    </div>
-
-                    <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-position-list">
-                            <thead>
-                                <tr>
-                                    <th><span>รหัสตำแหน่ง</span></th>
-                                    <th><span>ชื่อตำแหน่ง</span></th>
-                                    <th><span>วันที่สร้าง</span></th>
-                                    <th><span>ผู้สร้าง</span></th>
-                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
-                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
-                                    <th><span>สถานะ</span></th>
-                                    <th><span>แก้ไข</span></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-pane fade" id="nav-master-leave" role="tabpanel" aria-labelledby="nav-master-leave-tab">...</div>
-            <div class="tab-pane fade" id="nav-master-time" role="tabpanel" aria-labelledby="nav-master-time-tab">...</div>
-            <div class="tab-pane fade" id="nav-master-salary" role="tabpanel" aria-labelledby="nav-master-salary-tab">...</div>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-sale-empData-tab">@Html.Partial("_CustomerNewData.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-style-tab">@Html.Partial("_CustomerCreateStyle.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-calculate-tab">@Html.Partial("_CustomerCalculatePrice.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-fileUpload-tab">@Html.Partial("_CustomerUpload.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-quotation-tab">@Html.Partial("_CustomerQuotation.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-document-tab">@Html.Partial("_CustomerDocument.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-commission-tab">@Html.Partial("_CustomerCommission.cshtml")</div>
         </div>
+
     </div>
 </div>

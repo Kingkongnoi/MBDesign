@@ -4054,14 +4054,15 @@ textarea.form-control-lg {
     }
 
 .nav-pills .nav-link {
-    background: 0 0;
+    background: #F09723;
     border: 0;
-    border-radius: .25rem
+    /* border-radius: .25rem;*/
+    color: #fff;
 }
 
     .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-        color: #fff;
-        background-color: #0d6efd
+        color: #000;
+        background-color: #fff;
     }
 
 .nav-fill .nav-item, .nav-fill > .nav-link {

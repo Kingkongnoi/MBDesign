@@ -1,0 +1,55 @@
+﻿<div class="container-fluid">
+    <div class="card-body">
+        <div class="row mt-2">
+            <form id="form-search-cus-document">
+                <div class="row col-sm-12">
+                    <div class="col-sm-2">
+                        <label>เลขที่สัญญา</label>
+                        <input type="text" class="form-control" id="input-search-doc-number" name="input-search-doc-number" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>เลขที่ใบเสนอราคา</label>
+                        <input type="text" class="form-control" id="input-search-doc-quotation-number" name="input-search-doc-quotation-number" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>ชื่อลูกค้า</label>
+                        <input type="text" class="form-control" id="input-search-doc-cusName" name="input-search-doc-cusName" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>สถานะเอกสารสัญญา</label>
+                        <select class="form-select" id="select-search-doc-quotation-status">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>วันที่ออกสัญญา</label>
+                        <input type="date" class="form-control" id="input-search-doc-date" name="input-search-doc-date" />
+                    </div>
+                    <div class="col-sm-2 mt-4 text-end">
+                        <button type="button" class="btn btn-light btn-clear-search-cus-doc">ล้างข้อมูล</button>
+                        <button type="button" class="btn btn-primary btn-search-cus-doc">ค้นหา</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row col-sm-12 mt-2">
+            <table class="table no-footer" id="tb-cus-doc-list" width="100%">
+                <thead>
+                    <tr>
+                        <th><span>เลขที่สัญญา</span></th>
+                        <th><span>เลขที่ใบเสนอราคา</span></th>
+                        <th><span>ชื่อลูกค้า</span></th>
+                        <th><span>สถานะเอกสารสัญญา</span></th>
+                        <th><span>วันที่ออกสัญญา</span></th>
+                        <th><span>ผู้ออกสัญญา</span></th>
+                        <th><span>วันที่แก้ไขล่าสุด</span></th>
+                        <th><span>ผู้แก้ไขล่าสุด</span></th>
+                        <th><span>ดูเอกสาร</span></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

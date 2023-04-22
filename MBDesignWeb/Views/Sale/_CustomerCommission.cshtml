@@ -1,0 +1,53 @@
+﻿<div class="container-fluid">
+    <div class="card-body">
+        <div class="row mt-2">
+            <form id="form-search-commission">
+                <div class="row col-sm-12">
+                    <div class="col-sm-2">
+                        <label>เลขที่สัญญา</label>
+                        <input type="text" class="form-control" id="input-search-commission-number" name="input-search-commission-number" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>เลขที่ใบเสนอราคา</label>
+                        <input type="text" class="form-control" id="input-search-commission-quotation-no" name="input-search-commission-quotation-no" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>ชื่อลูกค้า</label>
+                        <input type="text" class="form-control" id="input-search-commission-cusName" name="input-search-commission-cusName" />
+                    </div>
+                    <div class="col-sm-2">
+                        <label>สถานะเอกสารสัญญา</label>
+                        <select class="form-select" id="select-search-commission-quotation-status">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <label>วันที่ออกสัญญา</label>
+                        <input type="date" class="form-control" id="input-search-commission-doc-date" name="input-search-commission-doc-date" />
+                    </div>
+                    <div class="col-sm-2 mt-4 text-end">
+                        <button type="button" class="btn btn-light btn-clear-search-quotation">ล้างข้อมูล</button>
+                        <button type="button" class="btn btn-primary btn-search-quotation">ค้นหา</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="row col-sm-12 mt-2">
+            <table class="table no-footer" id="tb-commission-list" width="100%">
+                <thead>
+                    <tr>
+                        <th><span>เดือน/ปี</span></th>
+                        <th><span>ยอดขายทั้งเดือน</span></th>
+                        <th><span>ค่าคอมมิชชั่น</span></th>
+                        <th><span>โบนัส</span></th>
+                        <th><span>สถานะ</span></th>
+                        <th><span>ชื่อเซลล์</span></th>
+                        <th><span>ดูรายละเอียด</span></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>

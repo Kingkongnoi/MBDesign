@@ -1,10 +1,9 @@
 ﻿@{
     ViewData["Title"] = "ข้อมูลหลัก";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<script src="~/scripts/config.js"></script>
-<script src="~/scripts/master/product.js"></script>
+@*<script src="~/scripts/config.js"></script>
+<script src="~/scripts/master/product.js"></script>*@
 
 <style>
     .loader {
@@ -17,41 +16,6 @@
 </style>
 
 <div class="row">
-    <h4>ข้อมูลหลัก</h4>
-
-    <div class="col-sm-12">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Employee">ข้อมูลพนักงาน</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active" asp-area="" asp-controller="Master" asp-action="Product">ตั้งค่าราคาสินค้า</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ตั้งค่าสูตรคำนวณ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลคลังสินค้า</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="BankAccount">ข้อมูลบัญชีรับเงิน</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">ข้อมูลรถขนส่ง</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-
-    </div>
 
     <div class="col-sm-12 mt-2">
         <nav>
@@ -101,7 +65,7 @@
                     </div>
 
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-product-list">
+                        <table class="table no-footer" id="tb-product-list" width="100%">
                             <thead>
                                 <tr>
                                     <th><span>รหัสสินค้า</span></th>
@@ -155,7 +119,7 @@
                     </div>
 
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-type-list">
+                        <table class="table no-footer" id="tb-type-list" width="100%">
                             <thead>
                                 <tr>
                                     <th><span>รหัสหมวดหมู่</span></th>
@@ -208,7 +172,7 @@
                     </div>
 
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-style-list">
+                        <table class="table no-footer" id="tb-style-list" width="100%">
                             <thead>
                                 <tr>
                                     <th><span>รหัสสไตล์</span></th>
