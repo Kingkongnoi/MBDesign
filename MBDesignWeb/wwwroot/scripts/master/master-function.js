@@ -92,7 +92,7 @@ function clearForm(modal) {
             $('#form-createPosition input[name="input-position-name"]').val('');
             $('#form-createPosition #select-position-status').val(1).trigger('change');
             break;
-        case "modal-createProduct":
+        case "modal-createProduct" || "modal-viewProduct":
             $('#form-createProduct input[name="input-product-code"]').val('');
             $('#form-createProduct #select-product-type').val('').trigger('change');
             $('#form-createProduct input[name="input-product-name"]').val('');
@@ -1066,7 +1066,7 @@ function callAddOrUpdateItem() {
     let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Product/AddItem` : `${app_settings.api_url}/api/Product/UpdateItem`;
 
     var options = [];
-    $.each($(`#divOptions div[name="divRenderOptions"]`), (i, item) => {
+    $.each($(`#modal-createProduct #divOptions div[name="divRenderOptions"]`), (i, item) => {
         let divId = $(item).attr('id');
         let seq = (divId.split("-")[1])
 
@@ -1166,6 +1166,7 @@ function renderGetItemList(data) {
             },
             createdRow: function (row, data) {
                 $(row).attr('data-id', data.itemId);
+                $(row).attr('data-typeid', data.typeId);
             },
             columnDefs: [
                 {
@@ -1249,16 +1250,16 @@ function renderItemForm(data, typeId) {
     $('#form-createProduct #select-product-status').val(status).trigger('change');
 }
 function renderItemOptions(data, modal, isView = false) {
-    $('#divOptions').empty();
+    $(`#${modal} #divOptions`).empty();
     if (data.length == 0) {
         renderNewOptions(modal, isView);
     }
     else {
         data.forEach((v) => {
             renderNewOptions(modal, isView);
-            let seq = $('div[name="divRenderOptions"]').length;
-            $(`#divRenderOptions-${seq} #input-options-name-${seq}`).val(v.options);
-            $(`#divRenderOptions-${seq} #input-options-price-${seq}`).val(v.optionsPrice);
+            let seq = $(`#${modal} div[name="divRenderOptions"]`).length;
+            $(`#${modal} #divRenderOptions-${seq} #input-options-name-${seq}`).val(v.options);
+            $(`#${modal} #divRenderOptions-${seq} #input-options-price-${seq}`).val(v.optionsPrice);
         });
     }
     

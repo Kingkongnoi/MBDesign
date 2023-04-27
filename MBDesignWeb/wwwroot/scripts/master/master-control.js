@@ -49,37 +49,37 @@
         $(`#modal-createEmployee`).modal('show');
         _emp_action = 'edit';
         clearForm('modal-createEmployee');
-        callGetItemById($(this).data('id'), $(this).data('typeid'));
+        //callGetItemById($(this).data('id'), $(this).data('typeid'));
     });
 
-    $(`#modal-createProduct`).on('show.bs.modal', function () {
-        clearForm("modal-createProduct");
-        if (_product_item_action == 'add') { callGetLastestItemId(); }
-    });
+    //$(`#modal-createProduct`).on('show.bs.modal', function () {
+    //    clearForm("modal-createProduct");
+    //    if (_product_item_action == 'add') { callGetLastestItemId(); }
+    //});
 
-    $('.btn-modal-save-product').on('click', function () {
-        DoAddOrUpdateItem("modal-createProduct");
-    });
+    //$('.btn-modal-save-product').on('click', function () {
+    //    //DoAddOrUpdateItem("modal-createProduct");
+    //});
 
-    $('#form-search-product .btn-search-product').on('click', function () {
-        callGetItemList();
-    });
+    //$('#form-search-product .btn-search-product').on('click', function () {
+    //    //callGetItemList();
+    //});
 
-    $('#form-search-product .btn-clear-search-product').on('click', function () {
-        clearSearchForm("item");
-        callGetItemList();
-    });
+    //$('#form-search-product .btn-clear-search-product').on('click', function () {
+    //    //clearSearchForm("item");
+    //    //callGetItemList();
+    //});
 
-    $('#tb-product-list').on('click', 'td.item-details', function () {
-        var tr = $(this).closest('tr');
+    //$('#tb-product-list').on('click', 'td.item-details', function () {
+    //    var tr = $(this).closest('tr');
 
-        var id = tr.data('id');
-        $(`#modal-viewProduct`).modal('show');
-        _product_item_action = 'view';
-        clearForm('modal-createProduct');
-        callGetItemById(id);
-    });
-    /* End Employee */
+    //    var id = tr.data('id');
+    //    $(`#modal-viewProduct`).modal('show');
+    //    _product_item_action = 'view';
+    //    clearForm('modal-createProduct');
+    //    //callGetItemById(id);
+    //});
+    ///* End Employee */
 
     $('#nav-master-role .btn-add-role').on('click', function () {
         $('#modal-createRole').modal('show');
@@ -257,9 +257,10 @@
 
         var id = tr.data('id');
         var typeId = tr.data('typeid');
+
         $(`#modal-viewProduct`).modal('show');
         _product_item_action = 'view';
-        clearForm('modal-createProduct');
+        clearForm('modal-viewProduct');
         $('#modal-viewProduct #divOptions').empty();
         callGetItemById(id, typeId, "modal-viewProduct", true);
     });
