@@ -35,7 +35,7 @@
     callGetAccountList();
     callGetItemList();
 
-    renderNewOptions();
+    renderNewOptions("modal-createProduct");
 
     /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {
@@ -228,13 +228,14 @@
         $(`#modal-createProduct`).modal('show');
         _product_item_action = 'edit';
         clearForm('modal-createProduct');
-        callGetItemById($(this).data('id'), $(this).data('typeid'));
+        $('#modal-createProduct #divOptions').empty();
+        callGetItemById($(this).data('id'), $(this).data('typeid'), 'modal-createProduct');
     });
 
     $(`#modal-createProduct`).on('show.bs.modal', function () {
         clearForm("modal-createProduct");
-        $('#divOptions').empty();
-        renderNewOptions();
+        $('#modal-createProduct #divOptions').empty();
+        renderNewOptions('modal-createProduct');
         if (_product_item_action == 'add') { callGetLastestItemId(); }
     });
 
@@ -255,10 +256,12 @@
         var tr = $(this).closest('tr');
 
         var id = tr.data('id');
+        var typeId = tr.data('typeid');
         $(`#modal-viewProduct`).modal('show');
         _product_item_action = 'view';
         clearForm('modal-createProduct');
-        callGetItemById(id);
+        $('#modal-viewProduct #divOptions').empty();
+        callGetItemById(id, typeId, "modal-viewProduct", true);
     });
     /* End ProductItem */
 

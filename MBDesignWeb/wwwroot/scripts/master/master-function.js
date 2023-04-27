@@ -1227,13 +1227,13 @@ function renderGetItemList(data) {
         }
     );
 }
-function callGetItemById(id, typeId) {
+function callGetItemById(id, typeId, modal, isView = false) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Product/GetItemByItemId?itemId=${id}`,
         success: function (data) {
             renderItemForm(data.item, typeId);
-            renderItemOptions(data.itemOptions);
+            renderItemOptions(data.itemOptions, modal, isView);
         },
         error: function (err) {
 
@@ -1248,14 +1248,14 @@ function renderItemForm(data, typeId) {
     $('#form-createProduct input[name="input-product-price"]').val(data.itemPrice);
     $('#form-createProduct #select-product-status').val(status).trigger('change');
 }
-function renderItemOptions(data) {
+function renderItemOptions(data, modal, isView = false) {
     $('#divOptions').empty();
     if (data.length == 0) {
-        renderNewOptions();
+        renderNewOptions(modal, isView);
     }
     else {
         data.forEach((v) => {
-            renderNewOptions();
+            renderNewOptions(modal, isView);
             let seq = $('div[name="divRenderOptions"]').length;
             $(`#divRenderOptions-${seq} #input-options-name-${seq}`).val(v.options);
             $(`#divRenderOptions-${seq} #input-options-price-${seq}`).val(v.optionsPrice);
@@ -1871,25 +1871,28 @@ function callSuccessAlert() {
     });
 }
 
-function renderNewOptions() {
-    let newSeq = $('div[name="divRenderOptions"]').length == 0 ? 1 : $('div[name="divRenderOptions"]').length + 1;
-    let removeBtn = newSeq > 1 ? `
+function renderNewOptions(modal, isView = false) {
+    let newSeq = $(`#${modal} div[name="divRenderOptions"]`).length == 0 ? 1 : $(`#${modal} div[name="divRenderOptions"]`).length + 1;
+    let removeBtn = (newSeq > 1) ? `
     <button type="button" class="btn btn-primary btn-circle-xs" data-seq="${newSeq}" onclick="removeRenderOptions(this)"><i class="fa fa-trash" aria-hidden="true"></i></button>` : ``;
 
+    let setDisabled = (!isView) ? "" : "disabled";
+    let styleVisibility = (!isView) ? "" : 'style="visibility:hidden;"';
+
     let renderDiv = `<div class="row mb-2" name="divRenderOptions" id="divRenderOptions-${newSeq}">
-                            <div class="col-sm-7"><input class="form-control" type="text" id="input-options-name-${newSeq}" name="input-options-name-${newSeq}" /></div>
-                            <div class="col-sm-3"><input class="form-control" type="number" id="input-options-price-${newSeq}" name="input-options-price-${newSeq}" /></div>
-                            <div class="col-sm-2">
+                            <div class="col-sm-7"><input class="form-control" type="text" id="input-options-name-${newSeq}" name="input-options-name-${newSeq}" ${setDisabled}/></div>
+                            <div class="col-sm-3"><input class="form-control" type="number" id="input-options-price-${newSeq}" name="input-options-price-${newSeq}" ${setDisabled} /></div>
+                            <div class="col-sm-2" ${styleVisibility}>
                                 <button type="button" class="btn btn-primary btn-circle-xs" title="เพิ่ม" data-seq="${newSeq}" onclick="addRenderOptions()"><i class="fa fa-plus"></i></button>
                                 ${removeBtn}
                             </div>
                         </div>`
 
-    $('#divOptions').append(renderDiv)
+    $(`#${modal} #divOptions`).append(renderDiv)
 }
 
 function addRenderOptions() {
-    renderNewOptions();
+    renderNewOptions("modal-createProduct");
 }
 
 function removeRenderOptions(obj) {
