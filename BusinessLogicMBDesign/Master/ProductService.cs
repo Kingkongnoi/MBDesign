@@ -88,6 +88,28 @@ namespace BusinessLogicMBDesign.Master
                     };
                     added = _productItemRepository.Add(addedObject, conn, transaction);
 
+                    #region add options
+                    var optionsExists = _productItemOptionsRepository.GetByItemId(added.Value, conn, transaction);
+                    if(optionsExists.Count > 0) 
+                    {
+                        int deletedOptions = _productItemOptionsRepository.HardDeleteByItemId(added.Value, conn, transaction);
+                    }
+
+                    foreach(var op in model.options)
+                    {
+                        var options = new tbProductItemOptions
+                        {
+                            itemId = added.Value,
+                            options = op.options.Trim(),
+                            optionsPrice = op.optionsPrice,
+                            status = model.status,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999"
+                        };
+                        int? addedOptions = _productItemOptionsRepository.Add(options, conn, transaction);
+                    }
+                    #endregion add options
+
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -125,6 +147,31 @@ namespace BusinessLogicMBDesign.Master
                     };
                     updated = _productItemRepository.Update(updatedObject, conn, transaction);
 
+                    #region add options
+                    var optionsExists = _productItemOptionsRepository.GetByItemId(model.itemId, conn, transaction);
+                    if (optionsExists.Count > 0)
+                    {
+                        int deletedOptions = _productItemOptionsRepository.HardDeleteByItemId(model.itemId, conn, transaction);
+                    }
+
+                    foreach (var op in model.options)
+                    {
+                        if(!string.IsNullOrEmpty(op.options))
+                        {
+                            var options = new tbProductItemOptions
+                            {
+                                itemId = model.itemId,
+                                options = op.options.Trim(),
+                                optionsPrice = op.optionsPrice,
+                                status = model.status,
+                                createDate = DateTime.UtcNow,
+                                createBy = "MB9999"
+                            };
+                            int? addedOptions = _productItemOptionsRepository.Add(options, conn, transaction);
+                        }
+                    }
+                    #endregion add options
+
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -134,6 +181,16 @@ namespace BusinessLogicMBDesign.Master
             }
 
             return updated;
+        }
+
+        public List<tbProductItemOptions> GetOptionsByItemId(int itemId) 
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemOptionsRepository.GetByItemId(itemId, conn);
+            }
         }
 
         #endregion product item

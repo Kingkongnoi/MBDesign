@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\Sale\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BusinessLogicMBDesign\BusinessLogicMBDesign.csproj" />
     <ProjectReference Include="..\EntitiesMBDesign\EntitiesMBDesign.csproj" />
   </ItemGroup>

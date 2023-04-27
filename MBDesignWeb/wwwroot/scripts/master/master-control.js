@@ -35,9 +35,51 @@
     callGetAccountList();
     callGetItemList();
 
+    renderNewOptions();
+
+    /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {
+        _emp_action = 'add'
+        $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
     });
+
+    $(document).on('click', '.btn-edit-employee', function () {
+        $(`#modal-createEmployee #empHeader`).text('แก้ไขข้อมูลพนักงาน');
+        $(`#modal-createEmployee`).modal('show');
+        _emp_action = 'edit';
+        clearForm('modal-createEmployee');
+        callGetItemById($(this).data('id'), $(this).data('typeid'));
+    });
+
+    $(`#modal-createProduct`).on('show.bs.modal', function () {
+        clearForm("modal-createProduct");
+        if (_product_item_action == 'add') { callGetLastestItemId(); }
+    });
+
+    $('.btn-modal-save-product').on('click', function () {
+        DoAddOrUpdateItem("modal-createProduct");
+    });
+
+    $('#form-search-product .btn-search-product').on('click', function () {
+        callGetItemList();
+    });
+
+    $('#form-search-product .btn-clear-search-product').on('click', function () {
+        clearSearchForm("item");
+        callGetItemList();
+    });
+
+    $('#tb-product-list').on('click', 'td.item-details', function () {
+        var tr = $(this).closest('tr');
+
+        var id = tr.data('id');
+        $(`#modal-viewProduct`).modal('show');
+        _product_item_action = 'view';
+        clearForm('modal-createProduct');
+        callGetItemById(id);
+    });
+    /* End Employee */
 
     $('#nav-master-role .btn-add-role').on('click', function () {
         $('#modal-createRole').modal('show');
@@ -191,6 +233,8 @@
 
     $(`#modal-createProduct`).on('show.bs.modal', function () {
         clearForm("modal-createProduct");
+        $('#divOptions').empty();
+        renderNewOptions();
         if (_product_item_action == 'add') { callGetLastestItemId(); }
     });
 

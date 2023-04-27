@@ -112,5 +112,22 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbProductStyle>(queryString, new { styleName }, transaction: trans);
         }
+
+        public List<tbProductStyle> GetAllActiveForSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select [styleId]
+                                ,[styleName]
+                                ,[status]
+                                ,[createDate]
+                                ,[createBy]
+                                ,[updateDate]
+                                ,[updateBy]
+                                ,[isDeleted]
+                                from tbProductStyle
+                                where isDeleted = 0 and status = 1
+                                order by styleName";
+
+            return conn.Query<tbProductStyle>(queryString, transaction: trans).ToList();
+        }
     }
 }

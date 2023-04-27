@@ -39,9 +39,10 @@ namespace MBDesignApi.Controllers.Master
         [HttpGet]
         public JsonResult GetItemByItemId(int itemId)
         {
-            var data = _productService.GetProductItemByItemId(itemId);
+            var item = _productService.GetProductItemByItemId(itemId);
+            var itemOptions = _productService.GetOptionsByItemId(itemId);
 
-            return new JsonResult(data);
+            return new JsonResult(new { item = item, itemOptions = itemOptions });
         }
         #endregion GET
 

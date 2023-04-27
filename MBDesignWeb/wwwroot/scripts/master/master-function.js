@@ -16,6 +16,8 @@ let _product_item_action = 'add';
 let _action = 'add';
 let _id = 0;
 
+let _emp_action = 'add';
+
 let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
@@ -78,40 +80,40 @@ function clearForm(modal) {
             $('#form-createHoliday #select-holiday-day').val('').trigger('change');
             $('#form-createHoliday input[name="input-holiday-date"]').val('');
             $('#form-createHoliday input[name="input-holiday-name"]').val('');
-            $('#form-createHoliday #select-holiday-status').val(0).trigger('change');
+            $('#form-createHoliday #select-holiday-status').val(1).trigger('change');
             break;
         case "modal-createDepartment":
             $('#form-createDepartment input[name="input-department-code"]').val('');
             $('#form-createDepartment input[name="input-department-name"]').val('');
-            $('#form-createDepartment #select-department-status').val(0).trigger('change');
+            $('#form-createDepartment #select-department-status').val(1).trigger('change');
             break;
         case "modal-createPosition":
             $('#form-createPosition input[name="input-position-code"]').val('');
             $('#form-createPosition input[name="input-position-name"]').val('');
-            $('#form-createPosition #select-position-status').val(0).trigger('change');
+            $('#form-createPosition #select-position-status').val(1).trigger('change');
             break;
         case "modal-createProduct":
             $('#form-createProduct input[name="input-product-code"]').val('');
             $('#form-createProduct #select-product-type').val('').trigger('change');
             $('#form-createProduct input[name="input-product-name"]').val('');
             $('#form-createProduct input[name="input-product-price"]').val('');
-            $('#form-createProduct #select-product-status').val(0).trigger('change');
+            $('#form-createProduct #select-product-status').val(1).trigger('change');
             break;
         case "modal-createType":
             $('#form-createType input[name="input-type-code"]').val('');
             $('#form-createType input[name="input-type-name"]').val('');
             $('#form-createType input[name="input-type-price"]').val('');
-            $('#form-createType #select-type-status').val(0).trigger('change');
+            $('#form-createType #select-type-status').val(1).trigger('change');
             break;
         case "modal-createStyle":
             $('#form-createStyle input[name="input-style-code"]').val('');
             $('#form-createStyle input[name="input-style-name"]').val('');
-            $('#form-createStyle #select-style-status').val(0).trigger('change');
+            $('#form-createStyle #select-style-status').val(1).trigger('change');
             break;
         case "modal-createAccount":
             $('#form-createAccount #select-bank-name').val('').trigger('change');
             $('#form-createAccount input[name="input-account-name"]').val('');
-            $('#form-createAccount #select-account-status').val(0).trigger('change');
+            $('#form-createAccount #select-account-status').val(1).trigger('change');
             $('#form-createAccount #select-account-type').val('').trigger('change');
             $('#form-createAccount input[name="input-account-number"]').val('');
             break;
@@ -1063,12 +1065,23 @@ function DoAddOrUpdateItem(modal) {
 function callAddOrUpdateItem() {
     let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Product/AddItem` : `${app_settings.api_url}/api/Product/UpdateItem`;
 
+    var options = [];
+    $.each($(`#divOptions div[name="divRenderOptions"]`), (i, item) => {
+        let divId = $(item).attr('id');
+        let seq = (divId.split("-")[1])
+
+        var optionsName = $(`#${divId} #input-options-name-${seq}`).val();
+        var optionsPrice = $(`#${divId} #input-options-price-${seq}`).val();
+        options.push({ options: optionsName, optionsPrice: optionsPrice });
+    });
+
     var obj = {
         itemId: $('#input-product-code').val(),
         itemName: $('#input-product-name').val(),
         typeId: $('#form-createProduct #select-product-type').val(),
         itemPrice: $('#input-product-price').val(),
-        status: ($('#form-createProduct #select-product-status').val() == "1") ? true : false
+        status: ($('#form-createProduct #select-product-status').val() == "1") ? true : false,
+        options: options
     };
 
     $.ajax({
@@ -1219,7 +1232,8 @@ function callGetItemById(id, typeId) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Product/GetItemByItemId?itemId=${id}`,
         success: function (data) {
-            renderItemForm(data, typeId);
+            renderItemForm(data.item, typeId);
+            renderItemOptions(data.itemOptions);
         },
         error: function (err) {
 
@@ -1233,6 +1247,21 @@ function renderItemForm(data, typeId) {
     $('#form-createProduct input[name="input-product-name"]').val(data.itemName);
     $('#form-createProduct input[name="input-product-price"]').val(data.itemPrice);
     $('#form-createProduct #select-product-status').val(status).trigger('change');
+}
+function renderItemOptions(data) {
+    $('#divOptions').empty();
+    if (data.length == 0) {
+        renderNewOptions();
+    }
+    else {
+        data.forEach((v) => {
+            renderNewOptions();
+            let seq = $('div[name="divRenderOptions"]').length;
+            $(`#divRenderOptions-${seq} #input-options-name-${seq}`).val(v.options);
+            $(`#divRenderOptions-${seq} #input-options-price-${seq}`).val(v.optionsPrice);
+        });
+    }
+    
 }
 /* ProductItem */
 
@@ -1839,5 +1868,42 @@ function callSuccessAlert() {
         title: 'บันทึกข้อมูลสำเร็จ',
         showConfirmButton: false,
         timer: 1500
+    });
+}
+
+function renderNewOptions() {
+    let newSeq = $('div[name="divRenderOptions"]').length == 0 ? 1 : $('div[name="divRenderOptions"]').length + 1;
+    let removeBtn = newSeq > 1 ? `
+    <button type="button" class="btn btn-primary btn-circle-xs" data-seq="${newSeq}" onclick="removeRenderOptions(this)"><i class="fa fa-trash" aria-hidden="true"></i></button>` : ``;
+
+    let renderDiv = `<div class="row mb-2" name="divRenderOptions" id="divRenderOptions-${newSeq}">
+                            <div class="col-sm-7"><input class="form-control" type="text" id="input-options-name-${newSeq}" name="input-options-name-${newSeq}" /></div>
+                            <div class="col-sm-3"><input class="form-control" type="number" id="input-options-price-${newSeq}" name="input-options-price-${newSeq}" /></div>
+                            <div class="col-sm-2">
+                                <button type="button" class="btn btn-primary btn-circle-xs" title="เพิ่ม" data-seq="${newSeq}" onclick="addRenderOptions()"><i class="fa fa-plus"></i></button>
+                                ${removeBtn}
+                            </div>
+                        </div>`
+
+    $('#divOptions').append(renderDiv)
+}
+
+function addRenderOptions() {
+    renderNewOptions();
+}
+
+function removeRenderOptions(obj) {
+    Swal.fire({
+        title: 'คุณต้องการลบหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let currSeq = $(obj).data('seq');
+            $(`#divRenderOptions-${currSeq}`).remove();
+        }
     });
 }

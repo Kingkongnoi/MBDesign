@@ -13,7 +13,7 @@ namespace EntitiesMBDesign
         public int optionsId { get; set; }
         public string options { get; set; } = string.Empty;
         public decimal optionsPrice { get; set; }
-        public string itemId { get; set; } = string.Empty;
+        public int itemId { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;

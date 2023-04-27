@@ -1,4 +1,4 @@
-﻿<div class="container-fluid">
+﻿<div class="container-fluid" id="div-createNewCus">
 
     <div class="card mt-4">
         <div class="card-header">
@@ -11,90 +11,93 @@
         </div>
 
         <div class="card-body">
-            <div class="col-sm-12 mb-4 text-end">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="radioQuotationType" id="radioQuotationDraft" value="draft" checked>
-                    <label class="form-check-label">ใบเสนอราคาเบื้องต้น</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="radioQuotationType" id="radioQuotationComplete" value="complete">
-                    <label class="form-check-label">ใบเสนอราคาพร้อมทำสัญญา</label>
-                </div>
-            </div>
-
-            <div class="row d-sm-flex">
-
-                <div class="col-sm-6">
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">ชื่อลูกค้า</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-firstName" name="input-cus-firstName" />
-                        </div>
+            <form id="form-sale-new-customer">
+                <div class="col-sm-12 mb-4 text-end">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radioQuotationType" id="radioQuotationDraft" value="draft" checked>
+                        <label class="form-check-label">ใบเสนอราคาเบื้องต้น</label>
                     </div>
-
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">ชื่อเล่น</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-nickname" name="input-cus-nickname" />
-                        </div>
-                    </div>
-
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">LINE ID</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-lineId" name="input-cus-lineId" />
-                        </div>
-                    </div>
-
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">ที่อยู่<br />(สำหรับออกบิล)</label>
-                        <div class="col-sm-9">
-                            <textarea class="form-control" id="input-cus-bill-address" name="input-cus-bill-address" rows="3"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">โลเคชั่น (Map)</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-location-address" name="input-cus-location-address" />
-                        </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="radioQuotationType" id="radioQuotationComplete" value="complete">
+                        <label class="form-check-label">ใบเสนอราคาพร้อมทำสัญญา</label>
                     </div>
                 </div>
 
-                <div class="col-sm-6">
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">นามสกุล</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-lastName" name="input-cus-lastName" />
-                        </div>
-                    </div>
+                <div class="row d-sm-flex">
 
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">เบอร์โทรศัพท์</label>
-                        <div class="col-sm-9">
-                            <input class="form-control" type="text" id="input-cus-tel" name="input-cus-tel" />
+                    <div class="col-sm-6">
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">ชื่อลูกค้า<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-firstName" name="input-cus-firstName" />
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">วันที่พร้อมติดตั้ง</label>
-                        <div class="col-sm-9">
-                            <div class="input-group">
-                                <input type="date" class="form-control" id="input-cus-install-date" name="input-cus-install-date" />
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">ชื่อเล่น</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-nickname" name="input-cus-nickname" />
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">LINE ID</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-lineId" name="input-cus-lineId" />
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">ที่อยู่<br />(สำหรับออกบิล)<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="input-cus-bill-address" name="input-cus-bill-address" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">โลเคชั่น (Map)</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-location-address" name="input-cus-location-address" />
                             </div>
                         </div>
                     </div>
 
-                    <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">สถานที่ติดตั้ง</label>
-                        <div class="col-sm-9">
-                            <textarea class="form-control" id="input-cus-install-address" name="input-cus-install-address" rows="3"></textarea>
+                    <div class="col-sm-6">
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">นามสกุล<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-lastName" name="input-cus-lastName" />
+                            </div>
                         </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เบอร์โทรศัพท์<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-tel" name="input-cus-tel" />
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">วันที่พร้อมติดตั้ง<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="date" class="form-control" id="input-cus-install-date" name="input-cus-install-date" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">สถานที่ติดตั้ง</label>
+                            <div class="col-sm-9">
+                                <textarea class="form-control" id="input-cus-install-address" name="input-cus-install-address" rows="3"></textarea>
+                            </div>
+                        </div>
+
                     </div>
 
                 </div>
+            </form>
 
-            </div>
 
         </div>
 
