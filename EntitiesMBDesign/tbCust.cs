@@ -18,6 +18,7 @@ namespace EntitiesMBDesign
         public string custLineId { get; set; } = string.Empty;   
         public string custAddress { get; set; } = string.Empty;
         public string custLocation { get; set; } = string.Empty;
+        public string custInstallAddress { get; set; } = string.Empty;
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
@@ -36,6 +37,6 @@ namespace EntitiesMBDesign
         public string custLineId { get; set; } = string.Empty;
         public string custAddress { get; set; } = string.Empty;
         public string custLocation { get; set; } = string.Empty;
-
+        public string custInstallAddress { get; set; } = string.Empty;
     }
 }

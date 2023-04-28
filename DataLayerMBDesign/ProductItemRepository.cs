@@ -115,7 +115,7 @@ namespace DataLayerMBDesign
 
         public List<ProductItemView> GetProductItemSelect2(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select itemId, itemName, itemName + ' - ' + convert(varchar(50),itemPrice) fullItemPrice
+            string queryString = @"select itemId, itemName, itemName + ' - ' + convert(varchar(50),itemPrice) fullItemPrice, itemPrice
                                 from tbProductItem
                                 where isDeleted = 0 and status = 1
                                 group by itemId, itemName, itemPrice

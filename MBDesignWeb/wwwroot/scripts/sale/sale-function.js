@@ -1,11 +1,9 @@
 ﻿let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
-var _localStorage = new GlobalObject.localStorage();
-
 let _customer_data_action = 'add';
 
-function clearInputForm() {
+function clearInputFormCustomerData() {
     let newCusForm = 'form-sale-new-customer';
     $(`#${newCusForm} #radioQuotationDraft`).prop('checked', true);
     $(`#${newCusForm} #input-cus-firstName`).val('');
@@ -18,7 +16,6 @@ function clearInputForm() {
     $(`#${newCusForm} #input-cus-install-date`).val('');
     $(`#${newCusForm} #input-cus-install-address`).val('');
 }
-
 let validateInputFormCustomerData = function () {
     let newCusForm = 'form-sale-new-customer';
     if ($(`#${newCusForm} #input-cus-firstName`).val() == "") {
@@ -81,53 +78,11 @@ let validateInputFormCustomerData = function () {
         });
         return false;
     }
+    else {
+        return true;
+    }
 }
-function DoAddOrUpdateCustomerData() {
-    if (!validateInputFormCustomerData()) return;
 
-    Swal.fire({
-        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
-        showDenyButton: false,
-        showCancelButton: true,
-        confirmButtonText: 'บันทึก',
-        cancelButtonText: `ยกเลิก`,
-        confirmButtonColor: _modal_primary_color_code,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            callAddOrUpdateHoliday(_department_action);
-        }
-    });
-}
-function callAddOrUpdateCustomerData() {
-    let url = (_customer_data_action == 'add') ? `${app_settings.api_url}/api/Employee/AddHoliday` : `${app_settings.api_url}/api/Employee/UpdateHoliday`;
-
-    var obj = {
-        holidayId: $('#form-createHoliday #input-holiday-code').val(),
-        day: $('#form-createHoliday #select-holiday-day').val(),
-        holidayDate: $('#form-createHoliday #input-holiday-date').val(),
-        holiday: $('#form-createHoliday #input-holiday-name').val(),
-        status: ($('#form-createHoliday #select-holiday-status').val() == "1") ? true : false
-    };
-
-    $.ajax({
-        url: url,
-        type: 'POST',
-        contentType: 'application/json; charset=utf-8',
-        dataType: "json",
-        data: JSON.stringify(obj),
-        success: (res) => {
-            if (res.result) {
-                callSuccessAlert();
-                $(`#${_modal_holiday_name}`).modal('hide');
-                callSelect2SearchHolidayYear();
-                callGetHolidayList();
-            }
-        },
-        error: () => {
-        }
-    });
-
-}
 
 function callGetStyleSelect2(formName) {
     $.ajax({
@@ -148,7 +103,6 @@ function renderStyleSelect2(formName, data) {
     });
     $(`#${formName} #select-cus-product-style`).val('').trigger('change')
 }
-
 function callGetProductTypeSelect2(formName) {
     $.ajax({
         type: 'GET',
@@ -168,7 +122,6 @@ function renderProductTypeSelect2(formName, data) {
     });
     $(`#${formName} #select-cus-product-type`).val('').trigger('change')
 }
-
 function callGetProductItemSelect2(formName) {
     $.ajax({
         type: 'GET',
@@ -184,11 +137,10 @@ function renderProductItemSelect2(formName, data) {
     $(`#${formName} #select-cus-product-items`).empty();
     $(`#${formName} #select-cus-product-items`).append(`<option value="">กรุณาเลือก</option>`);
     data.forEach((v) => {
-        $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}">${v.fullItemPrice}</option>`);
+        $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
     });
     $(`#${formName} #select-cus-product-items`).val('').trigger('change')
 }
-
 function clearCreateStyleSelect2() {
     $('#form-search-holiday #select-search-holiday-year').empty();
     $('#form-search-holiday #select-search-holiday-year').append(`<option value="">ทั้งหมด</option>`);
@@ -197,7 +149,6 @@ function clearCreateStyleSelect2() {
     });
     $('#form-search-holiday #select-search-holiday-year').val('').trigger('change')
 }
-
 function renderCreateStyleDiv() {
     let newSeq = $('div[name="seqCreateStyle"]').length == 0 ? 1 : $('div[name="seqCreateStyle"]').length + 1;
     let removeBtn = newSeq > 1 ? `<div class="col-sm-6 text-end">
@@ -216,7 +167,7 @@ function renderCreateStyleDiv() {
 
                     <div class="col-sm-6">
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือกสไตล์</label>
+                            <label class="col-sm-3 col-form-label text-end">เลือกสไตล์<span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <select class="form-select" id="select-cus-product-style" data-seq="${newSeq}">
                                     <option></option>
@@ -234,7 +185,7 @@ function renderCreateStyleDiv() {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือก Items</label>
+                            <label class="col-sm-3 col-form-label text-end">เลือก Items<span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}">
                                     <option></option>
@@ -253,7 +204,7 @@ function renderCreateStyleDiv() {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่</label>
+                            <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่<span class="text-danger">*</span></label>
                             <div class="col-sm-9">
                                 <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}">
                                     <option></option>
@@ -262,7 +213,7 @@ function renderCreateStyleDiv() {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือก Options</label>
+                            <label class="col-sm-3 col-form-label text-end">เลือก Options<span class="text-danger">*</span></label>
                             <div class="col-sm-9" id="chkselectOptions-${newSeq}" data-seq="${newSeq}" style="overflow-y:auto;">
     
                             </div>
@@ -272,46 +223,54 @@ function renderCreateStyleDiv() {
                     </div>
 
                 </div>
-            </form>
 
-
-            <div class="row">
+                <div class="row">
                 <div class="row col-sm-12 mb-2">
                     <label class="col-sm-3 col-form-label text-end">ขนาด</label>
                     <div class="row col-sm-9">
                         <div class="col-sm-4">
                             <label class="col-sm-3 col-form-label">ความยาว</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-length" data-seq="${newSeq}" />
+                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
                                 </div>
                         </div>
                         <div class="col-sm-4">
                                 <label class="col-sm-3 col-form-label">ความลึก</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-depth" data-seq="${newSeq}" />
+                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
                                 </div>
                         </div>
                         <div class="col-sm-4">
                           <label class="col-sm-3 col-form-label">ความสูง</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-height" data-seq="${newSeq}" />
+                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
                                 </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="row col-sm-12 mb-2">
-                <div class="row col-sm-3"></div>
-                <div class="row col-sm-9">
-                    <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
-                                <label class="form-check-label">
-                                ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
-                                </label>
+                    <label class="col-sm-3 col-form-label text-end"></label>
+                    <div class="row col-sm-9">
+                        <div class="col-sm-12">
+                            <label class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                     <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                            <label class="form-check-label">
+                                            ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
+                                            </label>
+                                    </div>
+                                </div>
                         </div>
+                        
+                    </div>
                 </div>
-                    
-                </div>
+
             </div>
+
+            </form>
+
         </div>
     </div>`
 
@@ -323,7 +282,6 @@ function renderCreateStyleDiv() {
     callGetProductTypeSelect2(formName);
     callGetProductItemSelect2(formName);
 }
-
 function removeRenderStyleWithSeq(obj) {
     Swal.fire({
         title: 'คุณต้องการลบหรือไม่?',
@@ -339,7 +297,6 @@ function removeRenderStyleWithSeq(obj) {
         }
     });
 }
-
 function callGetProductItemOptions(obj) {
     let currSeq = $(obj).data('seq');
     let formName = `formCreateStyle-${currSeq}`;
@@ -362,12 +319,342 @@ function renderCheckboxOptions(formName, seq, data) {
 
     data.forEach((v) => {
         renderChk += `<div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="" id="${seq}-${v.optionsId}">
+                            <input class="form-check-input" type="checkbox" value="" id="${seq}-${v.optionsId}" name="${v.options}" price="${v.optionsPrice}">
                             <label class="form-check-label">
-                            ${v.options}
+                            ${v.options} - ${v.optionsPrice}
                             </label>
                         </div>`;
     });
 
     $(`#${formName} #chkselectOptions-${seq}`).append(renderChk);
+}
+
+var _bank_account = [];
+function callGetActiveBankAccount() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetAllActiveBankAccount`,
+        success: function (data) {
+            _bank_account = data;
+            displayBankAccount('personal');
+        },
+        error: function (err) {
+        }
+    });
+}
+function displayBankAccount(accountType) {
+    $('#divCalculatePrice #displayAccountDetail').empty();
+
+    var acc = _bank_account.filter(v => { return v.accountType == accountType });
+    let bank = (acc.length == 0) ? "" : acc[0].bank;
+    let accountName = (acc.length == 0) ? "" : acc[0].accountName;
+    let accountNumber = (acc.length == 0) ? "" : acc[0].accountNumber;
+
+    let render = `<span>
+                    ${bank}<br />
+                    ชื่อบัญชี ${accountName}<br />
+                    เลขบัญชี ${accountNumber}<br />
+                </span>`;
+
+    $('#divCalculatePrice #displayAccountDetail').append(render)
+}
+
+var _style_list = [];
+function callGetItemOptions() {
+    $.each($(`#createStyle #divCreateStyle div[name="seqCreateStyle"]`), (i, item) => {
+        let divId = $(item).attr('id');
+        let seq = (divId.split("-")[1])
+
+        let calStyle = $(`#${divId} #select-cus-product-style`).val();
+        let calFloor = $(`#${divId} #input-cus-product-floor`).val();
+        let calZone = $(`#${divId} #input-cus-product-zone`).val();
+        let calType = $(`#${divId} #select-cus-product-type`).val();
+        let calItems = $(`#${divId} #select-cus-product-items`).val();
+        let calItemsPrice = $(`#${divId} #select-cus-product-items option:selected`).attr('price');
+        let calItemsName = $(`#${divId} #select-cus-product-items option:selected`).attr('name');
+
+        var options = [];
+        $.each($(`#${divId} #chkselectOptions-${seq} input[type="checkbox"]`), (i, item) => {
+            let chkId = $(item).attr('id');
+            let optionsId = chkId.split("-")[1];
+            let optionsName = $(item).attr('name');
+            let optionsPrice = $(item).attr('price');
+
+            options.push({ optionsId: optionsId, optionsChecked: $(`#${chkId}`).prop('checked'), optionsName: optionsName, optionsPrice: optionsPrice });
+        });
+
+        let calLength = $(`#${divId} #input-cus-product-length`).val();
+        let calDepth = $(`#${divId} #input-cus-product-depth`).val();
+        let calHeight = $(`#${divId} #input-cus-product-height`).val();
+        let chkSpHeight = $(`#${divId} #chkSpecialHeight-${seq}`).prop('checked');
+
+        _style_list.push({
+            divId: divId,
+            divSeq: seq,
+            styleId: calStyle,
+            floor: calFloor,
+            zone: calZone,
+            typeId: calType,
+            itemId: calItems,
+            itemName: calItemsName,
+            itemPrice: calItemsPrice,
+            options: options,
+            orderLength: calLength,
+            orderDepth: calDepth,
+            orderHeight: calHeight,
+            spHeight: chkSpHeight
+        });
+    });
+}
+function callCalculateItemOptions() {
+    let render = "";
+    _style_list.forEach((v) => {
+        let itemName = v.itemName;
+        let itemPrice = v.itemPrice;
+
+        var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
+        activeOptions.forEach((o) => { itemName += ` ${o.optionsName}`; itemPrice = parseFloat(itemPrice) + parseFloat(o.optionsPrice) });
+
+        render += `<div class="row" id="cal-${v.divId}">
+                            <div class="col-sm-8">
+                            <input class="form-control mb-2" type="text" id="input-cal-itemOptions" name="input-cal-itemOptions" value="${itemName}" disabled/>
+                            </div>
+                        <div class="col-sm-2">
+                            <input class="form-control mb-2" type="text" id="input-cal-itemPrice" name="input-cal-itemPrice" value="${itemPrice}" disabled/>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.seq} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
+                        </div>
+                        </div>`
+    });
+
+    $('#divCalculatePrice #divCalItemOptions').append(render);
+}
+
+function callSaveAndCreateQuotation() {
+    Swal.fire({
+        title: 'คุณต้องการบันทึกใบเสนอราคาหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            saveCusData();
+        }
+    });
+}
+function saveCusData(action = 'add') {
+    //customer data
+    let newCusForm = 'form-sale-new-customer';
+    let quotationType = ($(`#${newCusForm} #radioQuotationDraft`).prop('checked') == true) ? "draft" : "complete" ;
+    let cusFirstName = $(`#${newCusForm} #input-cus-firstName`).val();
+    let cusNickName = $(`#${newCusForm} #input-cus-nickname`).val();
+    let cusLineId = $(`#${newCusForm} #input-cus-lineId`).val();
+    let cusBillAddress = $(`#${newCusForm} #input-cus-bill-address`).val();
+    let cusLocationAddress = $(`#${newCusForm} #input-cus-location-address`).val();
+    let cusLastName = $(`#${newCusForm} #input-cus-lastName`).val();
+    let cusTel = $(`#${newCusForm} #input-cus-tel`).val();
+    let cusInstallDate = $(`#${newCusForm} #input-cus-install-date`).val();
+    let cusInstallAddress = $(`#${newCusForm} #input-cus-install-address`).val();
+
+    //style
+    var items = [];
+    _style_list.forEach((v) => {
+        var options = [];
+
+        var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
+        activeOptions.forEach((o) => { options.push({ optionsId: o.optionsId }) });
+
+        items.push({
+            styleId: v.styleId,
+            floor: v.floor,
+            zone: v.zone, 
+            typeId: v.typeId,
+            itemId: v.itemId,
+            orderLength: v.orderLength,
+            orderDepth: v.orderDepth,
+            orderHeight: v.orderHeight,
+            options: options
+        });
+    });
+
+    //Calculate
+    let calFormId = 'form-createCalculatePrice';
+    let calNote = $(`#${calFormId} #input-cal-note`).val();
+    let subTotal = $(`#${calFormId} #input-cal-subTotal`).val();
+    let discount = $(`#${calFormId} #input-cal-discount`).val();
+    let vatPercentage = ($(`#${calFormId} #radioVat`).prop('checked') == true) ? 0.07 : 0;
+    let vat = $(`#${calFormId} #input-cal-vat`).val();
+    let grandTotal = $(`#${calFormId} #input-cal-grandTotal`).val();
+    let disposite = $(`#${calFormId} #input-cal-disposite`).val();
+    let accountType = ($(`#${calFormId} #radioBankPersonal`).prop('checked') == true) ? "บัญชีส่วนบุคคล" : "บัญชีบริษัท";
+
+    let url = (action == 'add') ? `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation` : `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation`;
+
+    var obj = {
+        custFirstName: cusFirstName,
+        custSurName: cusLastName,
+        custNickName: cusNickName,
+        custTel: cusTel,
+        custLineId: cusLineId,
+        custAddress: cusBillAddress,
+        custLocation: cusLocationAddress,
+        custInstallAddress: cusInstallAddress,
+        quotationType: quotationType,
+        installDate: cusInstallDate,
+        items: items,
+        orderNote: calNote,
+        subTotal: subTotal,
+        discount: discount,
+        vat: vat,
+        grandTotal: grandTotal,
+        disposite: disposite,
+        accountType: accountType,
+        vatPercentage: vatPercentage
+    };
+
+    var data = JSON.stringify(obj);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: (res) => {
+            if (res.data != "") {
+                callSuccessAlert();
+                //$(`#modal-createProduct`).modal('hide');
+                //callGetItemList();
+                renderQuotationNumber(data);
+            }
+        },
+        error: () => {
+        },
+        contentType: 'application/json',
+        dataType: "json",
+    });
+}
+
+function renderQuotationNumber(quotationNumber) {
+    $('#divUploadRef #form-uploadRef #input-quotation-number').val("");
+    $('#divUploadRef #form-uploadRef #input-quotation-number').val(quotationNumber);
+}
+
+function callSuccessAlert() {
+    Swal.fire({
+        position: 'center',
+        icon: 'success',
+        title: 'บันทึกข้อมูลสำเร็จ',
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+function callSelect2QuotationStatus(id, isSearch = false) {
+    $(id).empty();
+    if (isSearch) {
+        $(id).append(`<option value="">ทั้งหมด</option>`);
+    }
+    $(id).append(`<option value="อนุมัติ">อนุมัติ</option>`);
+    $(id).append(`<option value="ไม่อนุมัติ">ไม่อนุมัติ</option>`);
+}
+
+function clearSearchQuotationForm() {
+    let formId = '#form-search-quotation';
+
+    $(`${formId} #input-search-quotation-number`).val('');
+    $(`${formId} #input-search-quotation-cusName`).val('');
+    $(`${formId} #select-search-quotation-status`).val('').trigger('change');
+}
+function callGetQuotationList() {
+    let formId = '#form-search-quotation';
+    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-number`).val();
+    let quotationCusName = ($(`${formId} #input-search-quotation-cusName`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-cusName`).val();
+    let status = ($(`${formId} #select-search-quotation-status`).val() == '') ? "%%" : $(`${formId} #select-search-quotation-status`).val();
+
+    //let loaded = $('#tb-quotation-list');
+
+    //loaded.prepend(loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetQuotationList?quotationNumber=${quotationNumber}&quotationCusName=${quotationCusName}&status=${status}`,
+        success: function (data) {
+            renderGetQuotationList(data);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderGetQuotationList(data) {
+    $('#tb-quotation-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bfrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.orderId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'quotationNumber',
+                    className: "quotationNumber-details",
+                },
+                {
+                    targets: 1,
+                    data: 'fullName',
+                },
+                {
+                    targets: 2,
+                    data: 'createDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 3,
+                    data: 'createBy'
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'updateDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'updateBy'
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
 }

@@ -45,7 +45,7 @@ namespace DataLayerMBDesign
 
         public List<tbProductItemOptions> GetProductItemOptionsSelect2(int itemId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select optionsId, options
+            string queryString = @"select optionsId, options, optionsPrice
                                 from tbProductItemOptions 
                                 where itemId = @itemId and isDeleted = 0 and status = 1";
 

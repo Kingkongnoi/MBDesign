@@ -140,5 +140,26 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbBankAccount>(queryString, transaction: trans);
         }
+
+        public List<tbBankAccount> GetActiveBackAccountUsage(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT accountId
+                                ,accountName
+                                ,accountNumber
+                                ,case when [accountType] = N'บัญชีส่วนบุคคล' then 'personal' else 'company' end accountType
+                                ,bank
+                                ,countUsage
+                                ,status
+                                ,createDate
+                                ,createBy
+                                ,updateDate
+                                ,updateBy
+                                ,isDeleted
+                                FROM tbBankAccount
+                                where isDeleted = 0 
+                                and status = 1";
+
+            return conn.Query<tbBankAccount>(queryString, transaction: trans).ToList();
+        }
     }
 }

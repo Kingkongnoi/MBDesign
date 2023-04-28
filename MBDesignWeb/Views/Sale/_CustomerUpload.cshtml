@@ -1,4 +1,4 @@
-﻿<div class="container-fluid">
+﻿<div class="container-fluid" id="divUploadRef">
 
     <div class="card mt-4">
         <div class="card-header">
@@ -11,7 +11,47 @@
         </div>
 
         <div class="card-body">
+            <form id="form-uploadRef">
+                <div class="row">
+             
+                    <div class="row col-sm-12 mb-2">
+                        <label class="col-sm-2 col-form-label text-end">เลขที่ใบเสนอราคา</label>
+                        <div class="row col-sm-3">
+                            <input class="form-control mb-2" type="text" id="input-quotation-number" name="input-quotation-number" disabled />
+                        </div>
+                    </div>
 
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปแปลน</label>
+                        <div class="row col-sm-5">
+                            <input class="form-control" type="file" id="select-upload-plan" name="select-upload-plan" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูป Reference</label>
+                        <div class="row col-sm-5">
+                            <input class="form-control" type="file" id="select-upload-reference" name="select-upload-reference" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปสลิปมัดจำ</label>
+                        <div class="row col-sm-5">
+                            <input class="form-control" type="file" id="select-upload-disposite" name="select-upload-disposite" placeholder="" />
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปบัตรประชาชน</label>
+                        <div class="row col-sm-5">
+                            <input class="form-control" type="file" id="select-upload-idcard" name="select-upload-idcard" placeholder="" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
         </div>
 
     </div>
