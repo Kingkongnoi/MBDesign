@@ -11,8 +11,8 @@
     $('#div-createNewCus .btn-next-cus-style').on('click', function (e) {
         if (!validateInputFormCustomerData()) { return false; }
 
-        e.preventDefault();
-        $('.nav-pills .active').parent().next('li').find('a').trigger('click');
+        //e.preventDefault();
+        //$('.nav-pills .active').parent().next('li').find('a').trigger('click');
     });
 
     $('.btn-add-style').on('click', function () {
@@ -28,18 +28,18 @@
         callSaveAndCreateQuotation();
     });
 
-    $("#saleMenu li > a").on("click", function (e) {
-        let val = $(this).text();
+    //$("#saleMenu li > a").on("click", function (e) {
+    //    let val = $(this).text();
         
-        if (val == "รายละเอียดสไตล์และชิ้นงาน") {
-            if (!validateInputFormCustomerData())
-            {
-                var href = "#nav-sale-empData-tab";
-                e.preventDefault();
-                $(`#saleMenu li > a[href="${href}"]`).trigger('click');
-            }
-        }
-    });
+    //    if (val == "รายละเอียดสไตล์และชิ้นงาน") {
+    //        if (!validateInputFormCustomerData())
+    //        {
+    //            var href = "#nav-sale-empData-tab";
+    //            e.preventDefault();
+    //            $(`#saleMenu li > a[href="${href}"]`).trigger('click');
+    //        }
+    //    }
+    //});
 
     $('#form-search-quotation .btn-clear-search-quotation').on('click', function () {
         clearSearchQuotationForm();
