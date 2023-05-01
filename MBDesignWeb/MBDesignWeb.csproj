@@ -18,4 +18,36 @@
     <Folder Include="wwwroot\lib\datetimepicker\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\lib\axios\axios.min.js" />
+    <None Include="wwwroot\lib\cdn\buttons.flash.min.js" />
+    <None Include="wwwroot\lib\cdn\buttons.html5.min.js" />
+    <None Include="wwwroot\lib\cdn\buttons.print.min.js" />
+    <None Include="wwwroot\lib\cdn\DataTables-1.10.16\images\0_Sorting icons.psd" />
+    <None Include="wwwroot\lib\cdn\DataTables-1.10.16\images\Sorting icons.psd" />
+    <None Include="wwwroot\lib\cdn\DataTables-1.10.16\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\lib\cdn\DataTables-1.10.16\js\datatables.bootstrapPagination.js" />
+    <None Include="wwwroot\lib\cdn\DataTables-1.10.16\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\lib\cdn\dataTables.bootstrap.min.js" />
+    <None Include="wwwroot\lib\cdn\dataTables.buttons.min.js" />
+    <None Include="wwwroot\lib\cdn\datatables.min.js" />
+    <None Include="wwwroot\lib\cdn\jquery.dataTables.min.js" />
+    <None Include="wwwroot\lib\cdn\jszip.min.js" />
+    <None Include="wwwroot\lib\cdn\pdfmake.min.js" />
+    <None Include="wwwroot\lib\cdn\vfs_fonts.js" />
+    <None Include="wwwroot\lib\datatables\media\images\0_Sorting icons.psd" />
+    <None Include="wwwroot\lib\datatables\media\images\Sorting icons.psd" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.bootstrap.js" />
+    <None Include="wwwroot\lib\datatables\media\js\datatables.bootstrapPagination.js" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.buttons.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.fixedColumns.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.responsive.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.rowReorder.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\dataTables.select.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\jquery.dataTables.min.js" />
+    <None Include="wwwroot\lib\datatables\media\js\responsive.bootstrap.min.js" />
+    <None Include="wwwroot\lib\select2\select2.full.min.js" />
+    <None Include="wwwroot\lib\select2\select2.min.js" />
+  </ItemGroup>
+
 </Project>

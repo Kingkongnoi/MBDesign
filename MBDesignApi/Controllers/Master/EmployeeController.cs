@@ -67,6 +67,13 @@ namespace MBDesignApi.Controllers.Master
             var data = _employeeService.GetAllActivePositionSelect2();
             return new JsonResult(data);
         }
+        [HttpGet]
+        public JsonResult GetRoleSelect2()
+        {
+            var data = _employeeService.GetAllActiveRoleSelect2();
+            return new JsonResult(data);
+        }
+
         #endregion GET
 
         #region POST

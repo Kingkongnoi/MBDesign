@@ -106,5 +106,15 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbRole>(queryString, new { roleName }, transaction: trans);
         }
+
+        public List<tbRole> GetAllActiveSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select roleId, name
+                                from tbRole
+                                where isDeleted = 0 and status = 1
+                                order by name";
+
+            return conn.Query<tbRole>(queryString, transaction: trans).ToList();
+        }
     }
 }

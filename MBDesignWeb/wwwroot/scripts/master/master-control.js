@@ -44,9 +44,12 @@
 
     renderNewOptions("modal-createProduct");
 
+    //$('#states').select2();
+
     callSelect2EmpDepartment();
     callSelect2EmpPosition();
     callSelect2EmpSalaryType();
+    callSelect2EmpRole();
     callGetEmployeeList();
 
     /* Begin Employee */
@@ -75,11 +78,11 @@
     });
 
     $('#form-search-employee .btn-clear-search-emp-data').on('click', function () {
+        clearSearchForm("employee");
         callGetEmployeeList();
     });
 
     $('#form-search-employee .btn-search-emp-data').on('click', function () {
-        clearSearchForm("employee");
         callGetEmployeeList();
     });
 

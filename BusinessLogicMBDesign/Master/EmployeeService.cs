@@ -20,6 +20,7 @@ namespace BusinessLogicMBDesign.Master
         private readonly RoleRepository _roleRepository;
         private readonly MenuRepository _menuRepository;
         private readonly RoleMenuRepository _roleMenuRepository;
+        private readonly RoleEmpDataRepository _roleEmpDataRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -33,6 +34,7 @@ namespace BusinessLogicMBDesign.Master
             _roleRepository = new RoleRepository(); 
             _menuRepository = new MenuRepository();
             _roleMenuRepository = new RoleMenuRepository();
+            _roleEmpDataRepository = new RoleEmpDataRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -101,6 +103,17 @@ namespace BusinessLogicMBDesign.Master
                 return _positionRepository.GetAllActiveSelect2(conn);
             }
         }
+
+        public List<tbRole> GetAllActiveRoleSelect2()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _roleRepository.GetAllActiveSelect2(conn);
+            }
+        }
+
         public int? AddEmployee(EmpDataModel model)
         {
             int? added = 0;
@@ -124,10 +137,23 @@ namespace BusinessLogicMBDesign.Master
                         status = model.status,
                         hiringDate = model.hiringDate,
                         signatureFileName = model.signatureFileName,
+                        timeStampType = model.timeStampType,
                         createDate = DateTime.UtcNow,
                         createBy = "MB9999"
                     };
+
                     added = _empDataRepository.Add(addedObject, conn, transaction);
+
+                    var addedRoleEmp = new tbRoleEmpData
+                    {
+                        roleId = model.roleId,
+                        empId = added.Value,
+                        status = model.status,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999"
+                    };
+
+                    int? addedMnuEmp = _roleEmpDataRepository.Add(addedRoleEmp, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -164,10 +190,46 @@ namespace BusinessLogicMBDesign.Master
                         status = model.status,
                         hiringDate = model.hiringDate,
                         signatureFileName = model.signatureFileName,
+                        timeStampType = model.timeStampType,
                         updateDate = DateTime.UtcNow,
                         updateBy = "MB9999"
                     };
+
                     updated = _empDataRepository.Update(updatedObject, conn, transaction);
+
+                    var empExists = _empDataRepository.GetFirstByEmpCode(model.empId, conn, transaction);
+                    int empId = (empExists != null) ? empExists.id : 0;
+
+                    var empRole = _roleEmpDataRepository.GetFirstByEmpId(model.id, conn, transaction);
+                    int roleEmpDataId = (empRole != null) ? empRole.roleEmpDataId : 0;
+
+                    if(roleEmpDataId == 0)
+                    {
+                        var addedRoleEmp = new tbRoleEmpData
+                        {
+                            roleId = model.roleId,
+                            empId = empId,
+                            status = model.status,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999"
+                        };
+
+                        int? addedMnuEmp = _roleEmpDataRepository.Add(addedRoleEmp, conn, transaction);
+                    }
+                    else
+                    {
+                        var updateRoleEmp = new tbRoleEmpData
+                        {
+                            roleEmpDataId = roleEmpDataId,
+                            roleId = model.roleId,
+                            empId = empId,
+                            status = model.status,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = "MB9999"
+                        };
+
+                        int? updateMnuEmp = _roleEmpDataRepository.Update(updateRoleEmp, conn, transaction);
+                    }
 
                     transaction.Commit();
                 }

@@ -31,11 +31,11 @@ namespace DataLayerMBDesign
                                 updateDate = @updateDate,
                                 updateBy = @updateBy,
                                 status = @status
-                                where isDeleted = 0 and id = @id
+                                where isDeleted = 0 and empCode = @empCode
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.empFirstName, obj.empLastName, obj.departmentId, obj.positionId, obj.salaryType, 
-                obj.salary, obj.hiringDate, obj.signatureFileName, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.id }, transaction: trans);
+                obj.salary, obj.hiringDate, obj.signatureFileName, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.empCode }, transaction: trans);
         }
 
         public List<EmpDataView> GetAll(string empId, string empName, string departmentId, string positionId, string status, SqlConnection conn, SqlTransaction? trans = null)
@@ -94,13 +94,22 @@ namespace DataLayerMBDesign
 
         public EmpDataView GetFirstById(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select top 1 select a.id, a.empCode, a.empFirstName + ' ' + a.empLastName fullName, a.departmentId, b.departmentName, a.positionId, c.positionName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status, 
-                                a.hiringDate, a.signatureFileName, a.timeStampType, a.salaryType, a.salary
+            string queryString = @"select top 1 a.id, a.empCode, a.empFirstName + ' ' + a.empLastName fullName, a.empFirstName, a.empLastName, a.departmentId, b.departmentName, a.positionId, c.positionName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status, 
+                                a.hiringDate, a.signatureFileName, a.timeStampType, a.salaryType, a.salary, isnull((select top 1 roleId from tbRoleEmpData where empId = a.id and isDeleted = 0 and status = 1),0) roleId
                                 from tbEmpData a inner join tbDepartment b on a.departmentId = b.departmentId
                                 inner join tbPosition c on a.positionId = c.positionId
                                 where a.isDeleted = 0 and id=@id";
 
             return conn.QueryFirstOrDefault<EmpDataView>(queryString, new { id }, transaction: trans);
+        }
+
+        public EmpDataView GetFirstByEmpCode(string empCode, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select top 1 a.*
+                                from tbEmpData a 
+                                where a.isDeleted = 0 and a.empCode=@empCode";
+
+            return conn.QueryFirstOrDefault<EmpDataView>(queryString, new { empCode }, transaction: trans);
         }
     }
 }

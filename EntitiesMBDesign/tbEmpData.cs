@@ -35,6 +35,7 @@ namespace EntitiesMBDesign
         public string fullName { get; set; } = string.Empty;
         public string departmentName { get; set; } = string.Empty;
         public string positionName { get; set; } = string.Empty;
+        public int roleId { get; set; }
     }
 
     public class EmpDataModel
@@ -44,12 +45,13 @@ namespace EntitiesMBDesign
         public string empFirstName { get; set; } = string.Empty;
         public string empLastName { get; set; } = string.Empty;
         public int departmentId { get; set; }
-        public int positionId { get; }
+        public int positionId { get; set; }
         public string salaryType { get; set; } = string.Empty;
         public decimal salary { get; set; }
         public DateTime hiringDate { get; set; }
         public string signatureFileName { get; set; } = string.Empty;
         public bool timeStampType { get; set; } = true;
         public bool status { get; set; } = true;
+        public int roleId { get; set; }
     }
 }

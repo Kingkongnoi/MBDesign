@@ -99,7 +99,7 @@ function clearForm(modal) {
             $(`${empFormId} #select-emp-status`).val(1).trigger('change');
             $(`${empFormId} input[name="input-start-date"]`).val('');
             $(`${empFormId} input[name="select-emp-signature"]`).val('');
-            $(`${empFormId} #radioEmpInputCard`).prop('checked');
+            $(`${empFormId} #radioEmpInputCard`).prop('checked', true);
             break;
         case "modal-createRole" || "modal-viewRole":
             let roleFormId = '#form-createRole';
@@ -548,7 +548,7 @@ let validateInput = function (modal) {
             }
             else if ($(`${empFormId} input[name="input-emp-salary"]`).val() == "" || $(`${empFormId} input[name="input-emp-salary"]`).val() == "0") {
                 Swal.fire({
-                    text: "กรุณากรอกgเงินเดือน",
+                    text: "กรุณากรอกเงินเดือน",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
@@ -672,7 +672,7 @@ function callAddOrUpdateEmployee() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
-                $(`#$modal-createEmployee`).modal('hide');
+                $(`#modal-createEmployee`).modal('hide');
                 callGetEmployeeList();
             }
         },
@@ -726,7 +726,7 @@ function renderGetEmployeeList(data) {
             columnDefs: [
                 {
                     targets: 0,
-                    data: 'empId',
+                    data: 'empCode',
                     className: "emp-details",
                 },
                 {
@@ -798,8 +798,8 @@ function callGetEmployeeById(id) {
 function renderEmployeeForm(data) {
     let status = (data.status) ? 1 : 0;
     let empFormId = '#form-createEmployee';
-    $(`${empFormId} input[name="input-emp-code"]`).val(data.empId);
-    //$(`${empFormId} #select-emp-role`).val('').trigger('change');
+    $(`${empFormId} input[name="input-emp-code"]`).val(data.empCode);
+    $(`${empFormId} #select-emp-role`).val(data.roleId).trigger('change');
     $(`${empFormId} input[name="input-emp-firstName"]`).val(data.empFirstName);
     $(`${empFormId} input[name="input-emp-lastName"]`).val(data.empLastName);
     $(`${empFormId} #select-emp-department`).val(data.departmentId).trigger('change');
@@ -807,11 +807,11 @@ function renderEmployeeForm(data) {
     $(`${empFormId} #select-salary-type`).val(data.salaryType).trigger('change');
     $(`${empFormId} input[name="input-emp-salary"]`).val(data.salary);
     $(`${empFormId} #select-emp-status`).val(status).trigger('change');
-    $(`${empFormId} input[name="input-start-date"]`).val(data.hiringDate);
+    $(`${empFormId} input[name="input-start-date"]`).val(convertDateTimeFormat(data.hiringDate, 'YYYY-MM-DD'));
     //$(`${empFormId} input[name="select-emp-signature"]`).val('');
     if (data.timeStampType == true) {
-        $(`${empFormId} #radioEmpInputCard`).prop('checked');
-    } else { $(`${empFormId} #radioEmpNoInputCard`).prop('checked'); }
+        $(`${empFormId} #radioEmpInputCard`).prop('checked', true);
+    } else { $(`${empFormId} #radioEmpNoInputCard`).prop('checked', true); }
 }
 function callSelect2EmpDepartment() {
     $.ajax({
@@ -878,6 +878,42 @@ function callGetLastestRoleId() {
             $(`#form-createEmployee input[name="input-emp-code"]`).val(data);
         },
         error: function (err) {
+        }
+    });
+}
+function callSelect2EmpRole() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Employee/GetRoleSelect2`,
+        success: function (data) {
+            renderSelect2Role(data);
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderSelect2Role(data) {
+    let formName = '#form-createEmployee';
+    let select2Name = '#select-emp-role';
+    let select2FirstVal = 'กรุณาเลือก';
+
+    $(`${formName} ${select2Name}`).empty();
+    $(`${formName} ${select2Name}`).append(`<option value="">${select2FirstVal}</option>`);
+
+    data.forEach((v) => {
+        $(`${formName} ${select2Name}`).append(`<option value="${v.roleId}">${v.name}</option>`);
+    });
+}
+function generateEmpId() {
+    let url = `${app_settings.api_url}/api/Employee/GenerateEmpId`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: (res) => {
+            $('#form-createEmployee input[name="input-emp-code"]').val(res);
+        },
+        error: () => {
         }
     });
 }

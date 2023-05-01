@@ -29,19 +29,104 @@
         color: #000;
         vertical-align: middle !important;
     }
+
+    .select2-container {
+        min-width: 400px;
+    }
+
+    .select2-results__option {
+        padding-right: 20px;
+        vertical-align: middle;
+    }
+
+        .select2-results__option:before {
+            content: "";
+            display: inline-block;
+            position: relative;
+            height: 20px;
+            width: 20px;
+            border: 2px solid #e9e9e9;
+            border-radius: 4px;
+            background-color: #fff;
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+
+        .select2-results__option[aria-selected=true]:before {
+            font-family: fontAwesome;
+            content: "\f00c";
+            color: #fff;
+            background-color: #f77750;
+            border: 0;
+            display: inline-block;
+            padding-left: 3px;
+        }
+
+    .select2-container--default .select2-results__option[aria-selected=true] {
+        background-color: #fff;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #eaeaeb;
+        color: #272727;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        margin-bottom: 10px;
+    }
+
+    .select2-container--default.select2-container--open.select2-container--below .select2-selection--multiple {
+        border-radius: 4px;
+    }
+
+    .select2-container--default.select2-container--focus .select2-selection--multiple {
+        border-color: #f77750;
+        border-width: 2px;
+    }
+
+    .select2-container--default .select2-selection--multiple {
+        border-width: 2px;
+    }
+
+    .select2-container--open .select2-dropdown--below {
+        border-radius: 6px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+
+    .select2-selection .select2-selection--multiple:after {
+        content: 'hhghgh';
+    }
+    /* select with icons badges single*/
+    .select-icon .select2-selection__placeholder .badge {
+        display: none;
+    }
+
+    .select-icon .placeholder {
+        display: none;
+    }
+
+    .select-icon .select2-results__option:before,
+    .select-icon .select2-results__option[aria-selected=true]:before {
+        display: none !important;
+        /* content: "" !important; */
+    }
+
+    .select-icon .select2-search--dropdown {
+        display: none;
+    }
 </style>
 
 <div class="row">
     <div class="col-sm-12 mt-2">
         <nav>
             <div class="nav nav-tabs" id="nav-tab-master-emp" role="tablist">
-                <button class="nav-link active" id="nav-master-empData-tab" data-bs-toggle="tab" data-bs-target="#nav-master-empData" type="button" role="tab" aria-controls="nav-master-empData" aria-selected="true">ข้อมูลพนักงาน</button>
-                <button class="nav-link" id="nav-master-role-tab" data-bs-toggle="tab" data-bs-target="#nav-master-role" type="button" role="tab" aria-controls="nav-master-role" aria-selected="false">สิทธิ์การใช้งาน</button>
-                <button class="nav-link" id="nav-master-holiday-tab" data-bs-toggle="tab" data-bs-target="#nav-master-holiday" type="button" role="tab" aria-controls="nav-master-holiday" aria-selected="false">วันหยุดบริษัท</button>
-                <button class="nav-link" id="nav-master-department-tab" data-bs-toggle="tab" data-bs-target="#nav-master-department" type="button" role="tab" aria-controls="nav-master-department" aria-selected="false">แผนก</button>
-                <button class="nav-link" id="nav-master-position-tab" data-bs-toggle="tab" data-bs-target="#nav-master-position" type="button" role="tab" aria-controls="nav-master-position" aria-selected="false">ตำแหน่ง</button>
-                <button class="nav-link" id="nav-master-leave-tab" data-bs-toggle="tab" data-bs-target="#nav-master-leave" type="button" role="tab" aria-controls="nav-master-leave" aria-selected="false">การลางาน</button>
-                <button class="nav-link" id="nav-master-time-tab" data-bs-toggle="tab" data-bs-target="#nav-master-time" type="button" role="tab" aria-controls="nav-master-time" aria-selected="false">เวลาเข้า-ออกงาน</button>
+                <button class="nav-link active" id="nav-master-empData-tab" data-bs-toggle="tab" data-bs-target="#nav-master-empData" type="button" role="tab" aria-controls="nav-master-empData" aria-selected="true" style="margin-right:2px;">ข้อมูลพนักงาน</button>
+                <button class="nav-link" id="nav-master-role-tab" data-bs-toggle="tab" data-bs-target="#nav-master-role" type="button" role="tab" aria-controls="nav-master-role" aria-selected="false" style="margin-right:2px;">สิทธิ์การใช้งาน</button>
+                <button class="nav-link" id="nav-master-holiday-tab" data-bs-toggle="tab" data-bs-target="#nav-master-holiday" type="button" role="tab" aria-controls="nav-master-holiday" aria-selected="false" style="margin-right:2px;">วันหยุดบริษัท</button>
+                <button class="nav-link" id="nav-master-department-tab" data-bs-toggle="tab" data-bs-target="#nav-master-department" type="button" role="tab" aria-controls="nav-master-department" aria-selected="false" style="margin-right:2px;">แผนก</button>
+                <button class="nav-link" id="nav-master-position-tab" data-bs-toggle="tab" data-bs-target="#nav-master-position" type="button" role="tab" aria-controls="nav-master-position" aria-selected="false" style="margin-right:2px;">ตำแหน่ง</button>
+                <button class="nav-link" id="nav-master-leave-tab" data-bs-toggle="tab" data-bs-target="#nav-master-leave" type="button" role="tab" aria-controls="nav-master-leave" aria-selected="false" style="margin-right:2px;">การลางาน</button>
+                <button class="nav-link" id="nav-master-time-tab" data-bs-toggle="tab" data-bs-target="#nav-master-time" type="button" role="tab" aria-controls="nav-master-time" aria-selected="false" style="margin-right:2px;">เวลาเข้า-ออกงาน</button>
                 <button class="nav-link" id="nav-master-salary-tab" data-bs-toggle="tab" data-bs-target="#nav-master-salary" type="button" role="tab" aria-controls="nav-master-salary" aria-selected="false">เงินเดือนพนักงาน</button>
             </div>
         </nav>
@@ -369,7 +454,6 @@
                             <div class="col-sm-12 mb-2">
                                 <label class="control-label">บทบาท<span class="text-danger">*</span></label>
                                     <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role"></select>
-
                             </div>
                             <div class="col-sm-12 mb-2">
                                 <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
@@ -454,7 +538,7 @@
                             </div>
                             <div class="col-sm-12 mb-2">
                                 <label for="formFile" class="form-label">ลายเซ็นต์</label>
-                                <input class="form-control" type="file" id="select-emp-signature" name="select-emp-signature" placeholder="" />
+                                    <input class="form-control" type="file" id="select-emp-signature" name="select-emp-signature" placeholder="" disabled />
                                 <span class="text-primary">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
                             </div>
                         </div>
