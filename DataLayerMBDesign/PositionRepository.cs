@@ -107,5 +107,15 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbPosition>(queryString, new { positionName }, transaction: trans);
         }
+
+        public List<tbPosition> GetAllActiveSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select positionId, positionName
+                                from tbPosition
+                                where isDeleted = 0 and status = 1
+                                order by positionName";
+
+            return conn.Query<tbPosition>(queryString, transaction: trans).ToList();
+        }
     }
 }

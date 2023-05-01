@@ -11,11 +11,11 @@ namespace EntitiesMBDesign
     {
         [Key]
         public int id { get; set; }
-        public string empId { get; set; } = string.Empty;
+        public string empCode { get; set; } = string.Empty;
         public string empFirstName { get; set; } = string.Empty;
         public string empLastName { get; set; } = string.Empty;
         public int departmentId { get; set; }
-        public int positionId { get;}
+        public int positionId { get; set; }
         public string salaryType { get; set; } = string.Empty;
         public decimal salary { get; set;}
         public DateTime hiringDate { get; set; }
@@ -25,8 +25,31 @@ namespace EntitiesMBDesign
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
         public DateTime? updateDate { get; set; }
-        public string? updateby { get; set; }
+        public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
 
+    }
+
+    public class EmpDataView : tbEmpData
+    {
+        public string fullName { get; set; } = string.Empty;
+        public string departmentName { get; set; } = string.Empty;
+        public string positionName { get; set; } = string.Empty;
+    }
+
+    public class EmpDataModel
+    {
+        public int id { get; set; }
+        public string empId { get; set; } = string.Empty;
+        public string empFirstName { get; set; } = string.Empty;
+        public string empLastName { get; set; } = string.Empty;
+        public int departmentId { get; set; }
+        public int positionId { get; }
+        public string salaryType { get; set; } = string.Empty;
+        public decimal salary { get; set; }
+        public DateTime hiringDate { get; set; }
+        public string signatureFileName { get; set; } = string.Empty;
+        public bool timeStampType { get; set; } = true;
+        public bool status { get; set; } = true;
     }
 }

@@ -105,5 +105,15 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbDepartment>(queryString, new { departmentName }, transaction: trans);
         }
+
+        public List<tbDepartment> GetAllActiveSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select departmentId, departmentName
+                                from tbDepartment
+                                where isDeleted = 0 and status = 1
+                                order by departmentName";
+
+            return conn.Query<tbDepartment>(queryString, transaction: trans).ToList();
+        }
     }
 }

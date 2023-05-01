@@ -20,6 +20,204 @@ namespace MBDesignApi.Controllers.Master
             _employeeService =  new EmployeeService(_configuration);
         }
 
+        #region Employee
+        #region GET
+        [HttpGet]
+        public JsonResult GetLastestId()
+        {
+            var data = _employeeService.GetFirstLastestId();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetEmpList(string empId, string empName, string departmentId, string positionId, string status)
+        {
+            var data = _employeeService.GetEmpList(empId, empName, departmentId, positionId, status);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetEmpByEmpId(int id)
+        {
+            var data = _employeeService.GetEmpByEmpId(id);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GenerateEmpId()
+        {
+            var data = _employeeService.GenerateEmpId();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetDepartmentSelect2()
+        {
+            var data = _employeeService.GetAllActiveDepartmentSelect2();
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetPositionSelect2()
+        {
+            var data = _employeeService.GetAllActivePositionSelect2();
+            return new JsonResult(data);
+        }
+        #endregion GET
+
+        #region POST
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult AddEmployee([FromBody] EmpDataModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _employeeService.AddEmployee(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+            return new JsonResult(returnData);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult UpdateEmployee([FromBody] EmpDataModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _employeeService.UpdateEmployee(obj);
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+            return new JsonResult(returnData);
+        }
+        #endregion POST
+
+        #endregion Employee
+
+        #region Role
+        #region GET
+        [HttpGet]
+        public JsonResult GetLastestRoleId()
+        {
+            var data = _employeeService.GetFirstLastestRoleId();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetRoleList(string roleName, string status)
+        {
+            var data = _employeeService.GetRoleList(roleName, status);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetRoleByRoleId(int id)
+        {
+            var data = _employeeService.GetRoleByRoleId(id);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetMenuList(int id)
+        {
+            var data = _employeeService.GetMenuList(id);
+
+            return new JsonResult(data);
+        }
+        #endregion GET
+
+        #region POST
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult AddRole([FromBody] RoleModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _employeeService.AddRole(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+            return new JsonResult(returnData);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult UpdateRole([FromBody] RoleModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _employeeService.UpdateRole(obj);
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+            return new JsonResult(returnData);
+        }
+        #endregion POST
+
+        #endregion Role
+
         #region holiday
 
         #region GET

@@ -11,6 +11,7 @@
 
     callSelect2AccountType('#form-search-bankAccount #select-search-account-type', true);
     callSelect2AccountType('#form-createAccount #select-account-type', true);
+
     callSelect2Status('#form-createHoliday #select-holiday-status');
     callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
 
@@ -32,16 +33,28 @@
     callSelect2Status('#form-createAccount #select-account-status');
     callSelect2Status('#form-search-bankAccount #select-search-account-status', true);
 
+    callSelect2Status('#form-createEmployee #select-emp-status');
+    callSelect2Status('#form-search-employee #select-search-emp-status', true);
+
+    callSelect2Status('#form-createRole #select-role-status');
+    callSelect2Status('#form-search-role #select-search-role-status', true);
+
     callGetAccountList();
     callGetItemList();
 
     renderNewOptions("modal-createProduct");
+
+    callSelect2EmpDepartment();
+    callSelect2EmpPosition();
+    callSelect2EmpSalaryType();
+    callGetEmployeeList();
 
     /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {
         _emp_action = 'add'
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
+        generateEmpId();
     });
 
     $(document).on('click', '.btn-edit-employee', function () {
@@ -49,41 +62,123 @@
         $(`#modal-createEmployee`).modal('show');
         _emp_action = 'edit';
         clearForm('modal-createEmployee');
-        //callGetItemById($(this).data('id'), $(this).data('typeid'));
+        callGetEmployeeById($(this).data('id'));
     });
 
-    //$(`#modal-createProduct`).on('show.bs.modal', function () {
-    //    clearForm("modal-createProduct");
-    //    if (_product_item_action == 'add') { callGetLastestItemId(); }
-    //});
+    $(`#modal-createEmployee`).on('show.bs.modal', function () {
+        clearForm("modal-createEmployee");
+        if (_emp_action == 'add') { generateEmpId(); }
+    });
 
-    //$('.btn-modal-save-product').on('click', function () {
-    //    //DoAddOrUpdateItem("modal-createProduct");
-    //});
+    $('.btn-modal-save-emp').on('click', function () {
+        DoAddOrUpdateEmployee("modal-createEmployee");
+    });
 
-    //$('#form-search-product .btn-search-product').on('click', function () {
-    //    //callGetItemList();
-    //});
+    $('#form-search-employee .btn-clear-search-emp-data').on('click', function () {
+        callGetEmployeeList();
+    });
 
-    //$('#form-search-product .btn-clear-search-product').on('click', function () {
-    //    //clearSearchForm("item");
-    //    //callGetItemList();
-    //});
+    $('#form-search-employee .btn-search-emp-data').on('click', function () {
+        clearSearchForm("employee");
+        callGetEmployeeList();
+    });
 
-    //$('#tb-product-list').on('click', 'td.item-details', function () {
-    //    var tr = $(this).closest('tr');
+    $('#tb-employee-list').on('click', 'td.emp-details', function () {
+        var tr = $(this).closest('tr');
 
-    //    var id = tr.data('id');
-    //    $(`#modal-viewProduct`).modal('show');
-    //    _product_item_action = 'view';
-    //    clearForm('modal-createProduct');
-    //    //callGetItemById(id);
-    //});
-    ///* End Employee */
+        var id = tr.data('id');
+        $(`#modal-viewEmployee`).modal('show');
+        _emp_action = 'view';
+        clearForm('modal-viewEmployee');
+        callGetEmployeeById(id);
+    });
+    /* End Employee */
 
+    /* Begin Role */
     $('#nav-master-role .btn-add-role').on('click', function () {
+        _role_action = 'add'
+        $(`#modal-createRole #roleHeader`).text('เพิ่มบทบาท');
         $('#modal-createRole').modal('show');
+        callGetLastestRoleId();
+        callGetMenuList(0);
     });
+
+    $(document).on('click', '.btn-edit-role', function () {
+        $(`#modal-createRole #roleHeader`).text('แก้ไขข้อมูลบทบาท');
+        $(`#modal-createRole`).modal('show');
+        _role_action = 'edit';
+        clearForm('modal-createRole');
+        callGetRoleById($(this).data('id'));
+    });
+
+    $(`#modal-createRole`).on('show.bs.modal', function () {
+        clearForm("modal-createRole");
+        if (_role_action == 'add') { callGetLastestRoleId(); }
+    });
+
+    $('.btn-modal-save-role').on('click', function () {
+        DoAddOrUpdateRole("modal-createRole");
+    });
+
+    $('#form-search-role .btn-clear-search-role').on('click', function () {
+        clearSearchForm("role");
+        callGetRoleList();
+    });
+
+    $('#form-search-role .btn-search-role').on('click', function () {
+        callGetRoleList();
+    });
+
+    $('#tb-role-list').on('click', 'td.role-details', function () {
+        var tr = $(this).closest('tr');
+
+        var id = tr.data('id');
+        $(`#modal-viewRole`).modal('show');
+        _role_action = 'view';
+        clearForm('modal-createRole');
+        callGetRoleById(id);
+    });
+
+    $('#tb-menu-list tbody').on('change', 'input[type="checkbox"]', function () {
+        //console.log($(this));
+        let chkId = $(this).attr('id');
+
+        //let chkName = chkId.split('-')[0];
+        let menuId = chkId.split('-')[1];
+
+        let chkValue = $(this).val();
+
+        let chkMenuName = $(this).attr('menuname');
+        let chkParentMenu = $(this).attr('parentmenu');
+
+        if (chkValue == "all") {
+            $(`#chkAdd-${menuId}`).prop('checked', false);
+            $(`#chkEdit-${menuId}`).prop('checked', false);
+            $(`#chkApprove-${menuId}`).prop('checked', false);
+            $(`#chkView-${menuId}`).prop('checked', false);
+        }
+        else {
+            if ($(`#chkAll-${menuId}`).prop('checked') == true) {
+                $(`#chkAll-${menuId}`).prop('checked', false);
+            }
+        }
+
+        if (chkMenuName == 'ทั้งหมด') {
+            $(`#tb-menu-list tbody input[type="checkbox"]`).each(function () {
+                if ($(this).attr('menuname') != chkMenuName && $(this).attr('parentmenu') == chkParentMenu) {
+                    $(this).prop('checked', false);
+                }
+            });
+        }
+        else {
+            $(`#tb-menu-list tbody input[type="checkbox"]`).each(function () {
+                if ($(this).attr('menuname') == 'ทั้งหมด' && $(this).attr('parentmenu') == chkParentMenu) {
+                    $(this).prop('checked', false);
+                }
+            });
+        }
+    });
+    /* End Role */
 
     /* Begin Holiday */
     $('#nav-master-holiday .btn-add-holiday').on('click', function () {
@@ -396,21 +491,24 @@
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
-        if (target == "#nav-master-holiday") {
+        if (target == "#nav-master-empData") {
+            clearSearchForm("employee");
+            callGetEmployeeList();
+        }
+        else if (target == "#nav-master-role") {
+            clearSearchForm("role");
+            callGetRoleList();
+        }
+        else if (target == "#nav-master-holiday") {
             clearSearchForm("holiday");
-            //callSelect2SearchHolidayYear();
-            //callSelect2HolidayDay(true);
-            //callSelect2Status('#form-search-holiday #select-search-holiday-status', true);
             callGetHolidayList();
         }
         else if (target == "#nav-master-department") {
             clearSearchForm("department");
-            //callSelect2Status('#form-search-department #select-search-department-status', true);
             callGetDepartmentList();
         }
         else if (target == "#nav-master-position") {
             clearSearchForm("position");
-            //callSelect2Status('#form-search-position #select-search-position-status', true);
             callGetPositionList();
         }
         else if (target == "#nav-master-productData") {
