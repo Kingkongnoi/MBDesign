@@ -242,11 +242,12 @@ namespace BusinessLogicMBDesign.Sale
                 {
                     string type = (model.vatPercentage == 0) ? "N" : "";
                     int lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByType(type, conn, transaction);
-                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen;
+                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
 
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
+                    string orderStatus = (model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
                     string quotation = this.GenerateQuotaion(generateNumber, type);
 
                     var addedObject = new tbCustOrder
@@ -266,7 +267,8 @@ namespace BusinessLogicMBDesign.Sale
                         quotationNumberType = type,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = "MB9999",
+                        orderStatus = orderStatus,
                     };
 
                     added = _custOrderRepository.Add(addedObject, conn, transaction);
@@ -368,7 +370,7 @@ namespace BusinessLogicMBDesign.Sale
 
                 try
                 {
-                    var exists = _custOrderRepository.GetFirstByOrderId(orderId, conn);
+                    var exists = _custOrderRepository.GetFirstByOrderIdSortDesc(orderId, conn);
                     if(exists != null)
                     {
                         result = exists.quotationNumber;

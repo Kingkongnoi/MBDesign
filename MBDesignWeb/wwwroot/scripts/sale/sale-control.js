@@ -8,20 +8,30 @@
     clearSearchQuotationForm();
     callGetQuotationList();
 
-    $('#div-createNewCus .btn-next-cus-style').on('click', function (e) {
-        if (!validateInputFormCustomerData()) { return false; }
+    $('#div-createNewCus .btn-next-cus-style').on('click', function () {
+        if (!validateInputFormCustomerData()) { return; }
 
-        //e.preventDefault();
-        //$('.nav-pills .active').parent().next('li').find('a').trigger('click');
+        $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
     });
 
     $('.btn-add-style').on('click', function () {
         renderCreateStyleDiv();
     });
 
-    $('.btn-next-cus-cal-price').on('click', function () {
+    $('#createStyle .btn-previous-cus-new-data').on('click', function () {
+        $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
+    });
+
+    $('#createStyle .btn-next-cus-cal-price').on('click', function () {
+        if (!validateInputFormStyle()) { return; }
+
         callGetItemOptions();
         callCalculateItemOptions();
+        $('.nav-pills a[href="#nav-sale-calculate-tab"]').tab('show');
+    });
+
+    $('#divCalculatePrice .btn-previous-cus-cal-price').on('click', function () {
+        $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
     });
 
     $('#divCalculatePrice .btn-save-and-create-quotation').on('click', function () {
@@ -30,16 +40,51 @@
 
     //$("#saleMenu li > a").on("click", function (e) {
     //    let val = $(this).text();
-        
+
     //    if (val == "รายละเอียดสไตล์และชิ้นงาน") {
-    //        if (!validateInputFormCustomerData())
-    //        {
-    //            var href = "#nav-sale-empData-tab";
-    //            e.preventDefault();
-    //            $(`#saleMenu li > a[href="${href}"]`).trigger('click');
+    //        if (validateInputFormCustomerData()) {
+    //            $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
+    //        }
+    //        else {
+    //            $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
+    //        }
+    //    }
+    //    else if (val == "การคำนวณราคา") {
+    //        console.log(validateInputFormStyle());
+    //        if (validateInputFormStyle()) {
+    //            //callGetItemOptions();
+    //            //callCalculateItemOptions();
+    //            $('.nav-pills a[href="#nav-sale-calculate-tab"]').tab('show');
+    //        }
+    //        else {
+    //            $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
     //        }
     //    }
     //});
+
+    $('#form-createCalculatePrice input[name="input-cal-note-price"]').on('blur', function () {
+        calculateSubAndGrandTotal();
+    });
+
+    $('#form-createCalculatePrice input[name="input-cal-note-price"]').on("keydown", function (event) {
+        if (event.which == 13) {
+            calculateSubAndGrandTotal();
+        }
+    });
+
+    $('#form-createCalculatePrice input[name="input-cal-discount"]').on('blur', function () {
+        calculateSubAndGrandTotal();
+    });
+
+    $('#form-createCalculatePrice input[name="input-cal-discount"]').on("keydown", function (event) {
+        if (event.which == 13) {
+            calculateSubAndGrandTotal();
+        }
+    });
+
+    $('#form-createCalculatePrice .btn-cal-deposit-amount').on('click', function () {
+        calculateDisposite();
+    });
 
     $('#form-search-quotation .btn-clear-search-quotation').on('click', function () {
         clearSearchQuotationForm();

@@ -28,18 +28,18 @@
                                     <input class="form-control mb-2" type="text" id="input-cal-note" name="input-cal-note" />
                                 </div>
                                 <div class="col-sm-2">
-                                    <input class="form-control mb-2" type="text" id="input-cal-note-price" name="input-cal-note-price" />
+                                    <input class="form-control mb-2" type="number" id="input-cal-note-price" name="input-cal-note-price" />
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">ราคารวม (Sub. Total)</label>
+                        <label class="col-sm-3 col-form-label text-end">ราคารวม (Sub. Total) <span class="text-danger">*</span></label>
                         <div class="row col-sm-9">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control mb-2" type="number" id="input-cal-subTotal" name="input-cal-subTotal" />
+                                    <input class="form-control mb-2" type="number" id="input-cal-subTotal" name="input-cal-subTotal" disabled />
                                 </div>
                                 <label class="col-sm-2 col-form-label">บาท</label>
                             </div>
@@ -61,11 +61,11 @@
                     <div class="row col-sm-12 mb-2">
                         <div class="col-sm-3 text-end">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radioVatType" id="radioVat" value="vat">
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioVat" onchange="calculateVat('vat');" value="vat">
                                 <label class="form-check-label">VAT 7%</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radioVatType" id="radioNonVat" value="nonvat" checked>
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioNonVat" onchange="calculateVat('nonvat');" value="nonvat" checked>
                                 <label class="form-check-label">Non VAT</label>
                             </div>
                         </div>
@@ -80,11 +80,11 @@
                     </div>
 
                     <div class="row col-sm-12 mb-2">
-                        <label class="col-sm-3 col-form-label text-end">ราคารวมทั้งหมด (Grand Total)</label>
+                        <label class="col-sm-3 col-form-label text-end">ราคารวมทั้งหมด (Grand Total) <span class="text-danger">*</span></label>
                         <div class="row col-sm-9">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control mb-2" type="number" id="input-cal-grandTotal" name="input-cal-grandTotal" />
+                                    <input class="form-control mb-2" type="number" id="input-cal-grandTotal" name="input-cal-grandTotal" disabled />
                                 </div>
                                 <label class="col-sm-2 col-form-label">บาท</label>
                             </div>
@@ -98,7 +98,7 @@
                         <div class="row col-sm-9">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control mb-2" type="number" id="input-cal-disposite" name="input-cal-disposite" />
+                                    <input class="form-control mb-2" type="number" id="input-cal-disposite" name="input-cal-disposite" disabled/>
                                 </div>
                                 <label class="col-sm-2 col-form-label">บาท</label>
                             </div>

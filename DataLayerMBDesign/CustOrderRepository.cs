@@ -26,11 +26,12 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { type }, transaction: trans);
         }
 
-        public tbCustOrder GetFirstByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        public tbCustOrder GetFirstByOrderIdSortDesc(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 *
                                 from tbCustOrder
-                                where orderId = @orderId and isDeleted = 0";
+                                where orderId = @orderId and isDeleted = 0
+                                order by orderId desc";
 
             return conn.QueryFirstOrDefault<tbCustOrder>(queryString, new { orderId }, transaction: trans);
         }

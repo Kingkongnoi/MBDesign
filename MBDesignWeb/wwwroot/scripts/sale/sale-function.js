@@ -83,7 +83,6 @@ let validateInputFormCustomerData = function () {
     }
 }
 
-
 function callGetStyleSelect2(formName) {
     $.ajax({
         type: 'GET',
@@ -149,6 +148,71 @@ function clearCreateStyleSelect2() {
     });
     $('#form-search-holiday #select-search-holiday-year').val('').trigger('change')
 }
+
+let validateInputFormStyle = function () {
+    var result = true;
+
+    $.each($(`#createStyle #divCreateStyle div[name="seqCreateStyle"]`), (i, item) => {
+        let divId = $(item).attr('id');
+        let seq = (divId.split("-")[1])
+
+        let calStyle = $(`#${divId} #select-cus-product-style`).val();
+        if (calStyle == "" || calStyle == null || calStyle == undefined) {
+            Swal.fire({
+                text: "กรุณาเลือกสไตล์",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                $(`${divId} #select-cus-product-style`).focus();
+            });
+            result = false;
+            return false;
+        }
+
+        let calType = $(`#${divId} #select-cus-product-type`).val();
+        if (calType == "" || calType == null || calType == undefined) {
+            Swal.fire({
+                text: "กรุณาเลือกหมวดหมู่",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                $(`${divId} #select-cus-product-type`).focus();
+            });
+            result = false;
+            return false;
+        }
+
+        let calItems = $(`#${divId} #select-cus-product-items`).val();
+        if (calItems == "" || calItems == null || calItems == undefined) {
+            Swal.fire({
+                text: "กรุณาเลือก Items",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                $(`${divId} #select-cus-product-items`).focus();
+            });
+            result = false;
+            return false;
+        }
+        //var options = [];
+        //$.each($(`#${divId} #chkselectOptions-${seq} input[type="checkbox"]`), (i, item) => {
+        //    let chkId = $(item).attr('id');
+        //    let optionsId = chkId.split("-")[1];
+        //    let optionsName = $(item).attr('name');
+        //    let optionsPrice = $(item).attr('price');
+
+        //    options.push({ optionsId: optionsId, optionsChecked: $(`#${chkId}`).prop('checked'), optionsName: optionsName, optionsPrice: optionsPrice });
+        //});
+    });
+
+    return result;
+}
 function renderCreateStyleDiv() {
     let newSeq = $('div[name="seqCreateStyle"]').length == 0 ? 1 : $('div[name="seqCreateStyle"]').length + 1;
     let removeBtn = newSeq > 1 ? `<div class="col-sm-6 text-end">
@@ -213,7 +277,7 @@ function renderCreateStyleDiv() {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือก Options<span class="text-danger">*</span></label>
+                            <label class="col-sm-3 col-form-label text-end">เลือก Options</label>
                             <div class="col-sm-9" id="chkselectOptions-${newSeq}" data-seq="${newSeq}" style="overflow-y:auto;">
     
                             </div>
@@ -225,7 +289,7 @@ function renderCreateStyleDiv() {
                 </div>
 
                 <div class="row">
-                <div class="row col-sm-12 mb-2">
+                        <div class="row col-sm-12 mb-2">
                     <label class="col-sm-3 col-form-label text-end">ขนาด</label>
                     <div class="row col-sm-9">
                         <div class="col-sm-4">
@@ -360,7 +424,10 @@ function displayBankAccount(accountType) {
 }
 
 var _style_list = [];
+var _subTotal = 0;
+var _cal_grand_total = 0;
 function callGetItemOptions() {
+    _style_list = [];
     $.each($(`#createStyle #divCreateStyle div[name="seqCreateStyle"]`), (i, item) => {
         let divId = $(item).attr('id');
         let seq = (divId.split("-")[1])
@@ -408,6 +475,8 @@ function callGetItemOptions() {
 }
 function callCalculateItemOptions() {
     let render = "";
+    _subTotal = 0;
+    $('#divCalculatePrice #divCalItemOptions').empty();
     _style_list.forEach((v) => {
         let itemName = v.itemName;
         let itemPrice = v.itemPrice;
@@ -426,12 +495,60 @@ function callCalculateItemOptions() {
                             <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.seq} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
                         </div>
                         </div>`
+
+        _subTotal = parseFloat(_subTotal) + parseFloat(itemPrice);
     });
 
     $('#divCalculatePrice #divCalItemOptions').append(render);
+
+    calculateSubAndGrandTotal();
 }
 
+let validateInputCalPrice = function () {
+    if ($('#form-createCalculatePrice input[name="input-cal-subTotal"]').val() == "" || $('#form-createCalculatePrice input[name="input-cal-subTotal"]').val() == "0") {
+        Swal.fire({
+            text: "กรุณากรอก ราคารวม (Sub. Total)",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createCalculatePrice input[name="input-cal-subTotal"]').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val() == "" || $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val() == "0") {
+        Swal.fire({
+            text: "กรุณากรอก ราคารวมทั้งหมด (Grand Total)",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createCalculatePrice input[name="input-cal-disposite"]').val() == "" || $('#form-createCalculatePrice input[name="input-cal-disposite"]').val() == "0") {
+        Swal.fire({
+            text: "กรุณากดคำนวณยอดมัดจำ",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createCalculatePrice input[name="input-cal-disposite"]').focus();
+        });
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
 function callSaveAndCreateQuotation() {
+    if (!validateInputCalPrice()) { return; }
+
     Swal.fire({
         title: 'คุณต้องการบันทึกใบเสนอราคาหรือไม่?',
         showDenyButton: false,
@@ -522,11 +639,10 @@ function saveCusData(action = 'add') {
         type: 'POST',
         data: data,
         success: (res) => {
-            if (res.data != "") {
+            if (res != "") {
                 callSuccessAlert();
-                //$(`#modal-createProduct`).modal('hide');
-                //callGetItemList();
-                renderQuotationNumber(data);
+                renderQuotationNumber(res);
+                $('.nav-pills a[href="#nav-sale-fileUpload-tab"]').tab('show');
             }
         },
         error: () => {
@@ -657,4 +773,55 @@ function renderGetQuotationList(data) {
             ],
         }
     );
+}
+
+function calculateSubAndGrandTotal(vatPercentage = 0) {
+    let calNote = $('#form-createCalculatePrice input[name="input-cal-note-price"]').val() == "" ? 0 : $('#form-createCalculatePrice input[name="input-cal-note-price"]').val();
+    let calSubTotal = parseFloat(_subTotal) + parseFloat(calNote);
+    $('#form-createCalculatePrice input[name="input-cal-subTotal"]').val(Math.floor(calSubTotal));
+
+    let discount = $('#form-createCalculatePrice input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-createCalculatePrice input[name="input-cal-discount"]').val());
+
+    let calVat = parseFloat(calSubTotal) * vatPercentage;
+    let showVat = (calVat == 0) ? "" : Math.floor(calVat);
+    $('#form-createCalculatePrice input[name="input-cal-vat"]').val(showVat);
+
+    let calGrandTotal = (parseFloat(calSubTotal) - parseFloat(discount)) + parseFloat(calVat);
+    _cal_grand_total = Math.floor(calGrandTotal);
+    $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val(Math.floor(calGrandTotal));
+
+    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
+}
+
+function calculateVat(vat_value) {
+    let vatPercentage = 0;
+    if (vat_value == "vat") {
+        vatPercentage = 0.07;
+        $('#form-createCalculatePrice input[name="input-cal-vat"]').removeAttr('disabled');
+
+    }
+    else {
+        $('#form-createCalculatePrice input[name="input-cal-vat"]').attr('disabled', 'disabled');
+        $('#form-createCalculatePrice input[name="input-cal-vat"]').val('')
+    }
+    calculateSubAndGrandTotal(vatPercentage);
+}
+
+function calculateDisposite() {
+    let showDisposite = 0;
+    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
+    if (_cal_grand_total <= 200000) {
+        showDisposite = 5000;
+    }
+    else if (_cal_grand_total > 200000 && _cal_grand_total <= 600000) {
+        showDisposite = 10000;
+    }
+    else if (_cal_grand_total > 600000 && _cal_grand_total <= 900000) {
+        showDisposite = 20000;
+    }
+    else if (_cal_grand_total > 900000) {
+        showDisposite = 30000;
+    }
+
+    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val(Math.floor(showDisposite));
 }
