@@ -7,15 +7,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\lib\bootstrap-file-input\**" />
+    <Content Remove="wwwroot\lib\bootstrap-file-input\**" />
+    <EmbeddedResource Remove="wwwroot\lib\bootstrap-file-input\**" />
+    <None Remove="wwwroot\lib\bootstrap-file-input\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="bootstrap-fileinput" Version="5.5.2" />
+    <PackageReference Include="Composer" Version="1.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\datetimepicker\" />
+    <Folder Include="wwwroot\lib\file-input\js\locales\" />
   </ItemGroup>
 
   <ItemGroup>
