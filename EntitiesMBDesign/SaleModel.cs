@@ -47,4 +47,12 @@ namespace EntitiesMBDesign
     {
         public int optionsId { get; set; }
     }
+
+    public class SaleUploadFiles
+    {
+        public string fileName { get; set; } = string.Empty;
+        public string filePath { get; set; } = string.Empty;
+        public long fileSize { get; set; }
+
+    }
 }

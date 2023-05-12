@@ -38,30 +38,6 @@
         callSaveAndCreateQuotation();
     });
 
-    //$("#saleMenu li > a").on("click", function (e) {
-    //    let val = $(this).text();
-
-    //    if (val == "รายละเอียดสไตล์และชิ้นงาน") {
-    //        if (validateInputFormCustomerData()) {
-    //            $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
-    //        }
-    //        else {
-    //            $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
-    //        }
-    //    }
-    //    else if (val == "การคำนวณราคา") {
-    //        console.log(validateInputFormStyle());
-    //        if (validateInputFormStyle()) {
-    //            //callGetItemOptions();
-    //            //callCalculateItemOptions();
-    //            $('.nav-pills a[href="#nav-sale-calculate-tab"]').tab('show');
-    //        }
-    //        else {
-    //            $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
-    //        }
-    //    }
-    //});
-
     $('#form-createCalculatePrice input[name="input-cal-note-price"]').on('blur', function () {
         calculateSubAndGrandTotal();
     });
@@ -86,6 +62,10 @@
         calculateDisposite();
     });
 
+    $('#divUploadRef .btn-save-cus-upload-ref').on('click', function () {
+        callSaveUploadRef();
+    });
+
     $('#form-search-quotation .btn-clear-search-quotation').on('click', function () {
         clearSearchQuotationForm();
         callGetQuotationList();
@@ -94,7 +74,6 @@
     $('#form-search-quotation .btn-search-quotation').on('click', function () {
         callGetQuotationList();
     });
-
 
     $('#tb-quotation-list').on('click', 'td.quotationNumber-details', function () {
         var tr = $(this).closest('tr');
@@ -105,4 +84,9 @@
         //clearForm(_modal_department_name);
         //callGetPositionById(id);
     });
+
+
+    //$('#form-uploadRef #select-upload-plan').on('change', function () {
+    //    console.log($(this)[0]);
+    //});
 });

@@ -558,11 +558,11 @@ function callSaveAndCreateQuotation() {
         confirmButtonColor: _modal_primary_color_code,
     }).then((result) => {
         if (result.isConfirmed) {
-            saveCusData();
+            saveQuotation();
         }
     });
 }
-function saveCusData(action = 'add') {
+function saveQuotation() {
     //customer data
     let newCusForm = 'form-sale-new-customer';
     let quotationType = ($(`#${newCusForm} #radioQuotationDraft`).prop('checked') == true) ? "draft" : "complete" ;
@@ -608,7 +608,7 @@ function saveCusData(action = 'add') {
     let disposite = $(`#${calFormId} #input-cal-disposite`).val();
     let accountType = ($(`#${calFormId} #radioBankPersonal`).prop('checked') == true) ? "บัญชีส่วนบุคคล" : "บัญชีบริษัท";
 
-    let url = (action == 'add') ? `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation` : `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation`;
+    let url = `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation`;
 
     var obj = {
         custFirstName: cusFirstName,
@@ -824,4 +824,57 @@ function calculateDisposite() {
     }
 
     $('#form-createCalculatePrice input[name="input-cal-disposite"]').val(Math.floor(showDisposite));
+}
+
+function callSaveUploadRef() {
+    let url = `${app_settings.api_url}/api/Sale/SaveUploadOrderRef`;
+
+    var files = $('#select-upload-plan').prop("files");
+    //var fdata = new FormData();
+    for (var i = 0; i < files.length; i++) {
+        //fdata.append("files", files[i]);
+        console.log(files[i]);
+    }
+    //console.log(fdata);
+    var obj = {
+        plan: $('#select-upload-plan').prop("files")
+        //custFirstName: cusFirstName,
+        //custSurName: cusLastName,
+        //custNickName: cusNickName,
+        //custTel: cusTel,
+        //custLineId: cusLineId,
+        //custAddress: cusBillAddress,
+        //custLocation: cusLocationAddress,
+        //custInstallAddress: cusInstallAddress,
+        //quotationType: quotationType,
+        //installDate: cusInstallDate,
+        //items: items,
+        //orderNote: calNote,
+        //subTotal: subTotal,
+        //discount: discount,
+        //vat: vat,
+        //grandTotal: grandTotal,
+        //disposite: disposite,
+        //accountType: accountType,
+        //vatPercentage: vatPercentage
+    };
+
+    var data = JSON.stringify(obj);
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: (res) => {
+            if (res != "") {
+                callSuccessAlert();
+                renderQuotationNumber(res);
+                $('.nav-pills a[href="#nav-sale-fileUpload-tab"]').tab('show');
+            }
+        },
+        error: () => {
+        },
+        contentType: 'application/json',
+        dataType: "json",
+    });
 }

@@ -2,6 +2,7 @@
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -23,6 +24,7 @@ namespace MBDesignApi.Controllers.Sale
             _saleService = new SaleService(_configuration);
         }
 
+        #region GET
         [HttpGet]
         public JsonResult GetSelect2ProductStyle()
         {
@@ -63,9 +65,20 @@ namespace MBDesignApi.Controllers.Sale
             return new JsonResult(data);
         }
 
+        [HttpGet]
+        public JsonResult GetQuotationList(string quotationNumber, string quotationCusName, string status)
+        {
+            var data = _saleService.GetQuotationList(quotationNumber, quotationCusName, status);
+
+            return new JsonResult(data);
+        }
+        #endregion GET
+
+        #region POST
+
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult SaveAndCreateQuotation([FromBody]object obj)
+        public JsonResult SaveAndCreateQuotation([FromBody] object obj)
         {
             dynamic cvtJson = JsonConvert.DeserializeObject(obj.ToString());
             var lstItems = new List<SaleItem>();
@@ -77,7 +90,8 @@ namespace MBDesignApi.Controllers.Sale
                     lstOptions.Add(new SaleOptions { optionsId = Convert.ToInt32(option["optionsId"]) });
                 }
 
-                lstItems.Add(new SaleItem {
+                lstItems.Add(new SaleItem
+                {
                     styleId = Convert.ToInt32(item["styleId"]),
                     floor = item["floor"],
                     zone = item["zone"],
@@ -118,12 +132,13 @@ namespace MBDesignApi.Controllers.Sale
             return new JsonResult(data);
         }
 
-        [HttpGet]
-        public JsonResult GetQuotationList(string quotationNumber, string quotationCusName, string status)
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public JsonResult SaveUploadOrderRef([FromBody]IFormFile files)
         {
-            var data = _saleService.GetQuotationList(quotationNumber, quotationCusName, status);
-
-            return new JsonResult(data);
+            //var data = DoUploadToAws();
+           return new JsonResult("OK");
         }
+        #endregion POST
     }
 }

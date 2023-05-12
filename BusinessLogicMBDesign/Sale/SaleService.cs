@@ -25,6 +25,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly CustOrderDetailRepository _custOrderDetailRepository;
         private readonly CustOrderItemOptionsRepository _custOrderItemOptionsRepository;
 
+
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
 
@@ -392,6 +393,12 @@ namespace BusinessLogicMBDesign.Sale
 
                 return _custOrderRepository.GetQuotationList(quotationNumber, quotationCusName, status, conn);
             }
+        }
+
+        public bool SaveUploadOrderRef(object obj)
+        {
+            //bool result = UploadToAwsController.SaveUploadOrderRef(obj);
+            return true;
         }
     }
 }
