@@ -713,7 +713,7 @@ function renderGetEmployeeList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1054,7 +1054,7 @@ function renderGetRoleList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1166,7 +1166,7 @@ function renderGetMenuList(data) {
             searching: false,
             data: data,
             pageLength: 20,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1357,7 +1357,7 @@ function renderGetHolidayList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1585,7 +1585,7 @@ function renderGetDepartmentList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1766,7 +1766,7 @@ function renderGetPositionList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1982,7 +1982,7 @@ function renderGetItemList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -2230,7 +2230,7 @@ function renderGetTypeList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -2418,7 +2418,7 @@ function renderGetStyleList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -2627,7 +2627,7 @@ function renderGetAccountList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

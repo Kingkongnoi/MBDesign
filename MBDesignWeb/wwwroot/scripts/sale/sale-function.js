@@ -200,6 +200,21 @@ let validateInputFormStyle = function () {
             result = false;
             return false;
         }
+       
+        let inputHeight = $(`#${divId} #input-cus-product-height`).val();
+        let checkedHeightSp = $(`#${divId} #chkSpecialHeight-${seq}`).prop('checked');
+        if (inputHeight >= 2.7 && checkedHeightSp == false) {
+            Swal.fire({
+                text: "กรุณาคลิก ความสูงพิเศษ เมื่อกรอกความสูง >= 2.70 เมตรขึ้นไป",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+            });
+            result = false;
+            return false;
+        }
         //var options = [];
         //$.each($(`#${divId} #chkselectOptions-${seq} input[type="checkbox"]`), (i, item) => {
         //    let chkId = $(item).attr('id');
@@ -476,27 +491,40 @@ function callGetItemOptions() {
 function callCalculateItemOptions() {
     let render = "";
     _subTotal = 0;
+    
     $('#divCalculatePrice #divCalItemOptions').empty();
     _style_list.forEach((v) => {
         let itemName = v.itemName;
         let itemPrice = v.itemPrice;
 
+        let calSpHeight = 0;
+        let calSpHeightPercentage = 0;
+        debugger;
+        if (v.spHeight) {
+            calSpHeightPercentage = (100 / 2.60 * v.orderHeight) - 100;
+        }
+
         var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
         activeOptions.forEach((o) => { itemName += ` ${o.optionsName}`; itemPrice = parseFloat(itemPrice) + parseFloat(o.optionsPrice) });
+
+        calSpHeight = parseFloat(itemPrice) + parseFloat(calSpHeightPercentage);
+
+        let showItemPrice = (parseFloat(itemPrice) + parseFloat(calSpHeight)).toFixed(2);
 
         render += `<div class="row" id="cal-${v.divId}">
                             <div class="col-sm-8">
                             <input class="form-control mb-2" type="text" id="input-cal-itemOptions" name="input-cal-itemOptions" value="${itemName}" disabled/>
                             </div>
                         <div class="col-sm-2">
-                            <input class="form-control mb-2" type="text" id="input-cal-itemPrice" name="input-cal-itemPrice" value="${itemPrice}" disabled/>
+                            <input class="form-control mb-2" type="text" id="input-cal-itemPrice" name="input-cal-itemPrice" value="${showItemPrice}" disabled/>
                         </div>
                         <div class="col-sm-2">
                             <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.seq} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
                         </div>
                         </div>`
 
-        _subTotal = parseFloat(_subTotal) + parseFloat(itemPrice);
+        _subTotal = parseFloat(_subTotal) + parseFloat(itemPrice) + parseFloat(calSpHeight);
+
     });
 
     $('#divCalculatePrice #divCalItemOptions').append(render);
@@ -712,7 +740,7 @@ function renderGetQuotationList(data) {
             responsive: true,
             searching: false,
             data: data,
-            dom: 'Bfrtip',
+            dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -778,17 +806,17 @@ function renderGetQuotationList(data) {
 function calculateSubAndGrandTotal(vatPercentage = 0) {
     let calNote = $('#form-createCalculatePrice input[name="input-cal-note-price"]').val() == "" ? 0 : $('#form-createCalculatePrice input[name="input-cal-note-price"]').val();
     let calSubTotal = parseFloat(_subTotal) + parseFloat(calNote);
-    $('#form-createCalculatePrice input[name="input-cal-subTotal"]').val(Math.floor(calSubTotal));
+    $('#form-createCalculatePrice input[name="input-cal-subTotal"]').val(calSubTotal.toFixed(2));
 
     let discount = $('#form-createCalculatePrice input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-createCalculatePrice input[name="input-cal-discount"]').val());
 
     let calVat = parseFloat(calSubTotal) * vatPercentage;
-    let showVat = (calVat == 0) ? "" : Math.floor(calVat);
+    let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
     $('#form-createCalculatePrice input[name="input-cal-vat"]').val(showVat);
 
     let calGrandTotal = (parseFloat(calSubTotal) - parseFloat(discount)) + parseFloat(calVat);
-    _cal_grand_total = Math.floor(calGrandTotal);
-    $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val(Math.floor(calGrandTotal));
+    _cal_grand_total = calGrandTotal.toFixed(2);
+    $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val(calGrandTotal.toFixed(2));
 
     $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
 }
