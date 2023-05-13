@@ -62,7 +62,7 @@ namespace MBDesignApi.Controllers.Sale
         {
             var data = _saleService.GetAllActiveBankAccount();
 
-            return new JsonResult(data);
+            return new JsonResult(data); 
         }
 
         [HttpGet]
@@ -71,6 +71,26 @@ namespace MBDesignApi.Controllers.Sale
             var data = _saleService.GetQuotationList(quotationNumber, quotationCusName, status);
 
             return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetQuotationDetailByOrderId(int orderId)
+        {
+            var custOrder = _saleService.GetCustOrderByOrderId(orderId);
+            var items = _saleService.GetCustOrderDetailByOrderId(orderId);
+            var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
+
+            var custId = (custOrder != null) ? custOrder.custId : 0;
+            var cust = _saleService.GetFirstByCustId(custId);
+
+            var result = new
+            {
+                custOrder = custOrder,
+                items = items,
+                itemsOptions = itemsOptions,
+                cust = cust,
+            };
+            return new JsonResult(result);
         }
         #endregion GET
 
@@ -118,13 +138,18 @@ namespace MBDesignApi.Controllers.Sale
                 installDate = cvtJson["installDate"] == "" ? "" : Convert.ToDateTime(cvtJson["installDate"]),
                 items = lstItems,
                 orderNote = cvtJson["orderNote"],
+                orderNotePrice = Convert.ToDecimal(cvtJson["orderNotePrice"]),
                 discount = cvtJson["discount"] == "" ? 0 : Convert.ToDecimal(cvtJson["discount"]),
                 vat = cvtJson["vat"] == "" ? 0 : Convert.ToDecimal(cvtJson["vat"]),
                 subTotal = cvtJson["subTotal"] == "" ? 0 : Convert.ToDecimal(cvtJson["subTotal"]),
                 grandTotal = cvtJson["grandTotal"] == "" ? 0 : Convert.ToDecimal(cvtJson["grandTotal"]),
                 disposite = cvtJson["disposite"] == "" ? 0 : Convert.ToDecimal(cvtJson["disposite"]),
                 accountType = cvtJson["accountType"],
-                vatPercentage = Convert.ToDecimal(cvtJson["vatPercentage"])
+                vatPercentage = Convert.ToDecimal(cvtJson["vatPercentage"]),
+                action = cvtJson["action"],
+                orderId = Convert.ToInt32(cvtJson["orderId"]),
+                custId = Convert.ToInt32(cvtJson["custId"]),
+                quotationComment = cvtJson["quotationComment"]
             };
 
             var data = _saleService.SaveAndCreateQuotation(dataObj);

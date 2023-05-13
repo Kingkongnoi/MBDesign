@@ -29,7 +29,7 @@ namespace DataLayerMBDesign
                                 updateDate = @updateDate,
                                 updateBy = @updateBy,
                                 status = @status
-                                where isDeleted = 0 and departmentId = @departmentId
+                                where isDeleted = 0 and custId = @custId
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.custFirstName, obj.custSurName, obj.custNickName, obj.custTel, obj.custAddress, obj.custLocation, obj.custLineId, obj.updateDate, obj.updateBy, obj.status, obj.custId }, transaction: trans);

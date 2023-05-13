@@ -10,6 +10,8 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Helpers;
+using System.Web.Mvc;
 
 namespace BusinessLogicMBDesign.Sale
 {
@@ -220,11 +222,37 @@ namespace BusinessLogicMBDesign.Sale
                 custInstallAddress = model.custInstallAddress
             };
 
-            int? custId = this.AddCust(custObj);
+            int? custId = 0;
+            if (model.action == "add") {
+                custId = this.AddCust(custObj);
+            }
+            else
+            {
+                custObj.custId = model.custId;
+                this.UpdateCust(custObj);
+                custId = model.custId;
+            }
 
-            int? orderId = this.AddCustOrder(model, custId.Value);
+            int? orderId = 0;
+            if (model.action == "add")
+            {
+                orderId = this.AddCustOrder(model, custId.Value);
+            }
+            else
+            {
+                orderId = model.orderId;
+                this.UpdateCustOrder(model, custId.Value, orderId.Value);
+            }
 
-            int? orderDetailId = this.AddCustOrderDetail(model, orderId.Value);
+            if (model.action == "add")
+            {
+                int? orderDetailId = this.AddCustOrderDetail(model, orderId.Value);
+            }
+            else
+            {
+                this.UpdateCustOrderDetail(model, orderId.Value);
+            }
+           
 
             string quotationNumber = this.GetQuotationNumberByOrderId(orderId.Value);
 
@@ -273,6 +301,84 @@ namespace BusinessLogicMBDesign.Sale
                     };
 
                     added = _custOrderRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+        public int UpdateCustOrder(SaleModel model, int custId, int orderId = 0)
+        {
+            int added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var custOrder = new tbCustOrder();
+                    if (orderId != 0)
+                    {
+                        custOrder = _custOrderRepository.GetFirstByOrderIdSortDesc(orderId, conn, transaction);
+                    }
+
+                    string type = (model.vatPercentage == 0) ? "N" : "";
+
+                    int lastestNumberGen = 0;
+                    
+                    if (orderId != 0)
+                    {
+                        lastestNumberGen = (custOrder != null) ? custOrder.quotationNumberGen : 0;
+                    }
+                    else
+                    {
+                        lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByType(type, conn, transaction);
+                    }
+
+                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
+
+                    var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
+                    int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
+
+                    string orderStatus = (model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
+
+                    string quotation = string.Empty;
+                    if (orderId != 0)
+                    {
+                        quotation = (custOrder != null) ? custOrder.quotationNumber : "";
+                    }
+                    else
+                    {
+                        quotation = this.GenerateQuotaion(generateNumber, type);
+                    }
+
+                    var addedObject = new tbCustOrder
+                    {
+                        quotationType = model.quotationType,
+                        installDate = model.installDate,
+                        orderNote = model.orderNote,
+                        discount = model.discount,
+                        subTotal = model.subTotal,
+                        grandTotal = model.grandTotal,
+                        disposite = model.disposite,
+                        accountId = accountId,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999",
+                        status = true,
+                        orderStatus = orderStatus,
+                        quotationComment = model.quotationComment,
+                        orderNotePrice = model.orderNotePrice,
+                        orderId = orderId
+                    };
+
+                    added = _custOrderRepository.Update(addedObject, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -349,6 +455,75 @@ namespace BusinessLogicMBDesign.Sale
             catch { }
 
         }
+        public int UpdateCustOrderDetail(SaleModel model, int orderId)
+        {
+            int added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    int delete = _custOrderDetailRepository.HardDeleteByOrderId(orderId, conn, transaction);
+
+                    foreach (var item in model.items)
+                    {
+                        var addedObject = new tbCustOrderDetail
+                        {
+                            orderId = orderId,
+                            styleId = item.styleId,
+                            floor = item.floor,
+                            zone = item.zone,
+                            typeId = item.typeId,
+                            itemId = item.itemId,
+                            orderLength = item.orderLength,
+                            orderDepth = item.orderDepth,
+                            orderHeight = item.orderHeight,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999"
+                        };
+
+                        int? orderDetailId = _custOrderDetailRepository.Add(addedObject, conn, transaction);
+
+                        UpdateCustOrderItemOptions(item.options, orderDetailId.Value, conn, transaction);
+                    }
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+        public void UpdateCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction trans = null)
+        {
+            try
+            {
+                int deleted = _custOrderItemOptionsRepository.HardDeleteByCustOrderDetailId(custOrderDetailId, conn, trans);
+
+                foreach (var item in model)
+                {
+                    var added = new tbCustOrderItemOptions
+                    {
+                        custOrderDetailId = custOrderDetailId,
+                        optionsId = item.optionsId,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999"
+                    };
+
+                    int? id = _custOrderItemOptionsRepository.Add(added, conn, trans);
+                }
+            }
+            catch { }
+
+        }
         public string GenerateQuotaion(int generateNumber, string type)
         {
             ThaiBuddhistCalendar thaiCalendar = new ThaiBuddhistCalendar();
@@ -400,5 +575,46 @@ namespace BusinessLogicMBDesign.Sale
             //bool result = UploadToAwsController.SaveUploadOrderRef(obj);
             return true;
         }
+
+        public List<CustOrderView> GetOrderDetailByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetOrderDetailByOrderId(orderId, conn);
+            }
+        }
+
+        public List<tbCustOrderDetail> GetCustOrderDetailByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderDetailRepository.GetByOrderId(orderId, conn);
+            }
+        }
+
+        public CustOrderView GetCustOrderByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
+            }
+        }
+
+        public List<tbCustOrderItemOptions> GetItemOptionsByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderItemOptionsRepository.GetItemOptionsByOrderId(orderId, conn);
+            }
+        }
+
     }
 }

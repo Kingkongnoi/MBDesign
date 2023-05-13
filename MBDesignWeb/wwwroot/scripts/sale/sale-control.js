@@ -12,6 +12,9 @@
         if (!validateInputFormCustomerData()) { return; }
 
         $('.nav-pills a[href="#nav-sale-style-tab"]').tab('show');
+        if (_action == "edit") {
+            renderCustStyle();
+        }
     });
 
     $('.btn-add-style').on('click', function () {
@@ -89,4 +92,25 @@
     //$('#form-uploadRef #select-upload-plan').on('change', function () {
     //    console.log($(this)[0]);
     //});
+
+    $("#saleMenu li > a").on("click", function (e) {
+        let val = $(this).text();
+
+        if (val == "รายการใบเสนอราคา") {
+            clearSearchQuotationForm();
+            callGetQuotationList();
+            $('#divCreateStyle').empty();
+            clearAllInputCreateStyle();
+        }
+    });
+
+    $(document).on('click', '.btn-edit-cus-quotation', function () {
+        $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
+        _action = 'edit';
+        _order_id = $(this).data('id');
+        clearInputFormCustomerData();
+        $('#divCreateStyle').empty();
+        renderEditQuotation($(this).data('id'));
+    });
+
 });

@@ -1,0 +1,151 @@
+﻿@*modal for create emp data*@
+<div id="modal-editQuotation" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">แก้ไขใบเสนอราคา</h4>
+                <div class="col-sm-4 text-end">
+                    <button type="button" class="btn btn-default-custom btn-print-quotation"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์ใบเสนอราคา</button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <form id="form-createCalculatePrice">
+                    <div class="row">
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-2 col-form-label text-end">ราคาทั้งหมด</label>
+                            <div class="row col-sm-10" id="divCalItemOptions">
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 mb-2">
+                            <div class="col-sm-10 text-end">
+                                <button type="button" class="btn btn-default-custom btn-cal-deposit-amount"><i class="fa-solid fa-calculator" aria-hidden="true"></i> เพิ่มชิ้นงาน</button>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-2 col-form-label text-end">โน๊ตเพิ่มเติม</label>
+                            <div class="row col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input class="form-control mb-2" type="text" id="input-cal-note" name="input-cal-note" />
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <input class="form-control mb-2" type="number" id="input-cal-note-price" name="input-cal-note-price" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-4 col-form-label text-end">ราคารวม (Sub. Total) <span class="text-danger">*</span></label>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input class="form-control mb-2" type="number" id="input-cal-subTotal" name="input-cal-subTotal" disabled />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">บาท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-4 col-form-label text-end">ส่วนลดท้ายบิล</label>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input class="form-control mb-2" type="number" id="input-cal-discount" name="input-cal-discount" />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">บาท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <div class="col-sm-4 text-end">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="radioVatType" id="radioVat" onchange="calculateVat('vat');" value="vat">
+                                    <label class="form-check-label">VAT 7%</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="radioVatType" id="radioNonVat" onchange="calculateVat('nonvat');" value="nonvat" checked>
+                                    <label class="form-check-label">Non VAT</label>
+                                </div>
+                            </div>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input class="form-control mb-2" type="number" id="input-cal-vat" name="input-cal-vat" disabled />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">บาท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-4 col-form-label text-end">ราคารวมทั้งหมด (Grand Total) <span class="text-danger">*</span></label>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input class="form-control mb-2" type="number" id="input-cal-grandTotal" name="input-cal-grandTotal" disabled />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">บาท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <div class="col-sm-4 text-end">
+                                <button type="button" class="btn btn-default-custom btn-cal-deposit-amount"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดมัดจำ</button>
+                            </div>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input class="form-control mb-2" type="number" id="input-cal-disposite" name="input-cal-disposite" disabled />
+                                    </div>
+                                    <label class="col-sm-2 col-form-label">บาท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-4 col-form-label text-end">บัญชีรับเงิน</label>
+                            <div class="col-sm-8 mt-1">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="radioBankAccount" id="radioBankPersonal" onchange="displayBankAccount('personal');" value="personal" checked>
+                                    <label class="form-check-label">บัญชีส่วนบุคคล</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="radioBankAccount" id="radioBankCompany" onchange="displayBankAccount('company');" value="company">
+                                    <label class="form-check-label">บัญชีบริษัท</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end"></label>
+                            <div class="col-sm-9" id="displayAccountDetail">
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-4 col-form-label text-end">เหตุผลที่ลูกค้าไม่อนุมัติงาน</label>
+                            <div class="row col-sm-8">
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <input class="form-control mb-2" type="text" id="input-cal-approve" name="input-cal-approve" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-edit-quotation"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>

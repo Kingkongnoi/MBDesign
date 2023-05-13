@@ -32,10 +32,30 @@ namespace EntitiesMBDesign
         public int quotationNumberGen { get; set; }
         public string quotationNumberType { get; set; } = string.Empty;
         public string orderStatus { get; set; } = string.Empty;
+        public string quotationComment { get; set; } = string.Empty;
+        public decimal orderNotePrice { get; set; }
     }
 
     public class CustOrderView : tbCustOrder
     {
         public string fullName { get; set; } = string.Empty;
+        public int itemId { get; set; }
+        public decimal orderLength { get; set; }
+        public decimal orderDepth { get; set; }
+        public decimal orderHeight { get; set; }
+        public int custOrderDetailId { get; set; }
+        public int custOrderItemOptionsId { get; set; }
+        public string itemName { get; set; } = string.Empty;
+        public decimal itemPrice { get; set; }
+        public int optionsId { get; set; }
+        public string options { get; set; } = string.Empty;
+        public decimal optionsPrice { get; set; }
+        public int styleId { get; set; }
+        public string styleName { get; set; } = string.Empty;
+        public string floor { get; set; } = string.Empty;
+        public string zone { get; set; } = string.Empty;
+        public string accountName { get; set; } = string.Empty;
+        public string accountNumber { get; set; } = string.Empty;
+        public string accountType { get; set; } = string.Empty;
     }
 }

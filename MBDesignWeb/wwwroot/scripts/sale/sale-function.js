@@ -1,11 +1,11 @@
 ﻿let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
-let _customer_data_action = 'add';
+let _action = 'add';
 
 function clearInputFormCustomerData() {
     let newCusForm = 'form-sale-new-customer';
-    $(`#${newCusForm} #radioQuotationDraft`).prop('checked', true);
+    $(`#${newCusForm} #radioQuotationComplete`).prop('checked', true);
     $(`#${newCusForm} #input-cus-firstName`).val('');
     $(`#${newCusForm} #input-cus-nickname`).val('');
     $(`#${newCusForm} #input-cus-lineId`).val('');
@@ -100,7 +100,9 @@ function renderStyleSelect2(formName, data) {
     data.forEach((v) => {
         $(`#${formName} #select-cus-product-style`).append(`<option value="${v.styleId}">${v.styleName}</option>`);
     });
-    $(`#${formName} #select-cus-product-style`).val('').trigger('change')
+    if (_action == 'add') {
+        $(`#${formName} #select-cus-product-style`).val('').trigger('change');
+    }
 }
 function callGetProductTypeSelect2(formName) {
     $.ajax({
@@ -119,7 +121,9 @@ function renderProductTypeSelect2(formName, data) {
     data.forEach((v) => {
         $(`#${formName} #select-cus-product-type`).append(`<option value="${v.typeId}">${v.typeName}</option>`);
     });
-    $(`#${formName} #select-cus-product-type`).val('').trigger('change')
+    if (_action == "add") {
+        $(`#${formName} #select-cus-product-type`).val('').trigger('change');
+    }
 }
 function callGetProductItemSelect2(formName) {
     $.ajax({
@@ -138,7 +142,10 @@ function renderProductItemSelect2(formName, data) {
     data.forEach((v) => {
         $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
     });
-    $(`#${formName} #select-cus-product-items`).val('').trigger('change')
+
+    if (_action == "add") {
+        $(`#${formName} #select-cus-product-items`).val('').trigger('change');
+    }
 }
 function clearCreateStyleSelect2() {
     $('#form-search-holiday #select-search-holiday-year').empty();
@@ -372,7 +379,9 @@ function removeRenderStyleWithSeq(obj) {
     }).then((result) => {
         if (result.isConfirmed) {
             let currSeq = $(obj).data('seq');
+            let currDivId = $(obj).data('divid');
             $(`#divCreateStyle-${currSeq}`).remove();
+            $(`#cal-${currDivId}`).remove();
         }
     });
 }
@@ -386,6 +395,9 @@ function callGetProductItemOptions(obj) {
         url: `${app_settings.api_url}/api/Sale/GetSelect2ProductItemOptionsByItemId?itemId=${itemId}`,
         success: function (data) {
             renderCheckboxOptions(formName, currSeq, data);
+            if (_action == "edit") {
+                renderCustOptions();
+            }
         },
         error: function (err) {
         }
@@ -499,7 +511,7 @@ function callCalculateItemOptions() {
 
         let calSpHeight = 0;
         let calSpHeightPercentage = 0;
-        debugger;
+
         if (v.spHeight) {
             calSpHeightPercentage = (100 / 2.60 * v.orderHeight) - 100;
         }
@@ -519,7 +531,7 @@ function callCalculateItemOptions() {
                             <input class="form-control mb-2" type="text" id="input-cal-itemPrice" name="input-cal-itemPrice" value="${showItemPrice}" disabled/>
                         </div>
                         <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.seq} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
+                            <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.divSeq} data-divid=${v.divId} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
                         </div>
                         </div>`
 
@@ -628,13 +640,15 @@ function saveQuotation() {
     //Calculate
     let calFormId = 'form-createCalculatePrice';
     let calNote = $(`#${calFormId} #input-cal-note`).val();
+    let calOrderNotePrice = $(`#${calFormId} #input-cal-note-price`).val();
     let subTotal = $(`#${calFormId} #input-cal-subTotal`).val();
     let discount = $(`#${calFormId} #input-cal-discount`).val();
     let vatPercentage = ($(`#${calFormId} #radioVat`).prop('checked') == true) ? 0.07 : 0;
     let vat = $(`#${calFormId} #input-cal-vat`).val();
     let grandTotal = $(`#${calFormId} #input-cal-grandTotal`).val();
     let disposite = $(`#${calFormId} #input-cal-disposite`).val();
-    let accountType = ($(`#${calFormId} #radioBankPersonal`).prop('checked') == true) ? "บัญชีส่วนบุคคล" : "บัญชีบริษัท";
+    let accountType = ($(`#${calFormId} #radioBankPersonal`).prop('checked') == true) ? "บัญชีส่วนบุคคล" : "บัญชีนามบริษัท";
+    let quotationComment = $(`#${calFormId} #input-cal-approve`).val();
 
     let url = `${app_settings.api_url}/api/Sale/SaveAndCreateQuotation`;
 
@@ -651,13 +665,18 @@ function saveQuotation() {
         installDate: cusInstallDate,
         items: items,
         orderNote: calNote,
+        orderNotePrice: calOrderNotePrice,
         subTotal: subTotal,
         discount: discount,
         vat: vat,
         grandTotal: grandTotal,
         disposite: disposite,
         accountType: accountType,
-        vatPercentage: vatPercentage
+        vatPercentage: vatPercentage,
+        action: _action,
+        orderId: _order_id,
+        custId: _cust_id,
+        quotationComment: quotationComment
     };
 
     var data = JSON.stringify(obj);
@@ -671,6 +690,7 @@ function saveQuotation() {
                 callSuccessAlert();
                 renderQuotationNumber(res);
                 $('.nav-pills a[href="#nav-sale-fileUpload-tab"]').tab('show');
+                clearAllInputCreateStyle();
             }
         },
         error: () => {
@@ -905,4 +925,254 @@ function callSaveUploadRef() {
         contentType: 'application/json',
         dataType: "json",
     });
+}
+
+function clearAllInputCreateStyle() {
+    _action = 'add';
+    clearInputFormCustomerData();
+    renderCreateStyleDiv();
+    _order_id = 0;
+    _cust_id = 0;
+    $(`#form-createCalculatePrice input[name="radioVatType"]`).attr('disabled', false);
+    $(`#form-createCalculatePrice #divNoteApprove`).addClass('note-approve-show');
+}
+
+var _items = [];
+var _items_options = [];
+var _order_id = 0;
+var _cust_id = 0;
+function renderEditQuotation(id) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetQuotationDetailByOrderId?orderId=${id}`,
+        success: function (data) {
+            _items = data.items;
+            _items_options = data.itemsOptions;
+            renderCustQuotation(data);
+            renderCustStyleDiv(data);
+            renderCustCalPrice(data);
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+
+function renderCustQuotation(data) {
+    let newCusForm = 'form-sale-new-customer';
+    let cust = data.cust;
+    let custOrder = data.custOrder;
+    if (custOrder.quotationType == "draft") {
+        $(`#${newCusForm} #radioQuotationDraft`).prop('checked', true);
+    }
+    else {
+        $(`#${newCusForm} #radioQuotationComplete`).prop('checked', true);
+    }
+
+    $(`#${newCusForm} #input-cus-firstName`).val(cust.custFirstName);
+    $(`#${newCusForm} #input-cus-nickname`).val(cust.custNickName);
+    $(`#${newCusForm} #input-cus-lineId`).val(cust.custLineId);
+    $(`#${newCusForm} #input-cus-bill-address`).val(cust.custAddress);
+    $(`#${newCusForm} #input-cus-location-address`).val(cust.custLocation);
+    $(`#${newCusForm} #input-cus-lastName`).val(cust.custSurName);
+    $(`#${newCusForm} #input-cus-tel`).val(cust.custTel);
+    $(`#${newCusForm} #input-cus-install-date`).val(convertDateTimeFormat(custOrder.installDate, 'YYYY-MM-DD'));
+    $(`#${newCusForm} #input-cus-install-address`).val(cust.custInstallAddress);
+    _cust_id = cust.custId;
+}
+function renderCustStyleDiv(data) {
+    data.items.forEach((v) => {
+
+        let newSeq = $('div[name="seqCreateStyle"]').length == 0 ? 1 : $('div[name="seqCreateStyle"]').length + 1;
+        let removeBtn = newSeq > 1 ? `<div class="col-sm-6 text-end">
+                                    <button type="button" class="btn btn-primary" data-seq="${newSeq}" onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                </div>` : ``;
+        let renderDiv = `<div id="divCreateStyle-${newSeq}" style="border:solid 0.025rem;" name="seqCreateStyle">
+        <div class="card-header bg-primary text-light">
+            <div class="row col-sm-12">
+                <div class="col-sm-6 mt-2"><h6>ชิ้นงานที่ ${newSeq}</h6></div>
+                ${removeBtn}
+            </div>
+        </div>
+        <div class="card-body">
+            <form id="formCreateStyle-${newSeq}">
+                <div class="row d-sm-flex">
+
+                    <div class="col-sm-6">
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือกสไตล์<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="select-cus-product-style" data-seq="${newSeq}">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือกโซน</label>
+                            <div class="col-sm-9">
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือก Items<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-sm-6">
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือกชั้น</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-floor" data-seq="${newSeq}" />
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่<span class="text-danger">*</span></label>
+                            <div class="col-sm-9">
+                                <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}">
+                                    <option></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end">เลือก Options</label>
+                            <div class="col-sm-9" id="chkselectOptions-${newSeq}" data-seq="${newSeq}" style="overflow-y:auto;">
+    
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+                <div class="row">
+                        <div class="row col-sm-12 mb-2">
+                    <label class="col-sm-3 col-form-label text-end">ขนาด</label>
+                    <div class="row col-sm-9">
+                        <div class="col-sm-4">
+                            <label class="col-sm-3 col-form-label">ความยาว</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
+                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                                <label class="col-sm-3 col-form-label">ความลึก</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
+                                </div>
+                        </div>
+                        <div class="col-sm-4">
+                          <label class="col-sm-3 col-form-label">ความสูง</label>
+                                <div class="col-sm-9">
+                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row col-sm-12 mb-2">
+                    <label class="col-sm-3 col-form-label text-end"></label>
+                    <div class="row col-sm-9">
+                        <div class="col-sm-12">
+                            <label class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                     <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                            <label class="form-check-label">
+                                            ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
+                                            </label>
+                                    </div>
+                                </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+
+            </form>
+
+        </div>
+    </div>`
+
+        $('#divCreateStyle').append(renderDiv)
+
+        ///Render input form
+        let formName = `formCreateStyle-${newSeq}`;
+        callGetStyleSelect2(formName);
+        callGetProductTypeSelect2(formName);
+        callGetProductItemSelect2(formName);
+    });
+}
+function renderCustStyle() {
+    let seq = 1;
+    _items.forEach((v) => {
+        $(`#formCreateStyle-${seq} #select-cus-product-style`).val(v.styleId).trigger('change');
+        $(`#formCreateStyle-${seq} input[name="input-cus-product-zone"]`).val(v.zone);
+        $(`#formCreateStyle-${seq} #select-cus-product-items`).val(v.itemId).trigger('change');
+        $(`#formCreateStyle-${seq} input[name="input-cus-product-floor"]`).val(v.floor);
+        $(`#formCreateStyle-${seq} #select-cus-product-type`).val(v.typeId).trigger('change');
+        let orderLength = (v.orderLength == 0) ? "" : v.orderLength;
+        $(`#formCreateStyle-${seq} #input-cus-product-length`).val(orderLength);
+        let orderDepth = (v.orderDepth == 0) ? "" : v.orderDepth;
+        $(`#formCreateStyle-${seq} #input-cus-product-depth`).val(orderDepth);
+        let orderHeight = (v.orderHeight == 0) ? "" : v.orderHeight;
+        $(`#formCreateStyle-${seq} #input-cus-product-height`).val(orderHeight);
+        if (v.orderHeight >= 2.70) {
+            $(`#formCreateStyle-${seq} #chkSpecialHeight-${seq}`).prop('checked', true);
+        } else {
+            $(`#formCreateStyle-${seq} #chkSpecialHeight-${seq}`).prop('checked', false);
+
+        }
+
+        seq++;
+    });
+
+}
+function renderCustOptions() {
+    let seq = 1;
+    _items.forEach((v) => {
+        var options = _items_options.filter((a) => { return a.custOrderDetailId == v.custOrderDetailId });
+        options.forEach((o) => {
+            $(`#formCreateStyle-${seq} #chkselectOptions-${seq} #${seq}-${o.optionsId}`).prop('checked', true);
+        });
+       
+        seq++;
+    });
+}
+function renderCustCalPrice(data) {
+    let formId = '#form-createCalculatePrice';
+    let custOrder = data.custOrder;
+    $(`${formId} input[name="input-cal-note"]`).val(custOrder.orderNote);
+    let orderNotePrice = (custOrder.orderNotePrice == 0) ? "" : custOrder.orderNotePrice;
+    $(`${formId} input[name="input-cal-note-price"]`).val(orderNotePrice);
+
+    if (custOrder.vat != 0) {
+        $(`${formId} #radioVat`).prop('checked', true);
+    } else {
+        $(`${formId} #radioNonVat`).prop('checked', true);
+    }
+    $(`${formId} input[name="radioVatType"]`).attr('disabled', true);
+
+    if (custOrder.accountType == "บัญชีส่วนบุคคล") {
+        $(`${formId} #radioBankPersonal`).prop('checked', true);
+    }
+    else {
+        $(`${formId} #radioBankCompany`).prop('checked', true);
+    }
+
+    $(`${formId} #divNoteApprove`).removeClass('note-approve-show');
+    $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
 }

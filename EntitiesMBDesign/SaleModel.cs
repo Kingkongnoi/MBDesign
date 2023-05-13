@@ -29,6 +29,11 @@ namespace EntitiesMBDesign
         public decimal disposite { get; set; } = 0;
         public string accountType { get; set; } = string.Empty;
         public decimal vatPercentage { get; set; } = 0;
+        public string action { get; set; } = string.Empty;
+        public int orderId { get; set; }
+        public int custId { get; set; }
+        public string quotationComment { get; set; } = string.Empty;
+        public decimal orderNotePrice { get; set; } = 0;
     }
 
     public class SaleItem

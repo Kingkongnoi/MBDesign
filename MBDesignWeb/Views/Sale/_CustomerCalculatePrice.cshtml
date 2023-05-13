@@ -1,4 +1,9 @@
-﻿<div class="container-fluid" id="divCalculatePrice">
+﻿<style>
+    .note-approve-show {
+        visibility:hidden;
+    }
+</style>
+<div class="container-fluid" id="divCalculatePrice">
 
     <div class="card mt-4">
         <div class="card-header">
@@ -122,6 +127,17 @@
                     <div class="row col-sm-12 mb-2">
                         <label class="col-sm-3 col-form-label text-end"></label>
                         <div class="col-sm-9" id="displayAccountDetail">
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2 note-approve-show" id="divNoteApprove">
+                        <label class="col-sm-3 col-form-label text-end">เหตุผลที่ลูกค้าไม่อนุมัติงาน</label>
+                        <div class="row col-sm-9">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <input class="form-control mb-2" type="text" id="input-cal-approve" name="input-cal-approve" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
