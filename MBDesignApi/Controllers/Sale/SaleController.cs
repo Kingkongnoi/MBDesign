@@ -138,7 +138,7 @@ namespace MBDesignApi.Controllers.Sale
                 installDate = cvtJson["installDate"] == "" ? "" : Convert.ToDateTime(cvtJson["installDate"]),
                 items = lstItems,
                 orderNote = cvtJson["orderNote"],
-                orderNotePrice = Convert.ToDecimal(cvtJson["orderNotePrice"]),
+                orderNotePrice = cvtJson["orderNotePrice"] == "" ? 0 : Convert.ToDecimal(cvtJson["orderNotePrice"]),
                 discount = cvtJson["discount"] == "" ? 0 : Convert.ToDecimal(cvtJson["discount"]),
                 vat = cvtJson["vat"] == "" ? 0 : Convert.ToDecimal(cvtJson["vat"]),
                 subTotal = cvtJson["subTotal"] == "" ? 0 : Convert.ToDecimal(cvtJson["subTotal"]),

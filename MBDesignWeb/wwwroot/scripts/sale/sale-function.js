@@ -933,6 +933,8 @@ function clearAllInputCreateStyle() {
     renderCreateStyleDiv();
     _order_id = 0;
     _cust_id = 0;
+
+    clearCalPriceForm();
     $(`#form-createCalculatePrice input[name="radioVatType"]`).attr('disabled', false);
     $(`#form-createCalculatePrice #divNoteApprove`).addClass('note-approve-show');
 }
@@ -1175,4 +1177,18 @@ function renderCustCalPrice(data) {
 
     $(`${formId} #divNoteApprove`).removeClass('note-approve-show');
     $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
+}
+
+function clearCalPriceForm() {
+    let formId = '#form-createCalculatePrice';
+    $(`${formId} #input-cal-note`).val('');
+    $(`${formId} #input-cal-note-price`).val('');
+    $(`${formId} #input-cal-subTotal`).val('');
+    $(`${formId} #input-cal-discount`).val('');
+    $(`${formId} #radioNonVat`).prop('checked', true);
+    $(`${formId} #input-cal-vat`).val('');
+    $(`${formId} #input-cal-grandTotal`).val('');
+    $(`${formId} #input-cal-disposite`).val('');
+    $(`${formId} #radioBankPersonal`).prop('checked', true);
+    $(`${formId} #input-cal-approve`).val('');
 }

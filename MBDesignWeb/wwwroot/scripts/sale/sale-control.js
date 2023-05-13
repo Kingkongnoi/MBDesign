@@ -102,6 +102,10 @@
             $('#divCreateStyle').empty();
             clearAllInputCreateStyle();
         }
+        else if (val == "ข้อมูลลูกค้าใหม่") {
+            $('#divCreateStyle').empty();
+            clearAllInputCreateStyle();
+        }
     });
 
     $(document).on('click', '.btn-edit-cus-quotation', function () {
