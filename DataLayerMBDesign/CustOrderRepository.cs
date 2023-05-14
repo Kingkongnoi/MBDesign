@@ -137,5 +137,41 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { orderId }, transaction: trans);
         }
 
+        public List<CustOrderView> GetDesign3DList(string quotationNumber, string empName, string checklistStatus, string installDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            {
+                condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
+            }
+
+            if (!string.IsNullOrEmpty(empName) && empName != "%%")
+            {
+                condition += string.Format(" and isnull(c.empFirstName + ' ' + c.empLastName,'') like N'%{0}%'", empName);
+            }
+
+            if (!string.IsNullOrEmpty(checklistStatus) && checklistStatus != "%%")
+            {
+                condition += string.Format(" and isnull(b.checklistStatus,'') = N'{0}'", checklistStatus);
+            }
+
+            if (!string.IsNullOrEmpty(installDate) && installDate != "%%")
+            {
+                condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
+            }
+
+            string queryString = string.Format(@"select a.orderId, a.quotationNumber, a.installDate, isnull(c.empFirstName + ' ' + c.empLastName,'') ownerEmpName, b.dueDate, isnull(b.checklistStatus,'') checklistStatus,
+            case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
+            case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+            from tbCustOrder a left join tbDesign3D b on a.orderId = isnull(b.orderId,0)
+            left join tbEmpData c on isnull(b.ownerEmpId,0) = isnull(c.id,0)
+            where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
+            {0}
+            order by a.orderId
+            ", condition);
+
+            return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
     }
 }

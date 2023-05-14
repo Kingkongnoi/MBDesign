@@ -58,5 +58,10 @@ namespace EntitiesMBDesign
         public string accountName { get; set; } = string.Empty;
         public string accountNumber { get; set; } = string.Empty;
         public string accountType { get; set; } = string.Empty;
+        public string ownerEmpName { get; set; } = string.Empty;
+        public DateTime? dueDate { get; set; }
+        public string checklistStatus { get; set; } = string.Empty;
+        public DateTime? lastUpdateDate { get; set; }
+        public string lastUpdateBy { get; set; } = string.Empty;
     }
 }
