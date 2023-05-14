@@ -34,6 +34,7 @@ namespace EntitiesMBDesign
         public string orderStatus { get; set; } = string.Empty;
         public string quotationComment { get; set; } = string.Empty;
         public decimal orderNotePrice { get; set; }
+        public string quotationYearMonthGen { get; set; } = string.Empty;
     }
 
     public class CustOrderView : tbCustOrder

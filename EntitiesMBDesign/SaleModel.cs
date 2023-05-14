@@ -34,6 +34,7 @@ namespace EntitiesMBDesign
         public int custId { get; set; }
         public string quotationComment { get; set; } = string.Empty;
         public decimal orderNotePrice { get; set; } = 0;
+        public string contractFileName { get; set; } = string.Empty;
     }
 
     public class SaleItem

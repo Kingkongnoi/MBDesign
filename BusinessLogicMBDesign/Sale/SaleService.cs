@@ -26,7 +26,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly CustOrderRepository _custOrderRepository;
         private readonly CustOrderDetailRepository _custOrderDetailRepository;
         private readonly CustOrderItemOptionsRepository _custOrderItemOptionsRepository;
-
+        private readonly ContractAgreementRepository _contractAgreementRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -42,6 +42,7 @@ namespace BusinessLogicMBDesign.Sale
             _custOrderRepository = new CustOrderRepository();
             _custOrderDetailRepository = new CustOrderDetailRepository();
             _custOrderItemOptionsRepository = new CustOrderItemOptionsRepository();
+            _contractAgreementRepository = new ContractAgreementRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -207,57 +208,7 @@ namespace BusinessLogicMBDesign.Sale
         }
         #endregion bank account
 
-        public string SaveAndCreateQuotation(SaleModel model)
-        {
-            // Add cust data
-            var custObj = new CustModel
-            {
-                custFirstName = model.custFirstName,
-                custSurName = model.custSurName,
-                custNickName = model.custNickName,
-                custTel = model.custTel,
-                custLineId = model.custLineId,
-                custAddress = model.custAddress,
-                custLocation = model.custLocation,
-                custInstallAddress = model.custInstallAddress
-            };
-
-            int? custId = 0;
-            if (model.action == "add") {
-                custId = this.AddCust(custObj);
-            }
-            else
-            {
-                custObj.custId = model.custId;
-                this.UpdateCust(custObj);
-                custId = model.custId;
-            }
-
-            int? orderId = 0;
-            if (model.action == "add")
-            {
-                orderId = this.AddCustOrder(model, custId.Value);
-            }
-            else
-            {
-                orderId = model.orderId;
-                this.UpdateCustOrder(model, custId.Value, orderId.Value);
-            }
-
-            if (model.action == "add")
-            {
-                int? orderDetailId = this.AddCustOrderDetail(model, orderId.Value);
-            }
-            else
-            {
-                this.UpdateCustOrderDetail(model, orderId.Value);
-            }
-           
-
-            string quotationNumber = this.GetQuotationNumberByOrderId(orderId.Value);
-
-            return quotationNumber;
-        }
+        #region CustOrder
         public int? AddCustOrder(SaleModel model, int custId)
         {
             int? added = 0;
@@ -270,14 +221,18 @@ namespace BusinessLogicMBDesign.Sale
                 try
                 {
                     string type = (model.vatPercentage == 0) ? "N" : "";
-                    int lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByType(type, conn, transaction);
+
+                    string quotationYearMonthGen = this.GenerateYearMonth();
+
+                    int lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByTypeAndYearMonthGen(type, quotationYearMonthGen, conn, transaction);
                     int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
 
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
                     string orderStatus = (model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
-                    string quotation = this.GenerateQuotaion(generateNumber, type);
+
+                    string quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
 
                     var addedObject = new tbCustOrder
                     {
@@ -298,9 +253,15 @@ namespace BusinessLogicMBDesign.Sale
                         createDate = DateTime.UtcNow,
                         createBy = "MB9999",
                         orderStatus = orderStatus,
+                        quotationYearMonthGen = quotationYearMonthGen
                     };
 
                     added = _custOrderRepository.Add(addedObject, conn, transaction);
+
+                    ///Contract generate
+                    string contractStatus = (orderStatus == "อนุมัติ") ? "เอกสารใบเสนอราคาอนุมัติ" : "เอกสารใบเสนอราคาอยู่ระหว่างการอนุมัติ";
+                    model.custId = custId;
+                    int? addedContract = this.AddContractAgreement(model, quotationYearMonthGen, contractStatus, quotation);
 
                     transaction.Commit();
                 }
@@ -332,14 +293,16 @@ namespace BusinessLogicMBDesign.Sale
                     string type = (model.vatPercentage == 0) ? "N" : "";
 
                     int lastestNumberGen = 0;
-                    
+
+                    string quotationYearMonthGen = this.GenerateYearMonth();
+
                     if (orderId != 0)
                     {
                         lastestNumberGen = (custOrder != null) ? custOrder.quotationNumberGen : 0;
                     }
                     else
                     {
-                        lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByType(type, conn, transaction);
+                        lastestNumberGen = _custOrderRepository.GetLastestQuotationNumberByTypeAndYearMonthGen(type, quotationYearMonthGen, conn, transaction);
                     }
 
                     int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
@@ -356,7 +319,7 @@ namespace BusinessLogicMBDesign.Sale
                     }
                     else
                     {
-                        quotation = this.GenerateQuotaion(generateNumber, type);
+                        quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
                     }
 
                     var addedObject = new tbCustOrder
@@ -426,7 +389,7 @@ namespace BusinessLogicMBDesign.Sale
 
                     transaction.Commit();
                 }
-                catch 
+                catch
                 {
                     transaction.Rollback();
                 }
@@ -434,7 +397,7 @@ namespace BusinessLogicMBDesign.Sale
 
             return added;
         }
-        public void AddCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction trans = null)
+        public void AddCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction? trans = null)
         {
             try
             {
@@ -501,7 +464,7 @@ namespace BusinessLogicMBDesign.Sale
 
             return added;
         }
-        public void UpdateCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction trans = null)
+        public void UpdateCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction? trans = null)
         {
             try
             {
@@ -524,16 +487,101 @@ namespace BusinessLogicMBDesign.Sale
             catch { }
 
         }
-        public string GenerateQuotaion(int generateNumber, string type)
+        public List<CustOrderView> GetOrderDetailByOrderId(int orderId)
         {
-            ThaiBuddhistCalendar thaiCalendar = new ThaiBuddhistCalendar();
-            
-            string getYear = thaiCalendar.GetYear(DateTime.UtcNow).ToString();
-            string getMonth = string.Format("{0:00}", thaiCalendar.GetMonth(DateTime.UtcNow));
-            
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetOrderDetailByOrderId(orderId, conn);
+            }
+        }
+        public List<tbCustOrderDetail> GetCustOrderDetailByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderDetailRepository.GetByOrderId(orderId, conn);
+            }
+        }
+        public CustOrderView GetCustOrderByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
+            }
+        }
+        public List<tbCustOrderItemOptions> GetItemOptionsByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderItemOptionsRepository.GetItemOptionsByOrderId(orderId, conn);
+            }
+        }
+        #endregion CustOrder
+
+        #region Quotation
+        public string SaveAndCreateQuotation(SaleModel model)
+        {
+            // Add cust data
+            var custObj = new CustModel
+            {
+                custFirstName = model.custFirstName,
+                custSurName = model.custSurName,
+                custNickName = model.custNickName,
+                custTel = model.custTel,
+                custLineId = model.custLineId,
+                custAddress = model.custAddress,
+                custLocation = model.custLocation,
+                custInstallAddress = model.custInstallAddress
+            };
+
+            int? custId = 0;
+            if (model.action == "add")
+            {
+                custId = this.AddCust(custObj);
+            }
+            else
+            {
+                custObj.custId = model.custId;
+                this.UpdateCust(custObj);
+                custId = model.custId;
+            }
+
+            int? orderId = 0;
+            if (model.action == "add")
+            {
+                orderId = this.AddCustOrder(model, custId.Value);
+            }
+            else
+            {
+                orderId = model.orderId;
+                this.UpdateCustOrder(model, custId.Value, orderId.Value);
+            }
+
+            if (model.action == "add")
+            {
+                int? orderDetailId = this.AddCustOrderDetail(model, orderId.Value);
+            }
+            else
+            {
+                this.UpdateCustOrderDetail(model, orderId.Value);
+            }
+
+            string quotationNumber = this.GetQuotationNumberByOrderId(orderId.Value);
+
+            return quotationNumber;
+        }
+        public string GenerateQuotaion(int generateNumber, string type, string yearMonth)
+        {
             string getNumber = string.Format("{0:0000}", generateNumber);
 
-            string newQuotation = string.Format("{0}{1}{2}{3}", getYear, getMonth, getNumber, type);
+            string newQuotation = string.Format("{0}{1}{2}", yearMonth, getNumber, type);
 
             return newQuotation;
         }
@@ -547,7 +595,7 @@ namespace BusinessLogicMBDesign.Sale
                 try
                 {
                     var exists = _custOrderRepository.GetFirstByOrderIdSortDesc(orderId, conn);
-                    if(exists != null)
+                    if (exists != null)
                     {
                         result = exists.quotationNumber;
                     }
@@ -559,7 +607,6 @@ namespace BusinessLogicMBDesign.Sale
 
             return result;
         }
-
         public List<CustOrderView> GetQuotationList(string quotationNumber, string quotationCusName, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -569,51 +616,79 @@ namespace BusinessLogicMBDesign.Sale
                 return _custOrderRepository.GetQuotationList(quotationNumber, quotationCusName, status, conn);
             }
         }
+        #endregion Quotation
 
+        #region UploadRef
         public bool SaveUploadOrderRef(object obj)
         {
             //bool result = UploadToAwsController.SaveUploadOrderRef(obj);
             return true;
         }
+        #endregion UploadRef
 
-        public List<CustOrderView> GetOrderDetailByOrderId(int orderId)
+        #region Contract
+        public string GenerateContractNumber(int generateNumber, string yearMonth)
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
+            string getNumber = string.Format("{0:0000}", generateNumber);
 
-                return _custOrderRepository.GetOrderDetailByOrderId(orderId, conn);
-            }
+            string newContractNum = string.Format("{0}{1}", yearMonth, getNumber);
+
+            return newContractNum;
         }
-
-        public List<tbCustOrderDetail> GetCustOrderDetailByOrderId(int orderId)
+        public int? AddContractAgreement(SaleModel model, string yearMonth, string contractStatus, string quotation)
         {
+            int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _custOrderDetailRepository.GetByOrderId(orderId, conn);
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    int lastestNumberGen = _contractAgreementRepository.GetLastestContractNumberByYearMonthGen(yearMonth, conn, transaction);
+                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
+
+                    string contractNumber = this.GenerateContractNumber(generateNumber, yearMonth);
+
+                    var addedObject = new tbContractAgreement
+                    {
+                        contractNumber = contractNumber,
+                        quotationNumber = quotation,
+                        contractStatus = contractStatus,
+                        custId = model.custId,
+                        contractFileName = model.contractFileName,
+                        contractNumberGen = generateNumber,
+                        contractYearMonthGen = yearMonth,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999",
+                    };
+
+                    added = _contractAgreementRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
             }
+
+            return added;
         }
+        #endregion Contract
 
-        public CustOrderView GetCustOrderByOrderId(int orderId)
+        public string GenerateYearMonth()
         {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
+            ThaiBuddhistCalendar thaiCalendar = new ThaiBuddhistCalendar();
 
-                return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
-            }
-        }
+            string getYear = thaiCalendar.GetYear(DateTime.UtcNow).ToString();
+            string getMonth = string.Format("{0:00}", thaiCalendar.GetMonth(DateTime.UtcNow));
 
-        public List<tbCustOrderItemOptions> GetItemOptionsByOrderId(int orderId)
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
+            string yearMonth = string.Format("{0}{1}", getYear, getMonth);
 
-                return _custOrderItemOptionsRepository.GetItemOptionsByOrderId(orderId, conn);
-            }
+            return yearMonth;
         }
 
     }

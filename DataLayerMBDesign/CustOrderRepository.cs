@@ -39,14 +39,14 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.quotationType, obj.installDate, obj.orderNote, obj.discount, obj.subTotal, obj.grandTotal, obj.disposite, obj.accountId, 
                 obj.updateDate, obj.updateBy, obj.status, obj.orderStatus, obj.quotationComment, obj.orderNotePrice, obj.orderId }, transaction: trans);
         }
-        public int GetLastestQuotationNumberByType(string type, SqlConnection conn, SqlTransaction? trans = null)
+        public int GetLastestQuotationNumberByTypeAndYearMonthGen(string type, string yearMonthGen, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 isnull(quotationNumberGen,0) quotationNumberGen
                                 from tbCustOrder
-                                where quotationNumberType = @type
+                                where quotationNumberType = @type and quotationYearMonthGen = @yearMonthGen
                                 order by quotationNumberGen desc";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { type }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { type, yearMonthGen }, transaction: trans);
         }
 
         public tbCustOrder GetFirstByOrderIdSortDesc(int orderId, SqlConnection conn, SqlTransaction? trans = null)
