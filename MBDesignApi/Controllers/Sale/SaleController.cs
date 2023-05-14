@@ -92,6 +92,20 @@ namespace MBDesignApi.Controllers.Sale
             };
             return new JsonResult(result);
         }
+        [HttpGet]
+        public JsonResult GetContractList(string contractNumber, string quotationNumber, string cusName, string contractStatus, string contractDate)
+        {
+            var data = _saleService.GetContractList(contractNumber, quotationNumber, cusName, contractStatus, contractDate);
+
+            return new JsonResult(data);
+        }
+        [HttpGet]
+        public JsonResult GetContractStatusSelect2()
+        {
+            var data = _saleService.GetContractStatusSelect2();
+
+            return new JsonResult(data);
+        }
         #endregion GET
 
         #region POST

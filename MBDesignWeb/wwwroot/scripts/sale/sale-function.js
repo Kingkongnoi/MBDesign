@@ -793,21 +793,18 @@ function renderGetQuotationList(data) {
                 },
                 {
                     targets: 4,
-                    data: 'createDate',
-                    render: function (data, type, row) {
-                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
-                    },
-                },
-                {
-                    targets: 5,
                     data: 'updateDate',
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
-                    targets: 6,
+                    targets: 5,
                     data: 'updateBy'
+                },
+                {
+                    targets: 6,
+                    data: 'orderStatus'
                 },
                 {
                     targets: 7,
@@ -840,7 +837,6 @@ function calculateSubAndGrandTotal(vatPercentage = 0) {
 
     $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
 }
-
 function calculateVat(vat_value) {
     let vatPercentage = 0;
     if (vat_value == "vat") {
@@ -854,7 +850,6 @@ function calculateVat(vat_value) {
     }
     calculateSubAndGrandTotal(vatPercentage);
 }
-
 function calculateDisposite() {
     let showDisposite = 0;
     $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
@@ -1191,4 +1186,128 @@ function clearCalPriceForm() {
     $(`${formId} #input-cal-disposite`).val('');
     $(`${formId} #radioBankPersonal`).prop('checked', true);
     $(`${formId} #input-cal-approve`).val('');
+}
+
+function clearSearchContractForm() {
+    let formId = '#form-search-cus-contract-document';
+
+    $(`${formId} #input-search-doc-number`).val('');
+    $(`${formId} #input-search-doc-quotation-number`).val('');
+    $(`${formId} #input-search-doc-cusName`).val('');
+    $(`${formId} #select-search-doc-contract-status`).val('').trigger('change');
+    $(`${formId} #input-search-doc-date`).val('');
+}
+function callGetContractList() {
+    let formId = '#form-search-cus-contract-document';
+
+    let contractNumber = ($(`${formId} #input-search-doc-number`).val() == '') ? "%%" : $(`${formId} #input-search-doc-number`).val();
+    let quotationNumber = ($(`${formId} #input-search-doc-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-doc-quotation-number`).val();
+    let cusName = ($(`${formId} #input-search-doc-cusName`).val() == '') ? "%%" : $(`${formId} #input-search-doc-cusName`).val();
+    let contractStatus = ($(`${formId} #select-search-doc-contract-status`).val() == '') ? "%%" : $(`${formId} #select-search-doc-contract-status`).val();
+    let contractDate = ($(`${formId} #input-search-doc-date`).val() == '') ? "%%" : $(`${formId} #input-search-doc-date`).val();
+
+    //let loaded = $('#tb-quotation-list');
+
+    //loaded.prepend(loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetContractList?contractNumber=${contractNumber}&quotationNumber=${quotationNumber}&cusName=${cusName}&contractStatus=${contractStatus}&contractDate=${contractDate}`,
+        success: function (data) {
+            renderGetContractList(data);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderGetContractList(data) {
+    $('#tb-cus-doc-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'contractNumber',
+                    className: "contractNumber-details",
+                },
+                {
+                    targets: 1,
+                    data: 'quotationNumber',
+                },
+                {
+                    targets: 2,
+                    data: 'fullName',
+                },
+                {
+                    targets: 3,
+                    data: 'contractStatus',
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'createBy'
+                },
+                {
+                    targets: 6,
+                    data: 'updateDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'updateBy'
+                },
+                {
+                    targets: 8,
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
+                    <i class="fas fa-file"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function callGetContractStatusSelect2() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetContractStatusSelect2`,
+        success: function (data) {
+            renderContractStatusSelect2(data);
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderContractStatusSelect2(data) {
+    $(`#form-search-cus-contract-document #select-search-doc-contract-status`).empty();
+    $(`#form-search-cus-contract-document #select-search-doc-contract-status`).append(`<option value="">ทั้งหมด</option>`);
+    data.forEach((v) => {
+        $(`#form-search-cus-contract-document #select-search-doc-contract-status`).append(`<option value="${v.contractStatus}">${v.contractStatus}</option>`);
+    });
+    $(`#form-search-cus-contract-document #select-search-doc-contract-status`).val('').trigger('change');
 }

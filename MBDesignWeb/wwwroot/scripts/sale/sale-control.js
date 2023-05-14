@@ -8,6 +8,10 @@
     clearSearchQuotationForm();
     callGetQuotationList();
 
+    clearSearchContractForm();
+    callGetContractStatusSelect2();
+    callGetContractList();
+
     $('#div-createNewCus .btn-next-cus-style').on('click', function () {
         if (!validateInputFormCustomerData()) { return; }
 
@@ -117,4 +121,12 @@
         renderEditQuotation($(this).data('id'));
     });
 
+    $('#form-search-cus-contract-document .btn-clear-search-cus-doc').on('click', function () {
+        clearSearchContractForm();
+        callGetContractList();
+    });
+
+    $('#form-search-cus-contract-document .btn-search-cus-doc').on('click', function () {
+        callGetContractList();
+    });
 });

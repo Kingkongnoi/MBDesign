@@ -677,6 +677,24 @@ namespace BusinessLogicMBDesign.Sale
 
             return added;
         }
+        public List<ContractAgreementView> GetContractList(string contractNumber, string quotationNumber, string cusName, string contractStatus, string contractDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _contractAgreementRepository.GetContractList(contractNumber, quotationNumber, cusName, contractStatus, contractDate, conn);
+            }
+        }
+        public List<tbContractAgreement> GetContractStatusSelect2()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _contractAgreementRepository.GetContractStatus(conn);
+            }
+        }
         #endregion Contract
 
         public string GenerateYearMonth()

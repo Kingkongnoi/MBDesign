@@ -25,4 +25,9 @@ namespace EntitiesMBDesign
         public int contractNumberGen { get; set; }
         public string contractYearMonthGen { get; set; } = string.Empty;
     }
+
+    public class ContractAgreementView : tbContractAgreement
+    {
+        public string fullName { get; set; } = string.Empty;
+    }
 }

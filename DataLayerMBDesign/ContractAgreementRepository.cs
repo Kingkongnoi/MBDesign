@@ -24,5 +24,67 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { yearMonthGen }, transaction: trans);
         }
+        public List<ContractAgreementView> GetContractList(string contractNumber, string quotationNumber, string cusName, string contractStatus, string contractDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "%%")
+            {
+                condition += string.Format(" and a.contractNumber like N'%{0}%'", contractNumber);
+            }
+
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            {
+                condition += string.Format(" and a.quotationNumber like N'%{0}%'", quotationNumber);
+            }
+
+            if (!string.IsNullOrEmpty(cusName) && cusName != "%%")
+            {
+                condition += string.Format(" and (b.custFirstName + ' ' + b.custSurName) like N'%{0}%'", cusName);
+            }
+
+            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "%%")
+            {
+                condition += string.Format(" and a.contractStatus = N'{0}'", contractStatus);
+            }
+
+            if (!string.IsNullOrEmpty(contractDate) && contractDate != "%%")
+            {
+                condition += string.Format(" and  FORMAT(a.createDate, 'yyyy-MM-dd') = N'{0}'", contractDate);
+            }
+
+            string queryString = string.Format(@"SELECT a.id
+            ,a.contractNumber
+            ,a.quotationNumber
+            ,a.contractStatus
+            ,a.custId
+            ,a.contractFileName
+            ,a.contractNumberGen
+            ,a.contractYearMonthGen
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+            ,b.custFirstName + ' ' + b.custSurName fullName
+            FROM tbContractAgreement a inner join tbcust b on a.custId = b.custId 
+            where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
+            {0}
+            order by contractNumber", condition);
+
+            return conn.Query<ContractAgreementView>(queryString,new { }, transaction: trans).ToList();
+        }
+
+        public List<tbContractAgreement> GetContractStatus(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"	select contractStatus 
+			from tbContractAgreement 
+			where isDeleted = 0 
+			group by  contractStatus 
+			order by contractStatus";
+
+            return conn.Query<tbContractAgreement>(queryString, transaction: trans).ToList();
+        }
     }
 }
