@@ -936,7 +936,7 @@ function clearAllInputCreateStyle() {
 
     clearCalPriceForm();
     $(`#form-createCalculatePrice input[name="radioVatType"]`).attr('disabled', false);
-    $(`#form-createCalculatePrice #divNoteApprove`).addClass('note-approve-show');
+    $(`#form-createCalculatePrice #divEditQuotation`).addClass('note-approve-show');
 }
 
 var _items = [];
@@ -1175,7 +1175,7 @@ function renderCustCalPrice(data) {
         $(`${formId} #radioBankCompany`).prop('checked', true);
     }
 
-    $(`${formId} #divNoteApprove`).removeClass('note-approve-show');
+    $(`${formId} #divEditQuotation`).removeClass('note-approve-show');
     $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
 }
 
