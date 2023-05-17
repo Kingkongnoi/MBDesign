@@ -1,0 +1,53 @@
+﻿<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-foreman-queue">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>เลขที่ใบเสนอราคา</label>
+                            <input type="text" class="form-control" id="input-search-foreman-quotation-number" name="input-search-foreman-quotation-number" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label>ชื่อลูกค้า</label>
+                            <input type="text" class="form-control" id="input-search-foreman-cus-name" name="input-search-foreman-cus-name" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label>สถานะการวัดหน้างาน</label>
+                            <select class="form-select" id="select-search-foreman-status">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>วันที่พร้อมติดตั้ง</label>
+                            <input type="date" class="form-control" id="input-search-foreman-install-date" name="input-search-foreman-install-date" />
+                        </div>
+                        <div class="col-sm-4 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-foreman">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-foreman">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-foreman-queue-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th><span>เลขที่ใบเสนอราคา</span></th>
+                            <th><span>วันที่พร้อมติดตั้ง</span></th>
+                            <th><span>ชื่อลูกค้า</span></th>
+                            <th><span>สถานะการวัดหน้างาน</span></th>
+                            <th><span>วันที่แก้ไขล่าสุด</span></th>
+                            <th><span>ผู้แก้ไขล่าสุด</span></th>
+                            <th><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("modal/_editForeman.cshtml")

@@ -10,29 +10,29 @@
 <script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/piexif.min.js" type="text/javascript"></script>
 
 @*modal for create 3d*@
-<div id="modal-editDesign3D" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+<div id="modal-editForeman" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-dialog-scrollable modal-xl">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-center">แก้ไขงาน 3D</h4>
+                <h4 class="modal-title text-center">แก้ไขข้อมูลวัดหน้างาน 3D</h4>
             </div>
             <div class="modal-body">
-                <form id="form-editDesign3D">
+                <form id="form-editForeman">
                     <div class="row d-sm-flex">
 
                         <div class="col-sm-6">
                             <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-4 col-form-label text-end">เลขที่ใบเสนอราคา</label>
+                                <label class="col-sm-4 col-form-label text-end">เลขที่สัญญา</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" type="text" id="input-edit-3d-quotation" name="input-edit-3d-quotation" disabled />
+                                    <input class="form-control" type="text" id="input-edit-foreman-contract" name="input-edit-foreman-contract" disabled />
                                 </div>
                             </div>
 
                             <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-4 col-form-label text-end">ผู้รับผิดชอบออกแบบ 3D</label>
+                                <label class="col-sm-4 col-form-label text-end">สถานะการวัดหน้างาน</label>
                                 <div class="col-sm-8">
-                                    <select class="form-select" id="select-edit-3d-designName"></select>
+                                    <select class="form-select" id="select-edit-foreman-status"></select>
                                 </div>
                             </div>
 
@@ -40,18 +40,12 @@
 
                         <div class="col-sm-6">
                             <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-4 col-form-label text-end">วันที่พร้อมติดตั้ง</label>
+                                <label class="col-sm-4 col-form-label text-end">เลขที่ใบเสนอราคา</label>
                                 <div class="col-sm-8">
-                                    <input class="form-control" type="text" id="input-edit-3d-install-date" name="input-edit-3d-install-date" disabled />
+                                    <input class="form-control" type="text" id="input-edit-foreman-quotation" name="input-edit-foreman-quotation" disabled />
                                 </div>
                             </div>
 
-                            <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-4 col-form-label text-end">วันที่กำหนดส่งงาน</label>
-                                <div class="col-sm-8">
-                                    <input class="form-control" type="date" id="input-edit-3d-due-date" name="input-edit-3d-due-date" />
-                                </div>
-                            </div>
                         </div>
 
                         <div class="col-sm-12">

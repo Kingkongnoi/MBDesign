@@ -173,5 +173,41 @@ namespace DataLayerMBDesign
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
+        public List<CustOrderView> GetForemanList(string quotationNumber, string cusName, string foremanStatus, string installDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            {
+                condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
+            }
+
+            if (!string.IsNullOrEmpty(cusName) && cusName != "%%")
+            {
+                condition += string.Format(" and isnull(c.custFirstName + ' ' + c.custSurName,'') like N'%{0}%'", cusName);
+            }
+
+            if (!string.IsNullOrEmpty(foremanStatus) && foremanStatus != "%%")
+            {
+                condition += string.Format(" and isnull(b.foremanStatus,'') = N'{0}'", foremanStatus);
+            }
+
+            if (!string.IsNullOrEmpty(installDate) && installDate != "%%")
+            {
+                condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
+            }
+
+            string queryString = string.Format(@"select a.orderId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, isnull(b.foremanStatus,'') foremanStatus,
+            case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
+            case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+            from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)
+            left join tbCust c on isnull(a.custId,0) = isnull(c.custId,0)
+            where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
+            {0}
+            order by a.orderId
+            ", condition);
+
+            return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
     }
 }

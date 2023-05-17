@@ -63,5 +63,7 @@ namespace EntitiesMBDesign
         public string checklistStatus { get; set; } = string.Empty;
         public DateTime? lastUpdateDate { get; set; }
         public string lastUpdateBy { get; set; } = string.Empty;
+        public string cusName { get; set; } = string.Empty;
+        public string foremanStatus { get; set; } = string.Empty;
     }
 }
