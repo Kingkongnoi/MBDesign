@@ -129,4 +129,5 @@
     $('#form-search-cus-contract-document .btn-search-cus-doc').on('click', function () {
         callGetContractList();
     });
+
 });

@@ -55,3 +55,33 @@
     </div>
     </div>
 </div>
+
+<div class="">
+    @Html.Partial("~/Views/DocumentTemplates/_QuotationVAT.cshtml")
+</div>
+
+<script>
+    $(function() {
+
+        $(document).on('click', '.btn-view-cus-contract', function () {
+        //let element = document.getElementById("quotationVatElement");
+        //html2pdf(element);
+            var element = document.getElementById('quotationVatElement');
+            var opt = {
+                margin: 0.5,
+                filename: 'myfile.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            // New Promise-based usage:
+            html2pdf().set(opt).from(element).save();
+
+            // Old monolithic-style usage:
+            //html2pdf(element, opt);
+        });
+    });
+
+</script>
+

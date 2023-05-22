@@ -1311,3 +1311,18 @@ function renderContractStatusSelect2(data) {
     });
     $(`#form-search-cus-contract-document #select-search-doc-contract-status`).val('').trigger('change');
 }
+
+
+const HtmlToPdf = (element, fileName) => {
+    let opt = {
+        margin: 5,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "svg", quality: 0.98 },
+        html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+    html2pdf()
+        .set(opt)
+        .from(element)
+        .save(fileName);
+};
