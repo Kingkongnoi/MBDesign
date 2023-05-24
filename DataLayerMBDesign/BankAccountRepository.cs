@@ -161,5 +161,17 @@ namespace DataLayerMBDesign
 
             return conn.Query<tbBankAccount>(queryString, transaction: trans).ToList();
         }
+
+        public int UpdateCountUsage(tbBankAccount obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"  update tbBankAccount
+                                set countUsage = countUsage+1,
+                                updateDate = @updateDate,
+                                updateBy = @updateBy
+                                where accountId = @accountId
+                                select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.updateDate, obj.updateBy, obj.accountId }, transaction: trans);
+        }
     }
 }

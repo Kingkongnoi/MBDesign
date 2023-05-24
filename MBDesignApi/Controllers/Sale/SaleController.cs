@@ -1,9 +1,11 @@
-﻿using BusinessLogicMBDesign.Master;
+﻿using BusinessLogicMBDesign;
+using BusinessLogicMBDesign.Master;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -17,11 +19,13 @@ namespace MBDesignApi.Controllers.Sale
     public class SaleController : Controller
     {
         private readonly SaleService _saleService;
+        private readonly UploadToAwsService _uploadToAwsService;
         private readonly IConfiguration _configuration; 
         public SaleController(IConfiguration configuration)
         {
             _configuration = configuration;
             _saleService = new SaleService(_configuration);
+            _uploadToAwsService = new UploadToAwsService(_configuration);
         }
 
         #region GET
@@ -173,11 +177,65 @@ namespace MBDesignApi.Controllers.Sale
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public JsonResult SaveUploadOrderRef([FromBody]IFormFile files)
+        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, List<IFormFile> files)
         {
-            //var data = DoUploadToAws();
-           return new JsonResult("OK");
+            var msg = new ResultMessage();
+            var addedUpload = new List<UploadFiles>();
+
+            string path = Directory.GetCurrentDirectory();
+            foreach (IFormFile source in files)
+            {
+                string folderName = string.Format("{0}\\images\\", path);
+                
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+
+                FileInfo file = new FileInfo(filename);
+                string fileExtension = file.Extension;
+
+                string oldFilePath = string.Format("{0}{1}", folderName, filename);
+                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+
+                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+
+                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+                FileStream output = System.IO.File.Create(fullFilePath);
+
+                source.CopyTo(output);
+                output.Dispose();
+                
+                var obj = new UploadFiles
+                {
+                    fileName = newFileName,
+                    filePath = fullFilePath,
+                    fileSize = source.Length,
+                    originalFileName = filename,
+                };
+
+                msg = _uploadToAwsService.DoUploadToAws(obj);
+                obj.imageUrl = msg.strResult;
+                if (msg.isResult == false) 
+                {
+                    return Json(msg);
+                }
+
+                addedUpload.Add(obj);
+            }
+
+            ///Update data
+            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId);
+            if(result == false)
+            {
+                return Json(msg);
+            }
+            return Json(msg);
+
         }
+
         #endregion POST
     }
 }

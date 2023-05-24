@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -54,11 +55,25 @@ namespace EntitiesMBDesign
         public int optionsId { get; set; }
     }
 
-    public class SaleUploadFiles
+    public class UploadFiles
     {
         public string fileName { get; set; } = string.Empty;
         public string filePath { get; set; } = string.Empty;
         public long fileSize { get; set; }
+        public string originalFileName { get; set; } = string.Empty;
+        public string imageUrl { get; set; } = string.Empty;
 
+    }
+
+    public class CustReturn
+    {
+        public int orderId { get; set; }
+        public string quotationNumber { get; set; } = string.Empty;
+    }
+
+    public class FromData
+    {
+        public int orderId { get; set; }
+        public List<IFormFile> files { get; set; }
     }
 }

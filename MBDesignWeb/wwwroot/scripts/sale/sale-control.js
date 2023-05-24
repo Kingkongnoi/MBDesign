@@ -70,7 +70,7 @@
     });
 
     $('#divUploadRef .btn-save-cus-upload-ref').on('click', function () {
-        callSaveUploadRef();
+        callUploadRef();
     });
 
     $('#form-search-quotation .btn-clear-search-quotation').on('click', function () {

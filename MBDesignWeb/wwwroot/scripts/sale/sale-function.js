@@ -598,6 +598,7 @@ function callSaveAndCreateQuotation() {
         confirmButtonColor: _modal_primary_color_code,
     }).then((result) => {
         if (result.isConfirmed) {
+            swal.close();
             saveQuotation();
         }
     });
@@ -700,9 +701,12 @@ function saveQuotation() {
     });
 }
 
-function renderQuotationNumber(quotationNumber) {
+function renderQuotationNumber(res) {
+    $('#divUploadRef #form-uploadRef #custOrderId').val("");
+    $('#divUploadRef #form-uploadRef #custOrderId').val(res.orderId);
+
     $('#divUploadRef #form-uploadRef #input-quotation-number').val("");
-    $('#divUploadRef #form-uploadRef #input-quotation-number').val(quotationNumber);
+    $('#divUploadRef #form-uploadRef #input-quotation-number').val(res.quotationNumber);
 }
 
 function callSuccessAlert() {
@@ -869,57 +873,134 @@ function calculateDisposite() {
     $('#form-createCalculatePrice input[name="input-cal-disposite"]').val(Math.floor(showDisposite));
 }
 
-function callSaveUploadRef() {
-    let url = `${app_settings.api_url}/api/Sale/SaveUploadOrderRef`;
+function clearUploadRefForm() {
+    $('#divUploadRef #form-uploadRef #custOrderId').val("");
+    $('#divUploadRef #form-uploadRef #input-quotation-number').val("");
 
-    var files = $('#select-upload-plan').prop("files");
-    //var fdata = new FormData();
-    for (var i = 0; i < files.length; i++) {
-        //fdata.append("files", files[i]);
-        console.log(files[i]);
+    $('#select-upload-plan').fileinput('destroy')
+    $('#select-upload-plan').fileinput({
+        uploadUrl: "Home/UploadFiles", // this is your home controller method url
+        //maxFileCount: 1,
+        showBrowse: true,
+        browseOnZoneClick: true,
+        browseLabel: 'เลือกไฟล์'
+    });
+
+    $('#select-upload-reference').fileinput('destroy')
+    $('#select-upload-reference').fileinput({
+        uploadUrl: "Home/UploadFiles", // this is your home controller method url
+        //maxFileCount: 1,
+        showBrowse: true,
+        browseOnZoneClick: true,
+        browseLabel: 'เลือกไฟล์'
+    });
+
+    $('#select-upload-disposite').fileinput('destroy')
+    $('#select-upload-disposite').fileinput({
+        uploadUrl: "Home/UploadFiles", // this is your home controller method url
+        //maxFileCount: 1,
+        showBrowse: true,
+        browseOnZoneClick: true,
+        browseLabel: 'เลือกไฟล์'
+    });
+
+    $('#select-upload-idcard').fileinput('destroy')
+    $('#select-upload-idcard').fileinput({
+        uploadUrl: "Home/UploadFiles", // this is your home controller method url
+        //maxFileCount: 1,
+        showBrowse: true,
+        browseOnZoneClick: true,
+        browseLabel: 'เลือกไฟล์'
+    });
+}
+function callUploadRef() {
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            swal.close();
+            saveUpload();
+        }
+    });
+}
+function saveUpload() {
+    var rsltUpload = true;
+
+    var orderId = $('#divUploadRef #form-uploadRef #custOrderId').val();
+
+    var selectUploadPlan = document.getElementById("select-upload-plan");
+    var uploadPlan = selectUploadPlan.files;
+    if (uploadPlan.length > 0) {
+        rsltUpload = callSaveUpload(orderId, "CustOrderPlan", "select-upload-plan");
     }
-    //console.log(fdata);
-    var obj = {
-        plan: $('#select-upload-plan').prop("files")
-        //custFirstName: cusFirstName,
-        //custSurName: cusLastName,
-        //custNickName: cusNickName,
-        //custTel: cusTel,
-        //custLineId: cusLineId,
-        //custAddress: cusBillAddress,
-        //custLocation: cusLocationAddress,
-        //custInstallAddress: cusInstallAddress,
-        //quotationType: quotationType,
-        //installDate: cusInstallDate,
-        //items: items,
-        //orderNote: calNote,
-        //subTotal: subTotal,
-        //discount: discount,
-        //vat: vat,
-        //grandTotal: grandTotal,
-        //disposite: disposite,
-        //accountType: accountType,
-        //vatPercentage: vatPercentage
-    };
 
-    var data = JSON.stringify(obj);
+    var selectUploadRef = document.getElementById("select-upload-reference");
+    var uploadRef = selectUploadRef.files;
+    if (uploadRef.length > 0) {
+        rsltUpload = callSaveUpload(orderId, "CustOrderReference", "select-upload-reference");
+    }
 
+    var selectUploadDisposite = document.getElementById("select-upload-disposite");
+    var uploadDisposite = selectUploadDisposite.files;
+    if (uploadDisposite.length > 0) {
+        rsltUpload = callSaveUpload(orderId, "CustOrderDisposite", "select-upload-disposite");
+    }
+
+    var selectUploadIdCard = document.getElementById("select-upload-idcard");
+    var uploadIdCard = selectUploadIdCard.files;
+    if (uploadIdCard.length > 0) {
+        rsltUpload = callSaveUpload(orderId, "CustOrderIdCard", "select-upload-idcard");
+    }
+
+    if (rsltUpload.isResult) {
+        callSuccessAlert();
+        clearUploadRefForm();
+        $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
+    }
+    else {
+        Swal.fire({
+            text: rsltUpload.message,
+            icon: 'error',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+        });
+    }
+}
+let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "") {
+    let url = (_action == "add") ? `${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}` : ``;
+
+    var control = document.getElementById(`${intputFileName}`);
+    var files = control.files;
+    var formData = new FormData();
+
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    var returnResult;
     $.ajax({
         url: url,
-        type: 'POST',
-        data: data,
-        success: (res) => {
-            if (res != "") {
-                callSuccessAlert();
-                renderQuotationNumber(res);
-                $('.nav-pills a[href="#nav-sale-fileUpload-tab"]').tab('show');
-            }
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        success: function (result) {
+            returnResult = result
         },
-        error: () => {
-        },
-        contentType: 'application/json',
-        dataType: "json",
+        error: function (err) {
+            returnResult = result
+        }
     });
+
+    return returnResult;
 }
 
 function clearAllInputCreateStyle() {

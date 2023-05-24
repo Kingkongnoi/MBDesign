@@ -27,6 +27,9 @@ namespace BusinessLogicMBDesign.Sale
         private readonly CustOrderDetailRepository _custOrderDetailRepository;
         private readonly CustOrderItemOptionsRepository _custOrderItemOptionsRepository;
         private readonly ContractAgreementRepository _contractAgreementRepository;
+        private readonly UploadRepository _uploadRepository;
+        private readonly UploadUrlRepository _uploadUrlRepository;
+        private readonly UploadCategoryRepository _uploadCategoryRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -37,12 +40,15 @@ namespace BusinessLogicMBDesign.Sale
             _productStyleRepository = new ProductStyleRepository();
             _productTypeRepository = new ProductTypeRepository();
             _productItemRepository = new ProductItemRepository();
-            _productItemOptionsRepository  = new ProductItemOptionsRepository();
-            _bankAccountRepository  = new BankAccountRepository();
+            _productItemOptionsRepository = new ProductItemOptionsRepository();
+            _bankAccountRepository = new BankAccountRepository();
             _custOrderRepository = new CustOrderRepository();
             _custOrderDetailRepository = new CustOrderDetailRepository();
             _custOrderItemOptionsRepository = new CustOrderItemOptionsRepository();
             _contractAgreementRepository = new ContractAgreementRepository();
+            _uploadRepository = new UploadRepository();
+            _uploadUrlRepository = new UploadUrlRepository();
+            _uploadCategoryRepository = new UploadCategoryRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -230,7 +236,7 @@ namespace BusinessLogicMBDesign.Sale
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
-                    string orderStatus = (model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
+                    string orderStatus = "รออนุมัติ";//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
 
                     string quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
 
@@ -526,7 +532,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion CustOrder
 
         #region Quotation
-        public string SaveAndCreateQuotation(SaleModel model)
+        public CustReturn SaveAndCreateQuotation(SaleModel model)
         {
             // Add cust data
             var custObj = new CustModel
@@ -575,7 +581,13 @@ namespace BusinessLogicMBDesign.Sale
 
             string quotationNumber = this.GetQuotationNumberByOrderId(orderId.Value);
 
-            return quotationNumber;
+            var data = new CustReturn
+            {
+                orderId = orderId.Value,
+                quotationNumber = quotationNumber
+            };
+
+            return data;
         }
         public string GenerateQuotaion(int generateNumber, string type, string yearMonth)
         {
@@ -619,9 +631,70 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Quotation
 
         #region UploadRef
-        public bool SaveUploadOrderRef(object obj)
+        public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId)
         {
-            //bool result = UploadToAwsController.SaveUploadOrderRef(obj);
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var cat = _uploadCategoryRepository.GetFirstByName(categoryName, conn, transaction);
+                    int categoryId = (cat != null) ? cat.id : 0;
+
+                    foreach (var f in file)
+                    {
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.originalFileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadUrlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
+
+                        var upload = new tbUpload
+                        {
+                            urlId = uploadUrlId.Value,
+                            orderId = orderId,
+                            uploadCategoryId = categoryId,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadId = _uploadRepository.Add(upload, conn, transaction);
+                    }
+
+                    if (categoryName == "CustOrderDisposite")
+                    {
+                        var custOrder = _custOrderRepository.GetCustOrderByOrderId(orderId, conn, transaction);
+                        if (custOrder != null)
+                        {
+                            var bank = new tbBankAccount
+                            {
+                                accountId = custOrder.accountId,
+                                updateDate = DateTime.UtcNow,
+                                updateBy = "MB9999"
+                            };
+                            var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+            }
             return true;
         }
         #endregion UploadRef
@@ -708,6 +781,5 @@ namespace BusinessLogicMBDesign.Sale
 
             return yearMonth;
         }
-
     }
 }
