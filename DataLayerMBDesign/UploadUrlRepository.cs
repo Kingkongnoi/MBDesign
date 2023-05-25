@@ -24,5 +24,14 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { orderId, uploadCategoryId }, transaction:  trans);
         }
+
+        public int HardDeleteByUploadId(int uploadId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"  
+            delete tbUploadUrl where urlId in (select urlId from tbUpload where uploadId = @uploadId)
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { uploadId }, transaction: trans);
+        }
     }
 }

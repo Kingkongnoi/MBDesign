@@ -706,6 +706,28 @@ namespace BusinessLogicMBDesign.Sale
                 return _uploadRepository.GetByOrderId(orderId, conn);
             }
         }
+        public int DeleteUpload(int uploadId)
+        {
+            int result = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+                try
+                {
+                    result = _uploadUrlRepository.HardDeleteByUploadId(uploadId, conn, transaction);
+                    result = _uploadRepository.HardDeleteByUploadId(uploadId, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch {
+                    transaction.Rollback();
+                }
+            }
+
+            return result;
+        }
         #endregion UploadRef
 
         #region Contract

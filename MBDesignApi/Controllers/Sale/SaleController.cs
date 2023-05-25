@@ -238,6 +238,18 @@ namespace MBDesignApi.Controllers.Sale
 
         }
 
+        [HttpPost]
+        public ActionResult DeleteUpload([FromQuery] int uploadId)
+        {
+            var msg = new ResultMessage();
+            var result = _saleService.DeleteUpload(uploadId);
+            if(result > 0)
+            {
+                msg.isResult = true;
+            }
+            return Json(msg);
+
+        }
         #endregion POST
     }
 }
