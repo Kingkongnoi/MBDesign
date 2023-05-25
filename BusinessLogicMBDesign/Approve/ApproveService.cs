@@ -18,6 +18,7 @@ namespace BusinessLogicMBDesign.Approve
         private readonly CustOrderRepository _custOrderRepository;
         private readonly ApproveRepository _approveRepository;
         private readonly ContractAgreementRepository _contractAgreementRepository;
+        private readonly Design3DRepository _design3DRepository;
 
         public ApproveService(IConfiguration configuration)
         {
@@ -27,6 +28,7 @@ namespace BusinessLogicMBDesign.Approve
             _custOrderRepository = new CustOrderRepository();
             _approveRepository = new ApproveRepository();
             _contractAgreementRepository = new ContractAgreementRepository();
+            _design3DRepository = new Design3DRepository();
         }
         public int GetCountCustOrderWaitForApprove()
         {
@@ -84,11 +86,46 @@ namespace BusinessLogicMBDesign.Approve
 
                     int? approveId = _approveRepository.Add(addApprove, conn, transaction);
 
+                    //Update order status
                     string orderStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalOrderStatus.approved : GlobalOrderStatus.notApprove;
                     int updatedOrderStatus = _custOrderRepository.UpdateOrderStatus(model.orderId, orderStatus, conn, transaction);
 
+                    //Update contract status
                     string contractStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalContractStatus.documentApproved : GlobalContractStatus.documentNotApproved;
                     int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatus, conn, transaction);
+
+                    //create 3d = บันทึกรับเรื่อง
+                    if(model.approveStatus == GlobalApproveStatus.approved)
+                    {
+                        string design3DStatus = Global3DStatus.saveToDesign3D;
+                        var exists = _design3DRepository.GetByOrderId(model.orderId, conn, transaction);
+
+                        if (exists == null)
+                        {
+                            var addDesign3D = new tbDesign3D
+                            {
+                                orderId = model.orderId,
+                                checklistStatus = design3DStatus,
+                                status = true,
+                                createDate = DateTime.UtcNow,
+                                createBy = "MB9999",
+                                isDeleted = false,
+                            };
+
+                            int? id = _design3DRepository.Add(addDesign3D, conn, transaction);
+                        }
+                        else
+                        {
+                            var updateDesign3D = new tbDesign3D
+                            {
+                                orderId = model.orderId,
+                                checklistStatus = design3DStatus
+                            };
+
+                            int update3d = _design3DRepository.UpdateChecklistStatus(model.orderId, design3DStatus, conn, transaction);
+                        }
+
+                    }
 
                     msg.isResult = true;
                     transaction.Commit();

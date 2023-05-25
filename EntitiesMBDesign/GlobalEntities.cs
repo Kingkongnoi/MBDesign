@@ -25,4 +25,9 @@ namespace EntitiesMBDesign
         public static string documentApproved = "เอกสารใบเสนอราคาอนุมัติ";
         public static string documentNotApproved = "เอกสารใบเสนอราคาไม่ได้รับอนุมัติ";
     }
+
+    public class Global3DStatus
+    {
+        public static string saveToDesign3D = "บันทึกรับเรื่อง";
+    }
 }
