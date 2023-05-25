@@ -21,5 +21,12 @@ namespace DataLayerMBDesign
 
             return conn.Query<tbDesign3D>(queryString, transaction:trans).ToList();
         }
+
+        public Design3DView GetInfoByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"";
+
+            return conn.QueryFirstOrDefault<Design3DView>(queryString, new { orderId }, transaction: trans);
+        }
     }
 }

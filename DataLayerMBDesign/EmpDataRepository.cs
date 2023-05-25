@@ -111,5 +111,19 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<EmpDataView>(queryString, new { empCode }, transaction: trans);
         }
+
+        public List<EmpDataView> GetDesign3DEmpDataSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"
+              select a.empFirstName + ' ' + a.empLastName fullName
+              from tbEmpData a inner join tbRoleEmpData b on a.id = b.empId
+              inner join tbRoleMenu c on b.roleId = c.roleId
+              inner join tbMenu d on c.menuId = d.menuId
+              where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
+              and c.isDeleted = 0 and c.status = 1 and d.isDeleted = 0 and d.status = 1
+              and d.name = N'การออกแบบ 3D' and (c.canAdd = 1 or c.canEdit = 1)";
+
+            return conn.Query<EmpDataView>(queryString, transaction:trans).ToList();
+        }
     }
 }

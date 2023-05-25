@@ -236,7 +236,7 @@ namespace BusinessLogicMBDesign.Sale
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
-                    string orderStatus = "รออนุมัติ";//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
+                    string orderStatus = GlobalOrderStatus.waitForApprove;//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
 
                     string quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
 
@@ -265,7 +265,7 @@ namespace BusinessLogicMBDesign.Sale
                     added = _custOrderRepository.Add(addedObject, conn, transaction);
 
                     ///Contract generate
-                    string contractStatus = (orderStatus == "อนุมัติ") ? "เอกสารใบเสนอราคาอนุมัติ" : "เอกสารใบเสนอราคาอยู่ระหว่างการอนุมัติ";
+                    string contractStatus = GlobalContractStatus.waitDocumentForApprove;//(orderStatus == "อนุมัติ") ? "เอกสารใบเสนอราคาอนุมัติ" : "เอกสารใบเสนอราคาอยู่ระหว่างการอนุมัติ";
                     model.custId = custId;
                     int? addedContract = this.AddContractAgreement(model, quotationYearMonthGen, contractStatus, quotation);
 
@@ -316,7 +316,7 @@ namespace BusinessLogicMBDesign.Sale
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
-                    string orderStatus = "รออนุมัติ";//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
+                    string orderStatus = GlobalOrderStatus.waitForApprove;//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
 
                     string quotation = string.Empty;
                     if (orderId != 0)

@@ -1,0 +1,99 @@
+﻿<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12 mt-2">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab-approve" role="tablist">
+                            <button class="nav-link active" id="nav-approve-tab" data-bs-toggle="tab" data-bs-target="#nav-approve" type="button" role="tab" aria-controls="nav-approve" aria-selected="true" style="margin-right:2px;">รายการ Approve</button>
+                            <button class="nav-link" id="nav-approve-history-tab" data-bs-toggle="tab" data-bs-target="#nav-approve-history" type="button" role="tab" aria-controls="nav-approve-history" aria-selected="false" style="margin-right:2px;">ประวัติการ Approve</button>
+
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tab-approve-tabContent">
+                        <div class="tab-pane fade show active" id="nav-approve" role="tabpanel" aria-labelledby="nav-approve-tab">
+                            <div class="container-fluid">
+                                <div class="row mt-2">
+@*                                    <form id="form-search-approve">
+                                        <div class="row col-sm-12">
+                                            <div class="col-sm-2">
+                                                <label>เลขที่ใบเสนอราคา</label>
+                                                <input type="text" class="form-control" id="input-search-quotation-number" name="input-search-quotation-number" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>ชื่อลูกค้า</label>
+                                                <input type="text" class="form-control" id="input-search-quotation-cusName" name="input-search-quotation-cusName" />
+                                            </div>
+                                            
+                                            <div class="col-sm-2 mt-4 text-end">
+                                                <button type="button" class="btn btn-default-custom btn-clear-search-emp-data">ล้างข้อมูล</button>
+                                                <button type="button" class="btn btn-primary btn-search-emp-data">ค้นหา</button>
+                                            </div>
+                                        </div>
+                                    </form>*@
+                                </div>
+
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-approve-list" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th><span>เลขที่ใบเสนอราคา</span></th>
+                                                <th><span>ชื่อลูกค้า</span></th>
+                                                <th><span>วันที่สร้าง</span></th>
+                                                <th><span>ผู้สร้าง</span></th>
+                                                <th><span>แก้ไข</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-approve-history" role="tabpanel" aria-labelledby="nav-approve-history-tab">
+                            <div class="container-fluid">
+                                <div class="row mt-2">
+                                    @*<form id="form-search-role">
+                                        <div class="row col-sm-12">
+                                            <div class="col-sm-2">
+                                                <label>ชื่อบทบาท</label>
+                                                <input type="text" class="form-control" id="input-search-role" name="input-search-role" placeholder="" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>สถานะ</label>
+                                                <select class="form-select" id="select-search-role-status">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-8 mt-4 text-end">
+                                                <button type="button" class="btn btn-default-custom btn-clear-search-role">ล้างข้อมูล</button>
+                                                <button type="button" class="btn btn-primary btn-search-role">ค้นหา</button>
+                                            </div>
+                                        </div>
+                                    </form>*@
+                                </div>
+
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-approve-history-list" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th><span>เลขที่ใบเสนอราคา</span></th>
+                                                <th><span>ชื่อลูกค้า</span></th>
+                                                <th><span>วันที่อนุมัติ</span></th>
+                                                <th><span>ผู้อนุมัติ</span></th>
+                                                <th><span>สถานะอนุมัติ</span></th>
+                                                <th><span>คอมเมนต์</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+</div>

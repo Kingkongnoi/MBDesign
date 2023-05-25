@@ -39,6 +39,12 @@
         localStorage.setItem('webUrl', '@ViewBag.webUrl');
         localStorage.setItem('apiUrl', '@ViewBag.apiUrl');
     </script>
+
+    <style>
+        .bagde-visible{
+            visibility:hidden;
+        }
+    </style>
 </head>
 
 
@@ -75,10 +81,33 @@
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index">ข้อมูลหลัก</a>
                         </li>
+
+                    </ul>
+
+                </div>
+                <div style="display:inline;float:right;">
+                    <ul class ="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
+                            <a class="nav-link" asp-area="" asp-controller="Approval" asp-action="Index">
+                                <i class="fa fa-bell fa-lg"></i>
+                                <span class="badge rounded-pill badge-notification bg-danger bagde-visible" style="font-size:0.5rem;" id="spnApproveNumber"></span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
+                            <a href="" class="nav-link"><i class="fa fa-user"></i><span> Admin</span></a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav> 
+
+        <script>
+            $(function () {
+                callCountCustOrderWaitForApprove();
+            });
+        </script>
     </header>
     <div class="container-fluid">
         @*<main role="main" class="pb-3">*@

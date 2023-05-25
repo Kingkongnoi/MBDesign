@@ -42,3 +42,22 @@ function convertDateTimeFormat(date, format) {
     }
     return dateFormat;
 }
+
+function callCountCustOrderWaitForApprove() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Approve/GetCountCustOrderWaitForApprove`,
+        success: function (data) {
+            console.log(data);
+            if (data > 0) {
+                $('#spnApproveNumber').removeClass('bagde-visible');
+            }
+            else {
+                $('#spnApproveNumber').addClass('bagde-visible');
+            }
+            $('#spnApproveNumber').html(data);
+        },
+        error: function (err) {
+        }
+    });
+}

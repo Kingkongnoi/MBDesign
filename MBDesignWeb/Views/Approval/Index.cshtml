@@ -1,0 +1,45 @@
+﻿@{
+    ViewData["Title"] = "การ Approve";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/approval/approval-control.js"></script>
+<script src="~/scripts/approval/approval-function.js"></script>
+
+<style>
+    .nav-tabs .nav-link {
+        background-color: #AFAFAF;
+        color: #FFF;
+    }
+
+        .nav-tabs .nav-link.active {
+            background-color: #F09723;
+            color: #FFF;
+        }
+
+    .table tr th {
+        background-color: #F09723;
+        color: #FFF;
+    }
+</style>
+
+<div class="row">
+    <h4>การ Approve</h4>
+
+    <div class="col-sm-12">
+
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-approval-tab">รายการ Approve</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-approval-tab">@Html.Partial("_ApproveList.cshtml")</div>
+        </div>
+
+    </div>
+</div>

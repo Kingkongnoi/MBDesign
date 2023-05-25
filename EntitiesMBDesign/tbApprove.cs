@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace EntitiesMBDesign
 {
-    public class tbDesign3D
+    public class tbApprove
     {
         [Key]
-        public int id { get; set; }
+        public int approveId { get; set; }
         public int orderId { get; set; }
-        public int ownerEmpId { get; set; }
-        public DateTime? dueDate { get; set; }
-        public string checklistStatus { get; set; } = string.Empty;
+        public string approveStatus { get; set; } = string.Empty;
+        public string approveComment { get; set; } = string.Empty;
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
@@ -23,8 +22,9 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class Design3DView : tbDesign3D
+    public class ApproveView : tbApprove
     {
-
+        public string quotationNumber { get; set; } = string.Empty;
+        public string cusName { get; set; } = string.Empty;
     }
 }

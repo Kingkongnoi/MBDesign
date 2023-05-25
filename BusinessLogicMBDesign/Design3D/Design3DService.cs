@@ -17,6 +17,8 @@ namespace BusinessLogicMBDesign.Design3D
 
         private readonly CustOrderRepository _custOrderRepository;
         private readonly Design3DRepository _design3DRepository;
+        private readonly EmpDataRepository _empDataRepository;
+        
 
         public Design3DService(IConfiguration configuration) 
         {
@@ -25,6 +27,7 @@ namespace BusinessLogicMBDesign.Design3D
 
             _custOrderRepository = new CustOrderRepository();
             _design3DRepository = new Design3DRepository();
+            _empDataRepository = new EmpDataRepository();
         }
 
         public List<CustOrderView> Get3DQueueList(string quotationNumber, string empName, string checklistStatus, string installDate)
@@ -33,7 +36,7 @@ namespace BusinessLogicMBDesign.Design3D
             {
                 conn.Open();
 
-                return _custOrderRepository.GetDesign3DList(quotationNumber, empName, checklistStatus, installDate, conn);
+                return _custOrderRepository.GetDesign3DList(quotationNumber, empName, checklistStatus, installDate, GlobalOrderStatus.approved, conn);
             }
         }
         public List<tbDesign3D> GetChecklistStatusSelect2()
@@ -43,6 +46,26 @@ namespace BusinessLogicMBDesign.Design3D
                 conn.Open();
 
                 return _design3DRepository.GetChecklistStatus(conn);
+            }
+        }
+
+        public List<EmpDataView> GetDesign3DNameSelect2()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _empDataRepository.GetDesign3DEmpDataSelect2(conn);
+            }
+        }
+
+        public CustOrderView Get3DQueueCustOrderByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
             }
         }
     }

@@ -34,9 +34,31 @@ namespace MBDesignApi.Controllers.Design3D
         [HttpGet]
         public JsonResult GetDesign3DNameSelect2()
         {
-            var data = _design3DService.GetChecklistStatusSelect2();
+            var data = _design3DService.GetDesign3DNameSelect2();
 
             return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetDesign3DByOrderId(int orderId)
+        {
+            var custOrder = _design3DService.Get3DQueueCustOrderByOrderId(orderId);
+            //var items = _saleService.GetCustOrderDetailByOrderId(orderId);
+            //var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
+            //var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
+
+            //var custId = (custOrder != null) ? custOrder.custId : 0;
+            //var cust = _saleService.GetFirstByCustId(custId);
+
+            var result = new
+            {
+                custOrder = custOrder,
+                //items = items,
+                //itemsOptions = itemsOptions,
+                //cust = cust,
+                //uploadRef = uploadRef
+            };
+            return new JsonResult(result);
         }
         #endregion GET
 
