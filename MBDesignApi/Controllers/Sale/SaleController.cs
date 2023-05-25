@@ -83,6 +83,7 @@ namespace MBDesignApi.Controllers.Sale
             var custOrder = _saleService.GetCustOrderByOrderId(orderId);
             var items = _saleService.GetCustOrderDetailByOrderId(orderId);
             var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
+            var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
 
             var custId = (custOrder != null) ? custOrder.custId : 0;
             var cust = _saleService.GetFirstByCustId(custId);
@@ -93,6 +94,7 @@ namespace MBDesignApi.Controllers.Sale
                 items = items,
                 itemsOptions = itemsOptions,
                 cust = cust,
+                uploadRef = uploadRef
             };
             return new JsonResult(result);
         }

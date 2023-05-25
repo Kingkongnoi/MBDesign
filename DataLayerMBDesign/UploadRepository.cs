@@ -35,7 +35,8 @@ namespace DataLayerMBDesign
             FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
             inner join tbUploadUrl c on a.urlId = c.urlId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
-            and a.orderId = @orderId";
+            and a.orderId = @orderId
+            order by a.uploadId";
 
             return conn.Query<UploadView>(queryString, new { orderId }, transaction: trans).ToList();
         }

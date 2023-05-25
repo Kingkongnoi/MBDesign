@@ -877,7 +877,7 @@ function clearUploadRefForm() {
     $('#divUploadRef #form-uploadRef #custOrderId').val("");
     $('#divUploadRef #form-uploadRef #input-quotation-number').val("");
 
-    $('#select-upload-plan').fileinput('destroy')
+    $('#select-upload-plan').fileinput('destroy');
     $('#select-upload-plan').fileinput({
         uploadUrl: "Home/UploadFiles", // this is your home controller method url
         //maxFileCount: 1,
@@ -1029,6 +1029,7 @@ function renderEditQuotation(id) {
             renderCustQuotation(data);
             renderCustStyleDiv(data);
             renderCustCalPrice(data);
+            renderCustUploadRef(data.uploadRef);
         },
         error: function (err) {
             //loaded.find(loader).remove();
@@ -1254,7 +1255,99 @@ function renderCustCalPrice(data) {
     $(`${formId} #divEditQuotation`).removeClass('note-approve-show');
     $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
 }
+function renderCustUploadRef(data) {
+    var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
 
+    var lstPlanUrl = [];
+    var lstPreviewImg = [];
+    planImg.forEach((a) => {
+        //lstPlanUrl.push(a.url);
+        //var addPreview = { type: "image", caption: a.fileName, downloadUrl: a.url, size: a.fileSize, key: a.uploadId };
+        //lstPreviewImg.push(addPreview);
+        //var imageUrl = `img src='${a.url}' class='file-preview-image' alt='${a.fileName}' title='${a.fileName}'>`;
+        debugger
+        //lstPlanUrl = (lstPlanUrl == '') ? `'${a.url}'` : `${lstPlanUrl},'${a.url}'`;
+        lstPlanUrl.push({ url: `${a.url}` });
+
+        var addPreview = {
+            caption: a.fileName,
+            width: '120px',
+            //url: '/localhost/public/delete',
+            key: a.uploadId,
+            extra: { id: a.uploadId }
+        };
+
+        lstPreviewImg.push(addPreview);
+    });
+
+    var result = [lstPlanUrl.map(d => `'${d.url}'`).join(',')];
+    console.log(result);
+    var url = [lstPlanUrl.map(u => `${u.url}`).join(', ')];
+    //'https://mb-dev-storage.s3.ap-southeast-2.amazonaws.com/Capture2_20230524141410.PNG', 'https://mb-dev-storage.s3.ap-southeast-2.amazonaws.com/Capture1_20230524141420.PNG'
+
+    $('#select-upload-plan').fileinput('destroy');
+    if (planImg.length > 0) {
+        $('#select-upload-plan').fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: true,
+            showCaption: true,
+            initialPreview: result,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                // { type: "image", caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 }
+                //{ caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
+                //{ caption: 'Capture2.PNG', downloadUrl: 'http://mb-dev-storage.s3.ap-southeast-2.amazonaws.com/Capture2_20230524105141.PNG?X-Amz-Expires=3600&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAWTTWZDGEYMK5SVPR/20230524/ap-southeast-2/s3/aws4_request&X-Amz-Date=20230524T105144Z&X-Amz-SignedHeaders=host&X-Amz-Signature=df8add34b13de1ad0aadf78341661a7b930a21f7844f11e428947f3d93cdc9b2', description: "", size: 487231, width: "120px", key: 1 }
+                lstPreviewImg
+            ],
+        });
+    }
+    else {
+        $('#select-upload-plan').fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+
+    //$('#display-picture-reference').fileinput({
+    //    //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+    //    showBrowse: false,
+    //    showUpload: false,
+    //    showCaption: false,
+    //    showDownload: false,
+    //    initialPreview: [url1, url2],
+    //    initialPreviewAsData: true,
+    //    initialPreviewConfig: [
+    //        { caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 },
+    //        { caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
+    //    ],
+    //});
+
+    //$('#select-3d-approve').fileinput({
+    //    uploadUrl: "Home/UploadFiles", // this is your home controller method url
+    //    //maxFileCount: 1,
+    //    showBrowse: true,
+    //    browseOnZoneClick: true,
+    //    browseLabel: 'เลือกไฟล์'
+    //});
+
+    //$('#display-picture-from-foreman').fileinput({
+    //    //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+    //    showBrowse: false,
+    //    showUpload: false,
+    //    showCaption: false,
+    //    showDownload: false,
+    //    initialPreview: [url1, url2],
+    //    initialPreviewAsData: true,
+    //    initialPreviewConfig: [
+    //        { caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 },
+    //        { caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
+    //    ],
+    //});
+}
 function clearCalPriceForm() {
     let formId = '#form-createCalculatePrice';
     $(`${formId} #input-cal-note`).val('');

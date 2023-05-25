@@ -62,9 +62,11 @@ namespace BusinessLogicMBDesign
                 GetPreSignedUrlRequest request = new GetPreSignedUrlRequest();
                 request.BucketName = _bucketName;
                 request.Key = files.fileName;
-                request.Expires = DateTime.Now.AddHours(1);
-                request.Protocol = Protocol.HTTP;
-                string url = s3Client.GetPreSignedURL(request);
+                request.Expires = DateTime.Now.AddMinutes(1);
+                //request.Protocol = Protocol.HTTPS;
+                string preSignedUrl = s3Client.GetPreSignedURL(request);
+
+                string url = preSignedUrl.Split("?")[0];
 
                 msg.message = "File Uploaded Successfully!!";
                 msg.strResult = url;

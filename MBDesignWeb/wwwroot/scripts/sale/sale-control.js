@@ -11,6 +11,7 @@
     clearSearchContractForm();
     callGetContractStatusSelect2();
     callGetContractList();
+    clearUploadRefForm();
 
     $('#div-createNewCus .btn-next-cus-style').on('click', function () {
         if (!validateInputFormCustomerData()) { return; }

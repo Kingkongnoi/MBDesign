@@ -316,7 +316,7 @@ namespace BusinessLogicMBDesign.Sale
                     var getBankAccount = _bankAccountRepository.GetBackAccountUsageByType(model.accountType, conn, transaction);
                     int accountId = (getBankAccount != null) ? getBankAccount.accountId : 0;
 
-                    string orderStatus = (model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
+                    string orderStatus = "รออนุมัติ";//(model.discount > 999) ? "รออนุมัติ" : "อนุมัติ";
 
                     string quotation = string.Empty;
                     if (orderId != 0)
@@ -696,6 +696,15 @@ namespace BusinessLogicMBDesign.Sale
                 }
             }
             return true;
+        }
+        public List<UploadView> GetUploadRefByOrderId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _uploadRepository.GetByOrderId(orderId, conn);
+            }
         }
         #endregion UploadRef
 
