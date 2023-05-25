@@ -1,0 +1,82 @@
+﻿<style>
+    .file-preview-frame {
+        width: 150px;
+        height: 200px;
+    }
+
+    .krajee-default.file-preview-frame .kv-file-content {
+        width: 130px;
+        height: 150px;
+    }
+
+    .krajee-default .file-footer-caption {
+        display: none;
+    }
+
+    .kv-file-upload, .fileinput-cancel-button, .fileinput-upload-button, .fileinput-remove-button, .fileinput-remove,
+    .btn-toggleheader, .btn-fullscreen, .btn-borderless, .kv-file-remove {
+        display: none;
+    }
+</style>
+
+<div class="container-fluid" id="div-approveCustomerRef">
+
+    <div class="card mt-4">
+        <div class="card-header">
+            <div class="row col-sm-12">
+                <div class="col-sm-6 mt-2"><h5>อัพโหลดรูปแปลนและรูป ref</h5></div>
+                <div class="col-sm-6 text-end">
+                    <button type="button" class="btn btn-default btn-previous-approve-cus-upload-ref"><i class="fas fa-arrow-alt-circle-left" aria-hidden="true"></i> ย้อนกลับ</button>
+                    <button type="button" class="btn btn-primary btn-next-approve-tab"><i class="fas fa-arrow-alt-circle-right" aria-hidden="true"></i> ถัดไป</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <form id="form-approveCustomerRef">
+                <div class="row">
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปแปลน</label>
+                        <div class="row col-sm-10">
+                            @*<input type="file" id="select-upload-plan" name="select-upload-plan" placeholder="" />*@
+                            <input id="select-upload-plan" name="select-upload-plan[]" type="file" class="file" accept="image/*" multiple>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูป Reference</label>
+                        <div class="row col-sm-10">
+                            @*<input class="form-control" type="file" id="select-upload-reference" name="select-upload-reference" placeholder="" />*@
+                            <input id="select-upload-reference" name="select-upload-reference[]" type="file" class="file" accept="image/*" multiple>
+
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปสลิปมัดจำ</label>
+                        <div class="row col-sm-10">
+                            @*<input class="form-control" type="file" id="select-upload-disposite" name="select-upload-disposite" placeholder="" />*@
+                            <input id="select-upload-disposite" name="select-upload-disposite[]" type="file" class="file" accept="image/*">
+
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปบัตรประชาชน</label>
+                        <div class="row col-sm-10">
+                            @*<input class="form-control" type="file" id="select-upload-idcard" name="select-upload-idcard" placeholder="" />*@
+                            <input id="select-upload-idcard" name="select-upload-idcard[]" type="file" class="file" accept="image/*">
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</div>

@@ -1,5 +1,6 @@
 ﻿using BusinessLogicMBDesign.Approve;
 using BusinessLogicMBDesign.Design3D;
+using EntitiesMBDesign;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MBDesignApi.Controllers.Approve
@@ -36,6 +37,14 @@ namespace MBDesignApi.Controllers.Approve
         public JsonResult GetApproveHistoryList()
         {
             var data = _approveService.GetApproveHistoryList();
+
+            return new JsonResult(data);
+        }
+
+        [HttpPost]
+        public JsonResult DoApproveProcess([FromBody]ApproveModel obj)
+        {
+            var data = _approveService.DoApproveProcess(obj);
 
             return new JsonResult(data);
         }

@@ -86,5 +86,15 @@ namespace DataLayerMBDesign
 
             return conn.Query<tbContractAgreement>(queryString, transaction: trans).ToList();
         }
+
+        public int UpdateContractStatus(int orderId, string contractStatus, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"UPDATE tbContractAgreement
+            SET [contractStatus] = @contractStatus
+            WHERE quotationNumber = (select top 1 quotationNumber from tbCustOrder where orderId = @orderId and isDeleted = 0 and status = 1) and isDeleted = 0
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, contractStatus }, transaction: trans);
+        }
     }
 }

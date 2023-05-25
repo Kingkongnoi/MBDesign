@@ -1235,8 +1235,11 @@ function renderCustCalPrice(data) {
     let formId = '#form-createCalculatePrice';
     let custOrder = data.custOrder;
     $(`${formId} input[name="input-cal-note"]`).val(custOrder.orderNote);
-    let orderNotePrice = (custOrder.orderNotePrice == 0) ? "" : custOrder.orderNotePrice;
+    let orderNotePrice = (custOrder.orderNotePrice == 0) ? "" : custOrder.orderNotePrice.toFixed(2);
     $(`${formId} input[name="input-cal-note-price"]`).val(orderNotePrice);
+
+    let orderDisCount = (custOrder.discount == 0) ? "" : custOrder.discount.toFixed(2);
+    $(`${formId} input[name="input-cal-discount"]`).val(orderDisCount);
 
     if (custOrder.vat != 0) {
         $(`${formId} #radioVat`).prop('checked', true);

@@ -17,6 +17,7 @@ namespace BusinessLogicMBDesign.Approve
 
         private readonly CustOrderRepository _custOrderRepository;
         private readonly ApproveRepository _approveRepository;
+        private readonly ContractAgreementRepository _contractAgreementRepository;
 
         public ApproveService(IConfiguration configuration)
         {
@@ -25,6 +26,7 @@ namespace BusinessLogicMBDesign.Approve
 
             _custOrderRepository = new CustOrderRepository();
             _approveRepository = new ApproveRepository();
+            _contractAgreementRepository = new ContractAgreementRepository();
         }
         public int GetCountCustOrderWaitForApprove()
         {
@@ -56,6 +58,49 @@ namespace BusinessLogicMBDesign.Approve
 
                 return _approveRepository.GetApproveHistory(conn);
             }
+        }
+
+        public ResultMessage DoApproveProcess(ApproveModel model)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var addApprove = new tbApprove
+                    {
+                        orderId = model.orderId,
+                        approveStatus = model.approveStatus,
+                        approveComment = model.approveComment,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999",
+                        isDeleted = false,
+                    };
+
+                    int? approveId = _approveRepository.Add(addApprove, conn, transaction);
+
+                    string orderStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalOrderStatus.approved : GlobalOrderStatus.notApprove;
+                    int updatedOrderStatus = _custOrderRepository.UpdateOrderStatus(model.orderId, orderStatus, conn, transaction);
+
+                    string contractStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalContractStatus.documentApproved : GlobalContractStatus.documentNotApproved;
+                    int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatus, conn, transaction);
+
+                    msg.isResult = true;
+                    transaction.Commit();
+                }
+                catch
+                {
+                    msg.isResult = false;
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
         }
     }
 }

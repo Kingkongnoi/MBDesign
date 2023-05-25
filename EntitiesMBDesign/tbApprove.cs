@@ -27,4 +27,12 @@ namespace EntitiesMBDesign
         public string quotationNumber { get; set; } = string.Empty;
         public string cusName { get; set; } = string.Empty;
     }
+
+    public class ApproveModel
+    {
+        public int orderId { get; set; }
+        public string approveStatus { get; set; } = string.Empty;
+        public string approveComment { get; set; } = string.Empty;
+    }
+
 }

@@ -257,5 +257,15 @@ namespace DataLayerMBDesign
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
+
+        public int UpdateOrderStatus(int orderId, string orderStatus, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"UPDATE tbCustOrder
+            SET [orderStatus] = @orderStatus
+            WHERE orderId = @orderId and isDeleted = 0
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new{ orderId, orderStatus }, transaction: trans);
+        }
     }
 }

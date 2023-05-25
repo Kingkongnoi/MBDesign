@@ -1,0 +1,43 @@
+﻿<div id="modal-editApprove" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">อนุมัติใบเสนอราคา : <span id="spnQuotationNumber"></span></h4>
+            </div>
+            <div class="modal-body">
+                <!-- Nav pills -->
+                <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;" id="approveMenu">
+                    <li class="nav-item">
+                        <a class="nav-link active disabled" data-bs-toggle="pill" href="#nav-approve-empData-tab" aria-disabled="true">ข้อมูลลูกค้าใหม่</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-approve-style-tab" aria-disabled="true">รายละเอียดสไตล์และชิ้นงาน</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-approve-calculate-tab" aria-disabled="true">การคำนวณราคา</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-approve-fileUpload-tab" aria-disabled="true">อัพโหลดรูปแปลนและรูป ref</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-approve-cus-tab" aria-disabled="true">อนุมัติใบเสนอราคา</a>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane active" id="nav-approve-empData-tab">@Html.Partial("_approveCustomerData.cshtml")</div>
+                    <div class="tab-pane fade" id="nav-approve-style-tab">@Html.Partial("_approveCustomerStyle.cshtml")</div>
+                    <div class="tab-pane fade" id="nav-approve-calculate-tab">@Html.Partial("_approveCustomerCalculate.cshtml")</div>
+                    <div class="tab-pane fade" id="nav-approve-fileUpload-tab">@Html.Partial("_approveCustomerRef.cshtml")</div>
+                    <div class="tab-pane fade" id="nav-approve-cus-tab">@Html.Partial("_approveCustomer.cshtml")</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-modal-save-approve"><i class="fa fa-floppy-o" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
