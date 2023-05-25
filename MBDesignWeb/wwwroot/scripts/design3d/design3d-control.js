@@ -14,6 +14,9 @@
     });
 
     $(document).on('click', '.btn-edit-3d', function () {
+        _order_id = $(this).data('orderid');
+        clearInputForm();
+        renderEditDesign3D($(this).data('orderid'));
         $('#modal-editDesign3D').modal('show');
     });
 });

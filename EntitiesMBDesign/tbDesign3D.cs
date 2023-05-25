@@ -25,6 +25,7 @@ namespace EntitiesMBDesign
 
     public class Design3DView : tbDesign3D
     {
-
+        public string quotationNumber { get; set; } = string.Empty;
+        public DateTime? installDate { get; set; }
     }
 }

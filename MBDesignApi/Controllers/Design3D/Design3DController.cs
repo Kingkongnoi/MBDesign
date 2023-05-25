@@ -10,10 +10,13 @@ namespace MBDesignApi.Controllers.Design3D
     {
         private readonly IConfiguration _configuration;
         private readonly Design3DService _design3DService;
+        private readonly SaleService _saleService;
+
         public Design3DController(IConfiguration configuration)
         {
             _configuration = configuration;
             _design3DService = new Design3DService(_configuration);
+            _saleService = new SaleService(_configuration);
         }
 
         #region GET
@@ -43,20 +46,15 @@ namespace MBDesignApi.Controllers.Design3D
         public JsonResult GetDesign3DByOrderId(int orderId)
         {
             var custOrder = _design3DService.Get3DQueueCustOrderByOrderId(orderId);
-            //var items = _saleService.GetCustOrderDetailByOrderId(orderId);
-            //var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
-            //var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
-
-            //var custId = (custOrder != null) ? custOrder.custId : 0;
-            //var cust = _saleService.GetFirstByCustId(custId);
+            var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
 
             var result = new
             {
                 custOrder = custOrder,
+                uploadRef = uploadRef
                 //items = items,
                 //itemsOptions = itemsOptions,
                 //cust = cust,
-                //uploadRef = uploadRef
             };
             return new JsonResult(result);
         }

@@ -36,6 +36,7 @@ namespace EntitiesMBDesign
         public string departmentName { get; set; } = string.Empty;
         public string positionName { get; set; } = string.Empty;
         public int roleId { get; set; }
+        public int empId { get; set; }
     }
 
     public class EmpDataModel

@@ -115,7 +115,7 @@ namespace DataLayerMBDesign
         public List<EmpDataView> GetDesign3DEmpDataSelect2(SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"
-              select a.empFirstName + ' ' + a.empLastName fullName
+              select a.empFirstName + ' ' + a.empLastName fullName, a.id empId
               from tbEmpData a inner join tbRoleEmpData b on a.id = b.empId
               inner join tbRoleMenu c on b.roleId = c.roleId
               inner join tbMenu d on c.menuId = d.menuId

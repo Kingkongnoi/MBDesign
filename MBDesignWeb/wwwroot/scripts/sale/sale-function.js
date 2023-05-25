@@ -1289,6 +1289,8 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewImg
             ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
         });
     }
     else {
@@ -1331,6 +1333,8 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewRefImg
             ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
         });
     }
     else {
@@ -1373,6 +1377,8 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewDisImg
             ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
         });
     }
     else {
@@ -1404,7 +1410,7 @@ function renderCustUploadRef(data) {
     });
 
     $('#select-upload-idcard').fileinput('destroy');
-    if (refImg.length > 0) {
+    if (idImg.length > 0) {
         $('#select-upload-idcard').fileinput({
             //uploadUrl: "Home/UploadFiles", // this is your home controller method url
             showBrowse: true,
@@ -1415,6 +1421,8 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewIdImg
             ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
         });
     }
     else {

@@ -30,7 +30,7 @@
                             </div>
 
                             <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-4 col-form-label text-end">ผู้รับผิดชอบออกแบบ 3D</label>
+                                <label class="col-sm-4 col-form-label text-end">ผู้รับผิดชอบออกแบบ 3D<span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
                                     <select class="form-select" id="select-edit-3d-designName"></select>
                                 </div>
@@ -136,56 +136,3 @@
         display: none;
     }
 </style>
-<script>
-    var url1 = 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/631px-FullMoon2010.jpg',
-        url2 = 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Earth_Eastern_Hemisphere.jpg/600px-Earth_Eastern_Hemisphere.jpg';
-    $('#display-picture-plan').fileinput({
-        //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-        showBrowse: false,
-        showUpload: false,
-        showCaption: false,
-        initialPreview: [url1, url2],
-        initialPreviewAsData: true,
-        initialPreviewConfig: [
-            { caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 },
-            { caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
-        ],
-    });
-
-    $('#display-picture-reference').fileinput({
-        //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-        showBrowse: false,
-        showUpload: false,
-        showCaption: false,
-        showDownload: false,
-        initialPreview: [url1, url2],
-        initialPreviewAsData: true,
-        initialPreviewConfig: [
-            { caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 },
-            { caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
-        ],
-    });
-
-    $('#select-3d-approve').fileinput({
-        uploadUrl: "Home/UploadFiles", // this is your home controller method url
-        //maxFileCount: 1,
-        showBrowse: true,
-        browseOnZoneClick: true,
-        browseLabel: 'เลือกไฟล์'
-    });
-
-    $('#display-picture-from-foreman').fileinput({
-        //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-        showBrowse: false,
-        showUpload: false,
-        showCaption: false,
-        showDownload: false,
-        initialPreview: [url1, url2],
-        initialPreviewAsData: true,
-        initialPreviewConfig: [
-            { caption: "Moon.jpg", downloadUrl: url1, description: "<h5>The Moon</h5>The Moon is Earth's only natural satellite and the fifth largest moon in the solar system. The Moon's distance from Earth is about 240,000 miles (385,000 km).", size: 930321, width: "120px", key: 1 },
-            { caption: "Earth.jpg", downloadUrl: url2, description: "<h5>The Earth</h5> The Earth is the 3<sup>rd</sup> planet from the Sun and the only astronomical object known to harbor and support life. About 29.2% of Earth's surface is land and remaining 70.8% is covered with water.", size: 1218822, width: "120px", key: 2 }
-        ],
-    });
-
-</script>

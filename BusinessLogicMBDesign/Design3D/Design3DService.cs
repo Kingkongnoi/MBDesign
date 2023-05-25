@@ -59,13 +59,13 @@ namespace BusinessLogicMBDesign.Design3D
             }
         }
 
-        public CustOrderView Get3DQueueCustOrderByOrderId(int orderId)
+        public Design3DView Get3DQueueCustOrderByOrderId(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
+                return _design3DRepository.GetEditDesign3DByOrderId(orderId, conn);
             }
         }
     }

@@ -1,4 +1,6 @@
-﻿function clearSearchForm() {
+﻿let _order_id = 0;
+
+function clearSearchForm() {
     let formId = '#form-search-3d-queue';
 
     $(`${formId} #input-search-3d-quotation-number`).val('');
@@ -133,17 +135,240 @@ function callGetDesign3DNameSelect2() {
         type: 'GET',
         url: `${app_settings.api_url}/api/Design3D/GetDesign3DNameSelect2`,
         success: function (data) {
-            renderDesign3DSelect2(data);
+            renderDesign3DNameSelect2(data);
         },
         error: function (err) {
         }
     });
 }
-function renderDesign3DSelect2(data) {
-    $(`#form-search-3d-queue #select-edit-3d-designName`).empty();
-    $(`#form-search-3d-queue #select-edit-3d-designName`).append(`<option value="">กรุณาเลือก</option>`);
+function renderDesign3DNameSelect2(data) {
+    $(`#form-editDesign3D #select-edit-3d-designName`).empty();
+    $(`#form-editDesign3D #select-edit-3d-designName`).append(`<option value="">กรุณาเลือก</option>`);
     data.forEach((v) => {
-        $(`#form-search-3d-queue #select-edit-3d-designName`).append(`<option value="${v.checklistStatus}">${v.checklistStatus}</option>`);
+        $(`#form-editDesign3D #select-edit-3d-designName`).append(`<option value="${v.empId}">${v.fullName}</option>`);
     });
-    $(`#form-search-3d-queue #select-edit-3d-designName`).val('').trigger('change');
+    $(`#form-editDesign3D #select-edit-3d-designName`).val('').trigger('change');
 }
+
+function clearInputForm() {
+    let formId = '#form-editDesign3D';
+    $(`${formId} #input-edit-3d-quotation`).val('');
+    $(`${formId} #input-edit-3d-install-date`).val('');
+    $(`${formId} #select-edit-3d-designName`).val('');
+    $(`${formId} #input-edit-3d-due-date`).val('');
+    $(`${formId} #input-edit-3d-checklist-status`).val('');
+}
+function renderEditDesign3D(id) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Design3D/GetDesign3DByOrderId?orderId=${id}`,
+        success: function (data) {
+            render3DToForm(data);
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function render3DToForm(data) {
+    let formId = '#form-editDesign3D';
+
+    $(`${formId} #input-edit-3d-quotation`).val(data.custOrder.quotationNumber);
+    var installDate = data.custOrder.installDate ? convertDateTimeFormat(data.custOrder.installDate, 'DD/MM/YYYY') : ""
+    $(`${formId} #input-edit-3d-install-date`).val(installDate);
+
+    if (data.custOrder.ownerEmpId == 0) {
+        $(`${formId} #select-edit-3d-designName`).val('');
+    }
+    else {
+        $(`${formId} #select-edit-3d-designName`).val(data.custOrder.ownerEmpId);
+    }
+
+    var dueDate = data.custOrder.dueDate ? convertDateTimeFormat(data.custOrder.dueDate, 'DD/MM/YYYY') : ""
+    $(`${formId} #input-edit-3d-due-date`).val(dueDate);
+    $(`${formId} #input-edit-3d-checklist-status`).val(data.custOrder.checklistStatus);
+
+    renderImageUpload(formId, data.uploadRef);
+}
+
+function renderImageUpload(formId, data) {
+    var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
+
+    var lstPlanUrl = [];
+    var lstPreviewImg = [];
+    planImg.forEach((a) => {
+        lstPlanUrl.push(`${a.url}`);
+
+        var addPreview = {
+            caption: a.fileName,
+            //width: '120px',
+            //url: '/localhost/public/delete',
+            key: a.uploadId,
+            extra: { id: a.uploadId }
+        };
+
+        lstPreviewImg.push(addPreview);
+    });
+
+    $(`${formId} #display-picture-plan`).fileinput('destroy');
+    if (planImg.length > 0) {
+        $(`${formId} #display-picture-plan`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: false,
+            showUpload: false,
+            showCaption: false,
+            initialPreview: lstPlanUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId} #display-picture-plan`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: false,
+            browseOnZoneClick: false,
+            showCaption: false,
+            showUpload: false,
+        });
+    }
+
+    var refImg = data.filter(v => { return v.categoryName == "CustOrderReference" });
+
+    var lstRefUrl = [];
+    var lstPreviewRefImg = [];
+    refImg.forEach((a) => {
+        lstRefUrl.push(`${a.url}`);
+
+        var addPreview = {
+            caption: a.fileName,
+            width: '120px',
+            //url: '/localhost/public/delete',
+            key: a.uploadId,
+            extra: { id: a.uploadId }
+        };
+
+        lstPreviewRefImg.push(addPreview);
+    });
+
+    $(`${formId} #display-picture-reference`).fileinput('destroy');
+    if (refImg.length > 0) {
+        $(`${formId} #display-picture-reference`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: false,
+            showUpload: false,
+            showCaption: false,
+            initialPreview: lstRefUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewRefImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId} #display-picture-reference`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: false,
+            browseOnZoneClick: false,
+            showCaption: false,
+            showUpload: false,
+        });
+    }
+
+    var approved3dImg = data.filter(v => { return v.categoryName == "3dApproved" });
+
+    var lstApproved3dUrl = [];
+    var lstPreviewApproved3dImg = [];
+    approved3dImg.forEach((a) => {
+        lstApproved3dUrl.push(`${a.url}`);
+
+        var addPreview = {
+            caption: a.fileName,
+            width: '120px',
+            //url: '/localhost/public/delete',
+            key: a.uploadId,
+            extra: { id: a.uploadId }
+        };
+
+        lstPreviewApproved3dImg.push(addPreview);
+    });
+
+    $(`${formId} #select-3d-approve`).fileinput('destroy');
+    if (approved3dImg.length > 0) {
+        $(`${formId} #select-3d-approve`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: true,
+            showCaption: true,
+            initialPreview: lstApproved3dUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewApproved3dImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId} #select-3d-approve`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+
+    var foremanImg = data.filter(v => { return v.categoryName == "foremanUpload" });
+
+    var lstIdUrl = [];
+    var lstPreviewIdImg = [];
+    foremanImg.forEach((a) => {
+        lstIdUrl.push(`${a.url}`);
+
+        var addPreview = {
+            caption: a.fileName,
+            width: '120px',
+            //url: '/localhost/public/delete',
+            key: a.uploadId,
+            extra: { id: a.uploadId }
+        };
+
+        lstPreviewIdImg.push(addPreview);
+    });
+
+    $(`${formId} #display-picture-from-foreman`).fileinput('destroy');
+    if (foremanImg.length > 0) {
+        $(`${formId} #display-picture-from-foreman`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: false,
+            showUpload: false,
+            showCaption: false,
+            initialPreview: lstIdUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewIdImg
+            ],
+            browseOnZoneClick: false,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId} #display-picture-from-foreman`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: false,
+            browseOnZoneClick: false,
+            showCaption: false,
+            showUpload: false,
+        });
+    }
+}
+
