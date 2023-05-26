@@ -279,6 +279,49 @@ function renderCreateStyleDiv() {
                             </div>
                         </div>
 
+                        <div class="row col-sm-12">
+                            <label class="col-sm-3 col-form-label text-end">ขนาด</label>
+                            <div class="row col-sm-9">
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความยาว</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความลึก</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความสูง</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end"></label>
+                            <div class="row col-sm-9">
+                                 <div class="col-sm-12">
+                                    <label class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                             <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                                    <label class="form-check-label">
+                                                    ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
 
                     <div class="col-sm-6">
@@ -308,49 +351,6 @@ function renderCreateStyleDiv() {
 
                     </div>
 
-                </div>
-
-                <div class="row">
-                        <div class="row col-sm-12 mb-2">
-                    <label class="col-sm-3 col-form-label text-end">ขนาด</label>
-                    <div class="row col-sm-9">
-                        <div class="col-sm-4">
-                            <label class="col-sm-3 col-form-label">ความยาว</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                        <div class="col-sm-4">
-                                <label class="col-sm-3 col-form-label">ความลึก</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                        <div class="col-sm-4">
-                          <label class="col-sm-3 col-form-label">ความสูง</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row col-sm-12 mb-2">
-                    <label class="col-sm-3 col-form-label text-end"></label>
-                    <div class="row col-sm-9">
-                        <div class="col-sm-12">
-                            <label class="col-sm-3 col-form-label"></label>
-                                <div class="col-sm-9">
-                                     <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
-                                            <label class="form-check-label">
-                                            ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
-                                            </label>
-                                    </div>
-                                </div>
-                        </div>
-                        
-                    </div>
                 </div>
 
             </div>
@@ -1080,9 +1080,7 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกโซน</label>
                             <div class="col-sm-9">
-                                <div class="col-sm-9">
                                     <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
-                                </div>
                             </div>
                         </div>
 
@@ -1093,6 +1091,49 @@ function renderCustStyleDiv(data) {
                                     <option></option>
                                 </select>
                             </div>
+                        </div>
+
+                        <div class="row col-sm-12">
+                            <label class="col-sm-3 col-form-label text-end">ขนาด</label>
+                            <div class="row col-sm-9">
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความยาว</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความลึก</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความสูง</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-3 col-form-label text-end"></label>
+                            <div class="row col-sm-9">
+                                 <div class="col-sm-12">
+                                    <label class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                             <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                                    <label class="form-check-label">
+                                                    ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+
                         </div>
 
                     </div>
@@ -1124,49 +1165,6 @@ function renderCustStyleDiv(data) {
 
                     </div>
 
-                </div>
-
-                <div class="row">
-                        <div class="row col-sm-12 mb-2">
-                    <label class="col-sm-3 col-form-label text-end">ขนาด</label>
-                    <div class="row col-sm-9">
-                        <div class="col-sm-4">
-                            <label class="col-sm-3 col-form-label">ความยาว</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                        <div class="col-sm-4">
-                                <label class="col-sm-3 col-form-label">ความลึก</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                        <div class="col-sm-4">
-                          <label class="col-sm-3 col-form-label">ความสูง</label>
-                                <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
-                                </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row col-sm-12 mb-2">
-                    <label class="col-sm-3 col-form-label text-end"></label>
-                    <div class="row col-sm-9">
-                        <div class="col-sm-12">
-                            <label class="col-sm-3 col-form-label"></label>
-                                <div class="col-sm-9">
-                                     <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
-                                            <label class="form-check-label">
-                                            ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
-                                            </label>
-                                    </div>
-                                </div>
-                        </div>
-                        
-                    </div>
                 </div>
 
             </div>
