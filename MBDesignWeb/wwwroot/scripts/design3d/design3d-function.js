@@ -1,4 +1,7 @@
 ﻿let _order_id = 0;
+let _design_3d_id = 0;
+let _modal_primary_color_code = "#F09723";
+let _modal_default_color_code = "#EFEFEF";
 
 function clearSearchForm() {
     let formId = '#form-search-3d-queue';
@@ -93,7 +96,7 @@ function renderGet3DQueueList(data) {
                     data: null,
                     orderable: false,
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-3d" data-orderid="${row.orderId}"  title="แก้ไข">
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-3d" data-orderid="${row.orderId}" data-design3did="${row.design3dId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
                     },
                 },
@@ -129,6 +132,7 @@ function clearEditForm() {
     $(`${formId} #input-edit-3d-install-date`).val('');
     $(`${formId} #input-edit-3d-due-date`).val('');
     $(`${formId} #input-edit-3d-checklist-status`).val('');
+    $(`${formId} #chkFinal3D`).prop('checked', false);
 }
 function callGetDesign3DNameSelect2() {
     $.ajax({
@@ -157,6 +161,7 @@ function clearInputForm() {
     $(`${formId} #select-edit-3d-designName`).val('');
     $(`${formId} #input-edit-3d-due-date`).val('');
     $(`${formId} #input-edit-3d-checklist-status`).val('');
+    $(`${formId} #chkFinal3D`).prop('checked', false);
 }
 function renderEditDesign3D(id) {
     $.ajax({
@@ -184,11 +189,14 @@ function render3DToForm(data) {
         $(`${formId} #select-edit-3d-designName`).val(data.custOrder.ownerEmpId);
     }
 
-    var dueDate = data.custOrder.dueDate ? convertDateTimeFormat(data.custOrder.dueDate, 'DD/MM/YYYY') : ""
+    var dueDate = data.custOrder.dueDate ? convertDateTimeFormat(data.custOrder.dueDate, 'YYYY-MM-DD') : "";
+
     $(`${formId} #input-edit-3d-due-date`).val(dueDate);
     $(`${formId} #input-edit-3d-checklist-status`).val(data.custOrder.checklistStatus);
 
     renderImageUpload(formId, data.uploadRef);
+
+    $(`${formId} #chkFinal3D`).prop('checked', data.custOrder.isCheckFinal3d);
 }
 
 function renderImageUpload(formId, data) {
@@ -312,6 +320,8 @@ function renderImageUpload(formId, data) {
             initialPreviewConfig: [
                 lstPreviewApproved3dImg
             ],
+            //deleteUrl: "/site/file-delete",
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
@@ -372,3 +382,72 @@ function renderImageUpload(formId, data) {
     }
 }
 
+let validateInput = function () {
+    if ($('#form-editDesign3D #select-edit-3d-designName').val() == "") {
+        Swal.fire({
+            text: "กรุณาเลือกผู้รับผิดชอบออกแบบ 3D",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-editDesign3D #select-edit-3d-designName').focus();
+        });
+        return false;
+    }
+    return true;
+};
+function callSave3dDesign() {
+    if (!validateInput()) { return; }
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.close();
+            DoSave3dDesign();
+        }
+    });
+}
+function DoSave3dDesign() {
+    let formId = '#form-editDesign3D';
+    let empId = $(`${formId} #select-edit-3d-designName`).val() == "" ? 0 : $(`${formId} #select-edit-3d-designName`).val();
+    let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? "%%" : $(`${formId} #input-edit-3d-due-date`).val();
+    let final3d = $(`${formId} #chkFinal3D`).prop('checked');
+
+    let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}`;
+
+    var control = document.getElementById(`select-3d-approve`);
+    var files = control.files;
+    var formData = new FormData();
+
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        success: function (result) {
+            if (result.isResult == true) {
+                callSuccessAlert();
+                $(`#modal-editDesign3D`).modal('hide');
+                callGetChecklistStatusSelect2();
+                callGet3DQueueList();
+            }
+        },
+        error: function (err) {
+            
+        }
+    });
+}

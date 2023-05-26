@@ -884,12 +884,3 @@ function DoApproveProcess() {
         dataType: "json",
     });
 }
-function callSuccessAlert() {
-    Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'บันทึกข้อมูลสำเร็จ',
-        showConfirmButton: false,
-        timer: 1500
-    });
-}

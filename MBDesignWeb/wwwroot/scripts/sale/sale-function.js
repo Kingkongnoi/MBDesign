@@ -709,16 +709,6 @@ function renderQuotationNumber(res) {
     $('#divUploadRef #form-uploadRef #input-quotation-number').val(res.quotationNumber);
 }
 
-function callSuccessAlert() {
-    Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'บันทึกข้อมูลสำเร็จ',
-        showConfirmButton: false,
-        timer: 1500
-    });
-}
-
 function callSelect2QuotationStatus(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
@@ -974,7 +964,7 @@ function saveUpload() {
     }
 }
 let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "") {
-    let url = (_action == "add") ? `${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}` : ``;
+    let url = /*(_action == "add") ? */`${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}`/* : ``*/;
 
     var control = document.getElementById(`${intputFileName}`);
     var files = control.files;
@@ -1289,6 +1279,7 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewImg
             ],
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
@@ -1333,6 +1324,7 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewRefImg
             ],
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
@@ -1377,6 +1369,7 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewDisImg
             ],
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
@@ -1421,6 +1414,7 @@ function renderCustUploadRef(data) {
             initialPreviewConfig: [
                 lstPreviewIdImg
             ],
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });

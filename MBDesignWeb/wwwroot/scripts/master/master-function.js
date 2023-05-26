@@ -603,15 +603,7 @@ let validateInput = function (modal) {
     }
 
 };
-function callSuccessAlert() {
-    Swal.fire({
-        position: 'center',
-        icon: 'success',
-        title: 'บันทึกข้อมูลสำเร็จ',
-        showConfirmButton: false,
-        timer: 1500
-    });
-}
+
 
 /* Employee */
 function DoAddOrUpdateEmployee(modal) {

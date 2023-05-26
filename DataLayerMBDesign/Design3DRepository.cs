@@ -16,6 +16,19 @@ namespace DataLayerMBDesign
             return conn.Insert(obj, transaction: trans);
         }
 
+        public int UpdateByKeyId(tbDesign3D obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"UPDATE tbDesign3D
+            SET [checklistStatus] = @checklistStatus,
+            [ownerEmpId] = @ownerEmpId,
+            [dueDate] = @dueDate,
+            [updateDate] = @updateDate,
+            [updateBy] = @updateBy
+            WHERE id = @id
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.checklistStatus, obj.ownerEmpId, obj.dueDate, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+        }
         public int UpdateChecklistStatus(int orderId, string checklistStatus, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbDesign3D
@@ -57,12 +70,31 @@ namespace DataLayerMBDesign
 
         public Design3DView GetEditDesign3DByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, b.quotationNumber, b.installDate
+            string queryString = @" select top 1 a.*, b.quotationNumber, b.installDate, case when a.checklistStatus = N'แบบ 3D Final' then 1 else 0 end isCheckFinal3d
                             from tbDesign3D a inner join tbCustOrder b on a.orderId = b.orderId
                             where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
                             and a.orderId = @orderId";
 
             return conn.QueryFirstOrDefault<Design3DView>(queryString, new { orderId }, transaction: trans);
+        }
+
+        public Design3DView GetEditDesign3DByKeyId(int keyId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @" SELECT TOP 1 id
+                                ,orderId
+                                ,ownerEmpId
+                                ,dueDate
+                                ,checklistStatus
+                                ,[status]
+                                ,createDate
+                                ,createBy
+                                ,updateDate
+                                ,updateBy
+                                ,isDeleted
+                                FROM tbDesign3D
+                                where id= @keyId and isDeleted = 0 and status = 1";
+
+            return conn.QueryFirstOrDefault<Design3DView>(queryString, new { keyId }, transaction: trans);
         }
     }
 }

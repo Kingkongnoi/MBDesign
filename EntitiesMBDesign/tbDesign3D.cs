@@ -27,5 +27,6 @@ namespace EntitiesMBDesign
     {
         public string quotationNumber { get; set; } = string.Empty;
         public DateTime? installDate { get; set; }
+        public bool isCheckFinal3d { get; set; }
     }
 }

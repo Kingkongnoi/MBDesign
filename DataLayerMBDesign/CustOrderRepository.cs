@@ -166,7 +166,7 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and a.orderStatus = N'{0}'", orderStatus);
             }
 
-            string queryString = string.Format(@"select a.orderId, a.quotationNumber, a.installDate, isnull(c.empFirstName + ' ' + c.empLastName,'') ownerEmpName, b.dueDate, isnull(b.checklistStatus,'') checklistStatus,
+            string queryString = string.Format(@"select a.orderId, b.id design3dId, a.quotationNumber, a.installDate, isnull(c.empFirstName + ' ' + c.empLastName,'') ownerEmpName, b.dueDate, isnull(b.checklistStatus,'') checklistStatus,
             case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
             case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
             from tbCustOrder a left join tbDesign3D b on a.orderId = isnull(b.orderId,0)
@@ -207,6 +207,7 @@ namespace DataLayerMBDesign
             case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
             from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)
             left join tbCust c on isnull(a.custId,0) = isnull(c.custId,0)
+            inner join tbForeman d on a.orderId = d.orderId and isnull(d.isDeleted,0) = 0
             where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
             {0}
             order by a.orderId
