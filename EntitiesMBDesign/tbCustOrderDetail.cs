@@ -28,7 +28,7 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class CustOrderDetailView
+    public class CustOrderDetailView : tbCustOrderDetail
     {
         public string itemName { get; set; } = string.Empty;
         public decimal itemPrice { get; set; }

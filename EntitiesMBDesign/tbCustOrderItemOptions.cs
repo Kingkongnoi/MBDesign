@@ -21,7 +21,7 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class CustOrderItemOptionsView
+    public class CustOrderItemOptionsView : tbCustOrderItemOptions
     {
         public string options { get; set; } = string.Empty;
         public decimal optionsPrice { get; set; }

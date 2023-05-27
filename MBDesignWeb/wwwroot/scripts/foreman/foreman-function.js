@@ -213,9 +213,61 @@ function renderForemanItemList(data) {
                     <div class="row col-sm-12 mt-4 mb-2">
                         <label for="formFile" class="col-sm-2 col-form-label text-end">รูปภาพ 3D</label>
                                 <div class="col-sm-10">
-                                    <input id="display-foreman-3d" name="display-foreman-3d[]" type="file" class="file" accept="image/*" multiple>
+                                    <input id="display-foreman-3d" name="display-foreman-3d[]" type="file" data-itemid=${v.itemId} class="file" accept="image/*" multiple>
                                 </div>
                     </div>`
+
+        insideBodyDiv += `
+                    <div class="row col-sm-12 mt-4 mb-2">
+                        <label for="formFile" class="col-sm-2 col-form-label text-end">อัปโหลดรูปหน้างาน</label>
+                                <div class="col-sm-10">
+                                    <input id="select-upload-foreman-3d" name="select-upload-foreman-3d[]" type="file" data-itemid=${v.itemId} class="file" accept="image/*" multiple>
+                                </div>
+                    </div>`
+
+        insideBodyDiv += `
+                    <div class="row col-sm-12">
+                            <label class="col-sm-2 col-form-label text-end">ขนาด</label>
+                            <div class="row col-sm-10">
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความยาว</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-itemid=${v.itemId} />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความลึก</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-itemid=${v.itemId} />
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="col-sm-4 col-form-label">ความสูง</label>
+                                    <div class="col-sm-12">
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-itemid=${v.itemId} />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>`
+
+        insideBodyDiv += `
+                        <div class="row col-sm-12 mb-2">
+                            <label class="col-sm-2 col-form-label text-end"></label>
+                            <div class="row col-sm-10">
+                                 <div class="col-sm-12">
+                                    <label class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                             <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${bodyIndx+1}">
+                                                    <label class="form-check-label">
+                                                    ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70)
+                                                    </label>
+                                            </div>
+                                        </div>
+                                </div>
+                            </div>
+        `;
 
         insideBodyDiv += ` </form>`;
 
