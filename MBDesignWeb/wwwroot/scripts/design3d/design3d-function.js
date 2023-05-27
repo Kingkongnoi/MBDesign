@@ -124,16 +124,6 @@ function renderChecklistStatusSelect2(data) {
     $(`#form-search-3d-queue #select-search-3d-checklist-status`).val('').trigger('change');
 }
 
-function clearEditForm() {
-    let formId = '#form-editDesign3D';
-
-    $(`${formId} #input-edit-3d-quotation`).val('');
-    $(`${formId} #select-edit-3d-designName`).val('').trigger('change');
-    $(`${formId} #input-edit-3d-install-date`).val('');
-    $(`${formId} #input-edit-3d-due-date`).val('');
-    $(`${formId} #input-edit-3d-checklist-status`).val('');
-    $(`${formId} #chkFinal3D`).prop('checked', false);
-}
 function callGetDesign3DNameSelect2() {
     $.ajax({
         type: 'GET',
@@ -198,7 +188,6 @@ function render3DToForm(data) {
 
     $(`${formId} #chkFinal3D`).prop('checked', data.custOrder.isCheckFinal3d);
 }
-
 function renderImageUpload(formId, data) {
     var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
 

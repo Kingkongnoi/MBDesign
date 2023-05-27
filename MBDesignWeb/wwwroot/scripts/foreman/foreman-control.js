@@ -13,6 +13,10 @@ $(function () {
     });
 
     $(document).on('click', '.btn-edit-foreman', function () {
+        _order_id = $(this).data('orderid');
+        _foreman_id = $(this).data('foremanid');
+        clearEditForm();
+        callGetEditForeman();
         $('#modal-editForeman').modal('show');
     });
 });

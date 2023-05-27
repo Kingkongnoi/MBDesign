@@ -27,4 +27,10 @@ namespace EntitiesMBDesign
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
     }
+
+    public class CustOrderDetailView
+    {
+        public string itemName { get; set; } = string.Empty;
+        public decimal itemPrice { get; set; }
+    }
 }

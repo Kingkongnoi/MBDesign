@@ -16,22 +16,25 @@ namespace DataLayerMBDesign
             return conn.Insert(obj, transaction: trans);
         }
 
-        public List<tbCustOrderItemOptions> GetItemOptionsByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        public List<CustOrderItemOptionsView> GetItemOptionsByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select custOrderItemOptionsId
-            ,custOrderDetailId
-            ,optionsId
-            ,[status]
-            ,createDate
-            ,createBy
-            ,updateDate
-            ,updateBy
-            ,isDeleted 
-            from tbCustOrderItemOptions where custOrderDetailId in 
+            string queryString = @"select a.custOrderItemOptionsId
+            ,a.custOrderDetailId
+            ,a.optionsId
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted 
+            ,b.options
+            ,b.optionsPrice
+            from tbCustOrderItemOptions a inner join tbProductItemOptions b on a.optionsId = b.optionsId
+            where a.custOrderDetailId in 
             (SELECT custOrderDetailId FROM tbCustOrderDetail where orderId = @orderId and isDeleted = 0)
-            and isDeleted = 0";
+            and a.isDeleted = 0 and b.isDeleted = 0";
 
-            return conn.Query<tbCustOrderItemOptions>(queryString, new { orderId }, transaction: trans).ToList();
+            return conn.Query<CustOrderItemOptionsView>(queryString, new { orderId }, transaction: trans).ToList();
         }
 
         public int HardDeleteByCustOrderDetailId(int custOrderDetailId, SqlConnection conn, SqlTransaction? trans = null)

@@ -66,5 +66,6 @@ namespace EntitiesMBDesign
         public string cusName { get; set; } = string.Empty;
         public string foremanStatus { get; set; } = string.Empty;
         public int design3dId { get; set; }
+        public int foremanId { get; set; }
     }
 }

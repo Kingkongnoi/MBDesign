@@ -11,11 +11,13 @@ namespace MBDesignApi.Controllers.Foreman
     {
         private readonly IConfiguration _configuration;
         private readonly ForemanService _foremanService;
+        private readonly SaleService _saleService;
 
         public ForemanController(IConfiguration configuration)
         {
             _configuration = configuration;
             _foremanService = new ForemanService(configuration);
+            _saleService = new SaleService(configuration);
         }
 
         #region GET
@@ -33,17 +35,23 @@ namespace MBDesignApi.Controllers.Foreman
 
             return new JsonResult(data);
         }
-        //[HttpGet]
-        //public JsonResult GetEditForemanByOrderId(int orderId)
-        //{
-        //    var items = _saleService.GetCustOrderDetailByOrderId(orderId);
+        [HttpGet]
+        public JsonResult GetForemanByOrderId(int orderId, int foremanId)
+        {
+            var custOrder = _foremanService.GetForemanCustOrderByKeyId(foremanId);
+            var items = _saleService.GetCustOrderDetailByOrderId(orderId);
+            var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
+            var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
 
-        //    var result = new
-        //    {
-        //        items = items,
-        //    };
-        //    return new JsonResult(result);
-        //}
+            var result = new
+            {
+                custOrder = custOrder,
+                items = items,
+                itemsOptions = itemsOptions,
+                uploadRef = uploadRef
+            };
+            return new JsonResult(result);
+        }
         #endregion GET
     }
 }

@@ -20,4 +20,10 @@ namespace EntitiesMBDesign
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
     }
+
+    public class ForemanView : tbForeman
+    {
+        public string quotationNumber { get; set; } = string.Empty;
+        public string contractNumber { get; set; } = string.Empty;
+    }
 }

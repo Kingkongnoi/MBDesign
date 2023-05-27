@@ -20,4 +20,10 @@ namespace EntitiesMBDesign
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
     }
+
+    public class CustOrderItemOptionsView
+    {
+        public string options { get; set; } = string.Empty;
+        public decimal optionsPrice { get; set; }
+    }
 }

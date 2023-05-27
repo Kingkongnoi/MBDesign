@@ -54,5 +54,15 @@ namespace BusinessLogicMBDesign.Foreman
                 return _foremanRepository.GetForemanStatus(conn);
             }
         }
+
+        public ForemanView GetForemanCustOrderByKeyId(int foremanId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _foremanRepository.GetEditForemanByForemanId(foremanId, conn);
+            }
+        }
     }
 }

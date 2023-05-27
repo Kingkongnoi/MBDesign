@@ -202,7 +202,7 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
 
-            string queryString = string.Format(@"select a.orderId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, isnull(b.foremanStatus,'') foremanStatus,
+            string queryString = string.Format(@"select a.orderId, d.id foremanId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, isnull(b.foremanStatus,'') foremanStatus,
             case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
             case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
             from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)

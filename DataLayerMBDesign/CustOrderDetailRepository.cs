@@ -16,29 +16,31 @@ namespace DataLayerMBDesign
             return conn.Insert(obj, transaction: trans);
         }
 
-        public List<tbCustOrderDetail> GetByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        public List<CustOrderDetailView> GetByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"SELECT custOrderDetailId
-            ,orderId
-            ,styleId
-            ,[floor]
-            ,[zone]
-            ,typeId
-            ,itemId
-            ,orderLength
-            ,orderDepth
-            ,orderHeight
-            ,[status]
-            ,createDate
-            ,createBy
-            ,updateDate
-            ,updateBy
-            ,isDeleted
-            FROM tbCustOrderDetail
-            where orderId = @orderId and isDeleted = 0
-            order by custOrderDetailId";
+            string queryString = @"select a.custOrderDetailId
+            ,a.orderId
+            ,a.styleId
+            ,a.[floor]
+            ,a.[zone]
+            ,a.typeId
+            ,a.itemId
+            ,a.orderLength
+            ,a.orderDepth
+            ,a.orderHeight
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+            ,b.itemName
+            ,b.itemPrice
+            FROM tbCustOrderDetail a inner join tbProductItem b on a.itemId = b.itemId
+            where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0
+            order by a.custOrderDetailId";
 
-            return conn.Query<tbCustOrderDetail>(queryString, new { orderId }, transaction: trans).ToList();
+            return conn.Query<CustOrderDetailView>(queryString, new { orderId }, transaction: trans).ToList();
 
         }
 

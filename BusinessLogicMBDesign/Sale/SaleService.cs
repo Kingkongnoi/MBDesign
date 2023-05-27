@@ -502,7 +502,7 @@ namespace BusinessLogicMBDesign.Sale
                 return _custOrderRepository.GetOrderDetailByOrderId(orderId, conn);
             }
         }
-        public List<tbCustOrderDetail> GetCustOrderDetailByOrderId(int orderId)
+        public List<CustOrderDetailView> GetCustOrderDetailByOrderId(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -520,7 +520,7 @@ namespace BusinessLogicMBDesign.Sale
                 return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
             }
         }
-        public List<tbCustOrderItemOptions> GetItemOptionsByOrderId(int orderId)
+        public List<CustOrderItemOptionsView> GetItemOptionsByOrderId(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
