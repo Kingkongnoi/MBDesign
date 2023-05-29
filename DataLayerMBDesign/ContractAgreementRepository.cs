@@ -96,5 +96,28 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { orderId, contractStatus }, transaction: trans);
         }
+        public tbContractAgreement GetFirstByOrderIdAndCustId(int custId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT TOP 1 [id]
+            ,[contractNumber]
+            ,[quotationNumber]
+            ,[contractStatus]
+            ,[custId]
+            ,[contractFileName]
+            ,[contractNumberGen]
+            ,[contractYearMonthGen]
+            ,[status]
+            ,[createDate]
+            ,[createBy]
+            ,[updateDate]
+            ,[updateBy]
+            ,[isDeleted]
+            FROM [tbContractAgreement]
+            where [custId] = @custId and [isDeleted] = 0 and [status] = 1
+            order by [id] desc";
+
+            return conn.QueryFirstOrDefault<tbContractAgreement>(queryString, new { custId }, transaction: trans);
+        }
+
     }
 }

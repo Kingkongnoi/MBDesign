@@ -30,6 +30,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly UploadRepository _uploadRepository;
         private readonly UploadUrlRepository _uploadUrlRepository;
         private readonly UploadCategoryRepository _uploadCategoryRepository;
+        private readonly InvoiceRepository _invoiceRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -49,6 +50,7 @@ namespace BusinessLogicMBDesign.Sale
             _uploadRepository = new UploadRepository();
             _uploadUrlRepository = new UploadUrlRepository();
             _uploadCategoryRepository = new UploadCategoryRepository();
+            _invoiceRepository = new InvoiceRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -348,6 +350,11 @@ namespace BusinessLogicMBDesign.Sale
                     };
 
                     added = _custOrderRepository.Update(addedObject, conn, transaction);
+
+                    ///Contract generate
+                    string contractStatus = GlobalContractStatus.waitDocumentForApprove;//(orderStatus == "อนุมัติ") ? "เอกสารใบเสนอราคาอนุมัติ" : "เอกสารใบเสนอราคาอยู่ระหว่างการอนุมัติ";
+                    model.custId = custId;
+                    int? addedContract = this.AddContractAgreement(model, quotationYearMonthGen, contractStatus, quotation);
 
                     transaction.Commit();
                 }
@@ -685,6 +692,27 @@ namespace BusinessLogicMBDesign.Sale
                                 updateBy = "MB9999"
                             };
                             var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+
+                            //Create invoice = จ่ายเงินมัดจำ
+                            var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
+                            if(exists == null)
+                            {
+                                string yearMonth = this.GenerateYearMonth();
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite);
+                            }
+                            else
+                            {
+                                var invoice = new tbInvoice
+                                { 
+                                    period = GlobalDispositePeriod.firstDisposite,
+                                    invoiceStatus = GlobalInvoieStatus.paid,
+                                    updateDate = DateTime.UtcNow,
+                                    updateBy = "MB9999",
+                                    id = exists.id
+                                };
+
+                                int updateInvoie = _invoiceRepository.UpdateInvoiceStatus(invoice, conn, transaction);
+                            }
                         }
                     }
 
@@ -755,21 +783,25 @@ namespace BusinessLogicMBDesign.Sale
 
                     string contractNumber = this.GenerateContractNumber(generateNumber, yearMonth);
 
-                    var addedObject = new tbContractAgreement
+                    var exists = _contractAgreementRepository.GetFirstByOrderIdAndCustId(model.custId, conn, transaction);
+                    if(exists == null)
                     {
-                        contractNumber = contractNumber,
-                        quotationNumber = quotation,
-                        contractStatus = contractStatus,
-                        custId = model.custId,
-                        contractFileName = model.contractFileName,
-                        contractNumberGen = generateNumber,
-                        contractYearMonthGen = yearMonth,
-                        status = true,
-                        createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
-                    };
+                        var addedObject = new tbContractAgreement
+                        {
+                            contractNumber = contractNumber,
+                            quotationNumber = quotation,
+                            contractStatus = contractStatus,
+                            custId = model.custId,
+                            contractFileName = model.contractFileName,
+                            contractNumberGen = generateNumber,
+                            contractYearMonthGen = yearMonth,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                        };
 
-                    added = _contractAgreementRepository.Add(addedObject, conn, transaction);
+                        added = _contractAgreementRepository.Add(addedObject, conn, transaction);
+                    }
 
                     transaction.Commit();
                 }
@@ -801,6 +833,52 @@ namespace BusinessLogicMBDesign.Sale
         }
         #endregion Contract
 
+        #region Invoice
+        public int? AddInvoice(int orderId, int custId, string yearMonth, string invoiceStatus, string quotation, string period)
+        {
+            int? added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    int lastestNumberGen = _invoiceRepository.GetLastestInvoiceNumberByYearMonthGen(yearMonth, conn, transaction);
+                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
+
+                    string invoiceNumber = this.GenerateContractNumber(generateNumber, yearMonth);
+
+                    var addedObject = new tbInvoice
+                    {
+                        invoiceNumber = invoiceNumber,
+                        invoiceNumberGen = generateNumber,
+                        invoiceYearMonthGen = yearMonth,
+                        quotationNumber = quotation,
+                        period = period,
+                        orderId = orderId,
+                        custId = custId,
+                        invoiceStatus = invoiceStatus,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999",
+                        isDeleted = false
+                    };
+
+                    added = _invoiceRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+        #endregion Invoice
         public string GenerateYearMonth()
         {
             ThaiBuddhistCalendar thaiCalendar = new ThaiBuddhistCalendar();

@@ -67,5 +67,18 @@ namespace EntitiesMBDesign
         public string foremanStatus { get; set; } = string.Empty;
         public int design3dId { get; set; }
         public int foremanId { get; set; }
+        public string contractStatus { get; set; } = string.Empty;
+        public string invoiceStatus { get; set; } = string.Empty;
+        public string contractNumber { get; set; } = string.Empty;
+        public string custAddress { get; set; } = string.Empty;
+        public string custFirstName { get; set; } = string.Empty;
+        public string custSurName { get; set; } = string.Empty;
+        public DateTime? contractCreateDate { get; set; }
+        public string contractCreateBy { get; set; } = string.Empty;
+        public DateTime? contractUpdateDate { get; set; }
+        public string contractUpdateBy { get; set; } = string.Empty;
+        public int contractId { get; set; }
+        public int invoiceId { get; set; }
+        public string invoicePeriod { get; set; } = string.Empty;
     }
 }

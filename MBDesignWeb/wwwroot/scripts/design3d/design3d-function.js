@@ -148,7 +148,7 @@ function clearInputForm() {
     let formId = '#form-editDesign3D';
     $(`${formId} #input-edit-3d-quotation`).val('');
     $(`${formId} #input-edit-3d-install-date`).val('');
-    $(`${formId} #select-edit-3d-designName`).val('');
+    $(`${formId} #select-edit-3d-designName`).val('').trigger('change');
     $(`${formId} #input-edit-3d-due-date`).val('');
     $(`${formId} #input-edit-3d-checklist-status`).val('');
     $(`${formId} #chkFinal3D`).prop('checked', false);

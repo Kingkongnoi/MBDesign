@@ -1,0 +1,53 @@
+﻿@{
+    ViewData["Title"] = "บัญชีและเอกสาร";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/accounting/accounting-controller.js"></script>
+<script src="~/scripts/accounting/accounting-service.js"></script>
+
+<style>
+    .nav-tabs .nav-link {
+        background-color: #AFAFAF;
+        color: #FFF;
+    }
+
+        .nav-tabs .nav-link.active {
+            background-color: #F09723;
+            color: #FFF;
+        }
+
+    .table tr th {
+        background-color: #F09723;
+        color: #FFF;
+    }
+</style>
+
+<div class="row">
+    <h4>บัญชีและเอกสาร</h4>
+
+    <div class="col-sm-12">
+
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-accounting-document-tab">ออกเอกสารสัญญา</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-accounting-invoice-tab">การออกใบแจ้งหนี้</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-accounting-certificate-tab">บัตรประชาชนกรรมการและหนังสือรับรองบริษัท</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-accounting-document-tab">@Html.Partial("_AccountingDocument.cshtml")</div>
+            <div class="tab-pane" id="nav-accounting-invoice-tab">@Html.Partial("_InvoiceDocument.cshtml")</div>
+            <div class="tab-pane" id="nav-accounting-certificate-tab">@Html.Partial("_BusinessCertificateDocument.cshtml")</div>
+        </div>
+
+    </div>
+</div>

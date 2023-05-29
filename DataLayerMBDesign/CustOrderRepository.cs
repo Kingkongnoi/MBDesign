@@ -268,5 +268,59 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new{ orderId, orderStatus }, transaction: trans);
         }
+
+        public CustOrderView GetAccountingByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select top 1 a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, isnull(c.contractStatus,'') contractStatus, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
+            c.createDate contractCreateDate, c.createBy contractCreateBy, c.updateDate contractUpdateDate, c.updateBy contractUpdateBy
+            from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
+            left join tbContractAgreement c on a.custId = c.custId and isnull(c.isDeleted,0) = 0
+            left join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
+            where a.status = 1 and b.status = 1 and isnull(c.status,1) = 1 and isnull(d.status,1) = 1
+            and a.orderId = @orderId";
+
+            return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { orderId }, transaction: trans);
+        }
+
+        public List<CustOrderView> GetAccountingListByParams(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractCreateDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "%%")
+            {
+                condition += string.Format(" and a.contractNumber like '%{0}%'", contractNumber);
+            }
+
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            {
+                condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
+            }
+
+            if (!string.IsNullOrEmpty(customerName) && customerName != "%%")
+            {
+                condition += string.Format(" and isnull(b.custFirstName + ' ' + b.custSurName,'') like N'%{0}%'", customerName);
+            }
+
+            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "%%")
+            {
+                condition += string.Format(" and isnull(c.contractStatus,'') = N'{0}'", contractStatus);
+            }
+
+            if (!string.IsNullOrEmpty(contractCreateDate) && contractCreateDate != "%%")
+            {
+                condition += string.Format(" and  FORMAT(c.createDate, 'yyyy-MM-dd') = N'{0}'", contractCreateDate);
+            }
+
+            string queryString = string.Format(@"select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, isnull(c.contractStatus,'') contractStatus, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
+            c.createDate contractCreateDate, c.createBy contractCreateBy, c.updateDate contractUpdateDate, c.updateBy contractUpdateBy, isnull(c.id,0) contractId, isnull(d.id,0) invoiceId, a.custId
+            from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
+            left join tbContractAgreement c on a.custId = c.custId and isnull(c.isDeleted,0) = 0
+            left join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
+            where a.status = 1 and b.status = 1 and isnull(c.status,1) = 1 and isnull(d.status,1) = 1
+            {0}
+            order by a.orderId", condition);
+
+            return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
     }
 }

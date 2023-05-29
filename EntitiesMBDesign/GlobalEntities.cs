@@ -25,6 +25,7 @@ namespace EntitiesMBDesign
         public static string documentApproved = "เอกสารใบเสนอราคาอนุมัติ";
         public static string documentNotApproved = "เอกสารใบเสนอราคาไม่ได้รับอนุมัติ";
         public static string document3dApproved = "รูปภาพ 3D อนุมัติ";
+        public static string documentSendToSaleAndForeman = "ส่งเอกสารสัญญาไปทีมเซลล์และโฟร์แมน";
     }
 
     public class Global3DStatus
@@ -43,5 +44,19 @@ namespace EntitiesMBDesign
     public class GlobalUploadCategory
     {
         public static string approved3d = "3dApproved";
+    }
+
+    public class GlobalDispositePeriod
+    {
+        public static string firstDisposite = "จ่ายเงินมัดจำ";
+        public static string secondDisposite = "จ่ายเงินงวด 2";
+        public static string thirdDisposite = "จ่ายเงินงวด 3";
+        public static string fouthDisposite = "จ่ายเงินงวด 4";
+    }
+
+    public class GlobalInvoieStatus
+    {
+        public static string waitPaid = "รอจ่าย";
+        public static string paid = "จ่ายแล้ว";
     }
 }
