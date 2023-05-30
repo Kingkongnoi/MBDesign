@@ -57,7 +57,7 @@ namespace MBDesignApi.Controllers.Accounting
         [HttpGet]
         public JsonResult GetAccountingByOrderId(int orderId)
         {
-            var custOrder = _accountingService.GetAccountingCustOrderByOrderId(orderId);
+            var custOrder = _accountingService.GetCustOrderByOrderId(orderId);
             var imageUpload = _accountingService.GetAccountImage(orderId);
 
             var result = new
@@ -67,7 +67,27 @@ namespace MBDesignApi.Controllers.Accounting
             };
             return new JsonResult(result);
         }
-        
+
+        [HttpGet]
+        public JsonResult GetInvoiceById(int orderId, int invoiceId)
+        {
+            var custOrder = _accountingService.GetCustOrderByOrderId(orderId);
+            var invoice = _accountingService.GetInvoiceByKeyId(invoiceId);
+            var cust = new tbCust();
+            if (custOrder != null)
+            {
+                cust = _accountingService.GetCustByCustId(custOrder.custId);
+            }
+
+            var result = new
+            {
+                custOrder = custOrder,
+                invoice = invoice,
+                cust = cust
+            };
+            return new JsonResult(result);
+        }
+
         [HttpGet]
         public JsonResult GetInvoiceList(string quotationNumber, string invoiceNumber, string customerName, string invoiceStatus, string invoiceDate)
         {
@@ -93,9 +113,15 @@ namespace MBDesignApi.Controllers.Accounting
         }
 
         [HttpGet]
-        public JsonResult GetCustomerInformationByOrderId(int orderId)
+        public JsonResult GetCustomerInformationByOrderId(int orderId, int invoiceId = 0)
         {
-            var custOrder = _accountingService.GetAccountingCustOrderByOrderId(orderId);
+            var custOrder = _accountingService.GetCustOrderByOrderId(orderId);
+            var invoice = new tbInvoice();
+            if (invoiceId != 0)
+            {
+                invoice = _accountingService.GetInvoiceByKeyId(invoiceId);
+            }
+
             var cust = new tbCust();
             if (custOrder != null)
             {
@@ -105,7 +131,8 @@ namespace MBDesignApi.Controllers.Accounting
             var result = new
             {
                 cust = cust,
-                custOrder = custOrder
+                custOrder = custOrder,
+                invoice = invoice
             };
             return new JsonResult(result);
         }
@@ -119,10 +146,27 @@ namespace MBDesignApi.Controllers.Accounting
 
             return new JsonResult(data);
         }
+
         [HttpPost]
         public JsonResult DoSendToSaleAndForeman(int orderId)
         {
             var data = _accountingService.DoSendToSaleAndForeman(orderId);
+
+            return new JsonResult(data);
+        }
+
+        [HttpPost]
+        public JsonResult DoAddInvoice([FromBody]InvoiceModel obj)
+        {
+            var data = _accountingService.DoAddInvoice(obj);
+
+            return new JsonResult(data);
+        }
+
+        [HttpPost]
+        public JsonResult DoUpdateInvoice([FromBody]InvoiceModel obj)
+        {
+            var data = _accountingService.DoUpdateInvoice(obj);
 
             return new JsonResult(data);
         }

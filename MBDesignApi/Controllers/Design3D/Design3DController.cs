@@ -12,16 +12,18 @@ namespace MBDesignApi.Controllers.Design3D
     public class Design3DController : Controller
     {
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly Design3DService _design3DService;
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
 
-        public Design3DController(IConfiguration configuration)
+        public Design3DController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _design3DService = new Design3DService(_configuration);
             _saleService = new SaleService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _webHostEnvironment = webHostEnvironment;
         }
 
         #region GET
@@ -79,12 +81,12 @@ namespace MBDesignApi.Controllers.Design3D
                 checklistStatus = Global3DStatus.whileDesign3dDraf1;
             }
 
-            string path = Directory.GetCurrentDirectory();
+            string path = _webHostEnvironment.WebRootPath;//Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
                 checklistStatus = Global3DStatus.design3dApproved;
 
-                string folderName = string.Format("{0}\\images\\", path);
+                string folderName = string.Format("{0}\\upload\\images\\", path);
 
                 if (!Directory.Exists(folderName))
                 {

@@ -88,5 +88,20 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.custFirstName, obj.custSurName, obj.custAddress, obj.updateDate, obj.updateBy, obj.custId }, transaction: trans);
         }
+
+        public int UpdateInvoiceCust(tbCust obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"update tbCust
+                                set custFirstName = @custFirstName,
+                                custSurName = @custSurName,
+                                custInstallAddress = @custInstallAddress,
+                                custTel = @custTel,
+                                updateDate = @updateDate,
+                                updateBy = @updateBy
+                                where isDeleted = 0 and custId = @custId
+                                select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.custFirstName, obj.custSurName, obj.custInstallAddress, obj.custTel, obj.updateDate, obj.updateBy, obj.custId }, transaction: trans);
+        }
     }
 }

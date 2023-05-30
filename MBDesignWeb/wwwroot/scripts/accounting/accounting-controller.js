@@ -57,7 +57,11 @@
 
     $('#nav-invoice .btn-add-invoice').on('click', function () {
         _invoice_action = 'add'
+        _order_id = 0;
+        _cust_id = 0;
+        _invoice_id = 0;
         generateInvoiceNumber();
+        $(`#form-createInvoice #select-period`).attr('disabled');
         $(`#modal-createInvoice #invoiceHeader`).text('เพิ่มใบแจ้งหนี้');
         $('#modal-createInvoice').modal('show');
     });
@@ -71,5 +75,9 @@
         renderEditInvoice($(this).data('orderid'));
         $(`#modal-createInvoice #invoiceHeader`).text('แก้ไขใบแจ้งหนี้');
         $('#modal-createInvoice').modal('show');
+    });
+
+    $('.btn-modal-save-invoice').on('click', function () {
+        callSaveCreateOrUpdateInvoice();
     });
 });

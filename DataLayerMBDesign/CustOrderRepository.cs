@@ -354,11 +354,11 @@ namespace DataLayerMBDesign
         }
         public List<tbCustOrder> GetQuotaionSelect2(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"	select quotationNumber, custId
+            string queryString = @"	select quotationNumber, orderId
             from tbCustOrder
             where isDeleted = 0 and status = 1
-            group by quotationNumber,custId
-            order by quotationNumber,custId";
+            group by quotationNumber,orderId
+            order by quotationNumber,orderId";
 
             return conn.Query<tbCustOrder>(queryString, transaction: trans).ToList();
         }

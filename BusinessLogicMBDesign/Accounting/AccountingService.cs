@@ -75,16 +75,33 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
-        public CustOrderView GetAccountingCustOrderByOrderId(int orderId)
+        public tbCustOrder GetCustOrderByOrderId(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _custOrderRepository.GetAccountingByOrderId(orderId, conn);
+                return _custOrderRepository.GetFirstByOrderIdSortDesc(orderId, conn);
             }
         }
+        public tbInvoice GetInvoiceByKeyId(int invoiceId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
 
+                return _invoiceRepository.GetByInvoiceId(invoiceId, conn);
+            }
+        }
+        public tbCust GetCustByCustId(int custId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custRepository.GetFirstById(custId, conn);
+            }
+        }
         public List<UploadView> GetAccountImage(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -106,8 +123,9 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
-        public string GenerateInvoiceNumber()
+        public tbInvoice GenerateInvoiceNumber()
         {
+            var result = new tbInvoice();
             string newInvoiceNum = string.Empty;
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -122,9 +140,13 @@ namespace BusinessLogicMBDesign.Accounting
                 string getNumber = string.Format("{0:0000}", generateNumber);
 
                 newInvoiceNum = string.Format("{0}{1}", yearMonth, getNumber);
+
+                result.invoiceNumber = newInvoiceNum;
+                result.invoiceNumberGen = generateNumber;
+                result.invoiceYearMonthGen = yearMonth;
             }
 
-            return newInvoiceNum;
+            return result;
         }
         public string GenerateYearMonth()
         {
@@ -195,6 +217,121 @@ namespace BusinessLogicMBDesign.Accounting
                 try
                 {
                     int updatedRow = _contractAgreementRepository.UpdateContractStatus(orderId, GlobalContractStatus.documentSendToSaleAndForeman, conn, transaction);
+
+                    msg.isResult = true;
+                    transaction.Commit();
+                }
+                catch
+                {
+                    msg.isResult = false;
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+        public ResultMessage DoAddInvoice(InvoiceModel model)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var updated = new tbCust
+                    {
+                        custFirstName = model.custFirstName,
+                        custSurName = model.custSurName,
+                        custInstallAddress = model.custInstallAddress,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999",
+                        custId = model.custId
+                    };
+
+                    int updatedRow = _custRepository.UpdateInvoiceCust(updated, conn, transaction);
+
+                    var custOrder = _custOrderRepository.GetCustOrderByOrderId(model.orderId, conn, transaction);
+                    if(custOrder != null)
+                    {
+                        var addedInvoice = new tbInvoice
+                        {
+                            invoiceNumber = model.invoiceNumber,
+                            invoiceNumberGen = model.invoiceNumberGen,
+                            invoiceYearMonthGen = model.invoiceYearMonthGen,
+                            quotationNumber = custOrder.quotationNumber,
+                            period = model.period,
+                            orderId = model.orderId,
+                            custId = model.custId,
+                            unitPrice = model.unitPrice,
+                            invoiceStatus = model.invoiceStatus,
+                            status = true,
+                            isDeleted = false,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999"
+                        };
+
+                        int? invoiceId = _invoiceRepository.Add(addedInvoice, conn, transaction);
+
+                    }
+
+                    msg.isResult = true;
+                    transaction.Commit();
+                }
+                catch
+                {
+                    msg.isResult = false;
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+        public ResultMessage DoUpdateInvoice(InvoiceModel model)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var updated = new tbCust
+                    {
+                        custFirstName = model.custFirstName,
+                        custSurName = model.custSurName,
+                        custInstallAddress = model.custInstallAddress,
+                        custTel = model.custTel,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999",
+                        custId = model.custId
+                    };
+
+                    int updatedRow = _custRepository.UpdateInvoiceCust(updated, conn, transaction);
+
+                    var custOrder = _custOrderRepository.GetCustOrderByOrderId(model.orderId, conn, transaction);
+                    if (custOrder != null)
+                    {
+                        var addedInvoice = new tbInvoice
+                        {
+                            quotationNumber = custOrder.quotationNumber,
+                            period = model.period,
+                            orderId = model.orderId,
+                            custId = model.custId,
+                            unitPrice = model.unitPrice,
+                            invoiceStatus = model.invoiceStatus,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = "MB9999",
+                            id= model.invoiceId
+                        };
+
+                        int? invoiceId = _invoiceRepository.UpdateInvoiceStatus(addedInvoice, conn, transaction);
+
+                    }
 
                     msg.isResult = true;
                     transaction.Commit();

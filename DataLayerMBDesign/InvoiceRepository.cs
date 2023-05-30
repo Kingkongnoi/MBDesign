@@ -19,13 +19,16 @@ namespace DataLayerMBDesign
         {
             string queryString = @"update tbInvoice
                                 set [period] = @period,
+                                orderId=@orderId,
+                                custId=@custId,
                                 invoiceStatus = @invoiceStatus,
+                                unitPrice = @unitPrice,
                                 updateDate = @updateDate,
                                 updateBy = @updateBy
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.period, obj.invoiceStatus, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.period, obj.orderId, obj.custId, obj.invoiceStatus, obj.unitPrice, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
         }
         public int GetLastestInvoiceNumberByYearMonthGen(string yearMonthGen, SqlConnection conn, SqlTransaction? trans = null)
         {
@@ -71,6 +74,31 @@ namespace DataLayerMBDesign
 			order by invoiceStatus";
 
             return conn.Query<tbInvoice>(queryString, transaction: trans).ToList();
+        }
+
+        public tbInvoice GetByInvoiceId(int invoiceId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT TOP 1 id
+                                ,invoiceNumber
+                                ,invoiceNumberGen
+                                ,invoiceYearMonthGen
+                                ,quotationNumber
+                                ,[period]
+                                ,orderId
+                                ,custId
+                                ,unitPrice
+                                ,invoiceStatus
+                                ,[status]
+                                ,createDate
+                                ,createBy
+                                ,updateDate
+                                ,updateBy
+                                ,isDeleted
+                                FROM tbInvoice
+                                where id = @invoiceId and isDeleted = 0 and status = 1
+                                order by id desc";
+
+            return conn.QueryFirstOrDefault<tbInvoice>(queryString, new { invoiceId }, transaction: trans);
         }
     }
 }

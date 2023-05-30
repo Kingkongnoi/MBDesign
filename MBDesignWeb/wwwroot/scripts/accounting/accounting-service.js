@@ -589,7 +589,12 @@ function generateInvoiceNumber() {
         url: url,
         type: 'GET',
         success: (res) => {
-            $('#form-createInvoice input[name="input-invoice-number"]').val(res);
+            console.log(res);
+            if (res != null) {
+                $('#form-createInvoice #invoiceNumberGen').val(res.invoiceNumberGen);
+                $('#form-createInvoice #invoiceYearMonth').val(res.invoiceYearMonthGen);
+                $('#form-createInvoice input[name="input-invoice-number"]').val(res.invoiceNumber);
+            }
         },
         error: () => {
         }
@@ -598,9 +603,9 @@ function generateInvoiceNumber() {
 function renderEditInvoice(id) {
     $.ajax({
         type: 'GET',
-        url: `${app_settings.api_url}/api/Accounting/GetAccountingByOrderId?orderId=${id}`,
+        url: `${app_settings.api_url}/api/Accounting/GetInvoiceById?orderId=${id}&invoiceId=${_invoice_id}`,
         success: function (data) {
-            renderAccountingToForm(data);
+            renderInvoiceToForm(data);
         },
         error: function (err) {
             //loaded.find(loader).remove();
@@ -608,168 +613,53 @@ function renderEditInvoice(id) {
     });
 }
 function renderInvoiceToForm(data) {
-    let formId = '#form-editAccounting';
-    console.log(data.custOrder.invoicePeriod);
-    $(`${formId} #input-edit-acc-contract`).val(data.custOrder.contractNumber);
-    $(`${formId} #input-edit-acc-quotation`).val(data.custOrder.quotationNumber);
-    $(`${formId} #input-edit-acc-contract-status`).val(data.custOrder.contractStatus);
-    $(`${formId} #input-edit-acc-invoice-status`).val(data.custOrder.invoicePeriod);
-    $(`${formId} #input-edit-acc-customer-firstName`).val(data.custOrder.custFirstName);
-    $(`${formId} #input-edit-acc-customer-surName`).val(data.custOrder.custSurName);
-    $(`${formId} #input-edit-acc-customer-address`).val(data.custOrder.custAddress);
+    let formId = '#form-createInvoice';
 
-    renderImageUpload(formId, data.imageUpload);
-}
-function renderImageUpload(formId, data) {
-    var custOrderIdCard = data.filter(v => { return v.categoryName == "CustOrderIdCard" });
-    console.log(custOrderIdCard);
-    var lstIdCardUrl = [];
-    var lstPreviewIdCard = [];
-    if (custOrderIdCard.length > 0) {
-        lstIdCardUrl.push(`${custOrderIdCard[0].url}`);
-
-        var addPreview = {
-            caption: custOrderIdCard[0].fileName,
-            //width: '120px',
-            //url: '/localhost/public/delete',
-            key: custOrderIdCard[0].uploadId,
-            extra: { id: custOrderIdCard[0].uploadId }
-        };
-
-        lstPreviewIdCard.push(addPreview);
-    }
-
-    $(`${formId} #pic-acc-customer-idCard`).fileinput('destroy');
-    if (custOrderIdCard.length > 0) {
-        $(`${formId} #pic-acc-customer-idCard`).fileinput({
-            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            showBrowse: false,
-            showUpload: false,
-            showCaption: false,
-            initialPreview: lstIdCardUrl,
-            initialPreviewAsData: true,
-            initialPreviewConfig: [
-                lstPreviewIdCard
-            ],
-            browseOnZoneClick: true,
-            browseLabel: 'เลือกไฟล์'
-        });
-    }
-    else {
-        $(`${formId} #pic-acc-customer-idCard`).fileinput({
-            uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            //maxFileCount: 1,
-            showBrowse: false,
-            browseOnZoneClick: false,
-            showCaption: false,
-            showUpload: false,
-        });
-    }
-
-    var custOrderPlan = data.filter(v => { return v.categoryName == "CustOrderPlan" });
-
-    var lstCustOrderPlanUrl = [];
-    var lstPreviewCustOrderPlan = [];
-    custOrderPlan.forEach((a) => {
-        lstCustOrderPlanUrl.push(`${a.url}`);
-
-        var addPreview = {
-            caption: a.fileName,
-            width: '120px',
-            //url: '/localhost/public/delete',
-            key: a.uploadId,
-            extra: { id: a.uploadId }
-        };
-
-        lstPreviewCustOrderPlan.push(addPreview);
-    });
-
-    $(`${formId} #pic-acc-plan`).fileinput('destroy');
-    if (custOrderPlan.length > 0) {
-        $(`${formId} #pic-acc-plan`).fileinput({
-            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            showBrowse: false,
-            showUpload: false,
-            showCaption: false,
-            initialPreview: lstCustOrderPlanUrl,
-            initialPreviewAsData: true,
-            initialPreviewConfig: [
-                lstPreviewCustOrderPlan
-            ],
-            browseOnZoneClick: true,
-            browseLabel: 'เลือกไฟล์'
-        });
-    }
-    else {
-        $(`${formId} #pic-acc-plan`).fileinput({
-            uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            //maxFileCount: 1,
-            showBrowse: false,
-            browseOnZoneClick: false,
-            showCaption: false,
-            showUpload: false,
-        });
-    }
-
-    var approved3dImg = data.filter(v => { return v.categoryName == "3dApproved" });
-
-    var lstApproved3dUrl = [];
-    var lstPreviewApproved3dImg = [];
-    approved3dImg.forEach((a) => {
-        lstApproved3dUrl.push(`${a.url}`);
-
-        var addPreview = {
-            caption: a.fileName,
-            width: '120px',
-            //url: '/localhost/public/delete',
-            key: a.uploadId,
-            extra: { id: a.uploadId }
-        };
-
-        lstPreviewApproved3dImg.push(addPreview);
-    });
-
-    $(`${formId} #pic-acc-3d-approve`).fileinput('destroy');
-    if (approved3dImg.length > 0) {
-        $(`${formId} #pic-acc-3d-approve`).fileinput({
-            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            showBrowse: false,
-            showUpload: false,
-            showCaption: false,
-            initialPreview: lstApproved3dUrl,
-            initialPreviewAsData: true,
-            initialPreviewConfig: [
-                lstPreviewApproved3dImg
-            ],
-            browseOnZoneClick: true,
-            browseLabel: 'เลือกไฟล์'
-        });
-    }
-    else {
-        $(`${formId} #pic-acc-3d-approve`).fileinput({
-            uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            //maxFileCount: 1,
-            showBrowse: false,
-            browseOnZoneClick: false,
-            showCaption: false,
-            showUpload: false,
-        });
-    }
+    $(`${formId} #invoiceNumberGen`).val(data.invoice.invoiceNumberGen);
+    $(`${formId} #invoiceYearMonth`).val(data.invoice.invoiceYearMonthGen);
+    $(`${formId} #input-invoice-number`).val(data.invoice.invoiceNumber);
+    $(`${formId} #select-quotation-number`).val(data.custOrder.orderId).trigger('change');
+    $(`${formId} #select-period`).val(data.invoice.period).trigger('change');
+    $(`${formId} #input-customer-firstName`).val(data.cust.custFirstName);
+    $(`${formId} #input-customer-tel`).val(data.cust.custTel);
+    $(`${formId} #input-customer-surName`).val(data.cust.custSurName);
+    $(`${formId} #select-invoice-status`).val(data.invoice.invoiceStatus).trigger('change');
+    $(`${formId} #input-install-address`).val(data.cust.custInstallAddress);
+    $(`${formId} #input-cal-unitPrice`).val(data.invoice.unitPrice.toFixed(2));
 }
 
-let _firstPeriod = 'งวดที่ 1 เมื่อตกลงนัดผู้ขายสำรวจพื้นที่ติดตั้งชิ้นงานเฟอร์นิเจอร์';
-let _secondPeriod = 'งวดที่ 2 เมื่อเซ็นสัญญาตกลงซื้องานเฟอร์นิเจอร์เพื่อสั่งผลิต';
-let _thridPeriod = 'งวดที่ 3 เมื่อนำชิ้นงานส่วนไม้เฟอร์นิเจอร์ขนส่งถึงหน้างาน';
-let _fourthPeriod = 'งวดที่ 4 เมื่อผู้ขายและทีมงานบริการติดตั้งแล้วเสร็จ พร้อมส่งงาน';
+let _firstFullPeriod = 'งวดที่ 1 เมื่อตกลงนัดผู้ขายสำรวจพื้นที่ติดตั้งชิ้นงานเฟอร์นิเจอร์';
+let _secondFullPeriod = 'งวดที่ 2 เมื่อเซ็นสัญญาตกลงซื้องานเฟอร์นิเจอร์เพื่อสั่งผลิต';
+let _thridFullPeriod = 'งวดที่ 3 เมื่อนำชิ้นงานส่วนไม้เฟอร์นิเจอร์ขนส่งถึงหน้างาน';
+let _fourthFullPeriod = 'งวดที่ 4 เมื่อผู้ขายและทีมงานบริการติดตั้งแล้วเสร็จ พร้อมส่งงาน';
 
-function renderPeriodSelect2() {
+let _firstPeriod = 'จ่ายเงินมัดจำ';
+let _secondPeriod = 'งวดที่ 2';
+let _thridPeriod = 'งวดที่ 3';
+let _fourthPeriod = 'งวดที่ 4';
+
+let _grand_total = 0;
+let _disposite = 0;
+
+function renderPeriodSelect2(data = null) {
     $(`#form-createInvoice #select-period`).empty();
     $(`#form-createInvoice #select-period`).append(`<option value="">กรุณาเลือก</option>`);
-    $(`#form-createInvoice #select-period`).append(`<option value="${_firstPeriod}">${_firstPeriod}</option>`);
-    $(`#form-createInvoice #select-period`).append(`<option value="${_secondPeriod}">${_secondPeriod}</option>`);
-    $(`#form-createInvoice #select-period`).append(`<option value="${_thridPeriod}">${_thridPeriod}</option>`);
-    $(`#form-createInvoice #select-period`).append(`<option value="${_fourthPeriod}">${_fourthPeriod}</option>`);
-    $(`#form-createInvoice #select-period`).val('').trigger('change');
+    if (_disposite == 0 || _invoice_action == "edit") {
+        $(`#form-createInvoice #select-period`).append(`<option value="${_firstPeriod}">${_firstFullPeriod}</option>`);
+    }
+    $(`#form-createInvoice #select-period`).append(`<option value="${_secondPeriod}">${_secondFullPeriod}</option>`);
+    $(`#form-createInvoice #select-period`).append(`<option value="${_thridPeriod}">${_thridFullPeriod}</option>`);
+    $(`#form-createInvoice #select-period`).append(`<option value="${_fourthPeriod}">${_fourthFullPeriod}</option>`);
+
+    console.log(data);
+    if (data != null) {
+        $(`#form-createInvoice #select-period`).val(data.period).trigger('change');
+    }
+    else {
+        $(`#form-createInvoice #select-period`).val('').trigger('change');
+    }
+   
+    $(`#form-createInvoice #select-period`).attr('disabled');
 }
 function callGetQuotaionSelect2() {
     $.ajax({
@@ -786,7 +676,7 @@ function renderQuotaionSelect2(data) {
     $(`#form-createInvoice #select-quotation-number`).empty();
     $(`#form-createInvoice #select-quotation-number`).append(`<option value="">กรุณาเลือก</option>`);
     data.forEach((v) => {
-        $(`#form-createInvoice #select-quotation-number`).append(`<option value="${v.custId}">${v.quotationNumber}</option>`);
+        $(`#form-createInvoice #select-quotation-number`).append(`<option value="${v.orderId}">${v.quotationNumber}</option>`);
     });
     $(`#form-createInvoice #select-quotation-number`).val('').trigger('change');
 }
@@ -804,11 +694,23 @@ function renderEditInvoiceSelect2() {
 function callCustomerInformation(e) {
     let orderId = $(e).val();
 
+    let formId = '#form-createInvoice';
+
+    if ($(`${formId} #select-quotation-number`).val() == "") {
+        $(`${formId} #select-period`).attr('disabled');
+    }
+    else {
+        $(`${formId} #select-period`).removeAttr('disabled');
+    }
+
+    if (_invoice_action == "add") {
+        $(`${formId} #select-period`).val('').trigger('change');
+    }
+
     $.ajax({
         type: 'GET',
-        url: `${app_settings.api_url}/api/Accounting/GetCustomerInformationByOrderId?orderId=${orderId}`,
+        url: `${app_settings.api_url}/api/Accounting/GetCustomerInformationByOrderId?orderId=${orderId}&invoiceId=${_invoice_id}`,
         success: function (data) {
-            let formId = '#form-createInvoice';
             $(`${formId} #input-customer-firstName`).val('');
             $(`${formId} #input-customer-firstName`).val(data.cust.custFirstName);
             $(`${formId} #input-customer-surName`).val('');
@@ -818,29 +720,233 @@ function callCustomerInformation(e) {
             $(`${formId} #input-install-address`).val('');
             $(`${formId} #input-install-address`).val(data.cust.custInstallAddress);
 
-            $(`${formId} #custId`).val('');
-            $(`${formId} #custId`).val(data.cust.custId);
+            _cust_id = data.cust.custId;
+            _order_id = orderId;
 
-            calculateUnitPrice(data.custOrder.grandTotal);
+            _grand_total = data.custOrder.grandTotal;
+            _disposite = data.custOrder.disposite;
+            debugger;
+            renderPeriodSelect2(data.invoice);
         },
         error: function (err) {
         }
     });
 }
 
-function calculateUnitPrice(grandTotal) {
-    let period = $(`#form-createInvoice #select-period`).val();
-    if (period == "") {
-        $(`${formId} #input-cal-unitPrice`).val(grandTotal);
-    }
-    else {
-
-    }
-
-}
 function calculateByPeriod(e) {
+    let unit_price = 0;
     let period = $(e).val();
-    if (_firstPeriod) {
-
+    if (period == _firstPeriod) {
+        unit_price = calculateDispositeFirstPeriod();
     }
+    else if (period == _secondPeriod) {
+        unit_price = _grand_total * 0.5;
+    }
+    else if (period == _thridPeriod) {
+        unit_price = _grand_total * 0.4;
+    }
+    else if (period == _fourthPeriod) {
+        firstDisposite = calculateDispositeFirstPeriod();
+        unit_price = firstDisposite - (_grand_total * 0.1);
+    }
+
+    $('#form-createInvoice input[name="input-cal-unitPrice"]').val('');
+    $('#form-createInvoice input[name="input-cal-unitPrice"]').val(unit_price.toFixed(2))
+}
+let calculateDispositeFirstPeriod = function() {
+    let showDisposite = 0;
+    $('#form-createInvoice input[name="input-cal-unitPrice"]').val('');
+    if (_grand_total <= 200000) {
+        showDisposite = 5000;
+    }
+    else if (_grand_total > 200000 && _grand_total <= 600000) {
+        showDisposite = 10000;
+    }
+    else if (_grand_total > 600000 && _grand_total <= 900000) {
+        showDisposite = 20000;
+    }
+    else if (_grand_total > 900000) {
+        showDisposite = 30000;
+    }
+
+    return showDisposite;
+    //$('#form-createInvoice input[name="input-cal-unitPrice"]').val(Math.floor(showDisposite));
+}
+
+let validateInputInvoice = function () {
+    if ($('#form-createInvoice #input-invoice-number').val() == "") {
+        Swal.fire({
+            text: "กรุณารอระบบ generate เลขที่ใบแจ้งหนี้",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #input-invoice-number').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #select-quotation-number').val() == "") {
+        Swal.fire({
+            text: "กรุณาเลือกเลขที่ใบเสนอราคา",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #select-quotation-number').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #select-period').val() == "") {
+        Swal.fire({
+            text: "กรุณาเลือกงวด",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #select-period').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #input-customer-firstName').val() == "") {
+        Swal.fire({
+            text: "กรุณากรอกชื่อลูกค้า",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #input-customer-firstName').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #input-customer-surName').val() == "") {
+        Swal.fire({
+            text: "กรุณากรอกนามสกุล",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #input-customer-surName').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #input-customer-tel').val() == "") {
+        Swal.fire({
+            text: "กรุณากรอกเบอร์โทรศัพท์",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #input-customer-tel').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #select-invoice-status').val() == "") {
+        Swal.fire({
+            text: "กรุณาเลือกสถานะใบแจ้งหนี้",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #select-invoice-status').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createInvoice #input-cal-unitPrice').val() == "" || $('#form-createInvoice #input-cal-unitPrice').val() == 0) {
+        Swal.fire({
+            text: "กรุณาเลือกสถานะใบแจ้งหนี้",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createInvoice #input-cal-unitPrice').focus();
+        });
+        return false;
+    }
+
+    return true;
+};
+function callSaveCreateOrUpdateInvoice() {
+    if (!validateInputInvoice()) { return; }
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.close();
+            DoSaveCreateOrUpdateInvoice();
+        }
+    });
+}
+function DoSaveCreateOrUpdateInvoice() {
+    let formId = '#form-createInvoice';
+
+    let invoiceNumber = $(`${formId} #input-invoice-number`).val() == "" ? "" : $(`${formId} #input-invoice-number`).val();
+    let invoiceNumberGen = $(`${formId} #invoiceNumberGen`).val();
+    let invoiceYearMonthGen = $(`${formId} #invoiceYearMonth`).val();
+    let period = $(`${formId} #select-period`).val() == "" ? "" : $(`${formId} #select-period`).val();
+    let custFirstName = $(`${formId} #input-customer-firstName`).val() == "" ? "" : $(`${formId} #input-customer-firstName`).val();
+    let custTel = $(`${formId} #input-customer-tel`).val() == "" ? "" : $(`${formId} #input-customer-tel`).val();
+    let custSurName = $(`${formId} #input-customer-surName`).val() == "" ? "" : $(`${formId} #input-customer-surName`).val();
+    let invoiceStatus = $(`${formId} #select-invoice-status`).val() == "" ? "" : $(`${formId} #select-invoice-status`).val();
+    let custInstallAddress = $(`${formId} #input-install-address`).val() == "" ? "" : $(`${formId} #input-install-address`).val();
+    let unitPrice = $(`${formId} #input-cal-unitPrice`).val() == "" ? "" : $(`${formId} #input-cal-unitPrice`).val();
+
+
+    var obj = {
+        invoiceNumber: invoiceNumber,
+        invoiceNumberGen: invoiceNumberGen,
+        invoiceYearMonthGen: invoiceYearMonthGen,
+        period: period,
+        orderId: _order_id,
+        custId: _cust_id,
+        custFirstName: custFirstName,
+        custTel: custTel,
+        custSurName: custSurName,
+        invoiceStatus: invoiceStatus,
+        custInstallAddress: custInstallAddress,
+        unitPrice: unitPrice,
+        invoiceId: _invoice_id
+    };
+
+    var data = JSON.stringify(obj);
+
+    let url = (_invoice_action == "add") ? `${app_settings.api_url}/api/Accounting/DoAddInvoice` : `${app_settings.api_url}/api/Accounting/DoUpdateInvoice`;
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: data,
+        success: (res) => {
+            if (res.isResult == true) {
+                callSuccessAlert();
+                $(`#modal-createInvoice`).modal('hide');
+                callGetInvoiceList();
+            }
+        },
+        error: () => {
+        },
+        contentType: 'application/json',
+        dataType: "json",
+    });
 }

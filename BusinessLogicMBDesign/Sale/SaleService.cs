@@ -699,7 +699,7 @@ namespace BusinessLogicMBDesign.Sale
                             if(exists == null)
                             {
                                 string yearMonth = this.GenerateYearMonth();
-                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite);
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite);
                             }
                             else
                             {
@@ -835,7 +835,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Contract
 
         #region Invoice
-        public int? AddInvoice(int orderId, int custId, string yearMonth, string invoiceStatus, string quotation, string period)
+        public int? AddInvoice(int orderId, int custId, string yearMonth, string invoiceStatus, string quotation, string period, decimal unitPrice)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -864,7 +864,8 @@ namespace BusinessLogicMBDesign.Sale
                         status = true,
                         createDate = DateTime.UtcNow,
                         createBy = "MB9999",
-                        isDeleted = false
+                        isDeleted = false,
+                        unitPrice = unitPrice
                     };
 
                     added = _invoiceRepository.Add(addedObject, conn, transaction);

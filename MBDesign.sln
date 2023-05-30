@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntitiesMBDesign", "Entitie
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayerMBDesign", "DataLayerMBDesign\DataLayerMBDesign.csproj", "{8BCE8208-808C-48DF-A44A-F4EDB42AE588}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicMBDesign", "BusinessLogicMBDesign\BusinessLogicMBDesign.csproj", "{FBAC9DF2-02F3-48AD-B042-D144AF1CA5D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicMBDesign", "BusinessLogicMBDesign\BusinessLogicMBDesign.csproj", "{FBAC9DF2-02F3-48AD-B042-D144AF1CA5D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilitiesMBDesign", "UtilitiesMBDesign\UtilitiesMBDesign.csproj", "{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesMBDesign", "UtilitiesMBDesign\UtilitiesMBDesign.csproj", "{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBDesignApi", "MBDesignApi\MBDesignApi.csproj", "{72E37D2A-D68C-4785-A98F-14F4068F613C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MBDesignApi", "MBDesignApi\MBDesignApi.csproj", "{72E37D2A-D68C-4785-A98F-14F4068F613C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

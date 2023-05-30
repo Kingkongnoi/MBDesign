@@ -11,7 +11,8 @@
             <div class="modal-body">
                 <form id="form-createInvoice">
                     <div class="row d-sm-flex">
-                        <input type="hidden" id="custId" />
+                        <input type="hidden" id="invoiceNumberGen" />
+                        <input type="hidden" id="invoiceYearMonth" />
                         @*<div class="col-sm-12">*@
                         <div class="col-sm-6">
                             <div class="row col-sm-12 mb-3">
@@ -36,7 +37,7 @@
                             <div class="row col-sm-12 mb-3">
                                 <label class="col-sm-2 col-form-label text-end">งวด<span class="text-danger">*</span></label>
                                 <div class="col-sm-10">
-                                    <select class="form-select" id="select-period" data-selected="" name="select-period" onchange="calculateByPeriod(this);"></select>
+                                    <select class="form-select" id="select-period" data-selected="" name="select-period" onchange="calculateByPeriod(this);" disabled></select>
                                 </div>
                             </div>
                         </div>
@@ -82,7 +83,7 @@
                             </div>
 
                             <div class="row col-sm-12 mb-3">
-                                <label class="col-sm-2 col-form-label text-end">ราคา (Unit Price)</label>
+                                <label class="col-sm-2 col-form-label text-end">ราคา (Unit Price)<span class="text-danger">*</span></label>
                                 <div class="row col-sm-10">
                                     <div class="row">
                                         <div class="col-sm-4">

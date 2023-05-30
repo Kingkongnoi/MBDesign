@@ -20,12 +20,14 @@ namespace MBDesignApi.Controllers.Sale
     {
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
-        private readonly IConfiguration _configuration; 
-        public SaleController(IConfiguration configuration)
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public SaleController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _saleService = new SaleService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _webHostEnvironment = webHostEnvironment;
         }
 
         #region GET
@@ -184,10 +186,10 @@ namespace MBDesignApi.Controllers.Sale
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
 
-            string path = Directory.GetCurrentDirectory();
+            string path = _webHostEnvironment.WebRootPath;//Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
-                string folderName = string.Format("{0}\\images\\", path);
+                string folderName = string.Format("{0}\\upload\\images\\", path);
                 
                 if (!Directory.Exists(folderName))
                 {
