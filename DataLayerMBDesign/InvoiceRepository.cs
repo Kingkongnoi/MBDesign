@@ -61,5 +61,16 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbInvoice>(queryString, new { orderId, custId }, transaction:trans);
         }
+
+        public List<tbInvoice> GetInvoiceStatus(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"	select invoiceStatus 
+			from tbInvoice 
+			where isDeleted = 0 
+			group by invoiceStatus 
+			order by invoiceStatus";
+
+            return conn.Query<tbInvoice>(queryString, transaction: trans).ToList();
+        }
     }
 }

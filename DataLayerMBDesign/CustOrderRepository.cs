@@ -48,7 +48,6 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { type, yearMonthGen }, transaction: trans);
         }
-
         public tbCustOrder GetFirstByOrderIdSortDesc(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 *
@@ -58,7 +57,6 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbCustOrder>(queryString, new { orderId }, transaction: trans);
         }
-
         public List<CustOrderView> GetQuotationList(string quotationNumber, string quotationCusName, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
@@ -86,7 +84,6 @@ namespace DataLayerMBDesign
             return conn.Query<CustOrderView>(queryString, transaction:trans ).ToList();
 
         }
-
         public List<CustOrderView> GetOrderDetailByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"
@@ -136,7 +133,6 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { orderId }, transaction: trans);
         }
-
         public List<CustOrderView> GetDesign3DList(string quotationNumber, string empName, string checklistStatus, string installDate, string orderStatus, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
@@ -215,14 +211,12 @@ namespace DataLayerMBDesign
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
-
         public int GetCountCustOrderWaitForApprove(string orderStatus, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = string.Format(@"select count(*) from tbCustOrder where orderStatus = N'{0}' and isDeleted = 0 and status = 1", orderStatus);
 
             return conn.QueryFirstOrDefault<int>(queryString, transaction: trans);
         }
-
         public List<CustOrderView> GetAllByorderStatus(string orderStatus, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = string.Format(@"SELECT a.orderId
@@ -258,7 +252,6 @@ namespace DataLayerMBDesign
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
-
         public int UpdateOrderStatus(int orderId, string orderStatus, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbCustOrder
@@ -268,11 +261,10 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new{ orderId, orderStatus }, transaction: trans);
         }
-
         public CustOrderView GetAccountingByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, isnull(c.contractStatus,'') contractStatus, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
-            c.createDate contractCreateDate, c.createBy contractCreateBy, c.updateDate contractUpdateDate, c.updateBy contractUpdateBy
+            c.createDate contractCreateDate, c.createBy contractCreateBy, c.updateDate contractUpdateDate, c.updateBy contractUpdateBy, a.grandTotal, a.custId
             from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
             left join tbContractAgreement c on a.custId = c.custId and isnull(c.isDeleted,0) = 0
             left join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
@@ -281,14 +273,13 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { orderId }, transaction: trans);
         }
-
         public List<CustOrderView> GetAccountingListByParams(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractCreateDate, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
             if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "%%")
             {
-                condition += string.Format(" and a.contractNumber like '%{0}%'", contractNumber);
+                condition += string.Format(" and c.contractNumber like '%{0}%'", contractNumber);
             }
 
             if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
@@ -321,6 +312,55 @@ namespace DataLayerMBDesign
             order by a.orderId", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
+        public List<CustOrderView> GetInvoiceListByParams(string quotationNumber, string invoiceNumber, string customerName, string invoiceStatus, string invoiceDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            {
+                condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
+            }
+
+            if (!string.IsNullOrEmpty(invoiceNumber) && invoiceNumber != "%%")
+            {
+                condition += string.Format(" and d.invoiceNumber like '%{0}%'", invoiceNumber);
+            }
+
+            if (!string.IsNullOrEmpty(customerName) && customerName != "%%")
+            {
+                condition += string.Format(" and isnull(b.custFirstName + ' ' + b.custSurName,'') like N'%{0}%'", customerName);
+            }
+
+            if (!string.IsNullOrEmpty(invoiceStatus) && invoiceStatus != "%%")
+            {
+                condition += string.Format(" and isnull(d.invoiceStatus,'') = N'{0}'", invoiceStatus);
+            }
+
+            if (!string.IsNullOrEmpty(invoiceDate) && invoiceDate != "%%")
+            {
+                condition += string.Format(" and  FORMAT(d.createDate, 'yyyy-MM-dd') = N'{0}'", invoiceDate);
+            }
+
+            string queryString = string.Format(@"select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custInstallAddress, b.custTel, isnull(a.quotationNumber,'') quotationNumber, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
+            isnull(d.id,0) invoiceId, a.custId, d.createDate, d.createBy, d.updateDate, d.updateBy, d.invoiceNumber
+            from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
+            where a.status = 1 and b.status = 1 and isnull(d.status,1) = 1
+            {0}
+            order by a.orderId", condition);
+
+            return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
+        public List<tbCustOrder> GetQuotaionSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"	select quotationNumber, custId
+            from tbCustOrder
+            where isDeleted = 0 and status = 1
+            group by quotationNumber,custId
+            order by quotationNumber,custId";
+
+            return conn.Query<tbCustOrder>(queryString, transaction: trans).ToList();
         }
     }
 }

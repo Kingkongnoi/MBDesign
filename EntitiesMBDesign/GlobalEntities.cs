@@ -50,8 +50,8 @@ namespace EntitiesMBDesign
     {
         public static string firstDisposite = "จ่ายเงินมัดจำ";
         public static string secondDisposite = "จ่ายเงินงวด 2";
-        public static string thirdDisposite = "จ่ายเงินงวด 3";
-        public static string fouthDisposite = "จ่ายเงินงวด 4";
+        public static string thridDisposite = "จ่ายเงินงวด 3";
+        public static string fourthDisposite = "จ่ายเงินงวด 4";
     }
 
     public class GlobalInvoieStatus

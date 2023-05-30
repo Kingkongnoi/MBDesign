@@ -1,5 +1,131 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-sm-12 mt-2">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab-invoice" role="tablist">
+                            <button class="nav-link active" id="nav-invoice-tab" data-bs-toggle="tab" data-bs-target="#nav-invoice" type="button" role="tab" aria-controls="nav-invoice" aria-selected="true" style="margin-right:2px;">ใบแจ้งหนี้</button>
+                            <button class="nav-link" id="nav-bill-tab" data-bs-toggle="tab" data-bs-target="#nav-bill" type="button" role="tab" aria-controls="nav-bill" aria-selected="false" style="margin-right:2px;">ใบเสร็จรับเงิน</button>
+
+                        </div>
+                    </nav>
+                    <div class="tab-content" id="nav-tab-invoice-tabContent">
+                        <div class="tab-pane fade show active" id="nav-invoice" role="tabpanel" aria-labelledby="nav-invoice-tab">
+                            <div class="container-fluid">
+                                <div class="row mt-2">
+                                    <form id="form-search-invoice">
+                                        <div class="row col-sm-12">
+                                            <div class="col-sm-2">
+                                                <label>เลขที่ใบเสนอราคา</label>
+                                                <input type="text" class="form-control" id="input-search-quotation-number" name="input-search-quotation-number" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>เลขที่ใบแจ้งหนี้</label>
+                                                <input type="text" class="form-control" id="input-search-invoice-number" name="input-search-invoice-number" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>ชื่อลูกค้า</label>
+                                                <input type="text" class="form-control" id="input-search-customer-name" name="input-search-customer-name" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>สถานะใบแจ้งหนี้</label>
+                                                <select class="form-select" id="select-search-invoice-status">
+                                                    <option></option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>วันที่ออกใบแจ้งหนี้</label>
+                                                <input type="date" class="form-control" id="input-search-invoice-date" name="input-search-invoice-date" />
+                                            </div>
+                                            <div class="col-sm-2 mt-4 text-end">
+                                                <button type="button" class="btn btn-default-custom btn-clear-search-invoice">ล้างข้อมูล</button>
+                                                <button type="button" class="btn btn-primary btn-search-invoice">ค้นหา</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-sm-2 mt-2">
+                                    <button type="button" class="btn btn-primary btn-add-invoice">เพิ่มใบแจ้งหนี้</button>
+                                </div>
+
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-invoice-list" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th><span>เลขที่ใบเสนอราคา</span></th>
+                                                <th><span>เลขที่ใบแจ้งหนี้</span></th>
+                                                <th><span>ชื่อลูกค้า</span></th>
+                                                <th><span>งวด</span></th>
+                                                <th><span>สถานะใบแจ้งหนี้</span></th>
+                                                <th><span>วันที่ออกใบแจ้งหนี้</span></th>
+                                                <th><span>ผู้ออกใบแจ้งหนี้</span></th>
+                                                <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                                <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                                <th><span>แก้ไข</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-bill" role="tabpanel" aria-labelledby="nav-bill-tab">
+                            <div class="container-fluid">
+                                <div class="row mt-2">
+                                    <form id="form-search-bill">
+                                        <div class="row col-sm-12">
+                                            <div class="col-sm-2">
+                                                <label>เลขที่ใบแจ้งหนี้</label>
+                                                <input type="text" class="form-control" id="input-search-invoice-number" name="input-search-invoice-number" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>เลขที่ใบเสร็จรับเงิน</label>
+                                                <input type="text" class="form-control" id="input-search-invoice-bill" name="input-search-invoice-bill" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>ชื่อลูกค้า</label>
+                                                <input type="text" class="form-control" id="input-search-customer-name" name="input-search-customer-name" />
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label>วันที่ออกใบเสร็จรับเงิน</label>
+                                                <input type="date" class="form-control" id="input-search-bill-date" name="input-search-bill-date" />
+                                            </div>
+                                            <div class="col-sm-4 mt-4 text-end">
+                                                <button type="button" class="btn btn-default-custom btn-clear-search-bill">ล้างข้อมูล</button>
+                                                <button type="button" class="btn btn-primary btn-search-bill">ค้นหา</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-bill-list" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th><span>เลขที่ใบแจ้งหนี้</span></th>
+                                                <th><span>เลขที่ใบเสร็จรับเงิน</span></th>
+                                                <th><span>ชื่อลูกค้า</span></th>
+                                                <th><span>งวด</span></th>
+                                                <th><span>สถานะใบเสร็จรับเงิน</span></th>
+                                                <th><span>วันที่ออกใบเสร็จรับเงิน</span></th>
+                                                <th><span>ผู้ออกใบเสร็จรับเงิน</span></th>
+                                                <th><span>พิมพ์</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("modal/_invoiceForm.cshtml")

@@ -138,6 +138,7 @@ namespace BusinessLogicMBDesign.Sale
                         custLineId = model.custLineId,
                         custAddress = model.custAddress,
                         custLocation = model.custLocation,
+                        custInstallAddress = model.custInstallAddress,
                         status = true,
                         updateDate = DateTime.UtcNow,
                         updateBy = "MB9999"
@@ -694,7 +695,7 @@ namespace BusinessLogicMBDesign.Sale
                             var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
 
                             //Create invoice = จ่ายเงินมัดจำ
-                            /*var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
+                            var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
                             if(exists == null)
                             {
                                 string yearMonth = this.GenerateYearMonth();
@@ -712,7 +713,7 @@ namespace BusinessLogicMBDesign.Sale
                                 };
 
                                 int updateInvoie = _invoiceRepository.UpdateInvoiceStatus(invoice, conn, transaction);
-                            }*/
+                            }
                         }
                     }
 
