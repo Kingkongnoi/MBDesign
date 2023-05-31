@@ -186,7 +186,7 @@ namespace MBDesignApi.Controllers.Sale
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
 
-            string path = _webHostEnvironment.WebRootPath;//Directory.GetCurrentDirectory();
+            string path = Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
                 string folderName = string.Format("{0}\\upload\\images\\", path);

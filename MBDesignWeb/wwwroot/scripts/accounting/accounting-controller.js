@@ -80,4 +80,8 @@
     $('.btn-modal-save-invoice').on('click', function () {
         callSaveCreateOrUpdateInvoice();
     });
+
+    $('.btn-print-invoice').on('click', function () {
+        printInvoice();
+    });
 });

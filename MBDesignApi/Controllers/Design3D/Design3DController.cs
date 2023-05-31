@@ -81,7 +81,7 @@ namespace MBDesignApi.Controllers.Design3D
                 checklistStatus = Global3DStatus.whileDesign3dDraf1;
             }
 
-            string path = _webHostEnvironment.WebRootPath;//Directory.GetCurrentDirectory();
+            string path = Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
                 checklistStatus = Global3DStatus.design3dApproved;

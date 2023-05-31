@@ -950,3 +950,16 @@ function DoSaveCreateOrUpdateInvoice() {
         dataType: "json",
     });
 }
+
+function printInvoice() {
+    debugger
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Accounting/PrintInvoice`,
+        success: function (data) {
+            //renderQuotaionSelect2(data);
+        },
+        error: function (err) {
+        }
+    });
+}

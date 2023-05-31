@@ -1,4 +1,5 @@
-﻿using BusinessLogicMBDesign.Accounting;
+﻿using AspNetCore.Reporting;
+using BusinessLogicMBDesign.Accounting;
 using BusinessLogicMBDesign.Approve;
 using BusinessLogicMBDesign.Design3D;
 using BusinessLogicMBDesign.Master;
@@ -14,11 +15,13 @@ namespace MBDesignApi.Controllers.Accounting
     {
         private readonly IConfiguration _configuration;
         private readonly AccountingService _accountingService;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AccountingController(IConfiguration configuration)
+        public AccountingController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _accountingService = new AccountingService(_configuration);
+            _webHostEnvironment = webHostEnvironment;
         }
 
         #region GET
@@ -135,6 +138,34 @@ namespace MBDesignApi.Controllers.Accounting
                 invoice = invoice
             };
             return new JsonResult(result);
+        }
+        [HttpGet]
+        public IActionResult PrintInvoice()
+        {
+            //var custOrder = _accountingService.GetCustOrderByOrderId(orderId);
+            //var invoice = new tbInvoice();
+            //if (invoiceId != 0)
+            //{
+            //    invoice = _accountingService.GetInvoiceByKeyId(invoiceId);
+            //}
+
+            //var cust = new tbCust();
+            //if (custOrder != null)
+            //{
+            //    cust = _accountingService.GetCustomerInformationByCustId(custOrder.custId);
+            //}
+
+            
+            string mimtype = "";
+            int extension = 1;
+            var path = $"{Directory.GetCurrentDirectory()}\\reports\\InvoiceReport.rdlc";
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            //param.Add("", "");
+
+            LocalReport report = new LocalReport(path);
+            var result = report.Execute(RenderType.Pdf, extension, param, mimtype);
+
+            return File(result.MainStream, "application/pdf");
         }
         #endregion GET
 
