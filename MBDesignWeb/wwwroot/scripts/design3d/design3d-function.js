@@ -14,10 +14,10 @@ function clearSearchForm() {
 function callGet3DQueueList() {
     let formId = '#form-search-3d-queue';
 
-    let quotationNumber = ($(`${formId} #input-search-3d-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-3d-quotation-number`).val();
-    let empName = ($(`${formId} #input-search-3d-design-name`).val() == '') ? "%%" : $(`${formId} #input-search-3d-design-name`).val();
-    let checklistStatus = ($(`${formId} #select-search-3d-checklist-status`).val() == '') ? "%%" : $(`${formId} #select-search-3d-checklist-status`).val();
-    let installDate = ($(`${formId} #input-search-3d-install-date`).val() == '') ? "%%" : $(`${formId} #input-search-3d-install-date`).val();
+    let quotationNumber = ($(`${formId} #input-search-3d-quotation-number`).val() == '') ? null : $(`${formId} #input-search-3d-quotation-number`).val();
+    let empName = ($(`${formId} #input-search-3d-design-name`).val() == '') ? null : $(`${formId} #input-search-3d-design-name`).val();
+    let checklistStatus = ($(`${formId} #select-search-3d-checklist-status`).val() == '') ? null : $(`${formId} #select-search-3d-checklist-status`).val();
+    let installDate = ($(`${formId} #input-search-3d-install-date`).val() == '') ? null : $(`${formId} #input-search-3d-install-date`).val();
 
     //let loaded = $('#tb-quotation-list');
 
@@ -407,7 +407,7 @@ function callSave3dDesign() {
 function DoSave3dDesign() {
     let formId = '#form-editDesign3D';
     let empId = $(`${formId} #select-edit-3d-designName`).val() == "" ? 0 : $(`${formId} #select-edit-3d-designName`).val();
-    let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? "%%" : $(`${formId} #input-edit-3d-due-date`).val();
+    let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? null : $(`${formId} #input-edit-3d-due-date`).val();
     let final3d = $(`${formId} #chkFinal3D`).prop('checked');
 
     let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}`;

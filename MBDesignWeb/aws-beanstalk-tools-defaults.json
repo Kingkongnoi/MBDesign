@@ -1,0 +1,21 @@
+
+{
+    "region" : "ap-southeast-2",
+    "configuration" : "Release",
+    "framework"     : "net6.0",
+    "self-contained" : false,
+    "application"    : "MBDesign-dev01",
+    "environment"    : "MBDesign-dev01-dev",
+    "app-path"       : "/",
+    "iis-website"    : "Default Web Site",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "",
+    "solution-stack"       : "64bit Windows Server Core 2019 v2.11.4 running IIS 10.0",
+    "environment-type"     : "SingleInstance",
+    "cname"                : "mbdesign-dev01-dev",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "mb",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role"
+}

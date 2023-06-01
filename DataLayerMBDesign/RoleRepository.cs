@@ -33,12 +33,12 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(rolename) && rolename != "%%")
+            if (!string.IsNullOrEmpty(rolename) && rolename != "null")
             {
                 condition += string.Format(" and name like N'%{0}%'", rolename);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }

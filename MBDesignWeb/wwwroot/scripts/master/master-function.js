@@ -676,11 +676,11 @@ function callAddOrUpdateEmployee() {
 function callGetEmployeeList() {
     let formId = '#form-search-employee';
 
-    let empId = ($(`${formId} #input-search-emp-code`).val() == '') ? "%%" : $(`${formId} #input-search-emp-code`).val();
-    let empName = ($(`${formId} #input-search-emp-name`).val() == '') ? "%%" : $(`${formId} #input-search-emp-name`).val();
-    let departmentId = ($(`${formId} #select-search-emp-department`).val() == '' || $(`${formId} #select-search-emp-department`).val() == undefined || $(`${formId} #select-search-emp-department`).val() == null) ? "%%" : $(`${formId} #select-search-emp-department`).val();
-    let positionId = ($(`${formId} #select-search-emp-position`).val() == '' || $(`${formId} #select-search-emp-position`).val() == undefined || $(`${formId} #select-search-emp-position`).val() == null) ? "%%" : $(`${formId} #select-search-emp-position`).val();
-    let status = ($(`${formId} #select-search-emp-status`).val() == '') ? "%%" : $(`${formId} #select-search-emp-status`).val();
+    let empId = ($(`${formId} #input-search-emp-code`).val() == '') ? null : $(`${formId} #input-search-emp-code`).val();
+    let empName = ($(`${formId} #input-search-emp-name`).val() == '') ? null : $(`${formId} #input-search-emp-name`).val();
+    let departmentId = ($(`${formId} #select-search-emp-department`).val() == '' || $(`${formId} #select-search-emp-department`).val() == undefined || $(`${formId} #select-search-emp-department`).val() == null) ? null : $(`${formId} #select-search-emp-department`).val();
+    let positionId = ($(`${formId} #select-search-emp-position`).val() == '' || $(`${formId} #select-search-emp-position`).val() == undefined || $(`${formId} #select-search-emp-position`).val() == null) ? null : $(`${formId} #select-search-emp-position`).val();
+    let status = ($(`${formId} #select-search-emp-status`).val() == '') ? null : $(`${formId} #select-search-emp-status`).val();
 
     //let loaded = $('#tb-employee-list');
 
@@ -1020,8 +1020,8 @@ function callGetLastestRoleId() {
 function callGetRoleList() {
     let formId = '#form-search-role';
 
-    let roleName = ($(`${formId} #input-search-role`).val() == '') ? "%%" : $(`${formId} #input-search-role`).val();
-    let status = ($(`${formId} #select-search-role-status`).val() == '') ? "%%" : $(`${formId} #select-search-role-status`).val();
+    let roleName = ($(`${formId} #input-search-role`).val() == '') ? null : $(`${formId} #input-search-role`).val();
+    let status = ($(`${formId} #select-search-role-status`).val() == '') ? null : $(`${formId} #select-search-role-status`).val();
 
     //let loaded = $('#tb-employee-list');
 
@@ -1320,11 +1320,11 @@ function callGetLastestHolidayId() {
     });
 }
 function callGetHolidayList() {
-    let year = ($('#form-search-holiday #select-search-holiday-year').val() == '' || $('#form-search-holiday #select-search-holiday-year').val() == null) ? "%%" : $('#form-search-holiday #select-search-holiday-year').val();
-    let day = ($('#form-search-holiday #select-search-holiday-day').val() == '') ? "%%" : $('#form-search-holiday #select-search-holiday-day').val();
-    let holidayDate = ($('#select-search-holiday-date').val() == '' || $('#select-search-holiday-date').val() == undefined) ? "%%" : $('#select-search-holiday-date').val();
-    let holiday = ($('#form-search-holiday #input-search-holiday-name').val() == '') ? "%%" : $('#form-search-holiday #input-search-holiday-name').val();
-    let status = ($('#form-search-holiday #select-search-holiday-status').val() == '') ? "%%" : $('#form-search-holiday #select-search-holiday-status').val();
+    let year = ($('#form-search-holiday #select-search-holiday-year').val() == '' || $('#form-search-holiday #select-search-holiday-year').val() == null) ? null : $('#form-search-holiday #select-search-holiday-year').val();
+    let day = ($('#form-search-holiday #select-search-holiday-day').val() == '') ? null : $('#form-search-holiday #select-search-holiday-day').val();
+    let holidayDate = ($('#select-search-holiday-date').val() == '' || $('#select-search-holiday-date').val() == undefined) ? null : $('#select-search-holiday-date').val();
+    let holiday = ($('#form-search-holiday #input-search-holiday-name').val() == '') ? null : $('#form-search-holiday #input-search-holiday-name').val();
+    let status = ($('#form-search-holiday #select-search-holiday-status').val() == '') ? null : $('#form-search-holiday #select-search-holiday-status').val();
 
     let loaded = $('#tb-holiday-list');
 
@@ -1551,8 +1551,8 @@ function callGetLastestDepartmentId() {
     });
 }
 function callGetDepartmentList() {
-    let departmentName = ($('#form-search-department #input-search-department').val() == '') ? "%%" : $('#form-search-department #input-search-department').val();
-    let status = ($('#form-search-department #select-search-department-status').val() == '') ? "%%" : $('#form-search-department #select-search-department-status').val();
+    let departmentName = ($('#form-search-department #input-search-department').val() == '') ? null : $('#form-search-department #input-search-department').val();
+    let status = ($('#form-search-department #select-search-department-status').val() == '') ? null : $('#form-search-department #select-search-department-status').val();
 
     let loaded = $('#tb-department-list');
 
@@ -1732,8 +1732,8 @@ function callGetLastestPositionId() {
     });
 }
 function callGetPositionList() {
-    let positionName = ($('#form-search-position #input-search-position').val() == '') ? "%%" : $('#form-search-position #input-search-position').val();
-    let status = ($('#form-search-position #select-search-position-status').val() == '') ? "%%" : $('#form-search-position #select-search-position-status').val();
+    let positionName = ($('#form-search-position #input-search-position').val() == '') ? null : $('#form-search-position #input-search-position').val();
+    let status = ($('#form-search-position #select-search-position-status').val() == '') ? null : $('#form-search-position #select-search-position-status').val();
 
     let loaded = $('#tb-position-list');
 
@@ -1947,9 +1947,9 @@ function callGetLastestItemId() {
     });
 }
 function callGetItemList() {
-    let itemName = ($('#form-search-product #input-search-product-items').val() == '' || $('#form-search-product #input-search-product-items').val() == undefined) ? "%%" : $('#form-search-product #input-search-product-items').val();
+    let itemName = ($('#form-search-product #input-search-product-items').val() == '' || $('#form-search-product #input-search-product-items').val() == undefined) ? null : $('#form-search-product #input-search-product-items').val();
     let typeId = ($('#form-search-product #select-search-product-type').val() == '' || $('#form-search-product #select-search-product-type').val() == null) ? "0" : $('#form-search-product #select-search-product-type').val();
-    let status = ($('#form-search-product #select-search-product-status').val() == '' || $('#form-search-product #select-search-product-status').val() == undefined) ? "%%" : $('#form-search-product #select-search-product-status').val();
+    let status = ($('#form-search-product #select-search-product-status').val() == '' || $('#form-search-product #select-search-product-status').val() == undefined) ? null : $('#form-search-product #select-search-product-status').val();
 
     let loaded = $('#tb-product-list');
 
@@ -2196,8 +2196,8 @@ function callGetLastestTypeId() {
 function callGetTypeList() {
 
     //let typeId = ($('#form-search-type #input-search-type-code').val() == '') ? "%%" : $('#form-search-type #input-search-type-code').val();
-    let typeName = ($('#form-search-type #input-search-type-name').val() == '') ? "%%" : $('#form-search-type #input-search-type-name').val();
-    let status = ($('#form-search-type #select-search-type-status').val() == '') ? "%%" : $('#form-search-type #select-search-type-status').val();
+    let typeName = ($('#form-search-type #input-search-type-name').val() == '') ? null : $('#form-search-type #input-search-type-name').val();
+    let status = ($('#form-search-type #select-search-type-status').val() == '') ? null : $('#form-search-type #select-search-type-status').val();
 
     let loaded = $('#tb-type-list');
 
@@ -2384,8 +2384,8 @@ function callGetLastestStyleId() {
 function callGetStyleList() {
 
     //let styleId = ($('#form-search-style #input-search-style-code').val() == '') ? "%%" : $('#form-search-style #input-search-style-code').val();
-    let styleName = ($('#form-search-style #input-search-style-name').val() == '') ? "%%" : $('#form-search-style #input-search-style-name').val();
-    let status = ($('#form-search-style #select-search-style-status').val() == '') ? "%%" : $('#form-search-style #select-search-style-status').val();
+    let styleName = ($('#form-search-style #input-search-style-name').val() == '') ? null : $('#form-search-style #input-search-style-name').val();
+    let status = ($('#form-search-style #select-search-style-status').val() == '') ? null : $('#form-search-style #select-search-style-status').val();
 
     let loaded = $('#tb-style-list');
 
@@ -2590,11 +2590,11 @@ function callAddOrUpdateAccount() {
 }
 function callGetAccountList() {
 
-    let bank = ($('#form-search-bankAccount #select-search-bank-name').val() == '' || $('#form-search-bankAccount #select-search-bank-name').val() == undefined) ? "%%" : $('#form-search-bankAccount #select-search-bank-name').val();
-    let accountName = ($('#form-search-bankAccount #input-search-account-name').val() == '') ? '%%' : $('#form-search-bankAccount #input-search-account-name').val();
-    let accountNumber = ($('#form-search-bankAccount #input-search-account-number').val() == '') ? '%%' : $('#form-search-bankAccount #input-search-account-number').val();
-    let accountType = ($('#form-search-bankAccount #select-search-account-type').val() == '' || $('#form-search-bankAccount #select-search-account-type').val() == undefined) ? "%%" : $('#form-search-bankAccount #select-search-account-type').val();
-    let status = ($('#form-search-bankAccount #select-search-account-status').val() == '') ? '%%' : $('#form-search-bankAccount #select-search-account-status').val();
+    let bank = ($('#form-search-bankAccount #select-search-bank-name').val() == '' || $('#form-search-bankAccount #select-search-bank-name').val() == undefined) ? null : $('#form-search-bankAccount #select-search-bank-name').val();
+    let accountName = ($('#form-search-bankAccount #input-search-account-name').val() == '') ? null : $('#form-search-bankAccount #input-search-account-name').val();
+    let accountNumber = ($('#form-search-bankAccount #input-search-account-number').val() == '') ? null : $('#form-search-bankAccount #input-search-account-number').val();
+    let accountType = ($('#form-search-bankAccount #select-search-account-type').val() == '' || $('#form-search-bankAccount #select-search-account-type').val() == undefined) ? null : $('#form-search-bankAccount #select-search-account-type').val();
+    let status = ($('#form-search-bankAccount #select-search-account-status').val() == '') ? null : $('#form-search-bankAccount #select-search-account-status').val();
 
     let loaded = $('#tb-account-list');
 

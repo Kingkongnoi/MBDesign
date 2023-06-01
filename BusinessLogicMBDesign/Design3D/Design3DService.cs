@@ -101,7 +101,7 @@ namespace BusinessLogicMBDesign.Design3D
                         { 
                             id = design3dId,
                             ownerEmpId = empId,
-                            dueDate = (dueDate == "%%") ? null : Convert.ToDateTime(dueDate),
+                            dueDate = (dueDate == "null") ? null : Convert.ToDateTime(dueDate),
                             checklistStatus = checklistStatus,
                             updateDate = DateTime.UtcNow,
                             updateBy = "MB9999"

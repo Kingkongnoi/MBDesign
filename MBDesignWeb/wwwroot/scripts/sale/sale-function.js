@@ -727,9 +727,9 @@ function clearSearchQuotationForm() {
 }
 function callGetQuotationList() {
     let formId = '#form-search-quotation';
-    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-number`).val();
-    let quotationCusName = ($(`${formId} #input-search-quotation-cusName`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-cusName`).val();
-    let status = ($(`${formId} #select-search-quotation-status`).val() == '') ? "%%" : $(`${formId} #select-search-quotation-status`).val();
+    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? null : $(`${formId} #input-search-quotation-number`).val();
+    let quotationCusName = ($(`${formId} #input-search-quotation-cusName`).val() == '') ? null : $(`${formId} #input-search-quotation-cusName`).val();
+    let status = ($(`${formId} #select-search-quotation-status`).val() == '') ? null : $(`${formId} #select-search-quotation-status`).val();
 
     //let loaded = $('#tb-quotation-list');
 
@@ -1453,11 +1453,11 @@ function clearSearchContractForm() {
 function callGetContractList() {
     let formId = '#form-search-cus-contract-document';
 
-    let contractNumber = ($(`${formId} #input-search-doc-number`).val() == '') ? "%%" : $(`${formId} #input-search-doc-number`).val();
-    let quotationNumber = ($(`${formId} #input-search-doc-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-doc-quotation-number`).val();
-    let cusName = ($(`${formId} #input-search-doc-cusName`).val() == '') ? "%%" : $(`${formId} #input-search-doc-cusName`).val();
-    let contractStatus = ($(`${formId} #select-search-doc-contract-status`).val() == '') ? "%%" : $(`${formId} #select-search-doc-contract-status`).val();
-    let contractDate = ($(`${formId} #input-search-doc-date`).val() == '') ? "%%" : $(`${formId} #input-search-doc-date`).val();
+    let contractNumber = ($(`${formId} #input-search-doc-number`).val() == '') ? null : $(`${formId} #input-search-doc-number`).val();
+    let quotationNumber = ($(`${formId} #input-search-doc-quotation-number`).val() == '') ? null : $(`${formId} #input-search-doc-quotation-number`).val();
+    let cusName = ($(`${formId} #input-search-doc-cusName`).val() == '') ? null : $(`${formId} #input-search-doc-cusName`).val();
+    let contractStatus = ($(`${formId} #select-search-doc-contract-status`).val() == '') ? null : $(`${formId} #select-search-doc-contract-status`).val();
+    let contractDate = ($(`${formId} #input-search-doc-date`).val() == '') ? null : $(`${formId} #input-search-doc-date`).val();
 
     //let loaded = $('#tb-quotation-list');
 

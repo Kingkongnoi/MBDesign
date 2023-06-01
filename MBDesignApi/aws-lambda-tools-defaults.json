@@ -1,0 +1,21 @@
+
+{
+    "region" : "ap-southeast-2",
+    "profile" : "mbDesign-dev01",
+    "configuration" : "Release",
+    "framework"     : "net6.0",
+    "function-name" : "mbDesign-api-dev01",
+    "function-description" : "",
+    "package-type"         : "Zip",
+    "function-handler"     : "MBDesignApi",
+    "function-memory-size" : 512,
+    "function-role"        : "arn:aws:iam::454441900425:role/service-role/mbDesign-api-dev01-role-8p6d0t2f",
+    "function-timeout"     : 15,
+    "function-runtime"     : "dotnet6",
+    "function-architecture" : "x86_64",
+    "function-subnets"      : "",
+    "function-security-groups" : "",
+    "tracing-mode"             : "PassThrough",
+    "environment-variables"    : "",
+    "image-tag"                : ""
+}

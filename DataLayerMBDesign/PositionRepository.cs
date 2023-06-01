@@ -34,12 +34,12 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(positionName) && positionName != "%%")
+            if (!string.IsNullOrEmpty(positionName) && positionName != "null")
             {
                 condition += string.Format(" and positionName like N'%{0}%'", positionName);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }

@@ -35,7 +35,7 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(itemName) && itemName != "%%")
+            if (!string.IsNullOrEmpty(itemName) && itemName != "null")
             {
                 condition += string.Format(" and a.itemName like N'%{0}%'", itemName);
             }
@@ -45,7 +45,7 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and a.typeId = {0}", typeId);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and a.status = {0}", status);
             }

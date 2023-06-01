@@ -28,27 +28,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "%%")
+            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "null")
             {
                 condition += string.Format(" and a.contractNumber like N'%{0}%'", contractNumber);
             }
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like N'%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(cusName) && cusName != "%%")
+            if (!string.IsNullOrEmpty(cusName) && cusName != "null")
             {
                 condition += string.Format(" and (b.custFirstName + ' ' + b.custSurName) like N'%{0}%'", cusName);
             }
 
-            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "%%")
+            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "null")
             {
                 condition += string.Format(" and a.contractStatus = N'{0}'", contractStatus);
             }
 
-            if (!string.IsNullOrEmpty(contractDate) && contractDate != "%%")
+            if (!string.IsNullOrEmpty(contractDate) && contractDate != "null")
             {
                 condition += string.Format(" and  FORMAT(a.createDate, 'yyyy-MM-dd') = N'{0}'", contractDate);
             }

@@ -35,12 +35,12 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(departmentname) && departmentname != "%%")
+            if (!string.IsNullOrEmpty(departmentname) && departmentname != "null")
             {
                 condition += string.Format(" and departmentName like N'%{0}%'", departmentname);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }

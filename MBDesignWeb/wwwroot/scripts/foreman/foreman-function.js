@@ -16,10 +16,10 @@ function clearSearchForemanForm() {
 function callGetForemanQueueList() {
     let formId = '#form-search-foreman-queue';
 
-    let quotationNumber = ($(`${formId} #input-search-foreman-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-foreman-quotation-number`).val();
-    let cusName = ($(`${formId} #input-search-foreman-cus-name`).val() == '') ? "%%" : $(`${formId} #input-search-foreman-cus-name`).val();
-    let foremanStatus = ($(`${formId} #select-search-foreman-status`).val() == '') ? "%%" : $(`${formId} #select-search-foreman-status`).val();
-    let installDate = ($(`${formId} #input-search-foreman-install-date`).val() == '') ? "%%" : $(`${formId} #input-search-foreman-install-date`).val();
+    let quotationNumber = ($(`${formId} #input-search-foreman-quotation-number`).val() == '') ? null : $(`${formId} #input-search-foreman-quotation-number`).val();
+    let cusName = ($(`${formId} #input-search-foreman-cus-name`).val() == '') ? null : $(`${formId} #input-search-foreman-cus-name`).val();
+    let foremanStatus = ($(`${formId} #select-search-foreman-status`).val() == '') ? null : $(`${formId} #select-search-foreman-status`).val();
+    let installDate = ($(`${formId} #input-search-foreman-install-date`).val() == '') ? null : $(`${formId} #input-search-foreman-install-date`).val();
 
     //let loaded = $('#tb-quotation-list');
 

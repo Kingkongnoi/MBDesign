@@ -19,11 +19,11 @@ function clearSearchForm() {
 function callGetAccountingList() {
     let formId = '#form-search-accounting';
 
-    let contractNumber = ($(`${formId} #input-search-contract-number`).val() == '') ? "%%" : $(`${formId} #input-search-contract-number`).val();
-    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-number`).val();
-    let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? "%%" : $(`${formId} #input-search-customer-name`).val();
-    let contractStatus = ($(`${formId} #select-search-contract-status`).val() == '') ? "%%" : $(`${formId} #select-search-contract-status`).val();
-    let contractDate = ($(`${formId} #input-search-contract-date`).val() == '') ? "%%" : $(`${formId} #input-search-contract-date`).val();
+    let contractNumber = ($(`${formId} #input-search-contract-number`).val() == '') ? null : $(`${formId} #input-search-contract-number`).val();
+    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? null : $(`${formId} #input-search-quotation-number`).val();
+    let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? null : $(`${formId} #input-search-customer-name`).val();
+    let contractStatus = ($(`${formId} #select-search-contract-status`).val() == '') ? null : $(`${formId} #select-search-contract-status`).val();
+    let contractDate = ($(`${formId} #input-search-contract-date`).val() == '') ? null : $(`${formId} #input-search-contract-date`).val();
 
     //let loaded = $('#tb-quotation-list');
 
@@ -451,11 +451,11 @@ function clearSearchInvoiceForm() {
 function callGetInvoiceList() {
     let formId = '#form-search-invoice';
 
-    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? "%%" : $(`${formId} #input-search-quotation-number`).val();
-    let invoiceNumber = ($(`${formId} #input-search-invoice-number`).val() == '') ? "%%" : $(`${formId} #input-search-invoice-number`).val();
-    let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? "%%" : $(`${formId} #input-search-customer-name`).val();
-    let invoiceStatus = ($(`${formId} #select-search-invoice-status`).val() == '') ? "%%" : $(`${formId} #select-search-invoice-status`).val();
-    let invoiceDate = ($(`${formId} #input-search-invoice-date`).val() == '') ? "%%" : $(`${formId} #input-search-invoice-date`).val();
+    let quotationNumber = ($(`${formId} #input-search-quotation-number`).val() == '') ? null : $(`${formId} #input-search-quotation-number`).val();
+    let invoiceNumber = ($(`${formId} #input-search-invoice-number`).val() == '') ? null : $(`${formId} #input-search-invoice-number`).val();
+    let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? null : $(`${formId} #input-search-customer-name`).val();
+    let invoiceStatus = ($(`${formId} #select-search-invoice-status`).val() == '') ? null : $(`${formId} #select-search-invoice-status`).val();
+    let invoiceDate = ($(`${formId} #input-search-invoice-date`).val() == '') ? null : $(`${formId} #input-search-invoice-date`).val();
 
     //let loaded = $('#tb-quotation-list');
 
@@ -952,12 +952,12 @@ function DoSaveCreateOrUpdateInvoice() {
 }
 
 function printInvoice() {
-    debugger
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Accounting/PrintInvoice`,
         success: function (data) {
             //renderQuotaionSelect2(data);
+            window.open(`${app_settings.api_url}/reports/` + data, "_blank");
         },
         error: function (err) {
         }

@@ -42,27 +42,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(empId) && empId != "%%")
+            if (!string.IsNullOrEmpty(empId) && empId != "null")
             {
                 condition += string.Format(" and a.empCode like N'%{0}%'", empId);
             }
 
-            if (!string.IsNullOrEmpty(empName) && empName != "%%")
+            if (!string.IsNullOrEmpty(empName) && empName != "null")
             {
                 condition += string.Format(" and (a.empFirstName + ' ' + a.empLastName) like N'%{0}%'", empName);
             }
 
-            if (!string.IsNullOrEmpty(departmentId) && departmentId != "%%")
+            if (!string.IsNullOrEmpty(departmentId) && departmentId != "null")
             {
                 condition += string.Format(" and a.departmentId = {0}", departmentId);
             }
 
-            if (!string.IsNullOrEmpty(positionId) && positionId != "%%")
+            if (!string.IsNullOrEmpty(positionId) && positionId != "null")
             {
                 condition += string.Format(" and a.positionId = {0}", positionId);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and a.status = {0}", status);
             }

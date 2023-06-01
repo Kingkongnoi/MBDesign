@@ -37,27 +37,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(bank) && bank != "%%")
+            if (!string.IsNullOrEmpty(bank) && bank != "null")
             {
                 condition += string.Format(" and bank = N'{0}'", bank);
             }
 
-            if (!string.IsNullOrEmpty(accountName) && accountName != "%%")
+            if (!string.IsNullOrEmpty(accountName) && accountName != "null")
             {
                 condition += string.Format(" and accountName like N'%{0}%'", accountName);
             }
 
-            if (!string.IsNullOrEmpty(accountNumber) && accountNumber != "%%")
+            if (!string.IsNullOrEmpty(accountNumber) && accountNumber != "null")
             {
                 condition += string.Format(" and accountNumber like N'%{0}%'", accountNumber);
             }
 
-            if (!string.IsNullOrEmpty(accountType) && accountType != "%%")
+            if (!string.IsNullOrEmpty(accountType) && accountType != "null")
             {
                 condition += string.Format(" and accountType = N'{0}'", accountType);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }

@@ -17,5 +17,6 @@ namespace MBDesignWeb.Controllers
             ViewBag.webUrl = _configuration.GetSection("webUrl").Value;
             return View();
         }
+
     }
 }

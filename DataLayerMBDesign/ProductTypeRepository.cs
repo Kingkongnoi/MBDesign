@@ -39,12 +39,12 @@ namespace DataLayerMBDesign
             //    condition += string.Format(" and typeId = {0}", typeId);
             //}
 
-            if (!string.IsNullOrEmpty(typeName) && typeName != "%%")
+            if (!string.IsNullOrEmpty(typeName) && typeName != "null")
             {
                 condition += string.Format(" and typeName like N'%{0}%'", typeName);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }

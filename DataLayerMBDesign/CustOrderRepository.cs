@@ -61,17 +61,17 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(quotationCusName) && quotationCusName != "%%")
+            if (!string.IsNullOrEmpty(quotationCusName) && quotationCusName != "null")
             {
                 condition += string.Format(" and (b.custFirstName + ' ' + b.custSurName) like N'%{0}%'", quotationCusName);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and a.orderStatus = N'{0}'", status);
             }
@@ -137,22 +137,22 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(empName) && empName != "%%")
+            if (!string.IsNullOrEmpty(empName) && empName != "null")
             {
                 condition += string.Format(" and isnull(c.empFirstName + ' ' + c.empLastName,'') like N'%{0}%'", empName);
             }
 
-            if (!string.IsNullOrEmpty(checklistStatus) && checklistStatus != "%%")
+            if (!string.IsNullOrEmpty(checklistStatus) && checklistStatus != "null")
             {
                 condition += string.Format(" and isnull(b.checklistStatus,'') = N'{0}'", checklistStatus);
             }
 
-            if (!string.IsNullOrEmpty(installDate) && installDate != "%%")
+            if (!string.IsNullOrEmpty(installDate) && installDate != "null")
             {
                 condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
@@ -178,22 +178,22 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(cusName) && cusName != "%%")
+            if (!string.IsNullOrEmpty(cusName) && cusName != "null")
             {
                 condition += string.Format(" and isnull(c.custFirstName + ' ' + c.custSurName,'') like N'%{0}%'", cusName);
             }
 
-            if (!string.IsNullOrEmpty(foremanStatus) && foremanStatus != "%%")
+            if (!string.IsNullOrEmpty(foremanStatus) && foremanStatus != "null")
             {
                 condition += string.Format(" and isnull(b.foremanStatus,'') = N'{0}'", foremanStatus);
             }
 
-            if (!string.IsNullOrEmpty(installDate) && installDate != "%%")
+            if (!string.IsNullOrEmpty(installDate) && installDate != "null")
             {
                 condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
@@ -277,27 +277,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "%%")
+            if (!string.IsNullOrEmpty(contractNumber) && contractNumber != "null")
             {
                 condition += string.Format(" and c.contractNumber like '%{0}%'", contractNumber);
             }
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(customerName) && customerName != "%%")
+            if (!string.IsNullOrEmpty(customerName) && customerName != "null")
             {
                 condition += string.Format(" and isnull(b.custFirstName + ' ' + b.custSurName,'') like N'%{0}%'", customerName);
             }
 
-            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "%%")
+            if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "null")
             {
                 condition += string.Format(" and isnull(c.contractStatus,'') = N'{0}'", contractStatus);
             }
 
-            if (!string.IsNullOrEmpty(contractCreateDate) && contractCreateDate != "%%")
+            if (!string.IsNullOrEmpty(contractCreateDate) && contractCreateDate != "null")
             {
                 condition += string.Format(" and  FORMAT(c.createDate, 'yyyy-MM-dd') = N'{0}'", contractCreateDate);
             }
@@ -317,27 +317,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "%%")
+            if (!string.IsNullOrEmpty(quotationNumber) && quotationNumber != "null")
             {
                 condition += string.Format(" and a.quotationNumber like '%{0}%'", quotationNumber);
             }
 
-            if (!string.IsNullOrEmpty(invoiceNumber) && invoiceNumber != "%%")
+            if (!string.IsNullOrEmpty(invoiceNumber) && invoiceNumber != "null")
             {
                 condition += string.Format(" and d.invoiceNumber like '%{0}%'", invoiceNumber);
             }
 
-            if (!string.IsNullOrEmpty(customerName) && customerName != "%%")
+            if (!string.IsNullOrEmpty(customerName) && customerName != "null")
             {
                 condition += string.Format(" and isnull(b.custFirstName + ' ' + b.custSurName,'') like N'%{0}%'", customerName);
             }
 
-            if (!string.IsNullOrEmpty(invoiceStatus) && invoiceStatus != "%%")
+            if (!string.IsNullOrEmpty(invoiceStatus) && invoiceStatus != "null")
             {
                 condition += string.Format(" and isnull(d.invoiceStatus,'') = N'{0}'", invoiceStatus);
             }
 
-            if (!string.IsNullOrEmpty(invoiceDate) && invoiceDate != "%%")
+            if (!string.IsNullOrEmpty(invoiceDate) && invoiceDate != "null")
             {
                 condition += string.Format(" and  FORMAT(d.createDate, 'yyyy-MM-dd') = N'{0}'", invoiceDate);
             }

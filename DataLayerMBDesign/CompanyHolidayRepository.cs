@@ -35,27 +35,27 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (!string.IsNullOrEmpty(year) && year != "%%")
+            if (!string.IsNullOrEmpty(year) && year != "null")
             {
                 condition += string.Format(" and year(holidayDate) = '{0}'", year);
             }
 
-            if (!string.IsNullOrEmpty(day) && day != "%%")
+            if (!string.IsNullOrEmpty(day) && day != "null")
             {
                 condition += string.Format(" and [day] = N'{0}'", day);
             }
 
-            if (!string.IsNullOrEmpty(holidayDate) && holidayDate != "%%")
+            if (!string.IsNullOrEmpty(holidayDate) && holidayDate != "null")
             {
                 condition += string.Format(" and  FORMAT([holidayDate], 'yyyy-MM-dd') = N'{0}'", holidayDate);
             }
 
-            if (!string.IsNullOrEmpty(holiday) && holiday != "%%")
+            if (!string.IsNullOrEmpty(holiday) && holiday != "null")
             {
                 condition += string.Format(" and  holiday like N'%{0}%'", holiday);
             }
 
-            if (!string.IsNullOrEmpty(status) && status != "%%")
+            if (!string.IsNullOrEmpty(status) && status != "null")
             {
                 condition += string.Format(" and status = {0}", status);
             }
