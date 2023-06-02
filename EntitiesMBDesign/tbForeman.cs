@@ -25,5 +25,15 @@ namespace EntitiesMBDesign
     {
         public string quotationNumber { get; set; } = string.Empty;
         public string contractNumber { get; set; } = string.Empty;
+        public string orderNote { get; set; } = string.Empty;
+        public decimal orderNotePrice { get; set; }
+        public decimal discount { get; set; }
+        public decimal vat { get; set; }
+        public decimal grandTotal { get; set; }
+        public int accountId { get; set; }
+        public string accountName { get; set; } = string.Empty;
+        public string accountNumber { get; set; } = string.Empty;
+        public string accountType { get; set; } = string.Empty;
+        public string bank { get; set; } = string.Empty;
     }
 }

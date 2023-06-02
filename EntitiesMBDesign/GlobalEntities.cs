@@ -44,6 +44,8 @@ namespace EntitiesMBDesign
     public class GlobalUploadCategory
     {
         public static string approved3d = "3dApproved";
+        public static string foremanUpload = "foremanUpload";
+        public static string secondDisposite = "CustOrderSecondDisposite";
     }
 
     public class GlobalDispositePeriod

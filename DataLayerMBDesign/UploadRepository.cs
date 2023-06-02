@@ -65,6 +65,31 @@ namespace DataLayerMBDesign
             return conn.Query<UploadView>(queryString, new { orderId, categoryName }, transaction: trans).ToList();
         }
 
+        public UploadView GetFirstByOrderIdWithCategoryName(int orderId, string categoryName, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT top 1 a.uploadId
+            ,a.orderId
+            ,a.uploadCategoryId
+            ,a.urlId
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+            ,b.name categoryName
+            ,c.[url]
+            ,c.[fileName]
+            ,c.fileSize
+            FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
+            inner join tbUploadUrl c on a.urlId = c.urlId
+            where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
+            and a.orderId = @orderId and b.name = @categoryName
+            order by a.uploadId desc";
+
+            return conn.QueryFirstOrDefault<UploadView>(queryString, new { orderId, categoryName }, transaction: trans);
+        }
+
         public int HardDeleteByParam(int orderId, int uploadCategoryId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"  

@@ -1,6 +1,7 @@
 ﻿using BusinessLogicMBDesign.Design3D;
 using BusinessLogicMBDesign.Foreman;
 using BusinessLogicMBDesign.Sale;
+using EntitiesMBDesign;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MBDesignApi.Controllers.Foreman
@@ -41,14 +42,24 @@ namespace MBDesignApi.Controllers.Foreman
             var custOrder = _foremanService.GetForemanCustOrderByKeyId(foremanId);
             var items = _saleService.GetCustOrderDetailByOrderId(orderId);
             var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
-            var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
+            var images3DApproved = _foremanService.GetByOrderIdAndCategory(orderId, GlobalUploadCategory.approved3d);
+
+            var imagesForeman = new List<UploadOrderDetailView>();
+            if (items.Count > 0)
+            {
+                imagesForeman = _foremanService.GetForemanUpload(orderId, items.FirstOrDefault().custOrderDetailId, GlobalUploadCategory.foremanUpload);
+            }
+
+            var imageSecondDisposite = _foremanService.GetFirstByOrderIdAndCategory(orderId, GlobalUploadCategory.secondDisposite);
 
             var result = new
             {
                 custOrder = custOrder,
                 items = items,
                 itemsOptions = itemsOptions,
-                uploadRef = uploadRef
+                images3DApproved = images3DApproved,
+                imagesForeman = imagesForeman,
+                imageSecondDisposite = imageSecondDisposite
             };
             return new JsonResult(result);
         }

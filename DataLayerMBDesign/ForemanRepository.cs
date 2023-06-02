@@ -55,10 +55,12 @@ namespace DataLayerMBDesign
 
         public ForemanView GetEditForemanByForemanId(int foremanId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber
+            string queryString = @" select top 1 a.*, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber, 
+            b.orderNote, b.orderNotePrice, b.discount, b.vat, b.grandTotal, b.accountId, d.accountName, d.accountNumber, d.accountType, d.bank
             from tbForeman a inner join tbCustOrder b on a.orderId = b.orderId
             inner join tbContractAgreement c on b.quotationNumber = c.quotationNumber
-            where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1 and c.isDeleted = 0 and c.status = 1
+            inner join tbBankAccount d on b.accountId = d.accountId
+            where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1 and c.isDeleted = 0 and c.status = 1 and d.isDeleted = 0 and d.status = 1
             and a.id = @foremanId";
 
             return conn.QueryFirstOrDefault<ForemanView>(queryString, new { foremanId }, transaction: trans);

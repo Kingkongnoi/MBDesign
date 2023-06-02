@@ -75,13 +75,13 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
-        public tbCustOrder GetCustOrderByOrderId(int orderId)
+        public CustOrderView GetCustOrderByOrderId(int orderId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _custOrderRepository.GetFirstByOrderIdSortDesc(orderId, conn);
+                return _custOrderRepository.GetAccountingByOrderId(orderId, conn);
             }
         }
         public tbInvoice GetInvoiceByKeyId(int invoiceId)

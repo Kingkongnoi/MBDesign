@@ -5,6 +5,12 @@ var _items = [];
 var _items_options = [];
 var _items_list_price = [];
 
+let _modal_primary_color_code = "#F09723";
+let _modal_default_color_code = "#EFEFEF";
+
+let _all_items_price = 0;
+var _items_list = [];
+
 function clearSearchForemanForm() {
     let formId = '#form-search-foreman-queue';
 
@@ -163,11 +169,11 @@ function renderEditForeman(data) {
     renderForemanItemList(data);
 }
 function renderForemanItemList(data) {
-    console.log(data.items);
-    console.log(data.itemsOptions);
-    let divId = `#divForemanItems`;
-    let headerDiv = `<nav>
-                    <div class="nav nav-tabs" id="nav-tab-foreman-items" role ="tablist">`;
+
+    let divId = `#nav-tab-foreman-items`;
+    $(divId).empty();
+
+    let headerDiv = ``;
 
     ///Generate nav bar
     for (var indx = 0; indx < data.items.length; indx++) {
@@ -179,19 +185,30 @@ function renderForemanItemList(data) {
 
     headerDiv += `
     <button class="nav-link" id="nav-foreman-cal-tab" data-bs-toggle="tab" data-bs-target="#nav-foreman-cal" type="button" role="tab" aria-controls="nav-foreman-cal" aria-selected="true" style="margin-right:2px;">การคำนวณราคา</button>
-    </div>
-    </nav>`
-
+    `
     $(divId).append(headerDiv);
 
-    $(divId).append('<div class="tab-content" id="nav-tab-foreman-items-tabContent">');
+
+    divId = `#nav-tab-foreman-items-tabContent`;
+    $(divId).empty();
 
     let bodyIndx = 0;
+    _items_list = [];
     data.items.forEach((v) => {
         let setActive = (bodyIndx == 0) ? `active` : '';
         let insideBodyDiv = '';
         insideBodyDiv  += `<div class="tab-pane fade show ${setActive}" id="nav-foreman-items-${bodyIndx + 1}" role="tabpanel" aria-labelledby="nav-foreman-items-${bodyIndx + 1}-tab">`
         insideBodyDiv += '<div class="container-fluid">';
+
+        let showItem = `${v.itemName}`
+        let showItemPrice = v.itemPrice;
+        var optionsList = data.itemsOptions.filter(x => { return x.custOrderDetailId == v.custOrderDetailId });
+        if (optionsList.length > 0) {
+            optionsList.forEach((a) => {
+                showItem += ` ${a.options}`
+                showItemPrice = parseFloat(showItemPrice) + parseFloat(a.optionsPrice);
+            })
+        }
 
         insideBodyDiv += `<form id="form-foreman-items-${bodyIndx + 1}">`;
         insideBodyDiv += `
@@ -200,10 +217,10 @@ function renderForemanItemList(data) {
                         <div class="row col-sm-10">
                             <div class="row">
                                 <div class="col-sm-10">
-                                    <input class="form-control mb-2" type="text" id="input-foreman-items-${bodyIndx + 1}" name="input-foreman-items-${bodyIndx + 1}" />
+                                    <input class="form-control mb-2" type="text" id="input-foreman-items-${bodyIndx + 1}" name="input-foreman-items-${bodyIndx + 1}" value="${showItem}" disabled />
                                 </div>
                                 <div class="col-sm-2">
-                                    <input class="form-control mb-2" type="number" id="input-foreman-items-price-${bodyIndx + 1}" name="input-foreman-items-price-${bodyIndx + 1}" />
+                                    <input class="form-control mb-2" type="number" id="input-foreman-items-price-${bodyIndx + 1}" name="input-foreman-items-price-${bodyIndx + 1}" value="${showItemPrice.toFixed(2)}" disabled />
                                 </div>
                             </div>
                         </div>
@@ -213,7 +230,7 @@ function renderForemanItemList(data) {
                     <div class="row col-sm-12 mt-4 mb-2">
                         <label for="formFile" class="col-sm-2 col-form-label text-end">รูปภาพ 3D</label>
                                 <div class="col-sm-10">
-                                    <input id="display-foreman-3d" name="display-foreman-3d[]" type="file" data-itemid=${v.itemId} class="file" accept="image/*" multiple>
+                                    <input id="display-foreman-3d-${bodyIndx + 1}" name="display-foreman-3d[]" type="file" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} class="file" accept="image/*" multiple>
                                 </div>
                     </div>`
 
@@ -221,7 +238,7 @@ function renderForemanItemList(data) {
                     <div class="row col-sm-12 mt-4 mb-2">
                         <label for="formFile" class="col-sm-2 col-form-label text-end">อัปโหลดรูปหน้างาน</label>
                                 <div class="col-sm-10">
-                                    <input id="select-upload-foreman-3d" name="select-upload-foreman-3d[]" type="file" data-itemid=${v.itemId} class="file" accept="image/*" multiple>
+                                    <input id="select-upload-foreman-3d-${bodyIndx + 1}" name="select-upload-foreman-3d-${bodyIndx + 1}[]" type="file" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} class="file" accept="image/*" multiple>
                                 </div>
                     </div>`
 
@@ -229,22 +246,22 @@ function renderForemanItemList(data) {
                     <div class="row col-sm-12">
                             <label class="col-sm-2 col-form-label text-end">ขนาด</label>
                             <div class="row col-sm-10">
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความยาว</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-itemid=${v.itemId} />
+                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} />
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความลึก</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-itemid=${v.itemId} />
+                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} />
                                     </div>
                                 </div>
-                                <div class="col-sm-4">
+                                <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความสูง</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-itemid=${v.itemId} />
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} onblur="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" onkeydown="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" />
                                     </div>
                                 </div>
                             </div>
@@ -259,7 +276,7 @@ function renderForemanItemList(data) {
                                     <label class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
                                              <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${bodyIndx+1}">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${bodyIndx + 1}" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId}>
                                                     <label class="form-check-label">
                                                     ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70)
                                                     </label>
@@ -274,142 +291,168 @@ function renderForemanItemList(data) {
         insideBodyDiv += '</div>';
         insideBodyDiv += '</div>';
 
-        bodyIndx++;
 
         $(divId).append(insideBodyDiv);
 
-        //let intitnalPicture = '<script>';
 
-        //intitnalPicture += '</script>';
+        _items_list.push({
+            showItem: showItem,
+            showItemPrice: showItemPrice.toFixed(2),
+            custOrderDetailId: v.custOrderDetailId
+        });
 
-        //$(divId).append(intitnalPicture);
+        render3dApprovedImages(`#form-foreman-items-${bodyIndx + 1} #display-foreman-3d-${bodyIndx + 1}`, data.images3DApproved);
+        renderForeman3dApprovedImages(`#form-foreman-items-${bodyIndx + 1} #select-upload-foreman-3d-${bodyIndx + 1}`, v.custOrderDetailId, data.imagesForeman);
+
+        bodyIndx++;
     });
 
     let calculateDiv = '';
     calculateDiv += `<div class="tab-pane fade show" id="nav-foreman-cal" role="tabpanel" aria-labelledby="nav-foreman-cal-tab">`
     calculateDiv += '<div class="container-fluid">';
 
-    //calculateDiv += `<form id="form-foreman-cal">`;
+    calculateDiv += `<form id="form-foreman-cal">`;
 
-    //calculateDiv += `
-    //                <div class="row col-sm-12 mt-4 mb-2">
-    //                    <label class="col-sm-2 col-form-label text-end">รายการที่ ${bodyIndx + 1}</label>
-    //                    <div class="row col-sm-10">
-    //                        <div class="row">
-    //                            <div class="col-sm-10">
-    //                                <input class="form-control mb-2" type="text" id="input-foreman-items-${bodyIndx + 1}" name="input-foreman-items-${bodyIndx + 1}" />
-    //                            </div>
-    //                            <div class="col-sm-2">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-items-price-${bodyIndx + 1}" name="input-foreman-items-price-${bodyIndx + 1}" />
-    //                            </div>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+    calculateDiv += `
+                    <div class="row col-sm-12 mt-4 mb-2">
+                        <label class="col-sm-2 col-form-label text-end">รายการทั้งหมด</label>
+                        <div class="row col-sm-10">
+                            <div class="row" id="div-allItems">
 
-    //calculateDiv += `
-    //                <div class="row col-sm-12 mt-4 mb-2">
-    //                    <label class="col-sm-2 col-form-label text-end">โน๊ตเพิ่มเติม</label>
-    //                    <div class="row col-sm-10">
-    //                        <div class="row">
-    //                            <div class="col-sm-10">
-    //                                <input class="form-control mb-2" type="text" id="input-foreman-note" name="input-foreman-note" />
-    //                            </div>
-    //                            <div class="col-sm-2">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-note-price" name="input-foreman-note-price" />
-    //                            </div>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+                            </div>
+                        </div>
 
-    //calculateDiv += `
-    //                <div class="row col-sm-12 mb-2">
-    //                    <label class="col-sm-3 col-form-label text-end">ราคารวม (Sub. Total) <span class="text-danger">*</span></label>
-    //                    <div class="row col-sm-9">
-    //                        <div class="row">
-    //                            <div class="col-sm-4">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-cal-subTotal" name="input-foreman-subTotal" disabled />
-    //                            </div>
-    //                            <label class="col-sm-2 col-form-label">บาท</label>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+                    </div>`;
 
-    //calculateDiv += `
-    //                <div class="row col-sm-12 mb-2">
-    //                    <label class="col-sm-3 col-form-label text-end">ส่วนลดท้ายบิล</label>
-    //                    <div class="row col-sm-9">
-    //                        <div class="row">
-    //                            <div class="col-sm-4">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-cal-discount" name="input-foreman-cal-discount" />
-    //                            </div>
-    //                            <label class="col-sm-2 col-form-label">บาท</label>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+    calculateDiv += `
+                    <div class="row col-sm-12 mt-4 mb-2">
+                        <label class="col-sm-2 col-form-label text-end">โน๊ตเพิ่มเติม</label>
+                        <div class="row col-sm-10">
+                            <div class="row">
+                                <div class="col-sm-10">
+                                    <input class="form-control mb-2" type="text" id="input-foreman-note" name="input-foreman-note" value=${data.custOrder.orderNote} />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-note-price" name="input-foreman-note-price" onblur="calculateSubAndGrandTotal();" onkeydown="calculateSubAndGrandTotal();" value=${data.custOrder.orderNotePrice.toFixed(2)} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
 
-    //calculateDiv += `
-    //                 <div class="row col-sm-12 mb-2">
-    //                    <div class="col-sm-3 text-end">
-    //                        <div class="form-check form-check-inline">
-    //                            <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanVat" onchange="calculateForemanVat('vat');" value="vat">
-    //                            <label class="form-check-label">VAT 7%</label>
-    //                        </div>
-    //                        <div class="form-check form-check-inline">
-    //                            <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanNonVat" onchange="calculateForemanVat('nonvat');" value="nonvat" checked>
-    //                            <label class="form-check-label">Non VAT</label>
-    //                        </div>
-    //                    </div>
-    //                    <div class="row col-sm-9">
-    //                        <div class="row">
-    //                            <div class="col-sm-4">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-cal-vat" name="input-foreman-cal-vat" disabled />
-    //                            </div>
-    //                            <label class="col-sm-2 col-form-label">บาท</label>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+    let allItems = '';
+    let lastIndx = 0;
+    let foremanSubTotal = 0;
 
-    //calculateDiv += `
-    //                    <div class="row col-sm-12 mb-2">
-    //                    <label class="col-sm-3 col-form-label text-end">ราคารวมทั้งหมด (Grand Total) <span class="text-danger">*</span></label>
-    //                    <div class="row col-sm-9">
-    //                        <div class="row">
-    //                            <div class="col-sm-4">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-cal-grandTotal" name="input-foreman-cal-grandTotal" disabled />
-    //                            </div>
-    //                            <label class="col-sm-2 col-form-label">บาท</label>
-    //                        </div>
-    //                    </div>
-    //                </div>
-    //    `;
+    _items_list.forEach((b) => {
+        allItems += `<div class="col-sm-10">
+                                    <input class="form-control mb-2" type="text" id="input-foreman-items-${lastIndx + 1}" name="input-foreman-items-${lastIndx + 1}" value="${b.showItem}" disabled />
+                                </div>
+                                <div class="col-sm-2">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-items-price-${lastIndx + 1}" name="input-foreman-items-price-${lastIndx + 1}" value="${b.showItemPrice}" disabled />
+                     </div>`
 
-    //calculateDiv += `<div class="row col-sm-12 mb-2">
-    //                    <div class="col-sm-3 text-end">
-    //                        <button type="button" class="btn btn-primary btn-cal-deposit-amount"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดเก็บเงินงวด 2</button>
-    //                    </div>
-    //                    <div class="row col-sm-9">
-    //                        <div class="row">
-    //                            <div class="col-sm-4">
-    //                                <input class="form-control mb-2" type="number" id="input-foreman-cal-disposite" name="input-foreman-cal-disposite" disabled/>
-    //                            </div>
-    //                            <label class="col-sm-2 col-form-label">บาท</label>
-    //                        </div>
-    //                    </div>
-    //                </div>`;
+        foremanSubTotal = parseFloat(foremanSubTotal) + parseFloat(b.showItemPrice);
 
-    //calculateDiv += `<div class="row col-sm-12 mb-2">
-    //                    <label class="col-sm-3 col-form-label text-end"></label>
-    //                    <div class="col-sm-9" id="displayForemanAccountDetail">
-    //                    </div>
-    //                </div>`;
+        lastIndx++;
+    });
+    foremanSubTotal = parseFloat(foremanSubTotal) + parseFloat(data.custOrder.orderNotePrice);
 
-    //calculateDiv += `
-    //                <div class="row col-sm-12 mt-4 mb-2">
-    //                    <label for="formFile" class="col-sm-2 col-form-label text-end">อัพโหลดรูปสลิปเก็บเงินงวด 2</label>
-    //                            <div class="col-sm-10">
-    //                                <input id="select-upload-foreman-disposite" name="select-upload-foreman-disposite[]" type="file" class="file" accept="image/*" multiple>
-    //                            </div>
-    //                </div>`
+    calculateDiv += `
+                    <div class="row col-sm-12 mb-2">
+                        <label class="col-sm-4 col-form-label text-end">ราคารวม (Sub. Total) <span class="text-danger">*</span></label>
+                        <div class="row col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-subTotal" name="input-foreman-subTotal" value="${foremanSubTotal.toFixed(2)}"  disabled />
+                                </div>
+                                <label class="col-sm-2 col-form-label">บาท</label>
+                            </div>
+                        </div>
+                    </div>`;
+
+    let discount = (data.custOrder.discount == 0) ? '' : data.custOrder.discount.toFixed(2);
+    calculateDiv += `
+                    <div class="row col-sm-12 mb-2">
+                        <label class="col-sm-4 col-form-label text-end">ส่วนลดท้ายบิล</label>
+                        <div class="row col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-discount" name="input-foreman-cal-discount" onblur="calculateSubAndGrandTotal();" onkeydown="calculateSubAndGrandTotal();" value="${discount}" />
+                                </div>
+                                <label class="col-sm-2 col-form-label">บาท</label>
+                            </div>
+                        </div>
+                    </div>`;
+
+    let vatChecked = (data.custOrder.vat == 0) ? '' : 'checked';
+    let nonvatChecked = (data.custOrder.vat == 0) ? 'checked' : '';
+    let vatPrice = (data.custOrder.vat == 0) ? '' : data.custOrder.vat.toFixed(2);
+    calculateDiv += `
+                     <div class="row col-sm-12 mb-2">
+                        <div class="col-sm-4 text-end">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanVat" onchange="calculateForemanVat('vat');" value="vat" ${vatChecked}>
+                                <label class="form-check-label">VAT 7%</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanNonVat" onchange="calculateForemanVat('nonvat');" value="nonvat" ${nonvatChecked}>
+                                <label class="form-check-label">Non VAT</label>
+                            </div>
+                        </div>
+                        <div class="row col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-vat" name="input-foreman-cal-vat" value="${vatPrice}" disabled />
+                                </div>
+                                <label class="col-sm-2 col-form-label">บาท</label>
+                            </div>
+                        </div>
+                    </div>`;
+
+    calculateDiv += `
+                        <div class="row col-sm-12 mb-2">
+                        <label class="col-sm-4 col-form-label text-end">ราคารวมทั้งหมด (Grand Total)<span class="text-danger">*</span></label>
+                        <div class="row col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-grandTotal" name="input-foreman-cal-grandTotal" value="${data.custOrder.grandTotal.toFixed(2)}" disabled />
+                                </div>
+                                <label class="col-sm-2 col-form-label">บาท</label>
+                            </div>
+                        </div>
+                    </div>
+        `;
+
+    calculateDiv += `<div class="row col-sm-12 mb-2">
+                        <div class="col-sm-4 text-end">
+                            <button type="button" class="btn btn-primary btn-cal-deposit-amount"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดเก็บเงินงวด 2</button>
+                        </div>
+                        <div class="row col-sm-8">
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-disposite" name="input-foreman-cal-disposite" disabled/>
+                                </div>
+                                <label class="col-sm-2 col-form-label">บาท</label>
+                            </div>
+                        </div>
+                    </div>`;
+
+    calculateDiv += `<div class="row col-sm-12 mb-2">
+                        <label class="col-sm-4 col-form-label text-end">บัญชีรับเงิน</label>
+                        <div class="col-sm-8" id="displayForemanAccountDetail">
+                            <span>${data.custOrder.bank}</br></span>
+                            <span>ชื่อบัญชี ${data.custOrder.accountName}</br></span>
+                            <span>เลขบัญชี ${data.custOrder.accountNumber}</br></span>
+                        </div>
+                    </div>`;
+
+    calculateDiv += `
+                    <div class="row col-sm-12 mt-4 mb-2">
+                        <label for="formFile" class="col-sm-4 col-form-label text-end">อัพโหลดรูปสลิปเก็บเงินงวด 2<span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input id="select-upload-foreman-disposite" name="select-upload-foreman-disposite[]" type="file" class="file" accept="image/*">
+                                </div>
+                    </div>`
         ;
 
     calculateDiv += ` </form>`;
@@ -419,89 +462,296 @@ function renderForemanItemList(data) {
 
     $(divId).append(calculateDiv);
 
-    //bodyDiv = '</div>';
+    $('#div-allItems').append(allItems);
 
-    $(divId).append('</div>');
+    renderDispositeSecondUpload(`#form-foreman-cal #select-upload-foreman-disposite`, data.imageSecondDisposite);
 }
-function callCalculateItemOptions() {
-    let render = "";
-    _subTotal = 0;
 
-    $('#divCalculatePrice #divCalItemOptions').empty();
-    _style_list.forEach((v) => {
-        let itemName = v.itemName;
-        let itemPrice = v.itemPrice;
-
-        let calSpHeight = 0;
-        let calSpHeightPercentage = 0;
-
-        if (v.spHeight) {
-            calSpHeightPercentage = (100 / 2.60 * v.orderHeight) - 100;
-        }
-
-        var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
-        activeOptions.forEach((o) => { itemName += ` ${o.optionsName}`; itemPrice = parseFloat(itemPrice) + parseFloat(o.optionsPrice) });
-
-        calSpHeight = parseFloat(itemPrice) + parseFloat(calSpHeightPercentage);
-
-        let showItemPrice = (parseFloat(itemPrice) + parseFloat(calSpHeight)).toFixed(2);
-
-        render += `<div class="row" id="cal-${v.divId}">
-                            <div class="col-sm-8">
-                            <input class="form-control mb-2" type="text" id="input-cal-itemOptions" name="input-cal-itemOptions" value="${itemName}" disabled/>
-                            </div>
-                        <div class="col-sm-2">
-                            <input class="form-control mb-2" type="text" id="input-cal-itemPrice" name="input-cal-itemPrice" value="${showItemPrice}" disabled/>
-                        </div>
-                        <div class="col-sm-2">
-                            <button type="button" class="btn btn-primary btn-circle-xs mb-2" title="ลบ" data-seq=${v.divSeq} data-divid=${v.divId} onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus"></i></button>
-                        </div>
-                        </div>`
-
-        _subTotal = parseFloat(_subTotal) + parseFloat(itemPrice) + parseFloat(calSpHeight);
-
-    });
-
-    $('#divCalculatePrice #divCalItemOptions').append(render);
-
-    calculateSubAndGrandTotal();
-}
-let calculateSpecialHeight = function () {
-    let calSpHeight = 0;
-    let calSpHeightPercentage = 0;
-
-    if (v.spHeight) {
-        calSpHeightPercentage = (100 / 2.60 * v.orderHeight) - 100;
-    }
-    calSpHeight = parseFloat(itemPrice) + parseFloat(calSpHeightPercentage);
-}
+let _vatPercentage = 0;
 function calculateForemanVat(vat_value) {
-    let vatPercentage = 0;
     if (vat_value == "vat") {
-        vatPercentage = 0.07;
+        _vatPercentage = 0.07;
         $('#form-foreman-cal input[name="input-foreman-cal-vat"]').removeAttr('disabled');
-
     }
     else {
+        _vatPercentage = 0;
         $('#form-foreman-cal input[name="input-foreman-cal-vat"]').attr('disabled', 'disabled');
         $('#form-foreman-cal input[name="input-foreman-cal-vat"]').val('')
     }
-    //calculateSubAndGrandTotal(vatPercentage);
+    calculateSubAndGrandTotal();
 }
-function calculateSubAndGrandTotal(vatPercentage = 0) {
-    let calNote = $('#form-foreman-cal input[name="input-cal-note-price"]').val() == "" ? 0 : $('#form-foreman-cal input[name="input-cal-note-price"]').val();
-    let calSubTotal = parseFloat(_subTotal) + parseFloat(calNote);
-    $('#form-foreman-cal input[name="input-cal-subTotal"]').val(calSubTotal.toFixed(2));
+function calculateSubAndGrandTotal() {
+    let totalItemsPrice = 0;
+    _items_list.forEach((b) => { totalItemsPrice = parseFloat(totalItemsPrice) + parseFloat(b.showItemPrice) });
 
-    let discount = $('#form-foreman-cal input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-foreman-cal input[name="input-cal-discount"]').val());
+    let calNote = $('#form-foreman-cal input[name="input-foreman-note-price"]').val() == "" ? 0 : $('#form-foreman-cal input[name="input-foreman-note-price"]').val();
+    let subTotal = parseFloat(totalItemsPrice) + parseFloat(calNote);
+    $('#form-foreman-cal input[name="input-foreman-subTotal"]').val(subTotal.toFixed(2));
 
-    let calVat = parseFloat(calSubTotal) * vatPercentage;
+    let calVat = parseFloat(subTotal) * _vatPercentage;
     let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
-    $('#form-foreman-cal input[name="input-cal-vat"]').val(showVat);
+    $('#form-foreman-cal input[name="input-foreman-cal-vat"]').val(showVat);
 
-    let calGrandTotal = (parseFloat(calSubTotal) - parseFloat(discount)) + parseFloat(calVat);
+    let discount = $('#form-foreman-cal #input-foreman-cal-discount').val() == "" ? 0 : parseFloat($('#form-foreman-cal #input-foreman-cal-discount').val());
+
+    let calGrandTotal = (parseFloat(subTotal) - parseFloat(discount)) + parseFloat(calVat);
     _cal_grand_total = calGrandTotal.toFixed(2);
     $('#form-foreman-cal input[name="input-foreman-cal-grandTotal"]').val(calGrandTotal.toFixed(2));
 
-    $('#form-foreman-cal input[name="input-cal-disposite"]').val('');
+    $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val('');
+}
+function render3dApprovedImages(formId, data) {
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (data.length > 0) {
+        data.forEach((a) => {
+            lstUrl.push(`${a.url}`);
+
+            var addPreview = {
+                caption: a.fileName,
+                //width: '120px',
+                //url: '/localhost/public/delete',
+                key: a.uploadId,
+                extra: { id: a.uploadId },
+            };
+
+            lstPreviewImg.push(addPreview);
+        });
+    }
+
+    $(`${formId}`).fileinput('destroy');
+    if (data.length > 0) {
+        $(`${formId}`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: false,
+            showUpload: false,
+            showCaption: false,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId}`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: false,
+            browseOnZoneClick: false,
+            showCaption: false,
+            showUpload: false,
+        });
+    }
+}
+function renderForeman3dApprovedImages(formId, orderDetailId, data) {
+    var images = data.filter(v => { return v.orderDetailId == orderDetailId });
+
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (images.length > 0) {
+        images.forEach((a) => {
+            lstUrl.push(`${a.url}`);
+
+            var addPreview = {
+                caption: a.fileName,
+                //width: '120px',
+                //url: '/localhost/public/delete',
+                key: a.uploadId,
+                extra: { id: a.uploadId },
+            };
+
+            lstPreviewImg.push(addPreview);
+        });
+    }
+
+    $(`${formId}`).fileinput('destroy');
+    if (images.length > 0) {
+        $(`${formId}`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: false,
+            showCaption: true,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId}`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
+            showUpload: false,
+        });
+    }
+}
+function renderDispositeSecondUpload(formId, data) {
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (data != null) {
+        data.forEach((a) => {
+            lstUrl.push(`${a.url}`);
+
+            var addPreview = {
+                caption: a.fileName,
+                //width: '120px',
+                //url: '/localhost/public/delete',
+                key: a.uploadId,
+                extra: { id: a.uploadId },
+            };
+
+            lstPreviewImg.push(addPreview);
+        });
+    }
+
+    $(`${formId}`).fileinput('destroy');
+    if (data != null) {
+        $(`${formId}`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: false,
+            showCaption: true,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId}`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
+            showUpload: false,
+        });
+    }
+}
+function callSaveForeman() {
+    if (!validateInputForeman()) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.close();
+            DoSaveForeman();
+        }
+    });
+}
+function DoSaveForeman() {
+    //let formId = '#form-editDesign3D';
+    //let empId = $(`${formId} #select-edit-3d-designName`).val() == "" ? 0 : $(`${formId} #select-edit-3d-designName`).val();
+    //let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? null : $(`${formId} #input-edit-3d-due-date`).val();
+    //let final3d = $(`${formId} #chkFinal3D`).prop('checked');
+
+    //let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}`;
+
+    //var control = document.getElementById(`select-3d-approve`);
+    //var files = control.files;
+    //var formData = new FormData();
+
+    //for (var i = 0; i != files.length; i++) {
+    //    formData.append("files", files[i]);
+    //}
+
+    //$.ajax({
+    //    url: url,
+    //    type: "POST",
+    //    contentType: false, // Do not set any content header
+    //    processData: false, // Do not process data
+    //    data: formData,
+    //    async: false,
+    //    success: function (result) {
+    //        if (result.isResult == true) {
+    //            callSuccessAlert();
+    //            $(`#modal-editDesign3D`).modal('hide');
+    //            callGetChecklistStatusSelect2();
+    //            callGet3DQueueList();
+    //        }
+    //    },
+    //    error: function (err) {
+
+    //    }
+    //});
+}
+function calculateDisposite() {
+    let showDisposite = 0;
+    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
+    if (_cal_grand_total <= 200000) {
+        showDisposite = 5000;
+    }
+    else if (_cal_grand_total > 200000 && _cal_grand_total <= 600000) {
+        showDisposite = 10000;
+    }
+    else if (_cal_grand_total > 600000 && _cal_grand_total <= 900000) {
+        showDisposite = 20000;
+    }
+    else if (_cal_grand_total > 900000) {
+        showDisposite = 30000;
+    }
+
+    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val(Math.floor(showDisposite));
+}
+let validateInputForeman = function () {
+    if ($('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val() == "" || $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val() == "0") {
+        Swal.fire({
+            text: "กรุณากดคำนวณยอดมัดจำงวด 2",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').focus();
+        });
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+function callSummarySubTotal(indx, custOrderDetailId) {
+    var items = _items_list.filter((c) => { return c.custOrderDetailId == custOrderDetailId });
+
+    var itemsPrice = 0;
+    if (items.length > 0) {
+        itemsPrice = items[0].showItemPrice;
+    }
+
+    let calSpHeight = 0;
+    let calSpHeightPercentage = 0;
+
+    let height = $(`#form-foreman-items-${indx} #input-cus-product-height`).val() == "" ? 0 : $(`#form-foreman-items-${indx} #input-cus-product-height`).val();
+    if (parseFloat(height) >= 2.7) {
+        $(`#form-foreman-items-${indx} #chkSpecialHeight-${indx}`).prop('checked', true);
+        calSpHeightPercentage = (100 / 2.60 * parseFloat(height)) - 100;
+        calSpHeight = parseFloat(itemsPrice) + parseFloat(calSpHeightPercentage);
+    }
+    else {
+        $(`#form-foreman-items-${indx} #chkSpecialHeight-${indx}`).prop('checked', false);
+    }
+
+    let showItemPrice = (parseFloat(itemsPrice) + parseFloat(calSpHeight)).toFixed(2);
+    items[0].showItemPrice = showItemPrice;
+    $(`#form-foreman-cal #input-foreman-items-price-${indx}`).val(showItemPrice);
+
+    calculateSubAndGrandTotal();
 }

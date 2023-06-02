@@ -19,4 +19,8 @@ $(function () {
         callGetEditForeman();
         $('#modal-editForeman').modal('show');
     });
+
+    $('#modal-editForeman .btn-modal-save-foreman').on('click', function () {
+        callSaveForeman();
+    });
 });
