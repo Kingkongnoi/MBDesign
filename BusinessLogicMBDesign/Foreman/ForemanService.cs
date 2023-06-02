@@ -19,6 +19,11 @@ namespace BusinessLogicMBDesign.Foreman
         private readonly ForemanRepository _foremanRepository;
         private readonly UploadRepository _uploadRepository;
         private readonly UploadOrderDetailRepository _uploadOrderDetailRepository;
+        private readonly UploadCategoryRepository _uploadCategoryRepository;
+        private readonly UploadUrlRepository _uploadUrlRepository;
+        private readonly CustOrderDetailRepository _custOrderDetailRepository;
+        private readonly BankAccountRepository _bankAccountRepository;
+        private readonly InvoiceRepository _invoiceRepository;
 
         public ForemanService(IConfiguration configuration)
         {
@@ -29,6 +34,11 @@ namespace BusinessLogicMBDesign.Foreman
             _foremanRepository = new ForemanRepository();
             _uploadRepository = new UploadRepository();
             _uploadOrderDetailRepository = new UploadOrderDetailRepository();
+            _uploadCategoryRepository = new UploadCategoryRepository();
+            _uploadUrlRepository = new UploadUrlRepository();
+            _custOrderDetailRepository = new CustOrderDetailRepository();
+            _bankAccountRepository = new BankAccountRepository();
+            _invoiceRepository = new InvoiceRepository();
         }
 
         public List<CustOrderView> GetForemanQueueList(string quotationNumber, string cusName, string foremanStatus, string installDate)
@@ -68,6 +78,15 @@ namespace BusinessLogicMBDesign.Foreman
                 return _foremanRepository.GetEditForemanByForemanId(foremanId, conn);
             }
         }
+        public List<CustOrderDetailView> GetForemanCustOrderDetailByKeyId(int orderId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderDetailRepository.GetByOrderId(orderId, conn);
+            }
+        }
 
         public List<UploadView> GetByOrderIdAndCategory(int orderId, string category)
         {
@@ -79,13 +98,13 @@ namespace BusinessLogicMBDesign.Foreman
             }
         }
 
-        public List<UploadOrderDetailView> GetForemanUpload(int orderId, int orderDetailId, string category)
+        public List<UploadOrderDetailView> GetForemanUpload(int orderId, string category)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _uploadOrderDetailRepository.GetByOrderIdAndOrderDetailIdWithCategory(orderId, orderDetailId, category, conn);
+                return _uploadOrderDetailRepository.GetByOrderIdWithCategory(orderId, category, conn);
             }
         }
 
@@ -97,6 +116,183 @@ namespace BusinessLogicMBDesign.Foreman
 
                 return _uploadRepository.GetFirstByOrderIdWithCategoryName(orderId, category, conn);
             }
+        }
+
+        public bool DoUpdateForemanPerItem(List<UploadFiles> file, string categoryName, int orderId, int orderDetailId, decimal length, decimal depth, decimal height)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var cat = _uploadCategoryRepository.GetFirstByName(categoryName, conn, transaction);
+                    int categoryId = (cat != null) ? cat.id : 0;
+
+                    foreach (var f in file)
+                    {
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.originalFileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadUrlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
+
+                        var upload = new tbUploadOrderDetail
+                        {
+                            urlId = uploadUrlId.Value,
+                            orderId = orderId,
+                            orderDetailId = orderDetailId,
+                            uploadCategoryId = categoryId,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadId = _uploadOrderDetailRepository.Add(upload, conn, transaction);
+                    }
+
+                    //Update item detail
+                    var items = new tbCustOrderDetail
+                    {
+                        orderId = orderId,
+                        custOrderDetailId = orderDetailId,
+                        orderLength = length,
+                        orderDepth = depth,
+                        orderHeight = height,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999"
+                    };
+
+                    int updateCustOrderDetail = _custOrderDetailRepository.UpdateForemanValue(items, conn, transaction);
+
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processing, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+            }
+            return true;
+        }
+        public ResultMessage DoUpdateForeman(List<UploadFiles> file, string categoryName, int orderId, string orderNote, decimal orderNotePrice, decimal subTotal, decimal discount, decimal vat, decimal grandTotal, decimal disposite)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var cat = _uploadCategoryRepository.GetFirstByName(categoryName, conn, transaction);
+                    int categoryId = (cat != null) ? cat.id : 0;
+
+                    foreach (var f in file)
+                    {
+                        int deleteUrl = _uploadUrlRepository.HardDeleteByParam(orderId, categoryId, conn, transaction);
+                        int delete = _uploadRepository.HardDeleteByParam(orderId, categoryId, conn, transaction);
+
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.originalFileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadUrlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
+
+                        var upload = new tbUpload
+                        {
+                            urlId = uploadUrlId.Value,
+                            orderId = orderId,
+                            uploadCategoryId = categoryId,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = "MB9999",
+                            isDeleted = false
+                        };
+
+                        int? uploadId = _uploadRepository.Add(upload, conn, transaction);
+                    }
+
+                    //Update item detail
+                    var items = new tbCustOrder
+                    {
+                        orderId = orderId,
+                        orderNote = orderNote,
+                        orderNotePrice = orderNotePrice,
+                        subTotal = subTotal,
+                        discount = discount,
+                        vat = vat,
+                        grandTotal = grandTotal,
+                        disposite = disposite,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = "MB9999"
+                    };
+
+                    int updateCustOrder = _custOrderRepository.UpdateForeman(items, conn, transaction);
+
+                    if (categoryName == GlobalUploadCategory.secondDisposite)
+                    {
+                        var custOrder = _custOrderRepository.GetCustOrderByOrderId(orderId, conn, transaction);
+                        if (custOrder != null)
+                        {
+                            var bank = new tbBankAccount
+                            {
+                                accountId = custOrder.accountId,
+                                updateDate = DateTime.UtcNow,
+                                updateBy = "MB9999"
+                            };
+                            var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+
+                            //Create invoice = จ่ายเงินมัดจำ
+                            var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
+                            if (exists != null)
+                            {
+                                var invoice = new tbInvoice
+                                {
+                                    orderId = orderId,
+                                    custId = custOrder.custId,
+                                    period = GlobalInvoicePeriod.secondDisposite,
+                                    invoiceStatus = GlobalInvoieStatus.paid,
+                                    unitPrice = disposite,
+                                    updateDate = DateTime.UtcNow,
+                                    updateBy = "MB9999",
+                                    id = exists.id
+                                };
+
+                                int updateInvoice = _invoiceRepository.UpdateInvoiceStatus(invoice, conn, transaction);
+                            }
+                        }
+                    }
+
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processed, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+            }
+            return msg;
         }
     }
 }

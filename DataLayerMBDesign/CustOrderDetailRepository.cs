@@ -51,5 +51,19 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { orderId }, transaction: trans);
         }
+
+        public int UpdateForemanValue(tbCustOrderDetail obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"UPDATE tbCustOrderDetail
+            SET [orderLength] = @orderLength,
+            [orderDepth] = @orderDepth,
+            [orderHeight] = @orderHeight,
+            [updateDate] = @updateDate,
+            [updateBy] = @updateBy
+            WHERE custOrderDetailId = @custOrderDetailId
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.orderLength, obj.orderDepth, obj.orderHeight, obj.updateDate, obj.updateBy, obj.custOrderDetailId }, transaction: trans);
+        }
     }
 }

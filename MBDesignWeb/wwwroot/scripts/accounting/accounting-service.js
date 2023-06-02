@@ -725,7 +725,7 @@ function callCustomerInformation(e) {
 
             _grand_total = data.custOrder.grandTotal;
             _disposite = data.custOrder.disposite;
-            debugger;
+
             renderPeriodSelect2(data.invoice);
         },
         error: function (err) {

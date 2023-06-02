@@ -23,4 +23,5 @@ $(function () {
     $('#modal-editForeman .btn-modal-save-foreman').on('click', function () {
         callSaveForeman();
     });
+
 });

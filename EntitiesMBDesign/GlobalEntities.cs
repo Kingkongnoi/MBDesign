@@ -39,6 +39,8 @@ namespace EntitiesMBDesign
     public class GlobalForemanStatus
     {
         public static string getToForeman = "รอรับเรื่อง";
+        public static string processing = "ระหว่างดำเนินการ";
+        public static string processed = "ดำเนินการเรียบร้อย";
     }
 
     public class GlobalUploadCategory
@@ -56,6 +58,13 @@ namespace EntitiesMBDesign
         public static string fourthDisposite = "จ่ายเงินงวด 4";
     }
 
+    public class GlobalInvoicePeriod
+    {
+        public static string firstDisposite = "จ่ายเงินมัดจำ";
+        public static string secondDisposite = "งวดที่ 2";
+        public static string thridDisposite = "งวดที่ 3";
+        public static string fourthDisposite = "งวดที่ 4";
+    }
     public class GlobalInvoieStatus
     {
         public static string waitPaid = "รอจ่าย";

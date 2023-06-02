@@ -11,6 +11,8 @@ let _modal_default_color_code = "#EFEFEF";
 let _all_items_price = 0;
 var _items_list = [];
 
+let _cal_grand_total = 0;
+
 function clearSearchForemanForm() {
     let formId = '#form-search-foreman-queue';
 
@@ -242,6 +244,19 @@ function renderForemanItemList(data) {
                                 </div>
                     </div>`
 
+        var itemsSize = data.custOrderDetail.filter((d) => { return d.custOrderDetailId == v.custOrderDetailId });
+        let orderLength = "";
+        let orderDepth = "";
+        let orderHeight = "";
+        let checkedSpHeight = '';
+
+        if (itemsSize.length > 0) {
+            orderLength = (itemsSize[0].orderLength == 0) ? "" : itemsSize[0].orderLength;
+            orderDepth = (itemsSize[0].orderDepth == 0) ? "" : itemsSize[0].orderDepth;
+            orderHeight = (itemsSize[0].orderHeight == 0) ? "" : itemsSize[0].orderHeight;
+            checkedSpHeight = (orderHeight >= 2.7) ? 'checked' : '';
+        }
+
         insideBodyDiv += `
                     <div class="row col-sm-12">
                             <label class="col-sm-2 col-form-label text-end">ขนาด</label>
@@ -249,19 +264,19 @@ function renderForemanItemList(data) {
                                 <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความยาว</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} />
+                                        <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} value="${orderLength}" />
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความลึก</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} />
+                                        <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} value="${orderDepth}"  />
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
                                     <label class="col-sm-4 col-form-label">ความสูง</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} onblur="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" onkeydown="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" />
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} value="${orderHeight}" onblur="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" onkeydown="callSummarySubTotal(${bodyIndx + 1}, ${v.custOrderDetailId});" />
                                     </div>
                                 </div>
                             </div>
@@ -276,7 +291,7 @@ function renderForemanItemList(data) {
                                     <label class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
                                              <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${bodyIndx + 1}" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId}>
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${bodyIndx + 1}" data-itemid=${v.itemId} data-custorderdetailid=${v.custOrderDetailId} disabled ${checkedSpHeight}>
                                                     <label class="form-check-label">
                                                     ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70)
                                                     </label>
@@ -296,13 +311,17 @@ function renderForemanItemList(data) {
 
 
         _items_list.push({
+            orderId: data.custOrder.orderId,
             showItem: showItem,
             showItemPrice: showItemPrice.toFixed(2),
-            custOrderDetailId: v.custOrderDetailId
+            custOrderDetailId: v.custOrderDetailId,
+            index: bodyIndx + 1
         });
 
         render3dApprovedImages(`#form-foreman-items-${bodyIndx + 1} #display-foreman-3d-${bodyIndx + 1}`, data.images3DApproved);
         renderForeman3dApprovedImages(`#form-foreman-items-${bodyIndx + 1} #select-upload-foreman-3d-${bodyIndx + 1}`, v.custOrderDetailId, data.imagesForeman);
+
+        callSummarySubTotal(bodyIndx + 1, v.custOrderDetailId);
 
         bodyIndx++;
     });
@@ -409,6 +428,8 @@ function renderForemanItemList(data) {
                         </div>
                     </div>`;
 
+    _cal_grand_total = data.custOrder.grandTotal.toFixed(2);
+
     calculateDiv += `
                         <div class="row col-sm-12 mb-2">
                         <label class="col-sm-4 col-form-label text-end">ราคารวมทั้งหมด (Grand Total)<span class="text-danger">*</span></label>
@@ -425,12 +446,12 @@ function renderForemanItemList(data) {
 
     calculateDiv += `<div class="row col-sm-12 mb-2">
                         <div class="col-sm-4 text-end">
-                            <button type="button" class="btn btn-primary btn-cal-deposit-amount"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดเก็บเงินงวด 2</button>
+                            <button type="button" class="btn btn-primary btn-cal-deposit-amount" onclick="calculateForemanDisposite();"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดเก็บเงินงวด 2</button>
                         </div>
                         <div class="row col-sm-8">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-disposite" name="input-foreman-cal-disposite" disabled/>
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-disposite" name="input-foreman-cal-disposite" value="" disabled/>
                                 </div>
                                 <label class="col-sm-2 col-form-label">บาท</label>
                             </div>
@@ -448,7 +469,7 @@ function renderForemanItemList(data) {
 
     calculateDiv += `
                     <div class="row col-sm-12 mt-4 mb-2">
-                        <label for="formFile" class="col-sm-4 col-form-label text-end">อัพโหลดรูปสลิปเก็บเงินงวด 2<span class="text-danger">*</span></label>
+                        <label for="formFile" class="col-sm-4 col-form-label text-end">อัพโหลดรูปสลิปเก็บเงินงวด 2</label>
                                 <div class="col-sm-8">
                                     <input id="select-upload-foreman-disposite" name="select-upload-foreman-disposite[]" type="file" class="file" accept="image/*">
                                 </div>
@@ -598,19 +619,19 @@ function renderDispositeSecondUpload(formId, data) {
     var lstUrl = [];
     var lstPreviewImg = [];
     if (data != null) {
-        data.forEach((a) => {
-            lstUrl.push(`${a.url}`);
+        //data.forEach((a) => {
+        lstUrl.push(`${data.url}`);
 
             var addPreview = {
-                caption: a.fileName,
+                caption: data.fileName,
                 //width: '120px',
                 //url: '/localhost/public/delete',
-                key: a.uploadId,
-                extra: { id: a.uploadId },
+                key: data.uploadId,
+                extra: { id: data.uploadId },
             };
 
             lstPreviewImg.push(addPreview);
-        });
+        //});
     }
 
     $(`${formId}`).fileinput('destroy');
@@ -658,45 +679,93 @@ function callSaveForeman() {
     });
 }
 function DoSaveForeman() {
-    //let formId = '#form-editDesign3D';
-    //let empId = $(`${formId} #select-edit-3d-designName`).val() == "" ? 0 : $(`${formId} #select-edit-3d-designName`).val();
-    //let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? null : $(`${formId} #input-edit-3d-due-date`).val();
-    //let final3d = $(`${formId} #chkFinal3D`).prop('checked');
+    ///Save items
+    let resultUpdate = true;
+    _items_list.forEach((v) => {
+        var control = document.getElementById(`select-upload-foreman-3d-${v.index}`);
+        var files = control.files;
+        var formData = new FormData();
+        for (var i = 0; i != files.length; i++) {
+            formData.append("files", files[i]);
+        }
 
-    //let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}`;
+        let length = $(`#form-foreman-items-${v.index} #input-cus-product-length`).val() == "" ? 0 : $(`#form-foreman-items-${v.index} #input-cus-product-length`).val();
+        let depth = $(`#form-foreman-items-${v.index} #input-cus-product-depth`).val() == "" ? 0 : $(`#form-foreman-items-${v.index} #input-cus-product-depth`).val();
+        let height = $(`#form-foreman-items-${v.index} #input-cus-product-height`).val() == "" ? 0 : $(`#form-foreman-items-${v.index} #input-cus-product-height`).val();
+        //let chkSpecialHeight = $(`#form-foreman-items-${v.index} #chkSpecialHeight-${v.index}`).prop('checked');
 
-    //var control = document.getElementById(`select-3d-approve`);
-    //var files = control.files;
-    //var formData = new FormData();
+        let url = `${app_settings.api_url}/api/Foreman/DoUpdateForemanItems?orderId=${v.orderId}&custOrderDetailId=${v.custOrderDetailId}&length=${length}&depth=${depth}&height=${height}`;
 
-    //for (var i = 0; i != files.length; i++) {
-    //    formData.append("files", files[i]);
-    //}
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: false, // Do not set any content header
+            processData: false, // Do not process data
+            data: formData,
+            async: false,
+            success: function (result) {
+                if (result == true) {
+                    console.log(result);
+                }
+            },
+            error: function (err) {
+                resultUpdate = false;
+            }
+        });
+    });
 
-    //$.ajax({
-    //    url: url,
-    //    type: "POST",
-    //    contentType: false, // Do not set any content header
-    //    processData: false, // Do not process data
-    //    data: formData,
-    //    async: false,
-    //    success: function (result) {
-    //        if (result.isResult == true) {
-    //            callSuccessAlert();
-    //            $(`#modal-editDesign3D`).modal('hide');
-    //            callGetChecklistStatusSelect2();
-    //            callGet3DQueueList();
-    //        }
-    //    },
-    //    error: function (err) {
+    var control = document.getElementById(`select-upload-foreman-disposite`);
+    var files = control.files;
+    var formData = new FormData();
 
-    //    }
-    //});
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    if (files.length > 0) {
+        let formId = '#form-foreman-cal';
+
+        let orderNote = $(`${formId} #input-foreman-note`).val() == "" ? null : $(`${formId} #input-foreman-note`).val();
+        let orderNotePrice = $(`${formId} #input-foreman-note-price`).val() == "" ? 0 : $(`${formId} #input-foreman-note-price`).val();
+        let subTotal = $(`${formId} #input-foreman-subTotal`).val() == "" ? 0 : $(`${formId} #input-foreman-subTotal`).val();
+        let discount = $(`${formId} #input-foreman-cal-discount`).val() == "" ? 0 : $(`${formId} #input-foreman-cal-discount`).val();
+        let vat = $(`${formId} #input-foreman-cal-vat`).val() == "" ? 0 : $(`${formId} #input-foreman-cal-vat`).val();
+        let grandTotal = $(`${formId} #input-foreman-cal-grandTotal`).val() == "" ? 0 : $(`${formId} #input-foreman-cal-grandTotal`).val();
+        let disposite = $(`${formId} #input-foreman-cal-disposite`).val() == "" ? 0 : $(`${formId} #input-foreman-cal-disposite`).val();
+
+        let url = `${app_settings.api_url}/api/Foreman/DoUpdateForeman?orderId=${_order_id}&orderNote=${orderNote}&orderNotePrice=${orderNotePrice}&subTotal=${subTotal}
+        &discount=${discount}&vat=${vat}&grandTotal=${grandTotal}&disposite=${disposite}`;
+
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: false, // Do not set any content header
+            processData: false, // Do not process data
+            data: formData,
+            async: false,
+            success: function (result) {
+                if (result.isResult == true) {
+                    callSuccessAlert();
+                    $(`#modal-editForeman`).modal('hide');
+                    callGetForemanQueueList();
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    if (resultUpdate) {
+        callSuccessAlert();
+        $(`#modal-editForeman`).modal('hide');
+        callGetForemanQueueList();
+    }
 }
-function calculateDisposite() {
-    let showDisposite = 0;
-    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val('');
-    if (_cal_grand_total <= 200000) {
+function calculateForemanDisposite() {
+    let showDisposite = _cal_grand_total * 0.5;
+    $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val('');
+    /*if (_cal_grand_total <= 200000) {
         showDisposite = 5000;
     }
     else if (_cal_grand_total > 200000 && _cal_grand_total <= 600000) {
@@ -708,8 +777,8 @@ function calculateDisposite() {
     else if (_cal_grand_total > 900000) {
         showDisposite = 30000;
     }
-
-    $('#form-createCalculatePrice input[name="input-cal-disposite"]').val(Math.floor(showDisposite));
+    */
+    $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val(Math.floor(showDisposite));
 }
 let validateInputForeman = function () {
     if ($('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val() == "" || $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val() == "0") {

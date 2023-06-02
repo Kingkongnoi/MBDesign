@@ -39,6 +39,33 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.quotationType, obj.installDate, obj.orderNote, obj.discount, obj.subTotal, obj.grandTotal, obj.disposite, obj.accountId, 
                 obj.updateDate, obj.updateBy, obj.status, obj.orderStatus, obj.quotationComment, obj.orderNotePrice, obj.orderId }, transaction: trans);
         }
+        public int UpdateForeman(tbCustOrder obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"UPDATE tbCustOrder
+            SET [orderNote] = @orderNote
+            ,[discount] = @discount
+            ,[subTotal] = @subTotal
+            ,[grandTotal] = @grandTotal
+            ,[disposite] = @disposite
+            ,[updateDate] = @updateDate
+            ,[updateBy] = @updateBy
+            ,[orderNotePrice] = @orderNotePrice
+            WHERE orderId = @orderId and isDeleted = 0
+            select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new
+            {
+                obj.orderNote,
+                obj.discount,
+                obj.subTotal,
+                obj.grandTotal,
+                obj.disposite,
+                obj.updateDate,
+                obj.updateBy,
+                obj.orderNotePrice,
+                obj.orderId
+            }, transaction: trans);
+        }
         public int GetLastestQuotationNumberByTypeAndYearMonthGen(string type, string yearMonthGen, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 isnull(quotationNumberGen,0) quotationNumberGen
