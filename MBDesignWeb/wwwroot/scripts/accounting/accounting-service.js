@@ -951,15 +951,24 @@ function DoSaveCreateOrUpdateInvoice() {
     });
 }
 
+
 function printInvoice() {
-    $.ajax({
-        type: 'GET',
-        url: `${app_settings.api_url}/api/Accounting/PrintInvoice`,
-        success: function (data) {
-            //renderQuotaionSelect2(data);
-            window.open(`${app_settings.api_url}/reports/` + data, "_blank");
-        },
-        error: function (err) {
-        }
-    });
+    let invoiceNumber = $('#form-createInvoice #input-invoice-number').val();
+    //var obj = {
+    //    invoiceNumber: invoiceNumber,
+    //};
+
+    //var data = JSON.stringify(obj);
+
+    //$.ajax({
+    //    type: 'POST',
+    //    url: `${app_settings.web_url}/Accounting/PrintInvoice`,
+    //    data: data,
+    //    success: function (data) {
+    //        //renderQuotaionSelect2(data);
+    window.open(`${app_settings.web_url}/Accounting/PrintInvoice`, "_blank");
+//        },
+//        error: function (err) {
+//        }
+//    });
 }

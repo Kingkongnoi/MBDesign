@@ -8,16 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="reports\InvoiceReport.rdlc" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="reports\InvoiceReport.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <!--<PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="8.1.0" />-->
     <PackageReference Include="Amazon.Lambda.AspNetCoreServer.Hosting" Version="1.6.0" />
     <PackageReference Include="AspNetCore.Reporting" Version="2.1.0" />
