@@ -44,6 +44,11 @@
         .bagde-visible{
             visibility:hidden;
         }
+
+        .loader {
+            z-index: 99;
+        }
+
     </style>
 </head>
 
@@ -114,11 +119,11 @@
        @*</main>*@
     </div>
 
-    <footer class="border-top footer text-muted">
+    @*<footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2023 - MBDesignWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer>*@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

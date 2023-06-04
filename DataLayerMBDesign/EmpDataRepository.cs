@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
@@ -125,5 +126,34 @@ namespace DataLayerMBDesign
 
             return conn.Query<EmpDataView>(queryString, transaction:trans).ToList();
         }
+        public tbEmpData GetFirstByEmpCodeAndIdCard(string empCode, string idCard, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT top 1 id
+                                ,empCode
+                                ,empFirstName
+                                ,empLastName
+                                ,departmentId
+                                ,positionId
+                                ,salaryType
+                                ,salary
+                                ,hiringDate
+                                ,signatureFileName
+                                ,timeStampType
+                                ,[status]
+                                ,createDate
+                                ,createBy
+                                ,updateDate
+                                ,updateBy
+                                ,isDeleted
+                                ,isnull(idCard,'') idCard
+                                FROM tbEmpData
+                                where empCode = @empCode and isnull(idCard,'') = @idCard
+                                and isDeleted = 0 and [status] = 1
+                                "
+            ;
+
+            return conn.QueryFirstOrDefault<tbEmpData>(queryString, new { empCode, idCard }, transaction: trans);
+        }
+
     }
 }

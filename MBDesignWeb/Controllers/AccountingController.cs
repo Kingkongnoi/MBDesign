@@ -37,9 +37,12 @@ namespace MBDesignWeb.Controllers
             param.Add("customerTel", "11");
             param.Add("customerEmail", "111");
 
+            var list = new List<InvoiceModel>();
             LocalReport report = new LocalReport(path);
-            var result = report.Execute(RenderType.Pdf, extension, param, mimtype);
+            report.AddDataSource("dsInvoice", list);
 
+            var result = report.Execute(RenderType.Pdf, extension, param, mimtype);
+           
             return File(result.MainStream, "application/pdf");
         }
 

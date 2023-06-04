@@ -22,10 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="wwwroot\Reports\InvoiceReport.rdlc" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Include="wwwroot\datasets\dsInvoice.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -90,7 +86,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\Reports\InvoiceReport.rdlc">
+    <Content Update="wwwroot\reports\InvoiceReport.rdlc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

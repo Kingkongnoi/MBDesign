@@ -1,29 +1,51 @@
-﻿let format = {
-    btnLoading: `<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> loading..`,
-    icon: `<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>`
-}
+﻿$(function () {
 
-$.fn.addLoading = function (isShowText = true) {
-    let targetBtn = $(this);
-    let txt = isShowText === true ? format.btnLoading : format.btnLoading.replace(' loading..', ` ${isShowText} `);
-    targetBtn.each(function () {
+    let format = {
+        btnLoading: `<i class="fa fa-spinner fa-spin" aria-hidden="true"></i> loading..`,
+        icon: `<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>`
+    }
+
+    $.fn.addLoading = function (isShowText = true) {
+        let targetBtn = $(this);
+        //let txt = isShowText ? format.btnLoading : format.btnLoading.replace(' loading..', '');
+        let txt = isShowText === true ? format.btnLoading : format.btnLoading.replace(' loading..', ` ${isShowText} `);
+        targetBtn.each(function () {
+            let target = $(this);
+            let backup = target.html();
+            target.attr('backup-txt', backup);
+            target.prop('disabled', true);
+            target.html(txt);
+        });
+    };
+    $.fn.removeLoading = function () {
+        let targetBtn = $(this);
+        targetBtn.each(function () {
+            let target = $(this);
+            let backup = target.attr('backup-txt');
+            target.prop('disabled', false);
+            target.html(backup);
+            target.removeAttr('backup-txt');
+        });
+    };
+
+    $.fn.addSpinLoading = function (positionRelative = false) {
         let target = $(this);
-        let backup = target.html();
-        target.attr('backup-txt', backup);
-        target.prop('disabled', true);
-        target.html(txt);
-    });
-};
-$.fn.removeLoading = function () {
-    let targetBtn = $(this);
-    targetBtn.each(function () {
+        if (positionRelative) target.addClass("position-relative");
+
+        let spinLoad = $('<div/>').addClass('loader');
+        target.addClass('disable-event');
+        target.prepend(spinLoad);
+    };
+
+    $.fn.removeSpinLoading = function () {
         let target = $(this);
-        let backup = target.attr('backup-txt');
-        target.prop('disabled', false);
-        target.html(backup);
-        target.removeAttr('backup-txt');
-    });
-};
+        if (target.hasClass("position-relative")) target.removeClass("position-relative");
+        let spinLoad = $('<div/>').addClass('loader');
+        target.removeClass('disable-event');
+        target.find('div.loader').remove();
+    };
+
+});
 
 const configUTC = true;
 function convertDateTimeFormat(date, format) {
