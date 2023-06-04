@@ -3,6 +3,20 @@ let _modal_default_color_code = "#EFEFEF";
 
 let _action = 'add';
 
+var _permission = [];
+function renderPermissionMenu() {
+    let loginId = localStorage.getItem('loginId');
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
+        success: function (data) {
+            _permission = data.filter((a) => { return a.menuName == "การขาย" });
+        },
+        error: function (err) {
+        }
+    });
+}
 function clearInputFormCustomerData() {
     let newCusForm = 'form-sale-new-customer';
     $(`#${newCusForm} #radioQuotationComplete`).prop('checked', true);
@@ -748,6 +762,15 @@ function callGetQuotationList() {
     });
 }
 function renderGetQuotationList(data) {
+    var cls = "no-display";
+    $('#tb-quotation-list #edit-action').addClass('no-display');
+    if (_permission.length > 0) {
+        if (_permission[0].canEdit) {
+            $('#tb-quotation-list #edit-action').removeClass('no-display');
+            cls = "";
+        }
+    }
+
     $('#tb-quotation-list').DataTable(
         {
             destroy: true,
@@ -804,6 +827,7 @@ function renderGetQuotationList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;

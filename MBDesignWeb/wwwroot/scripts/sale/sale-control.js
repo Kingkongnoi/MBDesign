@@ -1,4 +1,6 @@
 ﻿$(function () {
+    renderPermissionMenu();
+
     clearInputFormCustomerData();
     renderCreateStyleDiv();
     callGetActiveBankAccount();

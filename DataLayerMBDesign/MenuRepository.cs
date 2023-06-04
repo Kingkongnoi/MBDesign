@@ -54,7 +54,8 @@ namespace DataLayerMBDesign
             from tbMenu a inner join tbRoleMenu b on a.menuId = b.menuId and a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1
             inner join tbRoleEmpData c on b.roleId = c.roleId and c.isDeleted = 0 and c.status = 1
             left join tbMenu d on a.parentMenuId = d.menuId and isnull(d.isDeleted,0) = 0 and isnull(d.status,1) = 1
-            where c.empId = @empId"
+            where c.empId = @empId
+            order by a.orderMenu"
             ;
 
             return conn.Query<MenuView>(queryString, new { empId }, transaction: trans).ToList();

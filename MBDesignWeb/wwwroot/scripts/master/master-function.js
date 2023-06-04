@@ -717,7 +717,6 @@ function callGetEmployeeList() {
     });
 }
 function renderGetEmployeeList(data) {
-    debugger;
     var cls = "no-display";
     $('#tb-employee-list #edit-action').addClass('no-display');
     if (_emp_permission.length > 0) {

@@ -40,32 +40,32 @@
 
         <!-- Nav pills -->
         <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;" id="saleMenu">
-            <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#nav-sale-empData-tab" aria-disabled="true">ข้อมูลลูกค้าใหม่</a>
+            <li class="nav-item" id="nav-cus">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-empData-tab" aria-disabled="true">ข้อมูลลูกค้าใหม่</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-style">
                 <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-sale-style-tab" aria-disabled="true">รายละเอียดสไตล์และชิ้นงาน</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-calculate">
                 <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-sale-calculate-tab" aria-disabled="true">การคำนวณราคา</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-upload">
                 <a class="nav-link disabled" data-bs-toggle="pill" href="#nav-sale-fileUpload-tab" aria-disabled="true">อัพโหลดรูปแปลนและรูป ref</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-quotation">
                 <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-quotation-tab">รายการใบเสนอราคา</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-document">
                 <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-document-tab">รายการเอกสารสัญญา</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" id="nav-commision">
                 <a class="nav-link" data-bs-toggle="pill" href="#nav-sale-commission-tab">ค่าคอมมิชชั่น</a>
             </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-sale-empData-tab">@Html.Partial("_CustomerNewData.cshtml")</div>
+            <div class="tab-pane fade" id="nav-sale-empData-tab">@Html.Partial("_CustomerNewData.cshtml")</div>
             <div class="tab-pane fade" id="nav-sale-style-tab">@Html.Partial("_CustomerCreateStyle.cshtml")</div>
             <div class="tab-pane fade" id="nav-sale-calculate-tab">@Html.Partial("_CustomerCalculatePrice.cshtml")</div>
             <div class="tab-pane fade" id="nav-sale-fileUpload-tab">@Html.Partial("_CustomerUpload.cshtml")</div>

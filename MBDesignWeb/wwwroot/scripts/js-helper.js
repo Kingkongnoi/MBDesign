@@ -109,7 +109,7 @@ function callRoleNavMenu() {
         success: function (data) {
             console.log(data);
             data.forEach((v) => {
-                setShowAndHiddenNavMenu(v.menuName, v.parentMenuName);
+                setShowAndHiddenNavMenu(v.menuName, v.parentMenuName, v.canView);
             })
         },
         error: function (err) {
@@ -117,37 +117,62 @@ function callRoleNavMenu() {
     });
 }
 
-function setShowAndHiddenNavMenu(menuName, parentMenuName) {
+function setShowAndHiddenNavMenu(menuName, parentMenuName, canView) {
     if (menuName == "ภาพรวมข้อมูล" || parentMenuName == "ภาพรวมข้อมูล") {
 
     }
     else if (menuName == "การขาย" || parentMenuName == "การขาย") {
-        $('#nav-sale').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-sale').removeClass('nav-no-display');
+            $('.nav-pills a[href="#nav-sale-quotation-tab"]').tab('show');
+        }
     }
     else if (menuName == "การออกแบบ 3D" || parentMenuName == "การออกแบบ 3D") {
-        $('#nav-3d').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-3d').removeClass('nav-no-display');
+        }
     }
     else if (menuName == "โฟร์แมน" || parentMenuName == "โฟร์แมน") {
-        $('#nav-foreman').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-foreman').removeClass('nav-no-display');
+        }
     }
     else if (menuName == "บัญชีและเอกสาร" || parentMenuName == "บัญชีและเอกสาร") {
-        $('#nav-accounting').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-accounting').removeClass('nav-no-display');
+        }
     }
     else if (menuName == "ข้อมูลหลัก" || parentMenuName == "ข้อมูลหลัก") {
-        $('#nav-master').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-master').removeClass('nav-no-display');
+        }
     }
     else if (menuName == "การอนุมัติใบเสนอราคา" || parentMenuName == "การอนุมัติใบเสนอราคา") {
-        $('#nav-approve').removeClass('nav-no-display');
+        if (canView) {
+            $('#nav-approve').removeClass('nav-no-display');
+        }
     }
 }
 
+let _master_active = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');
-
+    $('.nav-pills').addClass('no-display');
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
         success: function (data) {
+            _master_active = "";
+            var master_menu = data.filter((b) => { return b.parentMenuName == "ข้อมูลหลัก" && b.canView });
+            if (master_menu.length > 0) {
+                $('.nav-pills').removeClass('no-display')
+            }
+
+            var sale_menu = data.filter((b) => { return b.parentMenuName == "ข้อมูลหลัก" && b.canView });
+            if (sale_menu.length > 0) {
+                $('.nav-pills').removeClass('no-display')
+            }
+
             data.forEach((v) => {
                 setPermissionMenu(v);
             })
@@ -161,7 +186,7 @@ function setPermissionMenu(v) {
 
     }
     else if (v.menuName == "การขาย" || v.parentMenuName == "การขาย") {
-        
+        setPermissionSaleMenu(v);
     }
     else if (v.menuName == "การออกแบบ 3D" || v.parentMenuName == "การออกแบบ 3D") {
         
@@ -180,15 +205,27 @@ function setPermissionMenu(v) {
     }
 }
 function setPermissionMasterMenu(v) {
+
     switch (v.menuName) {
         case "ทั้งหมด":
-            break;
-        case "ข้อมูลพนักงาน":
-            $('#nav-master-empData .btn-add-employee').addClass('no-display');
-            $('#nav-master-role .btn-add-role').addClass('no-display');
-            $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
-            $('#nav-master-department .btn-add-department').addClass('no-display');
-            $('#nav-master-position .btn-add-position').addClass('no-display');
+            if (v.canView) {
+                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show'); }
+
+                $('#nav-emp').removeClass('no-display');
+                $('#nav-product').removeClass('no-display');
+                $('#nav-calculate').removeClass('no-display');
+                $('#nav-inventory').removeClass('no-display');
+                $('#nav-accounting').removeClass('no-display');
+                $('#nav-transpotation').removeClass('no-display');
+            }
+            else {
+                $('#nav-emp').addClass('no-display');
+                $('#nav-product').addClass('no-display');
+                $('#nav-calculate').addClass('no-display');
+                $('#nav-inventory').addClass('no-display');
+                $('#nav-accounting').addClass('no-display');
+                $('#nav-transpotation').addClass('no-display');
+            }
 
             if (v.canAdd) {
                 $('#nav-master-empData .btn-add-employee').removeClass('no-display');
@@ -197,33 +234,141 @@ function setPermissionMasterMenu(v) {
                 $('#nav-master-department .btn-add-department').removeClass('no-display');
                 $('#nav-master-position .btn-add-position').removeClass('no-display');
             }
+            else {
+                $('#nav-master-empData .btn-add-employee').addClass('no-display');
+                $('#nav-master-role .btn-add-role').addClass('no-display');
+                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
+                $('#nav-master-department .btn-add-department').addClass('no-display');
+                $('#nav-master-position .btn-add-position').addClass('no-display');
+
+                $('#nav-master-productData .btn-add-product').addClass('no-display');
+                $('#nav-master-productType .btn-add-type').addClass('no-display');
+                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
+
+                $('#divBankAccount .btn-add-account').addClass('no-display');
+            }
+            break;
+        case "ข้อมูลพนักงาน":
+            if (v.canView) {
+                if (_master_active == "")
+                {
+                    _master_active = "active";
+                    $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show');
+                }
+                $('#nav-emp').removeClass('no-display');
+            }
+            else {
+                $('#nav-emp').addClass('no-display');
+            }
+
+            if (v.canAdd) {
+                $('#nav-master-empData .btn-add-employee').removeClass('no-display');
+                $('#nav-master-role .btn-add-role').removeClass('no-display');
+                $('#nav-master-holiday .btn-add-holiday').removeClass('no-display');
+                $('#nav-master-department .btn-add-department').removeClass('no-display');
+                $('#nav-master-position .btn-add-position').removeClass('no-display');
+
+                $('#nav-master-productData .btn-add-product').removeClass('no-display');
+                $('#nav-master-productType .btn-add-type').removeClass('no-display');
+                $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
+
+                $('#divBankAccount .btn-add-account').removeClass('no-display');
+            }
+            else {
+                $('#nav-master-empData .btn-add-employee').addClass('no-display');
+                $('#nav-master-role .btn-add-role').addClass('no-display');
+                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
+                $('#nav-master-department .btn-add-department').addClass('no-display');
+                $('#nav-master-position .btn-add-position').addClass('no-display');
+            }
             break;
 
         case "ตั้งค่าสินค้าและราคา":
-            $('#nav-master-productData .btn-add-product').addClass('no-display');
-            $('#nav-master-productType .btn-add-type').addClass('no-display');
-            $('#nav-master-productStyle .btn-add-style').addClass('no-display');
+            if (v.canView) {
+                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-product-tab"]').tab('show'); }
+                $('#nav-product').removeClass('no-display');
+            }
+            else {
+                $('#nav-product').addClass('no-display');
+            }
 
             if (v.canAdd) {
                 $('#nav-master-productData .btn-add-product').removeClass('no-display');
                 $('#nav-master-productType .btn-add-type').removeClass('no-display');
                 $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
             }
+            else {
+                $('#nav-master-productData .btn-add-product').addClass('no-display');
+                $('#nav-master-productType .btn-add-type').addClass('no-display');
+                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
+            }
 
             break;
         case "ตั้งค่าสูตรคำนวณ":
+            if (v.canView) {
+                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-calculate-tab"]').tab('show'); }
+                $('#nav-calculate').removeClass('no-display');
+            }
+            else {
+                $('#nav-calculate').addClass('no-display');
+            }
+
             break;
         case "ข้อมูลคลังสินค้า":
+            if (v.canView) {
+                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-inventory-tab"]').tab('show'); }
+                
+                $('#nav-inventory').removeClass('no-display');
+            }
+            else {
+                $('#nav-inventory').addClass('no-display');
+            }
+
             break;
         case "ข้อมูลบัญชีรับเงิน":
-            $('#divBankAccount .btn-add-account').addClass('no-display');
+            if (v.canView) {
+                if (_master_active == "") {
+                    _master_active = "active";
+                    $('.nav-pills a[href="#nav-mas-account-tab"]').tab('show');
+                }
+               
+                $('#nav-accounting').removeClass('no-display');
+            }
+            else {
+                $('#nav-accounting').addClass('no-display');
+            }
 
             if (v.canAdd) {
                 $('#divBankAccount .btn-add-account').removeClass('no-display');
             }
+            else {
+                $('#divBankAccount .btn-add-account').addClass('no-display');
+            }
             break;
         case "ข้อมูลรถขนส่ง":
+            if (v.canView) {
+                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-transpotation-tab"]').tab('show'); }
+                
+                $('#nav-transpotation').removeClass('no-display');
+            }
+            else {
+                $('#nav-transpotation').addClass('no-display');
+            }
             break;
     }
 
+}
+function setPermissionSaleMenu(v) {
+    if (v.canAdd) {
+        $('#nav-cus').removeClass('no-display');
+        $('#nav-style').removeClass('no-display');
+        $('#nav-calculate').removeClass('no-display');
+        $('#nav-upload').removeClass('no-display');
+    }
+    else {
+        $('#nav-cus').removeClass('no-display');
+        $('#nav-style').removeClass('no-display');
+        $('#nav-calculate').removeClass('no-display');
+        $('#nav-upload').removeClass('no-display');
+    }
 }
