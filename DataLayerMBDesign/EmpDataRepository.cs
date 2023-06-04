@@ -126,7 +126,7 @@ namespace DataLayerMBDesign
 
             return conn.Query<EmpDataView>(queryString, transaction:trans).ToList();
         }
-        public tbEmpData GetFirstByEmpCodeAndIdCard(string empCode, string idCard, SqlConnection conn, SqlTransaction? trans = null)
+        public EmpDataView GetFirstByEmpCodeAndIdCard(string empCode, string idCard, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"SELECT top 1 id
                                 ,empCode
@@ -146,13 +146,14 @@ namespace DataLayerMBDesign
                                 ,updateBy
                                 ,isDeleted
                                 ,isnull(idCard,'') idCard
+                                ,empFirstName + ' ' + empLastName fullName
                                 FROM tbEmpData
                                 where empCode = @empCode and isnull(idCard,'') = @idCard
                                 and isDeleted = 0 and [status] = 1
                                 "
             ;
 
-            return conn.QueryFirstOrDefault<tbEmpData>(queryString, new { empCode, idCard }, transaction: trans);
+            return conn.QueryFirstOrDefault<EmpDataView>(queryString, new { empCode, idCard }, transaction: trans);
         }
 
     }

@@ -17,8 +17,14 @@ namespace MBDesignApi.Controllers.Login
             _loginService = new LoginService(configuration);
         }
 
+        [HttpGet]
+        public IActionResult GetMenuPermissionPerEmpData(int id)
+        {
+            var result = _loginService.GetMenuPermissionPerEmpData(id);
+            return Json(result);
+        }
+
         [HttpPost]
-      
         public IActionResult DoLogin([FromBody] LoginModel model)
         {
             var msg = new ResultMessage();

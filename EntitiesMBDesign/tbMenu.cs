@@ -33,5 +33,9 @@ namespace EntitiesMBDesign
         public bool canView { get; set; }
         public int roleMenuId { get; set; }
         public bool headerLevel { get; set; }
+        public string menuName { get; set; } = string.Empty;
+        public int roleId { get; set; }
+        public int empId { get; set; }
+        public string parentMenuName { get; set; } = string.Empty;
     }
 }

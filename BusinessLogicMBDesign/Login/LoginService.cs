@@ -16,21 +16,33 @@ namespace BusinessLogicMBDesign.Login
         private readonly string _connectionString;
 
         private readonly EmpDataRepository _empDataRepository;
+        private readonly MenuRepository _menuRepository;
 
         public LoginService(IConfiguration configuration) {
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
 
             _empDataRepository = new EmpDataRepository();
+            _menuRepository = new MenuRepository();
         }
 
-        public tbEmpData GetEmpByUserAndPass(string user, string pass)
+        public EmpDataView GetEmpByUserAndPass(string user, string pass)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
                 return _empDataRepository.GetFirstByEmpCodeAndIdCard(user, pass, conn);
+            }
+        }
+
+        public List<MenuView> GetMenuPermissionPerEmpData(int empId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _menuRepository.GetMenuPermissionPerEmpData(empId, conn);
             }
         }
     }

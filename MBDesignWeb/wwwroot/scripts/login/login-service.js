@@ -65,8 +65,10 @@ function DoLogin() {
                 callSuccessAlert();
                 clearInput();
                 localStorage.setItem("loginId", res.result.id);
+                localStorage.setItem("loginCode", res.result.empCode);
+                localStorage.setItem("loginName", res.result.fullName);
                 $('.btn-login').removeLoading();
-                window.location.href = `${app_settings.web_url}/Master/Index`;    
+                window.location.href = `${app_settings.web_url}/Home/Index`;    
             }
             else {
                 Swal.fire({

@@ -1,4 +1,7 @@
 ﻿$(function () {
+    callGetRolePerMenu();
+    renderPermissionMenu();
+
     callAllBankSelect2();
 
     callSelect2HolidayDay(false);
@@ -51,6 +54,8 @@
     callSelect2EmpSalaryType();
     callSelect2EmpRole();
     callGetEmployeeList();
+    callGetItemList();
+    callGetAccountList();
 
     /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {

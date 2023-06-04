@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DataLayerMBDesign
 {
@@ -45,6 +46,18 @@ namespace DataLayerMBDesign
                 end";
 
             return conn.Query<MenuView>(queryString, new { roleId }, transaction: trans).ToList();
+        }
+
+        public List<MenuView> GetMenuPermissionPerEmpData(int empId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select a.menuId, a.name menuName, b.canAdd, b.canApprove, b.canEdit, b.canView, c.roleId, c.empId, a.parentMenuId, isnull(d.name,'') parentMenuName
+            from tbMenu a inner join tbRoleMenu b on a.menuId = b.menuId and a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1
+            inner join tbRoleEmpData c on b.roleId = c.roleId and c.isDeleted = 0 and c.status = 1
+            left join tbMenu d on a.parentMenuId = d.menuId and isnull(d.isDeleted,0) = 0 and isnull(d.status,1) = 1
+            where c.empId = @empId"
+            ;
+
+            return conn.Query<MenuView>(queryString, new { empId }, transaction: trans).ToList();
         }
     }
 }
