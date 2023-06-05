@@ -61,7 +61,7 @@
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
         generateEmpId();
-        renderEmployeeSignature(null);
+        renderEmployeeSignature("");
     });
 
     $(document).on('click', '.btn-edit-employee', function () {
@@ -531,4 +531,5 @@
             callGetStyleList();
         }
     });
+
 });

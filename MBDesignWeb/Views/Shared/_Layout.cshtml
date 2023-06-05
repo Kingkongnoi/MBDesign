@@ -35,7 +35,8 @@
     <link href="~/lib/loadingstyle.css" rel="stylesheet" />
 @*
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
-*@
+    *@
+
     <script>
         localStorage.setItem('webUrl', '@ViewBag.webUrl');
         localStorage.setItem('apiUrl', '@ViewBag.apiUrl');
@@ -77,19 +78,19 @@
                                 </a>
                         </li>*@
                         <li class="nav-item" id="nav-sale">
-                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index">การขาย</a>
+                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index"><img src="~/images/sales.png" width="20px" /> การขาย</a>
                         </li>
                         <li class="nav-item" id="nav-3d">
-                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index">การออกแบบ 3D</a>
+                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index"><img src="~/images/graphic-design.png" width="20px" /> การออกแบบ 3D</a>
                         </li>
                         <li class="nav-item" id="nav-foreman">
-                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index">โฟร์แมน</a>
+                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index"><img src="~/images/foreman.png" width="20px" /> โฟร์แมน</a>
                         </li>
                         <li class="nav-item" id="nav-accounting">
-                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index">บัญชีและเอกสาร</a>
+                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index"><img src="~/images/accounting.png" width="20px" /> บัญชีและเอกสาร</a>
                         </li>
                         <li class="nav-item" id="nav-master">
-                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index">ข้อมูลหลัก</a>
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index"><img src="~/images/data-processing.png" width="20px" /> ข้อมูลหลัก</a>
                         </li>
                     </ul>
 
@@ -105,7 +106,7 @@
                         </li>
                         <li class="nav-item">
                             @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
-                            <a href="" class="nav-link"><i class="fa fa-user"></i> <span id="spnloginName"></span></a>
+                            <a href="" class="nav-link"><img src="~/images/girl.png" width="25px" /> <span id="spnloginName"></span></a>
                         </li>
                     </ul>
                 </div>
