@@ -1,6 +1,6 @@
 ﻿$(function () {
-    callGetRolePerMenu();
-    renderPermissionMenu();
+    //callGetRolePerMenu();
+    //renderPermissionMenu();
 
     callAllBankSelect2();
 

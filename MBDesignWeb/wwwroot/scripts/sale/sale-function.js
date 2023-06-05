@@ -252,7 +252,7 @@ let validateInputFormStyle = function () {
 function renderCreateStyleDiv() {
     let newSeq = $('div[name="seqCreateStyle"]').length == 0 ? 1 : $('div[name="seqCreateStyle"]').length + 1;
     let removeBtn = newSeq > 1 ? `<div class="col-sm-6 text-end">
-                                    <button type="button" class="btn btn-primary" data-seq="${newSeq}" onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                                    <button type="button" class="btn btn-primary" data-seq="${newSeq}" onclick="removeRenderStyleWithSeq(this)"><i class="fa fa-minus" aria-hidden="true"></i></button>
                                 </div>` : ``;
     let renderDiv = `<div id="divCreateStyle-${newSeq}" style="border:solid 0.025rem;" name="seqCreateStyle">
         <div class="card-header bg-primary text-light">
@@ -1561,8 +1561,8 @@ function renderGetContractList(data) {
                     data: null,
                     orderable: false,
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
-                    <i class="fas fa-file"></i></button>`;
+                        return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
+                        <img src="/images/analysis.png" width="25px" /></button>`;
                     },
                 },
             ],

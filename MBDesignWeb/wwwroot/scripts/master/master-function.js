@@ -616,25 +616,6 @@ let validateInput = function (modal) {
 
 };
 
-var _emp_permission = [];
-var _product_permission = [];
-var _bank_permission = [];
-function renderPermissionMenu() {
-    let loginId = localStorage.getItem('loginId');
-
-    $.ajax({
-        type: 'GET',
-        url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
-        success: function (data) {
-            _emp_permission = data.filter((a) => { return a.parentMenuName == "ข้อมูลหลัก" && a.menuName == "ข้อมูลพนักงาน" });
-            _product_permission = data.filter((a) => { return a.parentMenuName == "ข้อมูลหลัก" && a.menuName == "ตั้งค่าสินค้าและราคา" });
-            _bank_permission = data.filter((a) => { return a.parentMenuName == "ข้อมูลหลัก" && a.menuName == "ข้อมูลบัญชีรับเงิน" });
-        },
-        error: function (err) {
-        }
-    });
-}
-
 /* Employee */
 function DoAddOrUpdateEmployee(modal) {
     if (!validateInput(modal)) return;
@@ -755,15 +736,6 @@ function callGetEmployeeList() {
     });
 }
 function renderGetEmployeeList(data) {
-    var cls = "no-display";
-    $('#tb-employee-list #edit-action').addClass('no-display');
-    if (_emp_permission.length > 0) {
-        if (_emp_permission[0].canEdit) {
-            $('#tb-employee-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
-
     $('#tb-employee-list').DataTable(
         {
             destroy: true,
@@ -831,7 +803,7 @@ function renderGetEmployeeList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-employee" data-id="${row.id}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -1156,15 +1128,6 @@ function callGetRoleList() {
     });
 }
 function renderGetRoleList(data) {
-    var cls = "no-display";
-    $('#tb-role-list #edit-action').addClass('no-display');
-    if (_emp_permission.length > 0) {
-        if (_emp_permission[0].canEdit) {
-            $('#tb-role-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
-
     $('#tb-role-list').DataTable(
         {
             destroy: true,
@@ -1224,7 +1187,7 @@ function renderGetRoleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-role" data-id="${row.roleId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -1469,14 +1432,6 @@ function callGetHolidayList() {
     });
 }
 function renderGetHolidayList(data) {
-    var cls = "no-display";
-    $('#tb-holiday-list #edit-action').addClass('no-display');
-    if (_emp_permission.length > 0) {
-        if (_emp_permission[0].canEdit) {
-            $('#tb-holiday-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
 
     $('#tb-holiday-list').DataTable(
         {
@@ -1548,7 +1503,7 @@ function renderGetHolidayList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-holiday" data-id="${row.holidayId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -1707,14 +1662,6 @@ function callGetDepartmentList() {
     });
 }
 function renderGetDepartmentList(data) {
-    var cls = "no-display";
-    $('#tb-department-list #edit-action').addClass('no-display');
-    if (_emp_permission.length > 0) {
-        if (_emp_permission[0].canEdit) {
-            $('#tb-department-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
 
     $('#tb-department-list').DataTable(
         {
@@ -1775,7 +1722,7 @@ function renderGetDepartmentList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-department" data-id="${row.departmentId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -1898,14 +1845,6 @@ function callGetPositionList() {
     });
 }
 function renderGetPositionList(data) {
-    var cls = "no-display";
-    $('#tb-position-list #edit-action').addClass('no-display');
-    if (_emp_permission.length > 0) {
-        if (_emp_permission[0].canEdit) {
-            $('#tb-position-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
 
     $('#tb-position-list').DataTable(
         {
@@ -1966,7 +1905,7 @@ function renderGetPositionList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-position" data-id="${row.positionId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -2124,14 +2063,6 @@ function callGetItemList() {
     });
 }
 function renderGetItemList(data) {
-    var cls = "no-display";
-    $('#tb-product-list #edit-action').addClass('no-display');
-    if (_product_permission.length > 0) {
-        if (_product_permission[0].canEdit) {
-            $('#tb-product-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
 
     $('#tb-product-list').DataTable(
         {
@@ -2201,7 +2132,7 @@ function renderGetItemList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-product" data-id="${row.itemId}" data-typeid="${row.typeId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -2250,7 +2181,7 @@ function renderItemOptions(data, modal, isView = false) {
 function renderNewOptions(modal, isView = false) {
     let newSeq = $(`#${modal} div[name="divRenderOptions"]`).length == 0 ? 1 : $(`#${modal} div[name="divRenderOptions"]`).length + 1;
     let removeBtn = (newSeq > 1) ? `
-    <button type="button" class="btn btn-primary btn-circle-xs" data-seq="${newSeq}" onclick="removeRenderOptions(this)"><i class="fa fa-trash" aria-hidden="true"></i></button>` : ``;
+    <button type="button" class="btn btn-primary btn-circle-xs" data-seq="${newSeq}" onclick="removeRenderOptions(this)"><i class="fa fa-minus" aria-hidden="true"></i></button>` : ``;
 
     let setDisabled = (!isView) ? "" : "disabled";
     let styleVisibility = (!isView) ? "" : 'style="visibility:hidden;"';
@@ -2382,15 +2313,7 @@ function callGetTypeList() {
     });
 }
 function renderGetTypeList(data) {
-    var cls = "no-display";
-    $('#tb-type-list #edit-action').addClass('no-display');
-    if (_product_permission.length > 0) {
-        if (_product_permission[0].canEdit) {
-            $('#tb-type-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
-
+    
     $('#tb-type-list').DataTable(
         {
             destroy: true,
@@ -2454,7 +2377,7 @@ function renderGetTypeList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-type" data-id="${row.typeId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -2580,15 +2503,7 @@ function callGetStyleList() {
     });
 }
 function renderGetStyleList(data) {
-    var cls = "no-display";
-    $('#tb-style-list #edit-action').addClass('no-display');
-    if (_product_permission.length > 0) {
-        if (_product_permission[0].canEdit) {
-            $('#tb-style-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
-
+    
     $('#tb-style-list').DataTable(
         {
             destroy: true,
@@ -2648,7 +2563,7 @@ function renderGetStyleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-style" data-id="${row.styleId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -2799,14 +2714,6 @@ function callGetAccountList() {
     });
 }
 function renderGetAccountList(data) {
-    var cls = "no-display";
-    $('#tb-account-list #edit-action').addClass('no-display');
-    if (_bank_permission.length > 0) {
-        if (_bank_permission[0].canEdit) {
-            $('#tb-account-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
 
     $('#tb-account-list').DataTable(
         {
@@ -2882,7 +2789,7 @@ function renderGetAccountList(data) {
                     targets: 10,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-account" data-id="${row.accountId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;

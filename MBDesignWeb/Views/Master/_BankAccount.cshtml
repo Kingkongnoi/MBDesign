@@ -19,6 +19,13 @@
         display: none;
     }
 
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+
 </style>
 
 <div class="row">
@@ -64,7 +71,7 @@
             </div>
 
             <div class="col-sm-2 mt-2">
-                <button type="button" class="btn btn-primary btn-add-account">เพิ่มบัญชี</button>
+                <button type="button" class="btn-add-custom btn-add-account"><img src="~/images/payment.png" width="25px" /> เพิ่มบัญชี</button>
             </div>
 
             <div class="row col-sm-12 mt-2">
@@ -96,7 +103,7 @@
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header justify-content-center">
                 <h4 class="modal-title text-center"><span id="accountHeader"></span></h4>
             </div>
             <div class="modal-body">
@@ -146,9 +153,9 @@
                     </span>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary btn-modal-save-account"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
             </div>
         </div>
     </div>
@@ -159,7 +166,7 @@
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header justify-content-center">
                 <h4 class="modal-title text-center">เพิ่มข้อมูลบัญชี</h4>
             </div>
             <div class="modal-body">
@@ -209,7 +216,7 @@
                     </span>
                 </div>
             </div>
-            <div class="modal-footer">
+            <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
             </div>
         </div>

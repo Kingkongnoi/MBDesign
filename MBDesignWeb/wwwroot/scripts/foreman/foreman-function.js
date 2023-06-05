@@ -446,7 +446,7 @@ function renderForemanItemList(data) {
 
     calculateDiv += `<div class="row col-sm-12 mb-2">
                         <div class="col-sm-4 text-end">
-                            <button type="button" class="btn btn-primary btn-cal-deposit-amount" onclick="calculateForemanDisposite();"><i class="fa-solid fa-calculator" aria-hidden="true"></i> กดคำนวณยอดเก็บเงินงวด 2</button>
+                            <button type="button" class="btn btn-default-custom btn-cal-deposit-amount" onclick="calculateForemanDisposite();"><img src="/images/calculator.png" width="25px" /> กดคำนวณยอดเก็บเงินงวด 2</button>
                         </div>
                         <div class="row col-sm-8">
                             <div class="row">
