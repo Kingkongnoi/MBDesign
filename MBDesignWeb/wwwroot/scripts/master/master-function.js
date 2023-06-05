@@ -474,6 +474,18 @@ let validateInput = function (modal) {
                 });
                 return false;
             }
+            else if ($(`${empFormId} input[name="input-emp-idCard"]`).val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกเลขบัตรประชาชน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $(`${empFormId} input[name="input-emp-idCard"]`).focus();
+                });
+                return false;
+            }
             else if ($(`${empFormId} #select-emp-role`).val() == "" || $(`${empFormId} #select-emp-role`).val() == null) {
                 Swal.fire({
                     text: "กรุณาเลือกบทบาท",
@@ -646,6 +658,7 @@ function callAddOrUpdateEmployee() {
 
     let empFormId = '#form-createEmployee';
     let empId = $(`${empFormId} input[name="input-emp-code"]`).val();
+    let empIdCard = $(`${empFormId} input[name="input-emp-idCard"]`).val();
     let roleId = $(`${empFormId} #select-emp-role`).val();
     let empFirstName = $(`${empFormId} input[name="input-emp-firstName"]`).val();
     let empLastName = $(`${empFormId} input[name="input-emp-lastName"]`).val();
@@ -655,7 +668,7 @@ function callAddOrUpdateEmployee() {
     let salary = $(`${empFormId} input[name="input-emp-salary"]`).val();
     let status = ($(`${empFormId} #select-emp-status`).val() == "1") ? true : false;
     let hiringDate = $(`${empFormId} input[name="input-start-date"]`).val();
-    let signatureFileName = $(`${empFormId} input[name="select-emp-signature"]`).val();
+    //let signatureFileName = $(`${empFormId} input[name="select-emp-signature"]`).val();
     let timeStampType = $(`${empFormId} #radioEmpInputCard`).prop('checked') == true ? true : false;
 
     var obj = {
@@ -669,8 +682,9 @@ function callAddOrUpdateEmployee() {
         salary: salary,
         status: status,
         hiringDate: hiringDate,
-        signatureFileName: signatureFileName,
-        timeStampType: timeStampType
+        timeStampType: timeStampType,
+        idCard: empIdCard,
+        signatureFileName: ""
     };
 
     $.ajax({
@@ -681,6 +695,7 @@ function callAddOrUpdateEmployee() {
         data: JSON.stringify(obj),
         success: (res) => {
             if (res.result) {
+                callAddOrUpdateSignatureFile(empId);
                 callSuccessAlert();
                 $(`#modal-createEmployee`).modal('hide');
                 callGetEmployeeList();
@@ -690,6 +705,29 @@ function callAddOrUpdateEmployee() {
         }
     });
 
+}
+function callAddOrUpdateSignatureFile(empId) {
+    var control = document.getElementById(`select-emp-signature`);
+    var files = control.files;
+    var formData = new FormData();
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    let url = `${app_settings.api_url}/api/Employee/DoUpdateSignatureFile?empCode=${empId}`;
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        success: function (result) {
+        },
+        error: function (err) {
+        }
+    });
 }
 function callGetEmployeeList() {
     let formId = '#form-search-employee';
@@ -809,6 +847,7 @@ function callGetEmployeeById(id) {
         url: `${app_settings.api_url}/api/Employee/GetEmpByEmpId?id=${id}`,
         success: function (data) {
             renderEmployeeForm(data);
+            renderEmployeeSignature(data.signatureFileName);
         },
         error: function (err) {
 
@@ -819,6 +858,7 @@ function renderEmployeeForm(data) {
     let status = (data.status) ? 1 : 0;
     let empFormId = '#form-createEmployee';
     $(`${empFormId} input[name="input-emp-code"]`).val(data.empCode);
+    $(`${empFormId} input[name="input-emp-idCard"]`).val(data.idCard);
     $(`${empFormId} #select-emp-role`).val(data.roleId).trigger('change');
     $(`${empFormId} input[name="input-emp-firstName"]`).val(data.empFirstName);
     $(`${empFormId} input[name="input-emp-lastName"]`).val(data.empLastName);
@@ -832,6 +872,54 @@ function renderEmployeeForm(data) {
     if (data.timeStampType == true) {
         $(`${empFormId} #radioEmpInputCard`).prop('checked', true);
     } else { $(`${empFormId} #radioEmpNoInputCard`).prop('checked', true); }
+}
+function renderEmployeeSignature(signatureFileName) {
+    let formId = '#form-createEmployee #select-emp-signature';
+
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (signatureFileName != "") {
+        //data.forEach((a) => {
+        lstUrl.push(`${signatureFileName}`);
+
+        var addPreview = {
+            //caption: data.fileName,
+            //width: '120px',
+            //url: '/localhost/public/delete',
+            //key: data.uploadId,
+            //extra: { id: data.uploadId },
+        };
+
+        lstPreviewImg.push(addPreview);
+        //});
+    }
+
+    $(`${formId}`).fileinput('destroy');
+    if (signatureFileName != "") {
+        $(`${formId}`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: false,
+            showCaption: true,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${formId}`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
+            showUpload: false,
+        });
+    }
 }
 function callSelect2EmpDepartment() {
     $.ajax({

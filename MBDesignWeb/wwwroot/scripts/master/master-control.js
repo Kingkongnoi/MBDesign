@@ -42,9 +42,6 @@
     callSelect2Status('#form-createRole #select-role-status');
     callSelect2Status('#form-search-role #select-search-role-status', true);
 
-    callGetAccountList();
-    callGetItemList();
-
     renderNewOptions("modal-createProduct");
 
     //$('#states').select2();
@@ -53,9 +50,10 @@
     callSelect2EmpPosition();
     callSelect2EmpSalaryType();
     callSelect2EmpRole();
-    callGetEmployeeList();
-    callGetItemList();
+
     callGetAccountList();
+    callGetItemList();
+    callGetEmployeeList();
 
     /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {
@@ -63,6 +61,7 @@
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
         generateEmpId();
+        renderEmployeeSignature(null);
     });
 
     $(document).on('click', '.btn-edit-employee', function () {

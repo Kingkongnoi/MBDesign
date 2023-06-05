@@ -136,10 +136,11 @@ namespace BusinessLogicMBDesign.Master
                         salary = model.salary,
                         status = model.status,
                         hiringDate = model.hiringDate,
-                        signatureFileName = model.signatureFileName,
+                        signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = "MB9999",
+                        idCard = model.idCard,
                     };
 
                     added = _empDataRepository.Add(addedObject, conn, transaction);
@@ -189,10 +190,11 @@ namespace BusinessLogicMBDesign.Master
                         salary = model.salary,
                         status = model.status,
                         hiringDate = model.hiringDate,
-                        signatureFileName = model.signatureFileName,
+                        signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = "MB9999",
+                        idCard = model.idCard,
                     };
 
                     updated = _empDataRepository.Update(updatedObject, conn, transaction);
@@ -230,6 +232,38 @@ namespace BusinessLogicMBDesign.Master
 
                         int? updateMnuEmp = _roleEmpDataRepository.Update(updateRoleEmp, conn, transaction);
                     }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return updated;
+        }
+
+        public int UpdateSignatureFileName(EmpDataModel model)
+        {
+            int updated = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var obj = new tbEmpData
+                    {
+                        signatureFileName = model.signatureFileName,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = model.loginCode,
+                        empCode = model.empId
+                    };
+
+                    updated = _empDataRepository.UpdateSignatureFileName(obj, conn, transaction);
 
                     transaction.Commit();
                 }

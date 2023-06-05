@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -55,5 +56,7 @@ namespace EntitiesMBDesign
         public bool timeStampType { get; set; } = true;
         public bool status { get; set; } = true;
         public int roleId { get; set; }
+        public string idCard { get; set; } = string.Empty;
+        public string loginCode { get; set; } = string.Empty;
     }
 }

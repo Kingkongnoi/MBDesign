@@ -31,12 +31,31 @@ namespace DataLayerMBDesign
                                 timeStampType = @timeStampType,
                                 updateDate = @updateDate,
                                 updateBy = @updateBy,
-                                status = @status
+                                status = @status,
+                                idCard = @idCard
                                 where isDeleted = 0 and empCode = @empCode
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.empFirstName, obj.empLastName, obj.departmentId, obj.positionId, obj.salaryType, 
-                obj.salary, obj.hiringDate, obj.signatureFileName, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.empCode }, transaction: trans);
+                obj.salary, obj.hiringDate, obj.signatureFileName, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.idCard, obj.empCode }, transaction: trans);
+        }
+
+        public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"update tbEmpData
+                                set signatureFileName = @signatureFileName,
+                                updateDate = @updateDate,
+                                updateBy = @updateBy
+                                where isDeleted = 0 and empCode = @empCode
+                                select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new
+            {
+                obj.signatureFileName,
+                obj.updateDate,
+                obj.updateBy,
+                obj.empCode
+            }, transaction: trans);
         }
 
         public List<EmpDataView> GetAll(string empId, string empName, string departmentId, string positionId, string status, SqlConnection conn, SqlTransaction? trans = null)
@@ -96,7 +115,8 @@ namespace DataLayerMBDesign
         public EmpDataView GetFirstById(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select top 1 a.id, a.empCode, a.empFirstName + ' ' + a.empLastName fullName, a.empFirstName, a.empLastName, a.departmentId, b.departmentName, a.positionId, c.positionName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status, 
-                                a.hiringDate, a.signatureFileName, a.timeStampType, a.salaryType, a.salary, isnull((select top 1 roleId from tbRoleEmpData where empId = a.id and isDeleted = 0 and status = 1),0) roleId
+                                a.hiringDate, a.signatureFileName, a.timeStampType, a.salaryType, a.salary, a.idCard,
+                                isnull((select top 1 roleId from tbRoleEmpData where empId = a.id and isDeleted = 0 and status = 1),0) roleId
                                 from tbEmpData a inner join tbDepartment b on a.departmentId = b.departmentId
                                 inner join tbPosition c on a.positionId = c.positionId
                                 where a.isDeleted = 0 and id=@id";

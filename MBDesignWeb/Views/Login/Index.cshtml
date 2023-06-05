@@ -21,46 +21,13 @@
 
 
 <style>
-    /*body {
-        background: #f6f5f7;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        font-family: 'KaLaTeXaTEXT';
-        height: 100vh;
-        margin: -20px 0 50px;
+    #img_logo {
+        width: 70%;
+        position: absolute;
+        top: 50%;
+        left: 10%;
+        transform: translate(-0%, -50%);
     }
-
-    .container {
-        background-color: #fff;
-        border-radius: 10px;
-        box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
-        position: relative;
-        overflow: hidden;
-        width: 768px;
-        max-width: 100%;
-        min-height: 480px;
-    }
-
-    .form-container {
-        position: absolute; 
-        top: 0;
-        height: 100%;
-        transition: all 0.6s ease-in-out;
-    }
-
-    .sign-in-container {
-        left: 0;
-        width: 50%;
-        z-index: 2;
-    }
-
-    .container.right-panel-active .sign-in-container {
-        transform: translateX(100%);
-    }*/
-
-
 </style>
 <script>
 	localStorage.setItem('webUrl', '@ViewBag.webUrl');
@@ -71,7 +38,7 @@
 </div>*@
 
 <div class="container" id="container">
-	<div class="form-container sign-in-container">
+    <div class="form-container sign-in-container">
 		<form id="form-login">
 			<h1 class="mb-2">เข้าสู่ระบบ</h1>
             <input  type="text" id="input-login-empCode" name="input-login-empCode" placeholder="รหัสพนักงาน" />
@@ -80,12 +47,7 @@
             <button type="button" class="btn-login">เข้าสู่ระบบ</button>
 		</form>
 	</div>
-	<div class="overlay-container">
-		<div class="overlay">
-			<div class="overlay-panel overlay-left">
-				
-			</div>
-
-		</div>
+	<div class="overlay-container justify-content-center">
+        <img src="~/images/IMG_2178_resize.png" id="img_logo"> 
 	</div>
 </div>

@@ -1,4 +1,6 @@
-﻿using BusinessLogicMBDesign.Master;
+﻿using BusinessLogicMBDesign.Design3D;
+using BusinessLogicMBDesign;
+using BusinessLogicMBDesign.Master;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Net.Http.Headers;
 
 namespace MBDesignApi.Controllers.Master
 {
@@ -14,10 +17,12 @@ namespace MBDesignApi.Controllers.Master
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeService _employeeService;
+        private readonly UploadToAwsService _uploadToAwsService;
         private readonly IConfiguration _configuration;
         public EmployeeController(IConfiguration configuration) {
             _configuration = configuration;
             _employeeService =  new EmployeeService(_configuration);
+            _uploadToAwsService = new UploadToAwsService(_configuration);
         }
 
         #region Employee
@@ -128,6 +133,69 @@ namespace MBDesignApi.Controllers.Master
                 resultStatus
             };
             return new JsonResult(returnData);
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public ActionResult DoUpdateSignatureFile([FromQuery] string empCode, List<IFormFile> files)
+        {
+            var msg = new ResultMessage();
+            var addedUpload = new List<UploadFiles>();
+
+            string path = Directory.GetCurrentDirectory();
+            foreach (IFormFile source in files)
+            {
+                string folderName = string.Format("{0}\\upload\\images\\", path);
+
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+
+                FileInfo file = new FileInfo(filename);
+                string fileExtension = file.Extension;
+
+                string oldFilePath = string.Format("{0}{1}", folderName, filename);
+                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+
+                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+
+                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+                FileStream output = System.IO.File.Create(fullFilePath);
+
+                source.CopyTo(output);
+                output.Dispose();
+
+                var obj = new UploadFiles
+                {
+                    fileName = newFileName,
+                    filePath = fullFilePath,
+                    fileSize = source.Length,
+                    originalFileName = filename,
+                };
+
+                msg = _uploadToAwsService.DoUploadToAws(obj);
+                obj.imageUrl = msg.strResult;
+
+                addedUpload.Add(obj);
+            }
+
+            var model = new EmpDataModel
+            {
+                signatureFileName = addedUpload.FirstOrDefault().imageUrl,
+                empId = empCode
+            };
+            ///Update data
+            var result = _employeeService.UpdateSignatureFileName(model);
+            if (result > 0)
+            {
+                msg.isResult = true;
+                return new JsonResult(msg);
+            }
+            return new JsonResult(msg);
+
         }
         #endregion POST
 
