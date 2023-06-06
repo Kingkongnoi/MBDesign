@@ -36,6 +36,7 @@ namespace DataLayerMBDesign
             ,a.isDeleted
             ,b.itemName
             ,b.itemPrice
+            ,(select top 1 styleName from tbProductStyle where styleId = a.styleId and isDeleted = 0) styleName
             FROM tbCustOrderDetail a inner join tbProductItem b on a.itemId = b.itemId
             where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0
             order by a.custOrderDetailId";

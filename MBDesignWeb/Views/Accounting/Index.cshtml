@@ -7,6 +7,8 @@
 <script src="~/scripts/accounting/accounting-controller.js"></script>
 <script src="~/scripts/accounting/accounting-service.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
     .nav-tabs .nav-link {
         background-color: #AFAFAF;
@@ -28,6 +30,10 @@
         background-color: transparent /*#0d6efd*/;
         border-color: transparent /*#0d6efd*/;
         font-size: 16px;
+    }
+
+    .no-display{
+        display: none;
     }
 </style>
 
@@ -58,3 +64,5 @@
 
     </div>
 </div>
+
+<div id="divGenerateInvoiceDoc" class="no-display">@Html.Partial("~/Views/Document/_Invoice.cshtml")</div>

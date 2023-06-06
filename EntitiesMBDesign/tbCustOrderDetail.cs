@@ -32,5 +32,6 @@ namespace EntitiesMBDesign
     {
         public string itemName { get; set; } = string.Empty;
         public decimal itemPrice { get; set; }
+        public string styleName { get; set; } = string.Empty;
     }
 }

@@ -153,7 +153,7 @@ namespace DataLayerMBDesign
             ,a.quotationNumberType
             ,a.orderStatus
             ,a.quotationComment
-            ,a.orderNotePrice, b.accountName, b.accountNumber, b.accountType
+            ,a.orderNotePrice, b.accountName, b.accountNumber, b.accountType, b.bank
             from tbCustOrder a inner join tbBankAccount b on a.accountId = b.accountId
             where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0
             order by a.orderId desc";

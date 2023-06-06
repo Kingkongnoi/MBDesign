@@ -133,4 +133,7 @@
         callGetContractList();
     });
 
+    $('#form-createCalculatePrice .btn-print-quotation').on('click', function () {
+        printQuotation();
+    });
 });

@@ -953,22 +953,94 @@ function DoSaveCreateOrUpdateInvoice() {
 
 
 function printInvoice() {
-    let invoiceNumber = $('#form-createInvoice #input-invoice-number').val();
-    //var obj = {
-    //    invoiceNumber: invoiceNumber,
-    //};
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`,
+        success: function (data) {
+            if (data.invoice != null) {
+                generateInvoiceDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
 
-    //var data = JSON.stringify(obj);
+async function generateInvoiceDocument(data) {
+    await renderInvoiceHtml(data);
+}
+async function renderInvoiceHtml(data) {
+    var currDate = new Date();
+    var createInvoiceDate = convertDateTimeFormat(currDate, 'DD/MM/YYYY');
 
-    //$.ajax({
-    //    type: 'POST',
-    //    url: `${app_settings.web_url}/Accounting/PrintInvoice`,
-    //    data: data,
-    //    success: function (data) {
-    //        //renderQuotaionSelect2(data);
-    window.open(`${app_settings.web_url}/Accounting/PrintInvoice`, "_blank");
-//        },
-//        error: function (err) {
-//        }
-//    });
+    var custFullName = data.cust.custFirstName + ' ' + data.cust.custSurName;
+
+    $('#invoiceElement #spnInvoiceNumber').html(data.invoice.invoiceNumber);
+    $('#invoiceElement #spnCreateInviceDocDate').html(createInvoiceDate);
+
+    $('#invoiceElement #lblCusName').html(custFullName);
+
+    var accname = `ชื่อบัญชี ${data.custOrder.accountName} ${data.custOrder.accountNumber}`
+    var accbank = `${data.custOrder.bank}`;
+    $('#invoiceElement #spnAccName').html(accname);
+    $('#invoiceElement #spnAccBank').html(accbank);
+
+    var period = "";
+    switch (data.invoice.period) {
+        case _firstPeriod: period = _firstFullPeriod; break;
+        case _secondPeriod: period = _secondFullPeriod; break;
+        case _thridPeriod: period = _thridFullPeriod; break;
+        case _fourthPeriod: period = _fourthFullPeriod; break;
+    }
+
+    var itemNo = 1;
+    var size = "";
+    var qty = 1;
+    var item = ''
+    item += `<tr>
+                        <td>${itemNo}</td>
+                        <td>${period}</td>
+                        <td>${size}</td>
+                        <td>${data.invoice.unitPrice}</td>
+                        <td>${qty}</td>
+                        <td>${data.custOrder.grandTotal}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Sub.Total</td>
+                        <td>${data.custOrder.subTotal}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Vat 7%</td>
+                        <td>${data.custOrder.vat}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Grand Total%</td>
+                        <td>${data.custOrder.grandTotal}</td>
+                    </tr>`;
+
+    $('#invoice-item-list').empty();
+    $('#invoice-item-list').append(item);
+
+    let options = {
+        margin: 0.25,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "png", quality: 0.98 },
+        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Invoice_${data.invoice.invoiceNumber}`,
+    };
+
+    var element = document.getElementById("invoiceElement");
+    //html2pdf().from(element).set(options).save();
+    //html2pdf(element);
+    html2pdf().from(element).set(options).save();
 }

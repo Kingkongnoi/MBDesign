@@ -14,19 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\datasets\dsInvoice.Designer.cs" />
-    <Content Remove="wwwroot\datasets\dsInvoice.xsc" />
-    <Content Remove="wwwroot\datasets\dsInvoice.xsd" />
-    <Content Remove="wwwroot\datasets\dsInvoice.xss" />
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="wwwroot\datasets\dsInvoice.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>dsInvoice.xsd</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -43,13 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\datasets\dsInvoice.xsc" />
-    <None Include="wwwroot\datasets\dsInvoice.xsd">
-      <SubType>Designer</SubType>
-      <LastGenOutput>dsInvoice.Designer.cs</LastGenOutput>
-      <Generator>MSDataSetGenerator</Generator>
-    </None>
-    <None Include="wwwroot\datasets\dsInvoice.xss" />
     <None Include="wwwroot\lib\axios\axios.min.js" />
     <None Include="wwwroot\lib\cdn\buttons.flash.min.js" />
     <None Include="wwwroot\lib\cdn\buttons.html5.min.js" />
@@ -83,12 +64,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EntitiesMBDesign\EntitiesMBDesign.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="wwwroot\reports\InvoiceReport.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>

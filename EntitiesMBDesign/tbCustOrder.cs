@@ -81,6 +81,6 @@ namespace EntitiesMBDesign
         public int invoiceId { get; set; }
         public string invoicePeriod { get; set; } = string.Empty;
         public string invoiceNumber { get; set; } = string.Empty;
-        public int custId { get; set; }
+        public string bank { get; set; } = string.Empty;
     }
 }

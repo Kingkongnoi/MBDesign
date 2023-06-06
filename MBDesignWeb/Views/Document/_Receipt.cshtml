@@ -1,0 +1,123 @@
+﻿@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>*@
+@*<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.2/jspdf.debug.js"></script>*@
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+    #tb-invoice-doc tr th {
+        background-color: lightgray;
+        color: #000;
+        font-size: 14px;
+    }
+
+    .watermark {
+        background: url("https://www.google.co.in/images/srpr/logo11w.png") center center no-repeat;
+        opacity: 0.6;
+        opacity: 0.6;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+
+    .report-table {
+        margin: 0 auto;
+        width: 697px;
+        align-self: center;
+    }
+
+    .table-header {
+        font-weight: 600;
+        height: 30px;
+    }
+</style>
+
+<div id="invoiceElement">
+    <div class="row">
+        <header>
+            <div class="row col-sm-12">
+                <div class="col-sm-2">
+                    <img src="~/images/IMG_2178_resize.png" height="80px" width="auto">
+                </div>
+
+                <div class="col-sm-7 text-end" style="font-size:14px;">
+                    <span>บริษัท เอ็ม บิ้วดิ้ง จำกัด (สำนักงานใหญ่)<br /></span>
+                    <span>102/9 ซอยหลังวัดต้นสน ตำบลบางปลาสร้อย<br /></span>
+                    <span>อำเภอเมืองชลบุรี จังหวัดชลบุรี 20000<br /></span>
+                    <span>เลขประจำตัวผู้เสียภาษี 0205558020588<br /></span>
+                    <span>โทร.089-6057840  Email : Mbuilding@hotmail.com</span>
+                </div>
+
+                <div class="col-sm-3 text-end" style="font-size:14px;">
+                    <div>
+                        <span>ต้นฉบับ<br /></span>
+                        <span>ใบแจ้งหนี้/INVOICE<br /></span>
+                        <span>เลขที่/No. <span id="spnInvoiceNumber"></span><br /></span>
+                        <span>วันที่/Date. <span id="spnCreateInviceDocDate"></span><br /></span>
+                        <span>เอกสารอ้างอิง :</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="row d-sm-flex" style="font-size:14px;">
+            <div class="col-sm-6">
+                <div class="row col-sm-12">
+                    <label class="col-sm-4 col-form-label">ลูกค้า :</label>
+                    <label class="col-sm-8 col-form-label" id="lblCusName"></label>
+                </div>
+
+                <div class="row col-sm-12">
+                    <label class="col-sm-4 col-form-label">ที่อยู่ :</label>
+                    <label class="col-sm-8 col-form-label" id="lblCusAddress" style="word-wrap: break-word;"></label>
+                </div>
+
+            </div>
+
+            <div class="col-sm-6">
+                <div class="row col-sm-12">
+                    <label class="col-sm-4 col-form-label">เลขประจำตัวผู้เสียภาษี :</label>
+                    <label class="col-sm-8 col-form-label" id="lblCusTax"></label>
+                </div>
+
+                <div class="row col-sm-12">
+                    <label class="col-sm-4 col-form-label">เบอร์โทร :</label>
+                    <label class="col-sm-8 col-form-label" id="lblCusTel"></label>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row col-sm-12 mt-2">
+            <table class="table" id="tb-invoice-doc">
+                <thead class="table-header">
+                    <tr>
+                        <th width="5%">ITEM</th>
+                        <th>DESCRIPTION</th>
+                        <th width="15%">SIZE</th>
+                        <th width="20%">UNIT PRICE</th>
+                        <th width="5%">QT.</th>
+                        <th width="20%">AMOUNT</th>
+                    </tr>
+                </thead>
+                <tbody id="invoice-item-list" class="table-body">
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <div class="row col-sm-12 mt-2">
+                <div class="row d-sm-flex">
+                    <div class="col-sm-6">
+                        <span>การชำระเงิน<br /></span>
+                        <span id="spnAccName"><br /></span>
+                        <span id="spnAccBank"><br /></span>
+                    </div>
+                    <div class="col-sm-6"></div>
+                </div>
+            </div>
+        </footer>
+
+
+    </div>
+
+</div>

@@ -762,15 +762,6 @@ function callGetQuotationList() {
     });
 }
 function renderGetQuotationList(data) {
-    var cls = "no-display";
-    $('#tb-quotation-list #edit-action').addClass('no-display');
-    if (_permission.length > 0) {
-        if (_permission[0].canEdit) {
-            $('#tb-quotation-list #edit-action').removeClass('no-display');
-            cls = "";
-        }
-    }
-
     $('#tb-quotation-list').DataTable(
         {
             destroy: true,
@@ -827,7 +818,7 @@ function renderGetQuotationList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: cls,
+                    //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -1590,16 +1581,112 @@ function renderContractStatusSelect2(data) {
 }
 
 
-const HtmlToPdf = (element, fileName) => {
-    let opt = {
-        margin: 5,
+function printQuotation() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetQuotaionByOrderId?orderId=${_order_id}`,
+        success: function (data) {
+            if (data.custOrder != null) {
+                generateQuotationDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+
+async function generateQuotationDocument(data) {
+    await renderQuotationHtml(data);
+}
+async function renderQuotationHtml(data) {
+    var currDate = new Date();
+    var createInvoiceDate = convertDateTimeFormat(currDate, 'DD/MM/YYYY');
+
+    var custFullName = data.cust.custFirstName + ' ' + data.cust.custSurName;
+
+    $('#quotationElement #spnQuotationNumber').html(data.custOrder.quotationNumber);
+    $('#quotationElement #spnCreateQuotationDocDate').html(createInvoiceDate);
+
+    $('#quotationElement #lblCusName').html(custFullName);
+
+    var accname = `ชื่อบัญชี ${data.custOrder.accountName} ${data.custOrder.accountNumber}`
+    var accbank = `${data.custOrder.bank}`;
+    $('#quotationElement #spnAccName').html(accname);
+    $('#quotationElement #spnAccBank').html(accbank);
+
+    var item = ''
+    var indx = 0;
+    data.items.forEach((a) => {
+        item += `<tr>
+                    <td></td>
+                    <td>${a.itemName}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+        var style = `Style : ${a.styleName}`
+        item += `<tr>
+                    <td></td>
+                    <td>${style}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+        indx = 1;
+       
+        data.itemsOptions.forEach((b) => {
+            var unitPrice = parseFloat(a.itemPrice) + parseFloat(b.optionsPrice);
+
+            var size = `ยาว ${a.orderLength} x ${a.orderHeight} x ${a.orderDepth}`
+            item += `<tr>
+                    <td>${indx}</td>
+                    <td>${b.options}</td>
+                    <td>${size}</td>
+                    <td>${unitPrice}</td>
+                    <td>${1}</td>
+                    <td>${unitPrice}</td>
+                </tr>`;
+            indx++;
+        });
+    });
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Sub.Total</td>
+                        <td>${data.custOrder.subTotal}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Vat 7%</td>
+                        <td>${data.custOrder.vat}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Grand Total%</td>
+                        <td>${data.custOrder.grandTotal}</td>
+                    </tr>`;
+
+    $('#quotation-item-list').empty();
+    $('#quotation-item-list').append(item);
+
+    let options = {
+        margin: 0.25,
         // pagebreak: { mode: "avoid-all", before: "#page2el" },
-        image: { type: "svg", quality: 0.98 },
-        html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        image: { type: "png", quality: 0.98 },
+        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Quotation_${data.custOrder.quotationNumber}`,
     };
-    html2pdf()
-        .set(opt)
-        .from(element)
-        .save(fileName);
-};
+
+    var element = document.getElementById("quotationElement");
+    //html2pdf().from(element).set(options).save();
+    //html2pdf(element);
+    html2pdf().from(element).set(options).save();
+}

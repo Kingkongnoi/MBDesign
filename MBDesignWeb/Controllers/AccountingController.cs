@@ -23,28 +23,5 @@ namespace MBDesignWeb.Controllers
             return View();
         }
 
-        public IActionResult PrintInvoice()
-        {
-            string mimtype = "";
-            int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\InvoiceReport.rdlc";
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("customerName", "test");
-            param.Add("invoiceNumber", "test");
-            param.Add("invoiceDate", "333");
-            param.Add("customerTax", "333");
-            param.Add("customerAddress", "222");
-            param.Add("customerTel", "11");
-            param.Add("customerEmail", "111");
-
-            var list = new List<InvoiceModel>();
-            LocalReport report = new LocalReport(path);
-            report.AddDataSource("dsInvoice", list);
-
-            var result = report.Execute(RenderType.Pdf, extension, param, mimtype);
-           
-            return File(result.MainStream, "application/pdf");
-        }
-
     }
 }
