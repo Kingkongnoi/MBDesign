@@ -82,5 +82,6 @@ namespace EntitiesMBDesign
         public string invoicePeriod { get; set; } = string.Empty;
         public string invoiceNumber { get; set; } = string.Empty;
         public string bank { get; set; } = string.Empty;
+        public string receiptNumber { get; set; } = string.Empty;
     }
 }

@@ -108,9 +108,9 @@ namespace MBDesignApi.Controllers.Accounting
         }
 
         [HttpGet]
-        public JsonResult GetBillList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
+        public JsonResult GetBillList(string invoiceNumber, string receiptNumber, string customerName, string receiptDate)
         {
-            var data = _accountingService.GetAccountingList(contractNumber, quotationNumber, customerName, contractStatus, contractDate);
+            var data = _accountingService.GetReceiptList(invoiceNumber, receiptNumber, customerName, receiptDate);
 
             return new JsonResult(data);
         }

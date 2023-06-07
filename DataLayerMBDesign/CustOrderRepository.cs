@@ -389,5 +389,41 @@ namespace DataLayerMBDesign
 
             return conn.Query<tbCustOrder>(queryString, transaction: trans).ToList();
         }
+        public List<CustOrderView> GetReceiptListByParams(string invoiceNumber, string receiptNumber, string customerName, string receiptDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+
+            if (!string.IsNullOrEmpty(invoiceNumber) && invoiceNumber != "null")
+            {
+                condition += string.Format(" and d.invoiceNumber like '%{0}%'", invoiceNumber);
+            }
+
+            if (!string.IsNullOrEmpty(receiptNumber) && receiptNumber != "null")
+            {
+                condition += string.Format(" and e.receiptNumber like '%{0}%'", receiptNumber);
+            }
+
+            if (!string.IsNullOrEmpty(customerName) && customerName != "null")
+            {
+                condition += string.Format(" and isnull(b.custFirstName + ' ' + b.custSurName,'') like N'%{0}%'", customerName);
+            }
+
+            if (!string.IsNullOrEmpty(receiptDate) && receiptDate != "null")
+            {
+                condition += string.Format(" and  FORMAT(e.createDate, 'yyyy-MM-dd') = N'{0}'", receiptDate);
+            }
+
+            string queryString = string.Format(@"select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custInstallAddress, b.custTel, isnull(a.quotationNumber,'') quotationNumber, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
+            isnull(d.id,0) invoiceId, a.custId, e.createDate, e.createBy, e.updateDate, e.updateBy, d.invoiceNumber, e.receiptNumber, e.id receiptId
+            from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
+            inner join tbReceipt e on d.id = e.invoiceId and isnull(e.isDeleted,0) = 0
+            where a.status = 1 and b.status = 1 and isnull(d.status,1) = 1
+            and isnull(d.invoiceStatus,'') = N'จ่ายแล้ว'
+            {0}
+            order by a.orderId", condition);
+
+            return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿$(function () {
     clearSearchForm();
     clearSearchInvoiceForm();
+    clearSearchReceiptForm();
 
     callGetQuotaionSelect2();
     renderEditInvoiceSelect2();
@@ -10,6 +11,7 @@
 
     callGetAccountingList();
     callGetInvoiceList();
+    callGetReceiptList();
 
     $('#form-search-accounting .btn-clear-search-accounting').on('click', function () {
         clearSearchForm();
@@ -42,7 +44,7 @@
             callGetInvoiceList();
         }
         else if (target == "#nav-bill") {
-            //GetApproveHistoryList();
+            callGetReceiptList();
         }
     });
 
@@ -84,5 +86,14 @@
 
     $('.btn-print-invoice').on('click', function () {
         printInvoice();
+    });
+
+    $('#form-search-bill .btn-clear-search-bill').on('click', function () {
+        clearSearchReceiptForm();
+        callGetReceiptList();
+    });
+
+    $('#form-search-bill .btn-search-bill').on('click', function () {
+        callGetReceiptList();
     });
 });

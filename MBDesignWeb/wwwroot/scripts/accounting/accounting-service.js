@@ -1044,3 +1044,99 @@ async function renderInvoiceHtml(data) {
     //html2pdf(element);
     html2pdf().from(element).set(options).save();
 }
+
+function clearSearchReceiptForm() {
+    let formId = '#form-search-bill';
+
+    $(`${formId} #input-search-invoice-number`).val('');
+    $(`${formId} #input-search-invoice-bill`).val('');
+    $(`${formId} #input-search-customer-name`).val('');
+    $(`${formId} #input-search-bill-date`).val('');
+}
+function callGetReceiptList() {
+    let formId = '#form-search-bill';
+
+    let invoiceNumber = ($(`${formId} #input-search-invoice-number`).val() == '') ? null : $(`${formId} #input-search-invoice-number`).val();
+    let receiptNumber = ($(`${formId} #input-search-invoice-bill`).val() == '') ? null : $(`${formId} #input-search-invoice-bill`).val();
+    let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? null : $(`${formId} #input-search-customer-name`).val();
+    let receiptDate = ($(`${formId} #input-search-bill-date`).val() == '') ? null : $(`${formId} #input-search-bill-date`).val();
+
+    //let loaded = $('#tb-quotation-list');
+
+    //loaded.prepend(loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Accounting/GetBillList?invoiceNumber=${invoiceNumber}&receiptNumber=${receiptNumber}&customerName=${customerName}&receiptDate=${receiptDate}`,
+        success: function (data) {
+            renderReceiptList(data);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderReceiptList(data) {
+    $('#tb-bill-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-orderid', data.orderId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'invoiceNumber',
+                    //className: "quotationNumber-details",
+                },
+                {
+                    targets: 1,
+                    data: 'receiptNumber',
+                },
+                {
+                    targets: 2,
+                    data: 'fullName',
+                },
+                {
+                    targets: 3,
+                    data: 'invoicePeriod',
+                },
+                {
+                    targets: 4,
+                    data: 'invoiceStatus',
+                },
+                {
+                    targets: 5,
+                    data: 'createDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'createBy',
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    orderable: false,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn-add-custom btn-edit-accounting" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
+                    <img src="/images/printing.png" width="25px" /></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}

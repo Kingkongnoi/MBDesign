@@ -125,6 +125,16 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
+        public List<CustOrderView> GetReceiptList(string invoiceNumber, string receiptNumber, string customerName, string receiptDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _custOrderRepository.GetReceiptListByParams(invoiceNumber, receiptNumber, customerName, receiptDate, conn);
+            }
+        }
+
         public tbInvoice GenerateInvoiceNumber()
         {
             var result = new tbInvoice();
@@ -171,7 +181,6 @@ namespace BusinessLogicMBDesign.Accounting
                 return _custRepository.GetFirstById(custId, conn);
             }
         }
-
         public ResultMessage DoUpdateAccountingCustomer(AccountingModel model)
         {
             var msg = new ResultMessage();
