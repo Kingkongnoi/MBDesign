@@ -62,13 +62,13 @@ function DoLogin() {
         data: data,
         success: (res) => {
             if (res.msg.isResult == true) {
-                callSuccessAlert();
-                clearInput();
+                //callSuccessAlert();
                 localStorage.setItem("loginId", res.result.id);
                 localStorage.setItem("loginCode", res.result.empCode);
                 localStorage.setItem("loginName", res.result.fullName);
                 $('.btn-login').removeLoading();
-                window.location.href = `${app_settings.web_url}/Home/Index`;    
+                window.location.href = `${app_settings.web_url}/Home/Index`;  
+                clearInput();
             }
             else {
                 Swal.fire({
