@@ -23,6 +23,8 @@ namespace EntitiesMBDesign
     public class DepartmentView : tbDepartment
     {
         public string fullName { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
     }
 
     public class DepartmentModel
@@ -30,5 +32,6 @@ namespace EntitiesMBDesign
         public int departmentId { get; set; }
         public string departmentName { get; set; } = string.Empty;
         public bool status { get; set; } = true;
+        public string loginCode { get; set; } = string.Empty;
     }
 }

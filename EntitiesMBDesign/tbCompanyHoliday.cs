@@ -22,9 +22,11 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class CompanyHolidayView
+    public class CompanyHolidayView : tbCompanyHoliday
     {
         public string holidayYear { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
     }
 
     public class CompanyHolidayModel
@@ -34,6 +36,7 @@ namespace EntitiesMBDesign
         public string holiday { get; set; } = string.Empty;
         public string holidayDate { get; set; } = string.Empty;
         public bool status { get; set; } = true;
+        public string loginCode { get; set; } = string.Empty;
 
     }
 }

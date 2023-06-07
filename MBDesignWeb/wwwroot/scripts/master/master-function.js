@@ -22,6 +22,10 @@ let _role_action = 'add';
 let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 function callSelect2Status(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
@@ -89,6 +93,7 @@ function clearForm(modal) {
         case "modal-createEmployee" || "modal-viewEmployee":
             let empFormId = '#form-createEmployee';
             $(`${empFormId} input[name="input-emp-code"]`).val('');
+            $(`${empFormId} input[name="input-emp-idCard"]`).val('');
             $(`${empFormId} #select-emp-role`).val('').trigger('change');
             $(`${empFormId} input[name="input-emp-firstName"]`).val('');
             $(`${empFormId} input[name="input-emp-lastName"]`).val('');
@@ -665,7 +670,8 @@ function callAddOrUpdateEmployee() {
         hiringDate: hiringDate,
         timeStampType: timeStampType,
         idCard: empIdCard,
-        signatureFileName: ""
+        signatureFileName: "",
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -773,28 +779,31 @@ function renderGetEmployeeList(data) {
                 {
                     targets: 4,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 6,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 7,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 8,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -803,6 +812,7 @@ function renderGetEmployeeList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-employee" data-id="${row.id}"  title="แก้ไข">
@@ -889,6 +899,52 @@ function renderEmployeeSignature(signatureFileName) {
             showBrowse: true,
             browseOnZoneClick: true,
             showCaption: true,
+            showUpload: false,
+        });
+    }
+
+    let viewformId = '#form-createEmployee #display-emp-signature';
+    var lstViewUrl = [];
+    var lstViewPreviewImg = [];
+    if (signatureFileName != "") {
+        //data.forEach((a) => {
+        lstViewUrl.push(`${signatureFileName}`);
+
+        var addPreview = {
+            //caption: data.fileName,
+            //width: '120px',
+            //url: '/localhost/public/delete',
+            //key: data.uploadId,
+            //extra: { id: data.uploadId },
+        };
+
+        lstViewPreviewImg.push(addPreview);
+        //});
+    }
+
+    $(`${viewformId}`).fileinput('destroy');
+    if (signatureFileName != "") {
+        $(`${viewformId}`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: false,
+            showUpload: false,
+            showCaption: false,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: false,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`${viewformId}`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: false,
+            browseOnZoneClick: false,
+            showCaption: false,
             showUpload: false,
         });
     }
@@ -1071,7 +1127,8 @@ function callAddOrUpdateRole() {
         roleId: roleId,
         name: name,
         status: status,
-        roleMenu: roleMenu
+        roleMenu: roleMenu,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -1157,28 +1214,31 @@ function renderGetRoleList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 4,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 6,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -1187,6 +1247,7 @@ function renderGetRoleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-role" data-id="${row.roleId}"  title="แก้ไข">
@@ -1373,7 +1434,8 @@ function callAddOrUpdateHoliday() {
         day: $('#form-createHoliday #select-holiday-day').val(),
         holidayDate: $('#form-createHoliday #input-holiday-date').val(),
         holiday: $('#form-createHoliday #input-holiday-name').val(),
-        status: ($('#form-createHoliday #select-holiday-status').val() == "1") ? true : false
+        status: ($('#form-createHoliday #select-holiday-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -1432,7 +1494,6 @@ function callGetHolidayList() {
     });
 }
 function renderGetHolidayList(data) {
-
     $('#tb-holiday-list').DataTable(
         {
             destroy: true,
@@ -1473,28 +1534,31 @@ function renderGetHolidayList(data) {
                 {
                     targets: 4,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 6,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 7,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 8,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -1503,6 +1567,7 @@ function renderGetHolidayList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-holiday" data-id="${row.holidayId}"  title="แก้ไข">
@@ -1593,7 +1658,8 @@ function callAddOrUpdateDepartment() {
     var obj = {
         departmentId: $('#input-department-code').val(),
         departmentName: $('#input-department-name').val(),
-        status: ($('#form-createDepartment #select-department-status').val() == "1") ? true : false
+        status: ($('#form-createDepartment #select-department-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -1692,28 +1758,31 @@ function renderGetDepartmentList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 4,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 6,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -1722,6 +1791,7 @@ function renderGetDepartmentList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-department" data-id="${row.departmentId}"  title="แก้ไข">
@@ -1776,7 +1846,8 @@ function callAddOrUpdatePosition() {
     var obj = {
         positionId: $('#input-position-code').val(),
         positionName: $('#input-position-name').val(),
-        status: ($('#form-createPosition #select-position-status').val() == "1") ? true : false
+        status: ($('#form-createPosition #select-position-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -1845,7 +1916,6 @@ function callGetPositionList() {
     });
 }
 function renderGetPositionList(data) {
-
     $('#tb-position-list').DataTable(
         {
             destroy: true,
@@ -1875,28 +1945,31 @@ function renderGetPositionList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 4,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 6,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -1905,6 +1978,7 @@ function renderGetPositionList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-position" data-id="${row.positionId}"  title="แก้ไข">
@@ -1993,7 +2067,8 @@ function callAddOrUpdateItem() {
         typeId: $('#form-createProduct #select-product-type').val(),
         itemPrice: $('#input-product-price').val(),
         status: ($('#form-createProduct #select-product-status').val() == "1") ? true : false,
-        options: options
+        options: options,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -2102,28 +2177,31 @@ function renderGetItemList(data) {
                 {
                     targets: 4,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 6,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 7,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 8,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -2132,6 +2210,7 @@ function renderGetItemList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-product" data-id="${row.itemId}" data-typeid="${row.typeId}"  title="แก้ไข">
@@ -2242,7 +2321,8 @@ function callAddOrUpdateType() {
         typeId: $('#input-type-code').val(),
         typeName: $('#input-type-name').val(),
         typePrice: $('#input-type-price').val(),
-        status: ($('#form-createType #select-type-status').val() == "1") ? true : false
+        status: ($('#form-createType #select-type-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -2347,28 +2427,31 @@ function renderGetTypeList(data) {
                 {
                     targets: 3,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 4,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 5,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 6,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 7,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -2377,6 +2460,7 @@ function renderGetTypeList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-type" data-id="${row.typeId}"  title="แก้ไข">
@@ -2432,7 +2516,8 @@ function callAddOrUpdateStyle() {
     var obj = {
         styleId: $('#input-style-code').val(),
         styleName: $('#input-style-name').val(),
-        status: ($('#form-createStyle #select-style-status').val() == "1") ? true : false
+        status: ($('#form-createStyle #select-style-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -2533,28 +2618,31 @@ function renderGetStyleList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 4,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 6,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -2563,6 +2651,7 @@ function renderGetStyleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-style" data-id="${row.styleId}"  title="แก้ไข">
@@ -2654,7 +2743,8 @@ function callAddOrUpdateAccount() {
         accountNumber: $('#form-createAccount #input-account-number').val(),
         accountName: $('#form-createAccount #input-account-name').val(),
         accountType: $('#form-createAccount #select-account-type').val(),
-        status: ($('#form-createAccount #select-account-status').val() == "1") ? true : false
+        status: ($('#form-createAccount #select-account-status').val() == "1") ? true : false,
+        loginCode: _userCode
     };
 
     $.ajax({
@@ -2759,28 +2849,31 @@ function renderGetAccountList(data) {
                 {
                     targets: 5,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 6,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 7,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 8,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 9,
                     data: 'status',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
                     },
@@ -2789,6 +2882,7 @@ function renderGetAccountList(data) {
                     targets: 10,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-account" data-id="${row.accountId}"  title="แก้ไข">

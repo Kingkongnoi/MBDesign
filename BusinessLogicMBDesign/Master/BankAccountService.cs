@@ -39,7 +39,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbBankAccount> GetBankAccountList(string bank, string accountName, string accountNumber, string accountType, string status)
+        public List<BankAccountView> GetBankAccountList(string bank, string accountName, string accountNumber, string accountType, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -102,7 +102,7 @@ namespace BusinessLogicMBDesign.Master
                         bank = model.bank,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _bankAccountRepository.Add(addedObject, conn, transaction);
 
@@ -140,7 +140,7 @@ namespace BusinessLogicMBDesign.Master
                         bank = model.bank,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _bankAccountRepository.Update(updatedObject, conn, transaction);
 

@@ -45,17 +45,19 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"select  [departmentId]
-                                ,[departmentName]
-                                ,[status]
-                                ,[createDate]
-                                ,[createBy]
-                                ,[updateDate]
-                                ,[updateBy]
-                                from tbDepartment
-                                where isDeleted = 0
+            string queryString = string.Format(@"select  a.[departmentId]
+                                ,a.[departmentName]
+                                ,a.[status]
+                                ,a.[createDate]
+                                ,a.[createBy]
+                                ,a.[updateDate]
+                                ,a.[updateBy]
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                from tbDepartment a
+                                where a.isDeleted = 0
                                 {0}
-                                order by departmentId", condition);
+                                order by a.departmentId", condition);
 
             return conn.Query<DepartmentView>(queryString, new {  }, transaction: trans).ToList();
         }

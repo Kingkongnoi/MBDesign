@@ -51,6 +51,8 @@ namespace DataLayerMBDesign
             }
 
             string queryString = string.Format(@"select a.itemId, a.itemName, a.typeId, b.typeName, sum(isnull(a.itemPrice,0)+isnull(b.typePrice,0)) price, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
             from tbProductItem a inner join tbProductType b on a.typeId = b.typeId
             where a.isDeleted = 0 and b.isDeleted = 0
             {0}

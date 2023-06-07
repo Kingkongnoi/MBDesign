@@ -20,11 +20,18 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
+    public class RoleView : tbRole
+    {
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+    }
+
     public class RoleModel
     {
         public int roleId { get; set; }
         public string name { get; set; } = string.Empty;
         public bool status { get; set; } = true;
         public List<RoleMenuModel> roleMenu { get; set; }
+        public string loginCode { get; set; } = string.Empty;
     }
 }

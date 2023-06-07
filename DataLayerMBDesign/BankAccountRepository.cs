@@ -33,7 +33,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.accountName, obj.accountNumber, obj.accountType, obj.bank, obj.updateDate, obj.updateBy, obj.status, obj.accountId }, transaction: trans);
         }
 
-        public List<tbBankAccount> GetAll(string bank, string accountName, string accountNumber, string accountType, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<BankAccountView> GetAll(string bank, string accountName, string accountNumber, string accountType, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -62,25 +62,27 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"SELECT accountId
-                                ,accountName
-                                ,accountNumber
-                                ,accountType
-                                ,bank
-                                ,countUsage
-                                ,status
-                                ,createDate
-                                ,createBy
-                                ,updateDate
-                                ,updateBy
-                                ,isDeleted
-                                FROM tbBankAccount
-                                where isDeleted = 0
+            string queryString = string.Format(@"SELECT a.accountId
+                                ,a.accountName
+                                ,a.accountNumber
+                                ,a.accountType
+                                ,a.bank
+                                ,a.countUsage
+                                ,a.status
+                                ,a.createDate
+                                ,a.createBy
+                                ,a.updateDate
+                                ,a.updateBy
+                                ,a.isDeleted
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                FROM tbBankAccount a
+                                where a.isDeleted = 0
                                 {0}
-                                order by accountId
+                                order by a.accountId
                                 ", condition);
 
-            return conn.Query<tbBankAccount>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<BankAccountView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbBankAccount GetLastestId(SqlConnection conn, SqlTransaction? trans = null)

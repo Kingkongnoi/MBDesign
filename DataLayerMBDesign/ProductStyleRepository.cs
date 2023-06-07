@@ -30,7 +30,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.styleName, obj.updateDate, obj.updateBy, obj.status, obj.styleId }, transaction: trans);
         }
 
-        public List<tbProductStyle> GetAll(/*string styleId, */string styleName, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<ProductStyleView> GetAll(/*string styleId, */string styleName, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -49,20 +49,22 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"select [styleId]
-                                ,[styleName]
-                                ,[status]
-                                ,[createDate]
-                                ,[createBy]
-                                ,[updateDate]
-                                ,[updateBy]
-                                ,[isDeleted]
-                                from tbProductStyle
-                                where isDeleted = 0
+            string queryString = string.Format(@"select a.[styleId]
+                                ,a.[styleName]
+                                ,a.[status]
+                                ,a.[createDate]
+                                ,a.[createBy]
+                                ,a.[updateDate]
+                                ,a.[updateBy]
+                                ,a.[isDeleted]
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                from tbProductStyle a
+                                where a.isDeleted = 0
                                 {0}
-                                order by styleId", condition);
+                                order by a.styleId", condition);
 
-            return conn.Query<tbProductStyle>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<ProductStyleView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbProductStyle GetLastestId(SqlConnection conn, SqlTransaction? trans = null)

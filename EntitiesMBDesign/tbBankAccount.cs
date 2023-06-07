@@ -24,6 +24,12 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
+    public class BankAccountView : tbBankAccount
+    {
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+    }
+
     public class BankAccountModel
     {
         public int accountId { get; set; }
@@ -32,5 +38,6 @@ namespace EntitiesMBDesign
         public string accountType { get; set; } = string.Empty;
         public string bank { get; set; } = string.Empty;
         public bool status { get; set; } = true;
+        public string loginCode { get; set; } = string.Empty;
     }
 }

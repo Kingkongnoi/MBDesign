@@ -26,7 +26,9 @@ namespace EntitiesMBDesign
     {
         public string typeName { get; set; } = string.Empty;
         public decimal price { get; set; }
-        public string fullItemPrice { get; set; }
+        public string fullItemPrice { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
     }
 
     public class ProductItemModel
@@ -37,5 +39,6 @@ namespace EntitiesMBDesign
         public decimal itemPrice { get; set; }
         public bool status { get; set; } = true;
         public List<tbProductItemOptions> options { get; set; }
+        public string loginCode { get; set; } = string.Empty;
     }
 }

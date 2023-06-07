@@ -31,7 +31,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.day, obj.holiday, obj.holidayDate, obj.updateDate, obj.updateBy, obj.status, obj.holidayId }, transaction: trans);
         }
 
-        public List<tbCompanyHoliday> GetAll(string year, string day, string holidayDate, string holiday, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<CompanyHolidayView> GetAll(string year, string day, string holidayDate, string holiday, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -60,22 +60,24 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"select  [holidayId]
-                                ,[day]
-                                ,[holiday]
-                                ,[holidayDate]
-                                ,[status]
-                                ,[createDate]
-                                ,[createBy]
-                                ,[updateDate]
-                                ,[updateBy]
-                                ,[isDeleted]
-                                from tbCompanyHoliday
-                                where isDeleted = 0
+            string queryString = string.Format(@"select  a.[holidayId]
+                                ,a.[day]
+                                ,a.[holiday]
+                                ,a.[holidayDate]
+                                ,a.[status]
+                                ,a.[createDate]
+                                ,a.[createBy]
+                                ,a.[updateDate]
+                                ,a.[updateBy]
+                                ,a.[isDeleted]
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                from tbCompanyHoliday a
+                                where a.isDeleted = 0
                                 {0}
-                                order by holidayId", condition);
+                                order by a.holidayId", condition);
 
-            return conn.Query<tbCompanyHoliday>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<CompanyHolidayView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbCompanyHoliday GetLastestId(SqlConnection conn, SqlTransaction? trans = null)

@@ -30,7 +30,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.typeName, obj.typePrice, obj.updateDate, obj.updateBy, obj.status, obj.typeId }, transaction: trans);
         }
 
-        public List<tbProductType> GetAll(/*string typeId, */string typeName, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<ProductTypeView> GetAll(/*string typeId, */string typeName, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -49,25 +49,27 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"select [typeId]
-                                ,[typeName]
-                                ,[length]
-                                ,[depth]
-                                ,[height]
-                                ,[typePrice]
-                                ,[imageFileName]
-                                ,[status]
-                                ,[createDate]
-                                ,[createBy]
-                                ,[updateDate]
-                                ,[updateBy]
-                                ,[isDeleted]
-                                from tbProductType
-                                where isDeleted = 0
+            string queryString = string.Format(@"select a.[typeId]
+                                ,a.[typeName]
+                                ,a.[length]
+                                ,a.[depth]
+                                ,a.[height]
+                                ,a.[typePrice]
+                                ,a.[imageFileName]
+                                ,a.[status]
+                                ,a.[createDate]
+                                ,a.[createBy]
+                                ,a.[updateDate]
+                                ,a.[updateBy]
+                                ,a.[isDeleted]
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                from tbProductType a
+                                where a.isDeleted = 0
                                 {0}
-                                order by typeId", condition);
+                                order by a.typeId", condition);
 
-            return conn.Query<tbProductType>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<ProductTypeView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbProductType GetLastestId(SqlConnection conn, SqlTransaction? trans = null)

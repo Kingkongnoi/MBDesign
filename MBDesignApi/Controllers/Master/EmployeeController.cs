@@ -182,18 +182,22 @@ namespace MBDesignApi.Controllers.Master
                 addedUpload.Add(obj);
             }
 
-            var model = new EmpDataModel
+            if(addedUpload.Count > 0)
             {
-                signatureFileName = addedUpload.FirstOrDefault().imageUrl,
-                empId = empCode
-            };
-            ///Update data
-            var result = _employeeService.UpdateSignatureFileName(model);
-            if (result > 0)
-            {
-                msg.isResult = true;
-                return new JsonResult(msg);
+                var model = new EmpDataModel
+                {
+                    signatureFileName = addedUpload.FirstOrDefault().imageUrl,
+                    empId = empCode
+                };
+                ///Update data
+                var result = _employeeService.UpdateSignatureFileName(model);
+                if (result > 0)
+                {
+                    msg.isResult = true;
+                    return new JsonResult(msg);
+                }
             }
+            
             return new JsonResult(msg);
 
         }

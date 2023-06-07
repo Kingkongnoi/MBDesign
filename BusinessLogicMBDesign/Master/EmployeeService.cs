@@ -139,7 +139,7 @@ namespace BusinessLogicMBDesign.Master
                         signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = model.loginCode,
                         idCard = model.idCard,
                     };
 
@@ -151,7 +151,7 @@ namespace BusinessLogicMBDesign.Master
                         empId = added.Value,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
 
                     int? addedMnuEmp = _roleEmpDataRepository.Add(addedRoleEmp, conn, transaction);
@@ -193,7 +193,7 @@ namespace BusinessLogicMBDesign.Master
                         signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999",
+                        updateBy = model.loginCode,
                         idCard = model.idCard,
                     };
 
@@ -213,7 +213,7 @@ namespace BusinessLogicMBDesign.Master
                             empId = empId,
                             status = model.status,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? addedMnuEmp = _roleEmpDataRepository.Add(addedRoleEmp, conn, transaction);
@@ -227,7 +227,7 @@ namespace BusinessLogicMBDesign.Master
                             empId = empId,
                             status = model.status,
                             updateDate = DateTime.UtcNow,
-                            updateBy = "MB9999"
+                            updateBy = model.loginCode
                         };
 
                         int? updateMnuEmp = _roleEmpDataRepository.Update(updateRoleEmp, conn, transaction);
@@ -290,7 +290,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbRole> GetRoleList(string roleName, string status)
+        public List<RoleView> GetRoleList(string roleName, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -340,7 +340,7 @@ namespace BusinessLogicMBDesign.Master
                         name = model.name,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
 
                     newRoleId = _roleRepository.Add(addedRole, conn, transaction);
@@ -364,7 +364,7 @@ namespace BusinessLogicMBDesign.Master
                             canView = canView,
                             status = model.status,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? addRoleMenu = _roleMenuRepository.Add(roleMenuObj, conn, transaction);
@@ -401,7 +401,7 @@ namespace BusinessLogicMBDesign.Master
                         name = model.name,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _roleRepository.Update(updatedRole, conn, transaction);
 
@@ -425,7 +425,7 @@ namespace BusinessLogicMBDesign.Master
                             canView = canView,
                             status = model.status,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? addRoleMenu = 0;
@@ -465,7 +465,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbCompanyHoliday> GetHolidayList(string year, string day, string holidayDate, string holiday, string status)
+        public List<CompanyHolidayView> GetHolidayList(string year, string day, string holidayDate, string holiday, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -514,7 +514,7 @@ namespace BusinessLogicMBDesign.Master
                         holidayDate = Convert.ToDateTime(model.holidayDate),
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _companyHolidayRepository.Add(addedObject, conn, transaction);
 
@@ -548,7 +548,7 @@ namespace BusinessLogicMBDesign.Master
                         holidayDate = Convert.ToDateTime(model.holidayDate),
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _companyHolidayRepository.Update(updatedObject, conn, transaction);
 
@@ -617,7 +617,7 @@ namespace BusinessLogicMBDesign.Master
                         departmentName = model.departmentName,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _departmentRepository.Add(addedObject, conn, transaction);
 
@@ -652,7 +652,7 @@ namespace BusinessLogicMBDesign.Master
                         departmentName = model.departmentName,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _departmentRepository.Update(updatedObject, conn, transaction);
 
@@ -681,7 +681,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbPosition> GetPositionList(string positionName, string status)
+        public List<PositionView> GetPositionList(string positionName, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -721,7 +721,7 @@ namespace BusinessLogicMBDesign.Master
                         positionName = model.positionName,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _positionRepository.Add(addedObject, conn, transaction);
 
@@ -756,7 +756,7 @@ namespace BusinessLogicMBDesign.Master
                         positionName = model.positionName,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _positionRepository.Update(updatedObject, conn, transaction);
 

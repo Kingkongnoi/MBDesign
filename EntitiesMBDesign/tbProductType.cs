@@ -25,11 +25,18 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
+    public class ProductTypeView : tbProductType
+    {
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+    }
+
     public class ProductTypeModel
     {
         public int typeId { get; set; }
         public string typeName { get; set; } = string.Empty;
         public decimal typePrice { get; set; }
         public bool status { get; set; } = true;
+        public string loginCode { get; set; } = string.Empty;
     }
 }

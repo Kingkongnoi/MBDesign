@@ -43,17 +43,13 @@ namespace DataLayerMBDesign
         public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbEmpData
-                                set signatureFileName = @signatureFileName,
-                                updateDate = @updateDate,
-                                updateBy = @updateBy
+                                set signatureFileName = @signatureFileName
                                 where isDeleted = 0 and empCode = @empCode
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new
             {
                 obj.signatureFileName,
-                obj.updateDate,
-                obj.updateBy,
                 obj.empCode
             }, transaction: trans);
         }
@@ -88,6 +84,8 @@ namespace DataLayerMBDesign
             }
 
             string queryString = string.Format(@"select a.id, a.empCode, a.empFirstName + ' ' + a.empLastName fullName, a.departmentId, b.departmentName, a.positionId, c.positionName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName           
                                 from tbEmpData a inner join tbDepartment b on a.departmentId = b.departmentId
                                 inner join tbPosition c on a.positionId = c.positionId
                                 where a.isDeleted = 0

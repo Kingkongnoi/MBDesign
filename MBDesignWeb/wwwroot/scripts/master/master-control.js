@@ -60,6 +60,11 @@
         _emp_action = 'add'
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
+        clearForm('modal-createEmployee');
+        allSelect2EmpDepartment();
+        callSelect2EmpPosition();
+        callSelect2EmpSalaryType();
+        callSelect2EmpRole();
         generateEmpId();
         renderEmployeeSignature("");
     });
@@ -69,6 +74,10 @@
         $(`#modal-createEmployee`).modal('show');
         _emp_action = 'edit';
         clearForm('modal-createEmployee');
+        allSelect2EmpDepartment();
+        callSelect2EmpPosition();
+        callSelect2EmpSalaryType();
+        callSelect2EmpRole();
         callGetEmployeeById($(this).data('id'));
     });
 
@@ -191,8 +200,8 @@
     $('#nav-master-holiday .btn-add-holiday').on('click', function () {
         _holiday_action = 'add';
         $(`#${_modal_holiday_name} #holidayHeader`).text('เพิ่มวันหยุด');
+        clearForm('modal-createHoliday')
         $(`#${_modal_holiday_name}`).modal('show');
-        $(`#${_modal_holiday_name} #`)
     });
 
     $(document).on('click', '.btn-edit-holiday', function () {

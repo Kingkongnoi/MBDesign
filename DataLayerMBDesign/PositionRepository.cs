@@ -30,7 +30,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.positionName, obj.updateDate, obj.updateBy, obj.status, obj.positionId }, transaction: trans);
         }
 
-        public List<tbPosition> GetAll(string positionName, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<PositionView> GetAll(string positionName, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -44,20 +44,22 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"select  [positionId]
-                                ,[positionName]
-                                ,[status]
-                                ,[createDate]
-                                ,[createBy]
-                                ,[updateDate]
-                                ,[updateBy]
-                                ,[isDeleted]
-                                from tbPosition
-                                where isDeleted = 0
+            string queryString = string.Format(@"select  a.[positionId]
+                                ,a.[positionName]
+                                ,a.[status]
+                                ,a.[createDate]
+                                ,a.[createBy]
+                                ,a.[updateDate]
+                                ,a.[updateBy]
+                                ,a.[isDeleted]
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                from tbPosition a
+                                where a.isDeleted = 0
                                 {0}
-                                order by positionId", condition);
+                                order by a.positionId", condition);
 
-            return conn.Query<tbPosition>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<PositionView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbPosition GetLastestId(SqlConnection conn, SqlTransaction? trans = null)

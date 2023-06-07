@@ -488,25 +488,25 @@
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ชื่อ<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" />
+                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">บทบาท<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role"></select>
+                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role" disabled></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">แผนก<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department"></select>
+                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department" disabled></select>
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
-                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status"></select>
+                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status" disabled></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">วันที่เริ่มงาน<span class="text-danger">*</span></label>
                                     <div class="input-group" id="datepickerStartDate">
-                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" />
+                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" disabled />
                                     </div>
                                 </div>
 
@@ -518,34 +518,34 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">เลขบัตรประชาชน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" />
+                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" />
+                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ตำแหน่ง<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position"></select>
+                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position" disabled></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">การรับเงินเดือน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type"></select>
+                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type" disabled></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">เงินเดือน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" />
+                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" disabled />
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="col-sm-12 control-label mb-2">การตอกบัตร</label>
                                     <div class="text-center">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked>
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked disabled>
                                             <label class="form-check-label">ตอกบัตร</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard">
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard" disabled>
                                             <label class="form-check-label">ไม่ตอกบัตร</label>
                                         </div>
                                     </div>
@@ -556,7 +556,7 @@
 
                         <div class="col-sm-12 mb-2">
                             <label for="formFile" class="form-label">ลายเซ็นต์</label>
-                            <input id="select-emp-signature" name="select-emp-signature[]" type="file" class="file" accept="image/*">
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/*">
                             <span class="text-primary-custom">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
                         </div>
                     </div>

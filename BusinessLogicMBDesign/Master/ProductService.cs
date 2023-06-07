@@ -84,7 +84,7 @@ namespace BusinessLogicMBDesign.Master
                         itemPrice = model.itemPrice,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _productItemRepository.Add(addedObject, conn, transaction);
 
@@ -104,7 +104,7 @@ namespace BusinessLogicMBDesign.Master
                             optionsPrice = op.optionsPrice,
                             status = model.status,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
                         int? addedOptions = _productItemOptionsRepository.Add(options, conn, transaction);
                     }
@@ -143,7 +143,7 @@ namespace BusinessLogicMBDesign.Master
                         typeId = model.typeId,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _productItemRepository.Update(updatedObject, conn, transaction);
 
@@ -165,7 +165,7 @@ namespace BusinessLogicMBDesign.Master
                                 optionsPrice = op.optionsPrice,
                                 status = model.status,
                                 createDate = DateTime.UtcNow,
-                                createBy = "MB9999"
+                                createBy = model.loginCode
                             };
                             int? addedOptions = _productItemOptionsRepository.Add(options, conn, transaction);
                         }
@@ -207,7 +207,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbProductType> GetProductTypeList(/*string typeId,*/ string typeName, string status)
+        public List<ProductTypeView> GetProductTypeList(/*string typeId,*/ string typeName, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -248,7 +248,7 @@ namespace BusinessLogicMBDesign.Master
                         typePrice = model.typePrice,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _productTypeRepository.Add(addedObject, conn, transaction);
 
@@ -284,7 +284,7 @@ namespace BusinessLogicMBDesign.Master
                         typePrice = model.typePrice,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _productTypeRepository.Update(updatedObject, conn, transaction);
 
@@ -324,7 +324,7 @@ namespace BusinessLogicMBDesign.Master
 
         }
 
-        public List<tbProductStyle> GetProductStyleList(/*string styleId, */string styleName, string status)
+        public List<ProductStyleView> GetProductStyleList(/*string styleId, */string styleName, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -364,7 +364,7 @@ namespace BusinessLogicMBDesign.Master
                         styleName = model.styleName,
                         status = model.status,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _productStyleRepository.Add(addedObject, conn, transaction);
 
@@ -399,7 +399,7 @@ namespace BusinessLogicMBDesign.Master
                         styleName = model.styleName,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _productStyleRepository.Update(updatedObject, conn, transaction);
 

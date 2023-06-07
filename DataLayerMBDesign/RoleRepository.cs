@@ -29,7 +29,7 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.name, obj.updateDate, obj.updateBy, obj.status, obj.roleId }, transaction: trans);
         }
 
-        public List<tbRole> GetAll(string rolename, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<RoleView> GetAll(string rolename, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -43,20 +43,22 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and status = {0}", status);
             }
 
-            string queryString = string.Format(@"SELECT roleId
-                                ,name
-                                ,status
-                                ,createDate
-                                ,createBy
-                                ,updateDate
-                                ,updateBy
-                                ,isDeleted
-                                FROM tbRole
-                                where isDeleted = 0
+            string queryString = string.Format(@"SELECT a.roleId
+                                ,a.name
+                                ,a.status
+                                ,a.createDate
+                                ,a.createBy
+                                ,a.updateDate
+                                ,a.updateBy
+                                ,a.isDeleted
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName
+                                FROM tbRole a
+                                where a.isDeleted = 0
                                 {0}
-                                order by roleId", condition);
+                                order by a.roleId", condition);
 
-            return conn.Query<tbRole>(queryString, new { }, transaction: trans).ToList();
+            return conn.Query<RoleView>(queryString, new { }, transaction: trans).ToList();
         }
 
         public tbRole GetLastestId(SqlConnection conn, SqlTransaction? trans = null)
