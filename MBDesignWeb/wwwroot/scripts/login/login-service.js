@@ -68,7 +68,7 @@ function DoLogin() {
                 localStorage.setItem("loginName", res.result.fullName);
                 $('.btn-login').removeLoading();
                 window.location.href = `${app_settings.web_url}/Home/Index`;  
-                clearInput();
+                //clearInput();
             }
             else {
                 Swal.fire({
