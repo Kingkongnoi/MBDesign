@@ -18,7 +18,7 @@ namespace DataLayerMBDesign
 
         public int GetLastestReceiptNumberByYearMonthGen(string yearMonthGen, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select top 1 isnull(receiptNumber,0) receiptNumber
+            string queryString = @"select top 1 isnull(receiptNumberGen,0) receiptNumberGen
             from tbReceipt
             where receiptYearMonthGen = @yearMonthGen
             order by receiptNumberGen desc";

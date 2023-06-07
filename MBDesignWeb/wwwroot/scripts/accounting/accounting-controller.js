@@ -60,6 +60,7 @@
         _order_id = 0;
         _cust_id = 0;
         _invoice_id = 0;
+        clearInputForm();
         generateInvoiceNumber();
         $(`#form-createInvoice #select-period`).attr('disabled');
         $(`#modal-createInvoice #invoiceHeader`).text('เพิ่มใบแจ้งหนี้');

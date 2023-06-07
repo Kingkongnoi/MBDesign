@@ -23,6 +23,7 @@ namespace BusinessLogicMBDesign.Accounting
         private readonly UploadRepository _uploadRepository;
         private readonly CustRepository _custRepository;
         private readonly InvoiceRepository _invoiceRepository;
+        private readonly ReceiptRepository _receiptRepository;
 
         public AccountingService(IConfiguration configuration)
         {
@@ -34,6 +35,7 @@ namespace BusinessLogicMBDesign.Accounting
             _uploadRepository = new UploadRepository();
             _custRepository = new CustRepository();
             _invoiceRepository = new InvoiceRepository();
+            _receiptRepository = new ReceiptRepository();
         }
 
         public List<CustOrderView> GetAccountingList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
@@ -275,6 +277,7 @@ namespace BusinessLogicMBDesign.Accounting
 
                         int? invoiceId = _invoiceRepository.Add(addedInvoice, conn, transaction);
 
+                        int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId);
                     }
 
                     msg.isResult = true;
@@ -344,6 +347,57 @@ namespace BusinessLogicMBDesign.Accounting
             }
 
             return msg;
+        }
+
+        public int? AddReceipt(int orderId, int custId, string yearMonth, int? invoiceId)
+        {
+            int? added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    int lastestNumberGen = _receiptRepository.GetLastestReceiptNumberByYearMonthGen(yearMonth, conn, transaction);
+                    int generateNumber = (lastestNumberGen == 0) ? 1 : lastestNumberGen + 1;
+
+                    string receiptNumber = this.GenerateNumber(generateNumber, yearMonth);
+
+                    var addedObject = new tbReceipt
+                    {
+                        receiptNumber = receiptNumber,
+                        receiptNumberGen = generateNumber,
+                        receiptYearMonthGen = yearMonth,
+                        orderId = orderId,
+                        custId = custId,
+                        invoiceId = invoiceId,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = "MB9999",
+                        isDeleted = false
+                    };
+
+                    added = _receiptRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+        public string GenerateNumber(int generateNumber, string yearMonth)
+        {
+            string getNumber = string.Format("{0:0000}", generateNumber);
+
+            string newContractNum = string.Format("{0}{1}", yearMonth, getNumber);
+
+            return newContractNum;
         }
     }
 }
