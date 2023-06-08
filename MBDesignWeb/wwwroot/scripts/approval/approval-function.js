@@ -1,6 +1,10 @@
 ﻿let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 function GetWaitApproveList() {
     //let loaded = $('#tb-quotation-list');
 
@@ -48,18 +52,20 @@ function renderGetWaitApproveList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy',
+                    data: 'createByName',
                 },
                 {
                     targets: 4,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-approve" data-orderid="${row.orderId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -115,17 +121,19 @@ function renderGetApproveHistoryList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy',
+                    data: 'createByName',
                 },
                 {
                     targets: 4,
                     data: 'approveStatus',
+                    className: "dt-center",
                 },
                 {
                     targets: 5,
@@ -861,7 +869,8 @@ function DoApproveProcess() {
     var obj = {
         approveStatus: approveStatus,
         orderId: _order_id,
-        approveComment: approveComment
+        approveComment: approveComment,
+        loginCode: _userCode
     };
 
     var data = JSON.stringify(obj);

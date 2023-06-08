@@ -278,6 +278,7 @@ namespace DataLayerMBDesign
             ,a.orderNotePrice
             ,a.quotationYearMonthGen
             ,b.custFirstName + ' ' + b.custSurName cusName
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName         
             from tbCustOrder a inner join tbCust b on a.custId = b.custId
             where a.isDeleted = 0 and a.[status] = 1 and b.isDeleted = 0 and b.[status] = 1
             and a.orderStatus = N'{0}'

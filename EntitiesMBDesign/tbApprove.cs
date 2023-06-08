@@ -33,6 +33,7 @@ namespace EntitiesMBDesign
         public int orderId { get; set; }
         public string approveStatus { get; set; } = string.Empty;
         public string approveComment { get; set; } = string.Empty;
+        public string loginCode { get; set; } = string.Empty;
     }
 
 }

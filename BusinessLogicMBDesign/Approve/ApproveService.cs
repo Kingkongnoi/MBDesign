@@ -80,7 +80,7 @@ namespace BusinessLogicMBDesign.Approve
                         approveComment = model.approveComment,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = model.loginCode,
                         isDeleted = false,
                     };
 
@@ -108,7 +108,7 @@ namespace BusinessLogicMBDesign.Approve
                                 checklistStatus = design3DStatus,
                                 status = true,
                                 createDate = DateTime.UtcNow,
-                                createBy = "MB9999",
+                                createBy = model.loginCode,
                                 isDeleted = false,
                             };
 
