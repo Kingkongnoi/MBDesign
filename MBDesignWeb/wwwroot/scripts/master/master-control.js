@@ -503,6 +503,9 @@
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-master-empData") {
             clearSearchForm("employee");
+            callSelect2EmpRole();
+            callSelect2EmpPosition();
+            callSelect2EmpDepartment();
             callGetEmployeeList();
         }
         else if (target == "#nav-master-role") {
@@ -523,6 +526,8 @@
         }
         else if (target == "#nav-master-productData") {
             clearSearchForm("item");
+            callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+            callProductTypeSelect2('#form-search-product #select-search-product-type', 'ทั้งหมด');
             callGetItemList();
         }
         else if (target == "#nav-master-productType") {
