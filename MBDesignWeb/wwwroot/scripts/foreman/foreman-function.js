@@ -13,6 +13,10 @@ var _items_list = [];
 
 let _cal_grand_total = 0;
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 function clearSearchForemanForm() {
     let formId = '#form-search-foreman-queue';
 
@@ -71,6 +75,7 @@ function renderGetForemanQueueList(data) {
                 {
                     targets: 1,
                     data: 'installDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.installDate ? convertDateTimeFormat(row.installDate, 'DD/MM/YYYY') : "";
                     },
@@ -82,10 +87,12 @@ function renderGetForemanQueueList(data) {
                 {
                     targets: 3,
                     data: 'foremanStatus',
+                    className: "dt-center",
                 },
                 {
                     targets: 4,
                     data: 'lastUpdateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.lastUpdateDate ? convertDateTimeFormat(row.lastUpdateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
@@ -98,6 +105,7 @@ function renderGetForemanQueueList(data) {
                     targets: 6,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-foreman" data-orderid="${row.orderId}" data-foremanid="${row.foremanId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -694,7 +702,7 @@ function DoSaveForeman() {
         let height = $(`#form-foreman-items-${v.index} #input-cus-product-height`).val() == "" ? 0 : $(`#form-foreman-items-${v.index} #input-cus-product-height`).val();
         //let chkSpecialHeight = $(`#form-foreman-items-${v.index} #chkSpecialHeight-${v.index}`).prop('checked');
 
-        let url = `${app_settings.api_url}/api/Foreman/DoUpdateForemanItems?orderId=${v.orderId}&custOrderDetailId=${v.custOrderDetailId}&length=${length}&depth=${depth}&height=${height}`;
+        let url = `${app_settings.api_url}/api/Foreman/DoUpdateForemanItems?orderId=${v.orderId}&custOrderDetailId=${v.custOrderDetailId}&length=${length}&depth=${depth}&height=${height}&loginCode=${_userCode}`;
 
         $.ajax({
             url: url,

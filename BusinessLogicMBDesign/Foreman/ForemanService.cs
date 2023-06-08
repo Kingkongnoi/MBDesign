@@ -118,7 +118,7 @@ namespace BusinessLogicMBDesign.Foreman
             }
         }
 
-        public bool DoUpdateForemanPerItem(List<UploadFiles> file, string categoryName, int orderId, int orderDetailId, decimal length, decimal depth, decimal height)
+        public bool DoUpdateForemanPerItem(List<UploadFiles> file, string categoryName, int orderId, int orderDetailId, decimal length, decimal depth, decimal height, string loginCode)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -140,7 +140,7 @@ namespace BusinessLogicMBDesign.Foreman
                             fileSize = f.fileSize,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -154,7 +154,7 @@ namespace BusinessLogicMBDesign.Foreman
                             uploadCategoryId = categoryId,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -170,7 +170,7 @@ namespace BusinessLogicMBDesign.Foreman
                         orderDepth = depth,
                         orderHeight = height,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = loginCode
                     };
 
                     int updateCustOrderDetail = _custOrderDetailRepository.UpdateForemanValue(items, conn, transaction);
@@ -186,7 +186,7 @@ namespace BusinessLogicMBDesign.Foreman
             }
             return true;
         }
-        public ResultMessage DoUpdateForeman(List<UploadFiles> file, string categoryName, int orderId, string orderNote, decimal orderNotePrice, decimal subTotal, decimal discount, decimal vat, decimal grandTotal, decimal disposite)
+        public ResultMessage DoUpdateForeman(List<UploadFiles> file, string categoryName, int orderId, string orderNote, decimal orderNotePrice, decimal subTotal, decimal discount, decimal vat, decimal grandTotal, decimal disposite, string loginCode)
         {
             var msg = new ResultMessage();
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -212,7 +212,7 @@ namespace BusinessLogicMBDesign.Foreman
                             fileSize = f.fileSize,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -225,7 +225,7 @@ namespace BusinessLogicMBDesign.Foreman
                             uploadCategoryId = categoryId,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -244,7 +244,7 @@ namespace BusinessLogicMBDesign.Foreman
                         grandTotal = grandTotal,
                         disposite = disposite,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = loginCode
                     };
 
                     int updateCustOrder = _custOrderRepository.UpdateForeman(items, conn, transaction);
@@ -258,7 +258,7 @@ namespace BusinessLogicMBDesign.Foreman
                             {
                                 accountId = custOrder.accountId,
                                 updateDate = DateTime.UtcNow,
-                                updateBy = "MB9999"
+                                updateBy = loginCode
                             };
                             var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
 
@@ -274,7 +274,7 @@ namespace BusinessLogicMBDesign.Foreman
                                     invoiceStatus = GlobalInvoieStatus.paid,
                                     unitPrice = disposite,
                                     updateDate = DateTime.UtcNow,
-                                    updateBy = "MB9999",
+                                    updateBy = loginCode,
                                     id = exists.id
                                 };
 

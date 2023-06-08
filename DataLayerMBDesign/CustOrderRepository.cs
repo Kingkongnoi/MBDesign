@@ -231,7 +231,9 @@ namespace DataLayerMBDesign
 
             string queryString = string.Format(@"select a.orderId, d.id foremanId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, isnull(b.foremanStatus,'') foremanStatus,
             case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
-            case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+            --case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+            case when b.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') 
+			else isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') end lastUpdateBy
             from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)
             left join tbCust c on isnull(a.custId,0) = isnull(c.custId,0)
             inner join tbForeman d on a.orderId = d.orderId and isnull(d.isDeleted,0) = 0

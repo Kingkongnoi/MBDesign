@@ -73,7 +73,7 @@ namespace MBDesignApi.Controllers.Foreman
         #region POST
         [HttpPost]
         [DisableRequestSizeLimit]
-        public JsonResult DoUpdateForemanItems([FromQuery] int orderId, [FromQuery] int custOrderDetailId, [FromQuery] decimal length, [FromQuery] decimal depth, [FromQuery] decimal height, List<IFormFile> files)
+        public JsonResult DoUpdateForemanItems([FromQuery] int orderId, [FromQuery] int custOrderDetailId, [FromQuery] decimal length, [FromQuery] decimal depth, [FromQuery] decimal height, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -125,7 +125,7 @@ namespace MBDesignApi.Controllers.Foreman
             string categoryName = GlobalUploadCategory.foremanUpload;
 
             ///Update data
-            var result = _foremanService.DoUpdateForemanPerItem(addedUpload, categoryName, orderId, custOrderDetailId, length, depth, height);
+            var result = _foremanService.DoUpdateForemanPerItem(addedUpload, categoryName, orderId, custOrderDetailId, length, depth, height, loginCode);
             msg.isResult = result;
 
             return new JsonResult(msg);
@@ -133,7 +133,7 @@ namespace MBDesignApi.Controllers.Foreman
         [HttpPost]
         [DisableRequestSizeLimit]
         public JsonResult DoUpdateForeman([FromQuery] int orderId, [FromQuery] string orderNote, [FromQuery] decimal orderNotePrice, [FromQuery] decimal subTotal
-            , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, List<IFormFile> files)
+            , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -185,7 +185,7 @@ namespace MBDesignApi.Controllers.Foreman
             string categoryName = GlobalUploadCategory.secondDisposite;
 
             ///Update data
-            msg = _foremanService.DoUpdateForeman(addedUpload, categoryName, orderId, orderNote, orderNotePrice, subTotal, discount, vat, grandTotal, disposite);
+            msg = _foremanService.DoUpdateForeman(addedUpload, categoryName, orderId, orderNote, orderNotePrice, subTotal, discount, vat, grandTotal, disposite, loginCode);
 
             return new JsonResult(msg);
         }
