@@ -70,7 +70,7 @@ namespace MBDesignApi.Controllers.Design3D
         #region POST
         [HttpPost]
         [DisableRequestSizeLimit]
-        public ActionResult DoUpdateDesign3D([FromQuery] int orderId, [FromQuery] int empId, [FromQuery] string dueDate, [FromQuery] bool final3d, [FromQuery] int design3dId, List<IFormFile> files)
+        public ActionResult DoUpdateDesign3D([FromQuery] int orderId, [FromQuery] int empId, [FromQuery] string dueDate, [FromQuery] bool final3d, [FromQuery] int design3dId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -135,7 +135,7 @@ namespace MBDesignApi.Controllers.Design3D
             string categoryName = GlobalUploadCategory.approved3d;
 
             ///Update data
-            var result = _design3DService.DoUpdateDesign3D(addedUpload, categoryName, orderId, empId, checklistStatus, dueDate, design3dId);
+            var result = _design3DService.DoUpdateDesign3D(addedUpload, categoryName, orderId, empId, checklistStatus, dueDate, design3dId, loginCode);
             if (result.isResult == false)
             {
                 msg.isResult = result.isResult;

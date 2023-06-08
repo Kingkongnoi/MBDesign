@@ -3,6 +3,10 @@ let _design_3d_id = 0;
 let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 function clearSearchForm() {
     let formId = '#form-search-3d-queue';
 
@@ -72,6 +76,7 @@ function renderGet3DQueueList(data) {
                 {
                     targets: 3,
                     data: 'dueDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.dueDate ? convertDateTimeFormat(row.dueDate, 'DD/MM/YYYY') : "";
                     },
@@ -79,10 +84,12 @@ function renderGet3DQueueList(data) {
                 {
                     targets: 4,
                     data: 'checklistStatus',
+                    className: "dt-center",
                 },
                 {
                     targets: 5,
                     data: 'lastUpdateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.lastUpdateDate ? convertDateTimeFormat(row.lastUpdateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
@@ -95,6 +102,7 @@ function renderGet3DQueueList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-3d" data-orderid="${row.orderId}" data-design3did="${row.design3dId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -410,7 +418,7 @@ function DoSave3dDesign() {
     let dueDate = $(`${formId} #input-edit-3d-due-date`).val() == "" ? null : $(`${formId} #input-edit-3d-due-date`).val();
     let final3d = $(`${formId} #chkFinal3D`).prop('checked');
 
-    let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}`;
+    let url = `${app_settings.api_url}/api/Design3D/DoUpdateDesign3D?orderId=${_order_id}&empId=${empId}&dueDate=${dueDate}&final3d=${final3d}&design3dId=${_design_3d_id}&loginCode=${_userCode}`;
 
     var control = document.getElementById(`select-3d-approve`);
     var files = control.files;

@@ -78,7 +78,7 @@ namespace BusinessLogicMBDesign.Design3D
             }
         }
 
-        public ResultMessage DoUpdateDesign3D(List<UploadFiles> file, string categoryName, int orderId, int empId, string checklistStatus, string dueDate, int design3dId)
+        public ResultMessage DoUpdateDesign3D(List<UploadFiles> file, string categoryName, int orderId, int empId, string checklistStatus, string dueDate, int design3dId, string loginCode)
         {
             var msg = new ResultMessage();
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -91,7 +91,7 @@ namespace BusinessLogicMBDesign.Design3D
                 {
                     if(file.Count > 0)
                     {
-                        DoAddUploadApprove3d(file, categoryName, orderId);
+                        DoAddUploadApprove3d(file, categoryName, orderId, loginCode);
                     }
    
                     var exists = _design3DRepository.GetEditDesign3DByKeyId(design3dId, conn, transaction);
@@ -104,7 +104,7 @@ namespace BusinessLogicMBDesign.Design3D
                             dueDate = (dueDate == "null") ? null : Convert.ToDateTime(dueDate),
                             checklistStatus = checklistStatus,
                             updateDate = DateTime.UtcNow,
-                            updateBy = "MB9999"
+                            updateBy = loginCode
                         };
                         int updated = _design3DRepository.UpdateByKeyId(updatedObject, conn, transaction);
                     }
@@ -126,7 +126,7 @@ namespace BusinessLogicMBDesign.Design3D
                                 foremanStatus = GlobalForemanStatus.getToForeman,
                                 status = true,
                                 createDate = DateTime.UtcNow,
-                                createBy = "MB9999",
+                                createBy = loginCode,
                                 isDeleted = false,
                             };
 
@@ -151,7 +151,7 @@ namespace BusinessLogicMBDesign.Design3D
             return msg;
         }
 
-        public bool DoAddUploadApprove3d(List<UploadFiles> file, string categoryName, int orderId)
+        public bool DoAddUploadApprove3d(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -173,7 +173,7 @@ namespace BusinessLogicMBDesign.Design3D
                             fileSize = f.fileSize,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -186,7 +186,7 @@ namespace BusinessLogicMBDesign.Design3D
                             uploadCategoryId = categoryId,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
