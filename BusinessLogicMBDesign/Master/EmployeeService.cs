@@ -190,7 +190,7 @@ namespace BusinessLogicMBDesign.Master
                         salary = model.salary,
                         status = model.status,
                         hiringDate = model.hiringDate,
-                        signatureFileName = "",//model.signatureFileName,
+                        //signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode,

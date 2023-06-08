@@ -61,10 +61,6 @@
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
         clearForm('modal-createEmployee');
-        allSelect2EmpDepartment();
-        callSelect2EmpPosition();
-        callSelect2EmpSalaryType();
-        callSelect2EmpRole();
         generateEmpId();
         renderEmployeeSignature("");
     });
@@ -74,10 +70,6 @@
         $(`#modal-createEmployee`).modal('show');
         _emp_action = 'edit';
         clearForm('modal-createEmployee');
-        allSelect2EmpDepartment();
-        callSelect2EmpPosition();
-        callSelect2EmpSalaryType();
-        callSelect2EmpRole();
         callGetEmployeeById($(this).data('id'));
     });
 

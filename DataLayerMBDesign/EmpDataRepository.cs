@@ -27,7 +27,7 @@ namespace DataLayerMBDesign
                                 salaryType = @salaryType,
                                 salary = @salary,
                                 hiringDate = @hiringDate,
-                                signatureFileName = @signatureFileName,
+                                --signatureFileName = @signatureFileName,
                                 timeStampType = @timeStampType,
                                 updateDate = @updateDate,
                                 updateBy = @updateBy,
@@ -37,7 +37,7 @@ namespace DataLayerMBDesign
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.empFirstName, obj.empLastName, obj.departmentId, obj.positionId, obj.salaryType, 
-                obj.salary, obj.hiringDate, obj.signatureFileName, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.idCard, obj.empCode }, transaction: trans);
+                obj.salary, obj.hiringDate/* obj.signatureFileName*/, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.idCard, obj.empCode }, transaction: trans);
         }
 
         public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)

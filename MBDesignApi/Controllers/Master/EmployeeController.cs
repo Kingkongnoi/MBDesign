@@ -137,7 +137,7 @@ namespace MBDesignApi.Controllers.Master
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public ActionResult DoUpdateSignatureFile([FromQuery] string empCode, List<IFormFile> files)
+        public ActionResult DoUpdateSignatureFile([FromQuery] string empCode, string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -187,7 +187,8 @@ namespace MBDesignApi.Controllers.Master
                 var model = new EmpDataModel
                 {
                     signatureFileName = addedUpload.FirstOrDefault().imageUrl,
-                    empId = empCode
+                    empId = empCode,
+                    loginCode = loginCode
                 };
                 ///Update data
                 var result = _employeeService.UpdateSignatureFileName(model);

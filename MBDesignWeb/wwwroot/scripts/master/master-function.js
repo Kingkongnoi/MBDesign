@@ -625,6 +625,23 @@ let validateInput = function (modal) {
 function DoAddOrUpdateEmployee(modal) {
     if (!validateInput(modal)) return;
 
+    var control = document.getElementById(`select-emp-signature`);
+    var files = control.files;
+    for (var i = 0; i != files.length; i++) {
+        if (files[i].type != "image/png") {
+            Swal.fire({
+                text: "กรุณาเลือกรูปภาพ png เท่านั้น",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                
+            });
+            return;
+        }
+    }
+
     Swal.fire({
         title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
         showDenyButton: false,
@@ -701,7 +718,7 @@ function callAddOrUpdateSignatureFile(empId) {
         formData.append("files", files[i]);
     }
 
-    let url = `${app_settings.api_url}/api/Employee/DoUpdateSignatureFile?empCode=${empId}`;
+    let url = `${app_settings.api_url}/api/Employee/DoUpdateSignatureFile?empCode=${empId}&loginCode=${_userCode}`;
 
     $.ajax({
         url: url,
