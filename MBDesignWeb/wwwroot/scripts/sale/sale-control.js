@@ -15,6 +15,9 @@
     callGetContractList();
     clearUploadRefForm();
 
+    callGetCommissionList();
+    callSelect2CommissionStatus();
+
     $('#div-createNewCus .btn-next-cus-style').on('click', function () {
         if (!validateInputFormCustomerData()) { return; }
 
@@ -113,6 +116,11 @@
             $('#divCreateStyle').empty();
             clearAllInputCreateStyle();
         }
+        else if (val == "ค่าคอมมิชชั่น") {
+            clearSearchCommission();
+            callSelect2CommissionStatus();
+            callGetCommissionList();
+        }
     });
 
     $(document).on('click', '.btn-edit-cus-quotation', function () {
@@ -135,5 +143,14 @@
 
     $('#form-createCalculatePrice .btn-print-quotation').on('click', function () {
         printQuotation();
+    });
+
+    $('#form-search-commission .btn-clear-search-commission').on('click', function () {
+        clearSearchCommission();
+        callGetCommissionList();
+    });
+
+    $('#form-search-commission .btn-search-commission').on('click', function () {
+        callGetCommissionList();
     });
 });

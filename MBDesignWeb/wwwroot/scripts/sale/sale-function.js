@@ -1772,3 +1772,95 @@ async function renderQuotationHtml(data) {
     //html2pdf(element);
     html2pdf().from(element).set(options).save();
 }
+
+function clearSearchCommission() {
+    let formId = '#form-search-commission';
+
+    $(`${formId} #input-search-commission-date`).val('');
+    $(`${formId} #select-search-commission-status`).val('').trigger('change');
+}
+function callGetCommissionList() {
+    let formId = '#form-search-commission';
+
+    let commissionDate = ($(`${formId} #input-search-commission-date`).val() == '') ? null : $(`${formId} #input-search-commission-date`).val();
+    let commissionStatus = ($(`${formId} #select-search-commission-status`).val() == '') ? null : $(`${formId} #select-search-commission-status`).val();
+
+    //let loaded = $('#tb-quotation-list');
+
+    //loaded.prepend(loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetCommissionList?commissionDate=${commissionDate}&commissionStatus=${commissionStatus}&loginCode=${_userCode}`,
+        success: function (data) {
+            renderGetCommissionList(data);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderGetCommissionList(data) {
+    $('#tb-commission-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.commissionId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'cvtCommissionDate',
+                    //className: "contractNumber-details",
+                },
+                {
+                    targets: 1,
+                    data: 'monthlySales',
+                },
+                {
+                    targets: 2,
+                    data: 'commission',
+                },
+                {
+                    targets: 3,
+                    data: 'bonus',
+                },
+                {
+                    targets: 4,
+                    data: 'commissionStatus',
+                },
+                {
+                    targets: 5,
+                    data: 'saleEmpName'
+                },
+                {
+                    targets: 6,
+                    data: null,
+                    orderable: false,
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn-add-custom btn-view-commission" data-id="${row.commissionId}"  title="ดูเอกสาร">
+                        <img src="/images/analysis.png" width="25px" /></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function callSelect2CommissionStatus() {
+    $(`#form-search-commission #select-search-commission-status`).empty();
+    $(`#form-search-commission #select-search-commission-status`).append(`<option value="">ทั้งหมด</option>`);
+    $(`#form-search-commission #select-search-commission-status`).append(`<option value="จ่ายแล้ว">จ่ายแล้ว</option>`);
+    $(`#form-search-commission #select-search-commission-status`).append(`<option value="รอจ่าย">รอจ่าย</option>`);
+}

@@ -5,30 +5,20 @@
             <form id="form-search-commission">
                 <div class="row col-sm-12">
                     <div class="col-sm-2">
-                        <label>เลขที่สัญญา</label>
-                        <input type="text" class="form-control" id="input-search-commission-number" name="input-search-commission-number" />
+                        <label>วันที่</label>
+                        <input type="date" class="form-control" id="input-search-commission-date" name="input-search-commission-date" />
                     </div>
+                    
                     <div class="col-sm-2">
-                        <label>เลขที่ใบเสนอราคา</label>
-                        <input type="text" class="form-control" id="input-search-commission-quotation-no" name="input-search-commission-quotation-no" />
-                    </div>
-                    <div class="col-sm-2">
-                        <label>ชื่อลูกค้า</label>
-                        <input type="text" class="form-control" id="input-search-commission-cusName" name="input-search-commission-cusName" />
-                    </div>
-                    <div class="col-sm-2">
-                        <label>สถานะเอกสารสัญญา</label>
-                        <select class="form-select" id="select-search-commission-quotation-status">
+                        <label>สถานะ</label>
+                        <select class="form-select" id="select-search-commission-status">
                             <option></option>
                         </select>
                     </div>
-                    <div class="col-sm-2">
-                        <label>วันที่ออกสัญญา</label>
-                        <input type="date" class="form-control" id="input-search-commission-doc-date" name="input-search-commission-doc-date" />
-                    </div>
-                    <div class="col-sm-2 mt-4 text-end">
-                            <button type="button" class="btn btn-default-custom btn-clear-search-quotation">ล้างข้อมูล</button>
-                        <button type="button" class="btn btn-primary btn-search-quotation">ค้นหา</button>
+                    
+                    <div class="col-sm-8 mt-4 text-end">
+                        <button type="button" class="btn btn-default-custom btn-clear-search-commission">ล้างข้อมูล</button>
+                        <button type="button" class="btn btn-primary btn-search-commission">ค้นหา</button>
                     </div>
                 </div>
             </form>
@@ -119,3 +109,5 @@
     </div>
 
 </div>
+
+@Html.Partial("modal/_modalCustomerCommission.cshtml")

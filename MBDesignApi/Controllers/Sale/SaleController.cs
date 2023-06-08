@@ -123,6 +123,13 @@ namespace MBDesignApi.Controllers.Sale
 
             return new JsonResult(data);
         }
+        [HttpGet]
+        public JsonResult GetCommissionList(string commissionDate, string commissionStatus, string loginCode)
+        {
+            var data = _saleService.GetCommissionList(commissionDate, commissionStatus, loginCode);
+
+            return new JsonResult(data);
+        }
         #endregion GET
 
         #region POST

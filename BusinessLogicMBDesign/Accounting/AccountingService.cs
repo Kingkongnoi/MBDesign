@@ -24,6 +24,7 @@ namespace BusinessLogicMBDesign.Accounting
         private readonly CustRepository _custRepository;
         private readonly InvoiceRepository _invoiceRepository;
         private readonly ReceiptRepository _receiptRepository;
+        private readonly CommissionRepository _commissionRepository;
 
         public AccountingService(IConfiguration configuration)
         {
@@ -36,6 +37,7 @@ namespace BusinessLogicMBDesign.Accounting
             _custRepository = new CustRepository();
             _invoiceRepository = new InvoiceRepository();
             _receiptRepository = new ReceiptRepository();
+            _commissionRepository = new CommissionRepository();
         }
 
         public List<CustOrderView> GetAccountingList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
@@ -289,6 +291,11 @@ namespace BusinessLogicMBDesign.Accounting
                         if (model.invoiceStatus == "จ่ายแล้ว")
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
+
+                            if(model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
+                            {
+                                int? commissionId = this.AddOrUpdateCommission(model.orderId, model.loginCode, custOrder.grandTotal);
+                            }
                         }
                     }
 
@@ -349,6 +356,11 @@ namespace BusinessLogicMBDesign.Accounting
                         if (model.invoiceStatus == "จ่ายแล้ว")
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
+
+                            if (model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
+                            {
+                                int? commissionId = this.AddOrUpdateCommission(model.orderId, model.loginCode, custOrder.grandTotal);
+                            }
                         }
                     }
 
@@ -452,6 +464,115 @@ namespace BusinessLogicMBDesign.Accounting
             }
 
             return result;
+        }
+
+        public int? AddOrUpdateCommission(int orderId, string saleEmpCode, decimal grandTotal)
+        {
+            int? added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    string currDate = DateTime.UtcNow.ToString("dd/yyyy");
+                    var exists = _commissionRepository.GetFirstCommissionByDate(currDate, saleEmpCode, conn, transaction);
+                    if(exists == null)
+                    {
+                        var calMonthlySales = grandTotal * Convert.ToDecimal(0.5);
+                        var cal = this.CalculateComissionAndBonus(calMonthlySales);
+                        var commission = cal.commission;
+                        var bonus = cal.bonus;
+
+                        var addedObject = new tbCommission
+                        {
+                            commissionDate = DateTime.UtcNow.Date,
+                            monthlySales = calMonthlySales,
+                            commission = commission,
+                            bonus = bonus,
+                            saleEmpCode = saleEmpCode,
+                            commissionStatus = "รอจ่าย",
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = saleEmpCode,
+                            isDeleted = false
+                        };
+
+                        added = _commissionRepository.Add(addedObject, conn, transaction);
+                    }
+                    else
+                    {
+                        var calMonthlySales = exists.monthlySales + (grandTotal * Convert.ToDecimal(0.5));
+                        var cal = this.CalculateComissionAndBonus(calMonthlySales);
+                        var commission = cal.commission;
+                        var bonus = cal.bonus;
+
+                        var updated = new tbCommission
+                        {
+                            monthlySales = calMonthlySales,
+                            commission = commission,
+                            bonus = bonus,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = saleEmpCode,
+                            commissionId = exists.commissionId
+                        };
+
+                        added = _commissionRepository.UpdateCommission(updated, conn, transaction);
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+
+        public (decimal commission, decimal bonus) CalculateComissionAndBonus(decimal calMonthlySales)
+        {
+            /*
+             * ยอดสะสมทั้งเดือน วันที่ 1-31 ของเดือนนั้นๆ
+	        ต่ำกว่า 500000 ได้ค่าคอม 0.5% 
+	        ยอด 500,001 - 1,000,000 = 1%
+	        ยอด 1,000,001-2,000,000 = 1% + bonus 5000   	
+	        ยอด 2,000,001-3,000,000 = 1.5% bonus10,000 	
+	        ยอด 3,000,001 ขึ้นไป 2% bonus 20,000
+             */
+            decimal commission = 0;
+            decimal bonus = 0;
+            if (calMonthlySales <= 500000)
+            {
+                commission = calMonthlySales * Convert.ToDecimal(0.005);
+                bonus = 0;
+            }
+            else if (calMonthlySales > 500000 && calMonthlySales <= 1000000)
+            {
+                commission = calMonthlySales * Convert.ToDecimal(0.01);
+                bonus = 0;
+            }
+            else if (calMonthlySales > 1000000 && calMonthlySales <= 2000000)
+            {
+                commission = calMonthlySales * Convert.ToDecimal(0.01);
+                bonus = 5000;
+            }
+            else if (calMonthlySales > 2000000 && calMonthlySales <= 3000000)
+            {
+                commission = calMonthlySales * Convert.ToDecimal(0.015);
+                bonus = 10000;
+            }
+            else if (calMonthlySales > 3000000)
+            {
+                commission = calMonthlySales * Convert.ToDecimal(0.02);
+                bonus = 20000;
+            }
+
+
+            return (commission, bonus);
         }
     }
 }

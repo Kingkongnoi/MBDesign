@@ -32,6 +32,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly UploadCategoryRepository _uploadCategoryRepository;
         private readonly InvoiceRepository _invoiceRepository;
         private readonly ReceiptRepository _receiptRepository;
+        private readonly CommissionRepository _commissionRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -53,6 +54,7 @@ namespace BusinessLogicMBDesign.Sale
             _uploadCategoryRepository = new UploadCategoryRepository();
             _invoiceRepository = new InvoiceRepository();
             _receiptRepository = new ReceiptRepository();
+            _commissionRepository = new CommissionRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -952,5 +954,17 @@ namespace BusinessLogicMBDesign.Sale
 
             return yearMonth;
         }
+
+        #region Commission
+        public List<CommissionView> GetCommissionList(string commissionDate, string commissionStatus, string loginCode)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _commissionRepository.GetCommissionList(commissionDate, commissionStatus, loginCode, conn);
+            }
+        }
+        #endregion Commission
     }
 }
