@@ -630,7 +630,7 @@ function DoAddOrUpdateEmployee(modal) {
     for (var i = 0; i != files.length; i++) {
         if (files[i].type != "image/png") {
             Swal.fire({
-                text: "กรุณาเลือกรูปภาพ png เท่านั้น",
+                text: "กรุณาเลือกไฟล์เป็น .png เท่านั้น",
                 icon: 'warning',
                 showCancelButton: false,
                 confirmButtonColor: _modal_primary_color_code,
