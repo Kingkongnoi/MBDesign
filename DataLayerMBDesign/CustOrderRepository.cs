@@ -337,7 +337,7 @@ namespace DataLayerMBDesign
             }
 
             string queryString = string.Format(@"select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, isnull(c.contractStatus,'') contractStatus, isnull(d.invoiceStatus,'') invoiceStatus, isnull(d.period,'') invoicePeriod,
-            c.createDate contractCreateDate, , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = c.createBy and isDeleted = 0),'') contractCreateBy, c.updateDate contractUpdateDate, isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = c.updateBy and isDeleted = 0),'') contractUpdateBy, isnull(c.id,0) contractId, isnull(d.id,0) invoiceId, a.custId
+            c.createDate contractCreateDate, isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = c.createBy and isDeleted = 0),'') contractCreateBy, c.updateDate contractUpdateDate, isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = c.updateBy and isDeleted = 0),'') contractUpdateBy, isnull(c.id,0) contractId, isnull(d.id,0) invoiceId, a.custId
             from tbCustOrder a inner join tbCust b on a.custId = b.custId and a.isDeleted = 0 and b.isDeleted = 0
             left join tbContractAgreement c on a.custId = c.custId and isnull(c.isDeleted,0) = 0
             left join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0

@@ -96,4 +96,8 @@
     $('#form-search-bill .btn-search-bill').on('click', function () {
         callGetReceiptList();
     });
+
+    $(document).on('click', '.btn-print-receipt', function () {
+        printReceipt($(this).data('receiptid'));
+    });
 });

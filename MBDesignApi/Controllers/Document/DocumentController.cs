@@ -80,5 +80,29 @@ namespace MBDesignApi.Controllers.Document
 
             return Json(result);
         }
+
+        [HttpGet]
+        public JsonResult GetReceiptByReceiptId(int receiptId)
+        {
+            var receipt = _documentService.GetReceiptByReceiptId(receiptId);
+            var invoice = _documentService.GetInvoiceByInvoiceId(receipt.invoiceId.Value);
+            var cust = new tbCust();
+            var custOrder = new CustOrderView();
+            if (receipt != null)
+            {
+                cust = _documentService.GetCustomerDataByCustId(receipt.custId.Value);
+                custOrder = _documentService.GetCustOrderByOrderId(receipt.orderId.Value);
+            }
+
+            var result = new
+            {
+                receipt = receipt,
+                invoice = invoice,
+                cust = cust,
+                custOrder = custOrder,
+            };
+
+            return Json(result);
+        }
     }
 }

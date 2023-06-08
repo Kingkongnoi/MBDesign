@@ -977,7 +977,6 @@ function printInvoice() {
         }
     });
 }
-
 async function generateInvoiceDocument(data) {
     await renderInvoiceHtml(data);
 }
@@ -1146,11 +1145,103 @@ function renderReceiptList(data) {
                     orderable: false,
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn-add-custom btn-edit-accounting" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
+                        return `<button type="button" class="btn-add-custom btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
                     <img src="/images/printing.png" width="25px" /></button>`;
                     },
                 },
             ],
         }
     );
+}
+
+function printReceipt(receiptId) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetReceiptByReceiptId?receiptId=${receiptId}`,
+        success: function (data) {
+            if (data.receipt != null) {
+                generateReceiptDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+async function generateReceiptDocument(data) {
+    await renderReceiptHtml(data);
+}
+async function renderReceiptHtml(data) {
+    var currDate = new Date();
+    var createReceiptDate = convertDateTimeFormat(currDate, 'DD/MM/YYYY');
+
+    var custFullName = data.cust.custFirstName + ' ' + data.cust.custSurName;
+
+    $('#receiptElement #spnReceiptNumber').html(data.receipt.receiptNumber);
+    $('#receiptElement #spnCreateInviceDocDate').html(createReceiptDate);
+
+    $('#receiptElement #lblCusName').html(custFullName);
+
+    var accname = `ชื่อบัญชี ${data.custOrder.accountName} ${data.custOrder.accountNumber}`
+    var accbank = `${data.custOrder.bank}`;
+    $('#receiptElement #spnAccName').html(accname);
+    $('#receiptElement #spnAccBank').html(accbank);
+
+    var period = "";
+    switch (data.invoice.period) {
+        case _firstPeriod: period = _firstFullPeriod; break;
+        case _secondPeriod: period = _secondFullPeriod; break;
+        case _thridPeriod: period = _thridFullPeriod; break;
+        case _fourthPeriod: period = _fourthFullPeriod; break;
+    }
+
+    var itemNo = 1;
+    var size = "";
+    var qty = 1;
+    var item = ''
+    item += `<tr>
+                        <td>${itemNo}</td>
+                        <td>${period}</td>
+                        <td>${size}</td>
+                        <td>${data.invoice.unitPrice}</td>
+                        <td>${qty}</td>
+                        <td>${data.custOrder.grandTotal}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Sub.Total</td>
+                        <td>${data.custOrder.subTotal}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Vat 7%</td>
+                        <td>${data.custOrder.vat}</td>
+                    </tr>`;
+
+    item += `<tr>
+                        <td><td colspan="3"></td></td>
+
+                        <td>Grand Total%</td>
+                        <td>${data.custOrder.grandTotal}</td>
+                    </tr>`;
+
+    $('#receipt-item-list').empty();
+    $('#receipt-item-list').append(item);
+
+    let options = {
+        margin: 0.25,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "png", quality: 0.98 },
+        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Receipt_${data.invoice.invoiceNumber}`,
+    };
+
+    var element = document.getElementById("receiptElement");
+    //html2pdf().from(element).set(options).save();
+    //html2pdf(element);
+    html2pdf().from(element).set(options).save();
 }

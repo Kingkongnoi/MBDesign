@@ -18,6 +18,7 @@ namespace BusinessLogicMBDesign.Document
         private readonly InvoiceRepository _invoiceRepository;
         private readonly CustRepository _custRepository;
         private readonly CustOrderRepository _custOrderRepository;
+        private readonly ReceiptRepository _receiptRepository;
 
         public DocumentService(IConfiguration configuration)
         {
@@ -27,6 +28,7 @@ namespace BusinessLogicMBDesign.Document
             _invoiceRepository = new InvoiceRepository();
             _custRepository = new CustRepository();
             _custOrderRepository  = new CustOrderRepository();
+            _receiptRepository = new ReceiptRepository();
         }
 
         public tbInvoice GetInvoiceByInvoiceId(int invoiceId)
@@ -35,6 +37,15 @@ namespace BusinessLogicMBDesign.Document
             {
                 conn.Open();
                 return _invoiceRepository.GetByInvoiceId(invoiceId, conn);
+            }
+        }
+
+        public tbReceipt GetReceiptByReceiptId(int receiptId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                return _receiptRepository.GetByReceiptId(receiptId, conn);
             }
         }
 
