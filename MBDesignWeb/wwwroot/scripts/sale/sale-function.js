@@ -537,10 +537,15 @@ function callCalculateItemOptions() {
         var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
         activeOptions.forEach((o) => { itemName += ` ${o.optionsName}`; itemPrice = parseFloat(itemPrice) + parseFloat(o.optionsPrice) });
 
-        calSpHeight = parseFloat(itemPrice) + parseFloat(calSpHeightPercentage);
-
-        let showItemPrice = (parseFloat(itemPrice) + parseFloat(calSpHeight)).toFixed(2);
-
+        let showItemPrice = 0;
+        if (v.spHeight) {
+            calSpHeight = (parseFloat(itemPrice) * parseFloat(calSpHeightPercentage)) + parseFloat(itemPrice);
+            showItemPrice = calSpHeight;
+        }
+        else {
+            showItemPrice = (parseFloat(itemPrice).toFixed(2));
+        }
+ 
         render += `<div class="row" id="cal-${v.divId}">
                             <div class="col-sm-8">
                             <input class="form-control mb-2" type="text" id="input-cal-itemOptions" name="input-cal-itemOptions" value="${itemName}" disabled/>
@@ -553,7 +558,7 @@ function callCalculateItemOptions() {
                         </div>
                         </div>`
 
-        _subTotal = parseFloat(_subTotal) + parseFloat(itemPrice) + parseFloat(calSpHeight);
+        _subTotal = parseFloat(_subTotal) + parseFloat(showItemPrice);//+ parseFloat(itemPrice) + parseFloat(calSpHeight);
 
     });
 
