@@ -29,5 +29,7 @@ namespace EntitiesMBDesign
     public class ContractAgreementView : tbContractAgreement
     {
         public string fullName { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
     }
 }

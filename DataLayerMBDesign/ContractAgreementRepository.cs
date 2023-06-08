@@ -68,6 +68,8 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.custFirstName + ' ' + b.custSurName fullName
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName  
             FROM tbContractAgreement a inner join tbcust b on a.custId = b.custId 
             where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
             {0}

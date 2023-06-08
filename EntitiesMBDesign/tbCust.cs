@@ -38,5 +38,6 @@ namespace EntitiesMBDesign
         public string custAddress { get; set; } = string.Empty;
         public string custLocation { get; set; } = string.Empty;
         public string custInstallAddress { get; set; } = string.Empty;
+        public string loginCode { get; set; } = string.Empty;
     }
 }

@@ -171,7 +171,8 @@ namespace MBDesignApi.Controllers.Sale
                 action = cvtJson["action"],
                 orderId = Convert.ToInt32(cvtJson["orderId"]),
                 custId = Convert.ToInt32(cvtJson["custId"]),
-                quotationComment = cvtJson["quotationComment"]
+                quotationComment = cvtJson["quotationComment"],
+                loginCode = cvtJson["loginCode"],
             };
 
             var data = _saleService.SaveAndCreateQuotation(dataObj);
@@ -181,7 +182,7 @@ namespace MBDesignApi.Controllers.Sale
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, List<IFormFile> files)
+        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -231,7 +232,7 @@ namespace MBDesignApi.Controllers.Sale
             }
 
             ///Update data
-            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId);
+            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
             if(result == false)
             {
                 return Json(msg);

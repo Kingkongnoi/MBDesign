@@ -104,7 +104,7 @@ namespace BusinessLogicMBDesign.Sale
                         custInstallAddress = model.custInstallAddress,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = model.loginCode
                     };
                     added = _custRepository.Add(addedObject, conn, transaction);
 
@@ -143,7 +143,7 @@ namespace BusinessLogicMBDesign.Sale
                         custInstallAddress = model.custInstallAddress,
                         status = true,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999"
+                        updateBy = model.loginCode
                     };
                     updated = _custRepository.Update(updatedObject, conn, transaction);
 
@@ -262,7 +262,7 @@ namespace BusinessLogicMBDesign.Sale
                         quotationNumberType = type,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = model.loginCode,
                         orderStatus = orderStatus,
                         quotationYearMonthGen = quotationYearMonthGen
                     };
@@ -344,7 +344,7 @@ namespace BusinessLogicMBDesign.Sale
                         disposite = model.disposite,
                         accountId = accountId,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999",
+                        updateBy = model.loginCode,
                         status = true,
                         orderStatus = orderStatus,
                         quotationComment = model.quotationComment,
@@ -395,12 +395,12 @@ namespace BusinessLogicMBDesign.Sale
                             orderHeight = item.orderHeight,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? orderDetailId = _custOrderDetailRepository.Add(addedObject, conn, transaction);
 
-                        AddCustOrderItemOptions(item.options, orderDetailId.Value, conn, transaction);
+                        AddCustOrderItemOptions(item.options, orderDetailId.Value, model.loginCode, conn, transaction);
                     }
 
                     transaction.Commit();
@@ -413,7 +413,7 @@ namespace BusinessLogicMBDesign.Sale
 
             return added;
         }
-        public void AddCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction? trans = null)
+        public void AddCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, string loginCode, SqlConnection conn, SqlTransaction? trans = null)
         {
             try
             {
@@ -425,7 +425,7 @@ namespace BusinessLogicMBDesign.Sale
                         optionsId = item.optionsId,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = loginCode
                     };
 
                     int? id = _custOrderItemOptionsRepository.Add(added, conn, trans);
@@ -462,12 +462,12 @@ namespace BusinessLogicMBDesign.Sale
                             orderHeight = item.orderHeight,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? orderDetailId = _custOrderDetailRepository.Add(addedObject, conn, transaction);
 
-                        UpdateCustOrderItemOptions(item.options, orderDetailId.Value, conn, transaction);
+                        UpdateCustOrderItemOptions(item.options, orderDetailId.Value, model.loginCode, conn, transaction);
                     }
 
                     transaction.Commit();
@@ -480,7 +480,7 @@ namespace BusinessLogicMBDesign.Sale
 
             return added;
         }
-        public void UpdateCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, SqlConnection conn, SqlTransaction? trans = null)
+        public void UpdateCustOrderItemOptions(List<SaleOptions> model, int custOrderDetailId, string loginCode, SqlConnection conn, SqlTransaction? trans = null)
         {
             try
             {
@@ -494,7 +494,7 @@ namespace BusinessLogicMBDesign.Sale
                         optionsId = item.optionsId,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999"
+                        createBy = loginCode
                     };
 
                     int? id = _custOrderItemOptionsRepository.Add(added, conn, trans);
@@ -554,7 +554,8 @@ namespace BusinessLogicMBDesign.Sale
                 custLineId = model.custLineId,
                 custAddress = model.custAddress,
                 custLocation = model.custLocation,
-                custInstallAddress = model.custInstallAddress
+                custInstallAddress = model.custInstallAddress,
+                loginCode = model.loginCode,
             };
 
             int? custId = 0;
@@ -641,7 +642,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Quotation
 
         #region UploadRef
-        public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId)
+        public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -663,7 +664,7 @@ namespace BusinessLogicMBDesign.Sale
                             fileSize = f.fileSize,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -676,7 +677,7 @@ namespace BusinessLogicMBDesign.Sale
                             uploadCategoryId = categoryId,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = loginCode,
                             isDeleted = false
                         };
 
@@ -692,7 +693,7 @@ namespace BusinessLogicMBDesign.Sale
                             {
                                 accountId = custOrder.accountId,
                                 updateDate = DateTime.UtcNow,
-                                updateBy = "MB9999"
+                                updateBy = loginCode
                             };
                             var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
 
@@ -701,9 +702,9 @@ namespace BusinessLogicMBDesign.Sale
                             if(exists == null)
                             {
                                 string yearMonth = this.GenerateYearMonth();
-                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite);
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite, loginCode);
 
-                                int? receiptId = this.AddReceipt(custOrder.orderId, custOrder.custId, yearMonth, invoiceId);
+                                int? receiptId = this.AddReceipt(custOrder.orderId, custOrder.custId, yearMonth, invoiceId, loginCode);
                             }
                             else
                             {
@@ -712,7 +713,7 @@ namespace BusinessLogicMBDesign.Sale
                                     period = GlobalDispositePeriod.firstDisposite,
                                     invoiceStatus = GlobalInvoieStatus.paid,
                                     updateDate = DateTime.UtcNow,
-                                    updateBy = "MB9999",
+                                    updateBy = loginCode,
                                     id = exists.id
                                 };
 
@@ -802,7 +803,7 @@ namespace BusinessLogicMBDesign.Sale
                             contractYearMonthGen = yearMonth,
                             status = true,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999",
+                            createBy = model.loginCode,
                         };
 
                         added = _contractAgreementRepository.Add(addedObject, conn, transaction);
@@ -839,7 +840,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Contract
 
         #region Invoice
-        public int? AddInvoice(int orderId, int custId, string yearMonth, string invoiceStatus, string quotation, string period, decimal unitPrice)
+        public int? AddInvoice(int orderId, int custId, string yearMonth, string invoiceStatus, string quotation, string period, decimal unitPrice, string loginCode)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -867,7 +868,7 @@ namespace BusinessLogicMBDesign.Sale
                         invoiceStatus = invoiceStatus,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = loginCode,
                         isDeleted = false,
                         unitPrice = unitPrice
                     };
@@ -885,7 +886,7 @@ namespace BusinessLogicMBDesign.Sale
             return added;
         }
 
-        public int? AddReceipt(int orderId, int custId, string yearMonth, int? invoiceId)
+        public int? AddReceipt(int orderId, int custId, string yearMonth, int? invoiceId, string loginCode)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -911,7 +912,7 @@ namespace BusinessLogicMBDesign.Sale
                         invoiceId = invoiceId,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = loginCode,
                         isDeleted = false
                     };
 

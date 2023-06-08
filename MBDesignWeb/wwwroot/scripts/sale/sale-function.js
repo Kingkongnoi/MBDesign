@@ -3,6 +3,10 @@ let _modal_default_color_code = "#EFEFEF";
 
 let _action = 'add';
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 var _permission = [];
 function renderPermissionMenu() {
     let loginId = localStorage.getItem('loginId');
@@ -691,7 +695,8 @@ function saveQuotation() {
         action: _action,
         orderId: _order_id,
         custId: _cust_id,
-        quotationComment: quotationComment
+        quotationComment: quotationComment,
+        loginCode: _userCode,
     };
 
     var data = JSON.stringify(obj);
@@ -791,33 +796,37 @@ function renderGetQuotationList(data) {
                 {
                     targets: 2,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 3,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 4,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 6,
-                    data: 'orderStatus'
+                    data: 'orderStatus',
+                    className: "dt-center",
                 },
                 {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
@@ -979,7 +988,7 @@ function saveUpload() {
     }
 }
 let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "") {
-    let url = /*(_action == "add") ? */`${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}`/* : ``*/;
+    let url = /*(_action == "add") ? */`${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}&loginCode=${_userCode}`/* : ``*/;
 
     var control = document.getElementById(`${intputFileName}`);
     var files = control.files;
@@ -1528,29 +1537,32 @@ function renderGetContractList(data) {
                 {
                     targets: 4,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 5,
-                    data: 'createBy'
+                    data: 'createByName'
                 },
                 {
                     targets: 6,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
                     targets: 7,
-                    data: 'updateBy'
+                    data: 'updateByName'
                 },
                 {
                     targets: 8,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
                         <img src="/images/analysis.png" width="25px" /></button>`;
