@@ -689,13 +689,16 @@ namespace BusinessLogicMBDesign.Sale
                         var custOrder = _custOrderRepository.GetCustOrderByOrderId(orderId, conn, transaction);
                         if (custOrder != null)
                         {
-                            var bank = new tbBankAccount
+                            if(custOrder.accountType == "บัญชีส่วนบุคคล")
                             {
-                                accountId = custOrder.accountId,
-                                updateDate = DateTime.UtcNow,
-                                updateBy = loginCode
-                            };
-                            var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+                                var bank = new tbBankAccount
+                                {
+                                    accountId = custOrder.accountId,
+                                    updateDate = DateTime.UtcNow,
+                                    updateBy = loginCode
+                                };
+                                var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+                            }
 
                             //Create invoice = จ่ายเงินมัดจำ
                             var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
