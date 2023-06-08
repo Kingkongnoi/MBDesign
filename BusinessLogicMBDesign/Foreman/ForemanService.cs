@@ -271,7 +271,7 @@ namespace BusinessLogicMBDesign.Foreman
                                     orderId = orderId,
                                     custId = custOrder.custId,
                                     period = GlobalInvoicePeriod.secondDisposite,
-                                    invoiceStatus = GlobalInvoieStatus.paid,
+                                    invoiceStatus = GlobalInvoiceStatus.paid,
                                     unitPrice = disposite,
                                     updateDate = DateTime.UtcNow,
                                     updateBy = loginCode,

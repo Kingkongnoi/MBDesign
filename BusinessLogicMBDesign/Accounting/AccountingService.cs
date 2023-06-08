@@ -285,8 +285,11 @@ namespace BusinessLogicMBDesign.Accounting
                         };
 
                         int? invoiceId = _invoiceRepository.Add(addedInvoice, conn, transaction);
-
-                        int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
+                        
+                        if (model.invoiceStatus == "จ่ายแล้ว")
+                        {
+                            int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
+                        }
                     }
 
                     msg.isResult = true;
@@ -343,6 +346,10 @@ namespace BusinessLogicMBDesign.Accounting
 
                         int? invoiceId = _invoiceRepository.UpdateInvoiceStatus(addedInvoice, conn, transaction);
 
+                        if (model.invoiceStatus == "จ่ายแล้ว")
+                        {
+                            int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
+                        }
                     }
 
                     msg.isResult = true;
@@ -407,6 +414,44 @@ namespace BusinessLogicMBDesign.Accounting
             string newContractNum = string.Format("{0}{1}", yearMonth, getNumber);
 
             return newContractNum;
+        }
+
+        public List<InvoiceView> GetPeriodByOrderId(int orderId)
+        {
+            var result = new List<InvoiceView>();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                var exists = _invoiceRepository.GetFirstByOrderId(orderId, conn);
+                if(exists == null)
+                {
+                    result.Add(new InvoiceView {  period = GlobalInvoicePeriod.firstDisposite, fullPeriod = GlobalInvoicePeriod.firstFullDisposite });
+                    result.Add(new InvoiceView {  period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
+                    result.Add(new InvoiceView {  period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
+                    result.Add(new InvoiceView {  period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                }
+                else
+                {
+                    if(exists.period == GlobalInvoicePeriod.firstDisposite)
+                    {
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                    }
+                    else if (exists.period == GlobalInvoicePeriod.secondDisposite)
+                    {
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                    }
+                    else if (exists.period == GlobalInvoicePeriod.thridDisposite)
+                    {
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                    }
+                }
+            }
+
+            return result;
         }
     }
 }

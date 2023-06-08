@@ -714,7 +714,7 @@ namespace BusinessLogicMBDesign.Sale
                             if(exists == null)
                             {
                                 string yearMonth = this.GenerateYearMonth();
-                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoieStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite, loginCode);
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoiceStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite, loginCode);
 
                                 int? receiptId = this.AddReceipt(custOrder.orderId, custOrder.custId, yearMonth, invoiceId, loginCode);
                             }
@@ -723,7 +723,7 @@ namespace BusinessLogicMBDesign.Sale
                                 var invoice = new tbInvoice
                                 { 
                                     period = GlobalDispositePeriod.firstDisposite,
-                                    invoiceStatus = GlobalInvoieStatus.paid,
+                                    invoiceStatus = GlobalInvoiceStatus.paid,
                                     updateDate = DateTime.UtcNow,
                                     updateBy = loginCode,
                                     id = exists.id

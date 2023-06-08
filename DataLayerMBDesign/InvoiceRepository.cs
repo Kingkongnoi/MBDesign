@@ -100,5 +100,30 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbInvoice>(queryString, new { invoiceId }, transaction: trans);
         }
+
+        public tbInvoice GetFirstByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT TOP 1 id
+                                ,invoiceNumber
+                                ,invoiceNumberGen
+                                ,invoiceYearMonthGen
+                                ,quotationNumber
+                                ,[period]
+                                ,orderId
+                                ,custId
+                                ,unitPrice
+                                ,invoiceStatus
+                                ,[status]
+                                ,createDate
+                                ,createBy
+                                ,updateDate
+                                ,updateBy
+                                ,isDeleted
+                                FROM tbInvoice
+                                where orderId = @orderId and isDeleted = 0 and status = 1
+                                order by id desc";
+
+            return conn.QueryFirstOrDefault<tbInvoice>(queryString, new { orderId }, transaction: trans);
+        }
     }
 }

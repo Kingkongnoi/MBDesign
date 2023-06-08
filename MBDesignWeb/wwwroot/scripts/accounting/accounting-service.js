@@ -585,6 +585,7 @@ function clearInputInvoiceForm() {
     let formId = '#form-createInvoice';
     $(`${formId} #input-invoice-number`).val('');
     $(`${formId} #select-quotation-number`).val('').trigger('change');
+    $(`${formId} #select-quotation-number`).removeAttr('disabled')
     $(`${formId} #select-period`).val('').trigger('change');
     $(`${formId} #input-customer-firstName`).val('');
     $(`${formId} #input-customer-tel`).val('');
@@ -630,7 +631,9 @@ function renderInvoiceToForm(data) {
     $(`${formId} #invoiceYearMonth`).val(data.invoice.invoiceYearMonthGen);
     $(`${formId} #input-invoice-number`).val(data.invoice.invoiceNumber);
     $(`${formId} #select-quotation-number`).val(data.custOrder.orderId).trigger('change');
+    $(`${formId} #select-quotation-number`).attr('disabled');
     $(`${formId} #select-period`).val(data.invoice.period).trigger('change');
+    $(`${formId} #select-period`).attr('disabled');
     $(`${formId} #input-customer-firstName`).val(data.cust.custFirstName);
     $(`${formId} #input-customer-tel`).val(data.cust.custTel);
     $(`${formId} #input-customer-surName`).val(data.cust.custSurName);
@@ -652,8 +655,8 @@ let _fourthPeriod = 'งวดที่ 4';
 let _grand_total = 0;
 let _disposite = 0;
 
-function renderPeriodSelect2(data = null) {
-    $(`#form-createInvoice #select-period`).empty();
+function renderPeriodSelect2(/*data = null*/orderId = 0, period = "") {
+    /*$(`#form-createInvoice #select-period`).empty();
     $(`#form-createInvoice #select-period`).append(`<option value="">กรุณาเลือก</option>`);
     if (_disposite == 0 || _invoice_action == "edit") {
         $(`#form-createInvoice #select-period`).append(`<option value="${_firstPeriod}">${_firstFullPeriod}</option>`);
@@ -662,15 +665,38 @@ function renderPeriodSelect2(data = null) {
     $(`#form-createInvoice #select-period`).append(`<option value="${_thridPeriod}">${_thridFullPeriod}</option>`);
     $(`#form-createInvoice #select-period`).append(`<option value="${_fourthPeriod}">${_fourthFullPeriod}</option>`);
 
-    console.log(data);
     if (data != null) {
         $(`#form-createInvoice #select-period`).val(data.period).trigger('change');
     }
     else {
         $(`#form-createInvoice #select-period`).val('').trigger('change');
     }
-   
+
     $(`#form-createInvoice #select-period`).attr('disabled');
+    */
+    
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Accounting/GetPeriodByOrderId?orderId=${orderId}`,
+        success: function (data) {
+            $(`#form-createInvoice #select-period`).empty();
+            $(`#form-createInvoice #select-period`).append(`<option value="">กรุณาเลือก</option>`);
+            if (data.length > 0) {
+                data.forEach((v) => {
+                    $(`#form-createInvoice #select-period`).append(`<option value="${v.period}">${v.fullPeriod}</option>`);
+                });
+                $(`#form-createInvoice #select-period`).removeAttr('disabled');
+            }
+
+        },
+        error: function (err) {
+        }
+    });
+
+    if (period != "") {
+        $(`#form-createInvoice #select-period`).val(period).trigger('change');
+        $(`#form-createInvoice #select-period`).attr('disabled');
+    }
 }
 function callGetQuotaionSelect2() {
     $.ajax({
@@ -737,7 +763,7 @@ function callCustomerInformation(e) {
             _grand_total = data.custOrder.grandTotal;
             _disposite = data.custOrder.disposite;
 
-            renderPeriodSelect2(data.invoice);
+            renderPeriodSelect2(data.custOrder.orderId, data.invoice.period);
         },
         error: function (err) {
         }

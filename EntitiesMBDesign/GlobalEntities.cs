@@ -64,8 +64,13 @@ namespace EntitiesMBDesign
         public static string secondDisposite = "งวดที่ 2";
         public static string thridDisposite = "งวดที่ 3";
         public static string fourthDisposite = "งวดที่ 4";
+
+        public static string firstFullDisposite = "งวดที่ 1 เมื่อตกลงนัดผู้ขายสำรวจพื้นที่ติดตั้งชิ้นงานเฟอร์นิเจอร์";
+        public static string secondFullDisposite = "งวดที่ 2 เมื่อเซ็นสัญญาตกลงซื้องานเฟอร์นิเจอร์เพื่อสั่งผลิต";
+        public static string thridFullDisposite = "งวดที่ 3 เมื่อนำชิ้นงานส่วนไม้เฟอร์นิเจอร์ขนส่งถึงหน้างาน";
+        public static string fourthFullDisposite = "งวดที่ 4 เมื่อผู้ขายและทีมงานบริการติดตั้งแล้วเสร็จ พร้อมส่งงาน";
     }
-    public class GlobalInvoieStatus
+    public class GlobalInvoiceStatus
     {
         public static string waitPaid = "รอจ่าย";
         public static string paid = "จ่ายแล้ว";

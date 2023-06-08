@@ -167,6 +167,15 @@ namespace MBDesignApi.Controllers.Accounting
 
             return File(result.MainStream, "application/pdf");
         }
+
+        [HttpGet]
+        public JsonResult GetPeriodByOrderId(int orderId)
+        {
+            var data = _accountingService.GetPeriodByOrderId(orderId);
+
+            return new JsonResult(data);
+        }
+
         #endregion GET
 
         #region POST
