@@ -7,6 +7,10 @@ let _invoice_action = 'add';
 let _modal_primary_color_code = "#F09723";
 let _modal_default_color_code = "#EFEFEF";
 
+let _userId = localStorage.getItem('loginId');
+let _userCode = localStorage.getItem('loginCode');
+let _userName = localStorage.getItem('loginName');
+
 function clearSearchForm() {
     let formId = '#form-search-accounting';
 
@@ -79,6 +83,7 @@ function renderAccountingList(data) {
                 {
                     targets: 4,
                     data: 'contractCreateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.contractCreateDate ? convertDateTimeFormat(row.contractCreateDate, 'DD/MM/YYYY') : "";
                     },
@@ -90,6 +95,7 @@ function renderAccountingList(data) {
                 {
                     targets: 6,
                     data: 'contractUpdateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.contractUpdateDate ? convertDateTimeFormat(row.contractUpdateDate, 'DD/MM/YYYY') : "";
                     },
@@ -105,6 +111,7 @@ function renderAccountingList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-accounting" data-orderid="${row.orderId}" data-custid="${row.custId}" data-contractid="${row.contractId}" data-invoiceid="${row.invoiceId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -376,7 +383,8 @@ function DoSaveAccounting() {
         custFirstName: custFirstName,
         custSurName: custSurName,
         custAddress: custAddress,
-        custId: _cust_id
+        custId: _cust_id,
+        loginCode: _userCode
     };
 
     var data = JSON.stringify(obj);
@@ -515,24 +523,26 @@ function renderInvoiceingList(data) {
                 {
                     targets: 5,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY') : "";
                     },
                 },
                 {
                     targets: 6,
-                    data: 'createBy',
+                    data: 'createByName',
                 },
                 {
                     targets: 7,
                     data: 'updateDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY') : "";
                     },
                 },
                 {
                     targets: 8,
-                    data: 'updateBy',
+                    data: 'updateByName',
                     render: function (data, type, row) {
                         return row.updateBy ? row.updateBy : "";
                     },
@@ -541,6 +551,7 @@ function renderInvoiceingList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-invoice" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -926,7 +937,8 @@ function DoSaveCreateOrUpdateInvoice() {
         invoiceStatus: invoiceStatus,
         custInstallAddress: custInstallAddress,
         unitPrice: unitPrice,
-        invoiceId: _invoice_id
+        invoiceId: _invoice_id,
+        loginCode: _userCode
     };
 
     var data = JSON.stringify(obj);
@@ -1119,18 +1131,20 @@ function renderReceiptList(data) {
                 {
                     targets: 5,
                     data: 'createDate',
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY') : "";
                     },
                 },
                 {
                     targets: 6,
-                    data: 'createBy',
+                    data: 'createByName',
                 },
                 {
                     targets: 7,
                     data: null,
                     orderable: false,
+                    className: "dt-center",
                     render: function (data, type, row) {
                         return `<button type="button" class="btn-add-custom btn-edit-accounting" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
                     <img src="/images/printing.png" width="25px" /></button>`;

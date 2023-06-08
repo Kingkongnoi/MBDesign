@@ -198,7 +198,7 @@ namespace BusinessLogicMBDesign.Accounting
                         custSurName= model.custSurName,
                         custAddress= model.custAddress,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999",
+                        updateBy = model.loginCode,
                         custId = model.custId
                     };
 
@@ -258,7 +258,7 @@ namespace BusinessLogicMBDesign.Accounting
                         custSurName = model.custSurName,
                         custInstallAddress = model.custInstallAddress,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999",
+                        updateBy = model.loginCode,
                         custId = model.custId
                     };
 
@@ -281,12 +281,12 @@ namespace BusinessLogicMBDesign.Accounting
                             status = true,
                             isDeleted = false,
                             createDate = DateTime.UtcNow,
-                            createBy = "MB9999"
+                            createBy = model.loginCode
                         };
 
                         int? invoiceId = _invoiceRepository.Add(addedInvoice, conn, transaction);
 
-                        int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId);
+                        int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
                     }
 
                     msg.isResult = true;
@@ -319,7 +319,7 @@ namespace BusinessLogicMBDesign.Accounting
                         custInstallAddress = model.custInstallAddress,
                         custTel = model.custTel,
                         updateDate = DateTime.UtcNow,
-                        updateBy = "MB9999",
+                        updateBy = model.loginCode,
                         custId = model.custId
                     };
 
@@ -337,7 +337,7 @@ namespace BusinessLogicMBDesign.Accounting
                             unitPrice = model.unitPrice,
                             invoiceStatus = model.invoiceStatus,
                             updateDate = DateTime.UtcNow,
-                            updateBy = "MB9999",
+                            updateBy = model.loginCode,
                             id= model.invoiceId
                         };
 
@@ -358,7 +358,7 @@ namespace BusinessLogicMBDesign.Accounting
             return msg;
         }
 
-        public int? AddReceipt(int orderId, int custId, string yearMonth, int? invoiceId)
+        public int? AddReceipt(int orderId, int custId, string yearMonth, int? invoiceId, string loginCode)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -384,7 +384,7 @@ namespace BusinessLogicMBDesign.Accounting
                         invoiceId = invoiceId,
                         status = true,
                         createDate = DateTime.UtcNow,
-                        createBy = "MB9999",
+                        createBy = loginCode,
                         isDeleted = false
                     };
 

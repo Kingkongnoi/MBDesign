@@ -12,6 +12,7 @@ namespace EntitiesMBDesign
         public string custSurName { get; set; } = string.Empty;
         public string custAddress { get; set; } = string.Empty;
         public int custId { get; set; }
+        public string loginCode { get; set; } = string.Empty;
 
     }
     public class InvoiceModel
@@ -30,5 +31,6 @@ namespace EntitiesMBDesign
         public string invoiceStatus { get; set; } = string.Empty;
         public string custInstallAddress { get; set; } = string.Empty;
         public int invoiceId { get; set; }
+        public string loginCode { get; set; } = string.Empty;
     }
 }
