@@ -15,6 +15,7 @@ let _product_item_action = 'add';
 
 let _action = 'add';
 let _id = 0;
+let _empId = 0;
 
 let _emp_action = 'add';
 let _role_action = 'add';
@@ -469,7 +470,7 @@ let validateInput = function (modal) {
             let empFormId = '#form-createEmployee';
             if ($(`${empFormId} input[name="input-emp-code"]`).val() == "") {
                 Swal.fire({
-                    text: "กรุณารอระบบ generate รหัสพนักงาน",
+                    text: "กรุณากรอกรหัสพนักงาน",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
@@ -688,7 +689,8 @@ function callAddOrUpdateEmployee() {
         timeStampType: timeStampType,
         idCard: empIdCard,
         signatureFileName: "",
-        loginCode: _userCode
+        loginCode: _userCode,
+        id: _empId
     };
 
     $.ajax({
@@ -698,11 +700,21 @@ function callAddOrUpdateEmployee() {
         dataType: "json",
         data: JSON.stringify(obj),
         success: (res) => {
-            if (res.result) {
+            //if (res.result) {
+            if (res.msg.isResult) {
                 callAddOrUpdateSignatureFile(empId);
                 callSuccessAlert();
                 $(`#modal-createEmployee`).modal('hide');
                 callGetEmployeeList();
+            }
+            else {
+                Swal.fire({
+                    text: res.msg.strResult,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    confirmButtonText: 'ตกลง'
+                });
             }
         },
         error: () => {

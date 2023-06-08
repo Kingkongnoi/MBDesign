@@ -78,7 +78,6 @@ namespace MBDesignApi.Controllers.Master
             var data = _employeeService.GetAllActiveRoleSelect2();
             return new JsonResult(data);
         }
-
         #endregion GET
 
         #region POST
@@ -88,23 +87,13 @@ namespace MBDesignApi.Controllers.Master
         {
             var result = true;
             var resultStatus = "success";
-            var data = _employeeService.AddEmployee(obj);
-
-            if (data == -1)
-            {
-                result = false;
-                resultStatus = "duplicate";
-            }
-            else if (data == 0)
-            {
-                result = false;
-                resultStatus = "error";
-            }
+            var msg = _employeeService.AddEmployee(obj);
 
             var returnData = new
             {
                 result,
-                resultStatus
+                resultStatus,
+                msg
             };
             return new JsonResult(returnData);
         }
@@ -115,22 +104,13 @@ namespace MBDesignApi.Controllers.Master
         {
             var result = true;
             var resultStatus = "success";
-            var data = _employeeService.UpdateEmployee(obj);
-            if (data == -1)
-            {
-                result = false;
-                resultStatus = "duplicate";
-            }
-            else if (data == 0)
-            {
-                result = false;
-                resultStatus = "error";
-            }
+            var msg = _employeeService.UpdateEmployee(obj);
 
             var returnData = new
             {
                 result,
-                resultStatus
+                resultStatus,
+                msg
             };
             return new JsonResult(returnData);
         }

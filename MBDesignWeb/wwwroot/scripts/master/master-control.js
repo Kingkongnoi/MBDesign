@@ -58,24 +58,26 @@
     /* Begin Employee */
     $('#nav-master-empData .btn-add-employee').on('click', function () {
         _emp_action = 'add'
+        clearForm('modal-createEmployee');
+        //generateEmpId();
+        renderEmployeeSignature("");
         $(`#modal-createEmployee #empHeader`).text('เพิ่มพนักงาน');
         $('#modal-createEmployee').modal('show');
-        clearForm('modal-createEmployee');
-        generateEmpId();
-        renderEmployeeSignature("");
+        
     });
 
     $(document).on('click', '.btn-edit-employee', function () {
-        $(`#modal-createEmployee #empHeader`).text('แก้ไขข้อมูลพนักงาน');
-        $(`#modal-createEmployee`).modal('show');
         _emp_action = 'edit';
+        _empId = $(this).data('id');
         clearForm('modal-createEmployee');
         callGetEmployeeById($(this).data('id'));
+        $(`#modal-createEmployee #empHeader`).text('แก้ไขข้อมูลพนักงาน');
+        $(`#modal-createEmployee`).modal('show');
     });
 
     $(`#modal-createEmployee`).on('show.bs.modal', function () {
         clearForm("modal-createEmployee");
-        if (_emp_action == 'add') { generateEmpId(); }
+        //if (_emp_action == 'add') { generateEmpId(); }
     });
 
     $('.btn-modal-save-emp').on('click', function () {

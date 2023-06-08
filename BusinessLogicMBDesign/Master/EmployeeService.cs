@@ -114,8 +114,20 @@ namespace BusinessLogicMBDesign.Master
             }
         }
 
-        public int? AddEmployee(EmpDataModel model)
+        public EmpDataView GetEmpByEmpCode(string empCode)
         {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _empDataRepository.GetFirstByEmpCode(empCode, conn);
+            }
+
+        }
+
+        public ResultMessage AddEmployee(EmpDataModel model)
+        {
+            var msg = new ResultMessage();
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -125,6 +137,14 @@ namespace BusinessLogicMBDesign.Master
 
                 try
                 {
+                    var exists = _empDataRepository.GetFirstByEmpCode(model.empId, conn, transaction);
+                    if(exists != null)
+                    {
+                        msg.isResult = false;
+                        msg.strResult = "รหัสพนักงานนี้มีผู้ใช้งานแล้ว";
+                        transaction.Rollback();
+                        return msg;
+                    }
                     var addedObject = new tbEmpData
                     {
                         empCode = model.empId,
@@ -156,19 +176,23 @@ namespace BusinessLogicMBDesign.Master
 
                     int? addedMnuEmp = _roleEmpDataRepository.Add(addedRoleEmp, conn, transaction);
 
+                    msg.isResult = true;
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
+                    msg.isResult = false;
+                    msg.strResult = ex.Message;
                     transaction.Rollback();
                 }
             }
 
-            return added;
+            return msg;
         }
 
-        public int UpdateEmployee(EmpDataModel model)
+        public ResultMessage UpdateEmployee(EmpDataModel model)
         {
+            var msg = new ResultMessage();
             int updated = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -178,6 +202,19 @@ namespace BusinessLogicMBDesign.Master
 
                 try
                 {
+                    var empExists = _empDataRepository.GetFirstByEmpCode(model.empId, conn, transaction);
+                    if (empExists != null) {
+                        if(empExists.id != model.id)
+                        {
+                            msg.isResult = false;
+                            msg.strResult = "รหัสพนักงานนี้มีผู้ใช้งานแล้ว";
+                            transaction.Rollback();
+                            return msg;
+                        }
+                    }
+
+                    int empId = (empExists != null) ? empExists.id : 0;
+
                     var updatedObject = new tbEmpData
                     {
                         id = model.id,
@@ -198,9 +235,6 @@ namespace BusinessLogicMBDesign.Master
                     };
 
                     updated = _empDataRepository.Update(updatedObject, conn, transaction);
-
-                    var empExists = _empDataRepository.GetFirstByEmpCode(model.empId, conn, transaction);
-                    int empId = (empExists != null) ? empExists.id : 0;
 
                     var empRole = _roleEmpDataRepository.GetFirstByEmpId(model.id, conn, transaction);
                     int roleEmpDataId = (empRole != null) ? empRole.roleEmpDataId : 0;
@@ -233,15 +267,18 @@ namespace BusinessLogicMBDesign.Master
                         int? updateMnuEmp = _roleEmpDataRepository.Update(updateRoleEmp, conn, transaction);
                     }
 
+                    msg.isResult = true;
                     transaction.Commit();
                 }
                 catch (Exception ex)
                 {
+                    msg.isResult = false;
+                    msg.strResult = ex.Message;
                     transaction.Rollback();
                 }
             }
 
-            return updated;
+            return msg;
         }
 
         public int UpdateSignatureFileName(EmpDataModel model)
