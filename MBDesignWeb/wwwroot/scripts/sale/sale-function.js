@@ -137,7 +137,7 @@ function renderProductTypeSelect2(formName, data) {
     $(`#${formName} #select-cus-product-type`).empty();
     $(`#${formName} #select-cus-product-type`).append(`<option value="">กรุณาเลือก</option>`);
     data.forEach((v) => {
-        $(`#${formName} #select-cus-product-type`).append(`<option value="${v.typeId}">${v.typeName}</option>`);
+        $(`#${formName} #select-cus-product-type`).append(`<option value="${v.typeId}" price="${v.typePrice}" name="${v.typeName}">${v.fullTypePrice}</option>`);
     });
     if (_action == "add") {
         $(`#${formName} #select-cus-product-type`).val('').trigger('change');
@@ -154,16 +154,16 @@ function callGetProductItemSelect2(formName) {
         }
     });
 }
-function renderProductItemSelect2(formName, data) {
+function renderProductItemSelect2(formName/*, data*/) {
     $(`#${formName} #select-cus-product-items`).empty();
     $(`#${formName} #select-cus-product-items`).append(`<option value="">กรุณาเลือก</option>`);
-    data.forEach((v) => {
-        $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
-    });
+    //data.forEach((v) => {
+    //    $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
+    //});
 
-    if (_action == "add") {
+    //if (_action == "add") {
         $(`#${formName} #select-cus-product-items`).val('').trigger('change');
-    }
+    //}
 }
 function clearCreateStyleSelect2() {
     $('#form-search-holiday #select-search-holiday-year').empty();
@@ -211,23 +211,24 @@ let validateInputFormStyle = function () {
             return false;
         }
 
-        let calItems = $(`#${divId} #select-cus-product-items`).val();
-        if (calItems == "" || calItems == null || calItems == undefined) {
-            Swal.fire({
-                text: "กรุณาเลือก Items",
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: _modal_primary_color_code,
-                confirmButtonText: 'ตกลง'
-            }).then((result) => {
-                $(`${divId} #select-cus-product-items`).focus();
-            });
-            result = false;
-            return false;
-        }
+        //let calItems = $(`#${divId} #select-cus-product-items`).val();
+        //if (calItems == "" || calItems == null || calItems == undefined) {
+        //    Swal.fire({
+        //        text: "กรุณาเลือก Items",
+        //        icon: 'warning',
+        //        showCancelButton: false,
+        //        confirmButtonColor: _modal_primary_color_code,
+        //        confirmButtonText: 'ตกลง'
+        //    }).then((result) => {
+        //        $(`${divId} #select-cus-product-items`).focus();
+        //    });
+        //    result = false;
+        //    return false;
+        //}
        
         let inputHeight = $(`#${divId} #input-cus-product-height`).val();
         let checkedHeightSp = $(`#${divId} #chkSpecialHeight-${seq}`).prop('checked');
+        $(`#${divId} #input-cus-product-height`).css('color', 'black');
         if (inputHeight >= 2.7 && checkedHeightSp == false) {
             Swal.fire({
                 text: "กรุณาคลิก ความสูงพิเศษ เมื่อกรอกความสูง >= 2.70 เมตรขึ้นไป",
@@ -236,6 +237,7 @@ let validateInputFormStyle = function () {
                 confirmButtonColor: _modal_primary_color_code,
                 confirmButtonText: 'ตกลง'
             }).then((result) => {
+                $(`#${divId} #input-cus-product-height`).css('color', 'red');
             });
             result = false;
             return false;
@@ -289,7 +291,7 @@ function renderCreateStyleDiv() {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือก Items<span class="text-danger">*</span></label>
+                            <label class="col-sm-3 col-form-label text-end">เลือก Items</label>
                             <div class="col-sm-9">
                                 <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}">
                                     <option></option>
@@ -353,7 +355,7 @@ function renderCreateStyleDiv() {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่<span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}">
+                                <select class="form-select" id="select-cus-product-type" onchange="callGetProductItemSelect2ByType(this);" data-seq="${newSeq}">
                                     <option></option>
                                 </select>
                             </div>
@@ -384,7 +386,8 @@ function renderCreateStyleDiv() {
     let formName = `formCreateStyle-${newSeq}`;
     callGetStyleSelect2(formName);
     callGetProductTypeSelect2(formName);
-    callGetProductItemSelect2(formName);
+    //callGetProductItemSelect2(formName);
+    renderProductItemSelect2(formName);
 }
 function removeRenderStyleWithSeq(obj) {
     Swal.fire({
@@ -437,6 +440,35 @@ function renderCheckboxOptions(formName, seq, data) {
 
     $(`#${formName} #chkselectOptions-${seq}`).append(renderChk);
 }
+function callGetProductItemSelect2ByType(obj) {
+    let currSeq = $(obj).data('seq');
+    let formName = `formCreateStyle-${currSeq}`;
+    let typeId = $(`#${formName} #select-cus-product-type`).val() == "" ? 0 : $(`#${formName} #select-cus-product-type`).val();
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetSelect2ProductItemByTypeId?typeId=${typeId}`,
+        success: function (data) {
+            renderProductItemSelect2ByType(formName, data);
+            //if (_action == "edit") {
+            //    renderCustOptions();
+            //}
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderProductItemSelect2ByType(formName, data) {
+    $(`#${formName} #select-cus-product-items`).empty();
+    $(`#${formName} #select-cus-product-items`).append(`<option value="">กรุณาเลือก</option>`);
+    data.forEach((v) => {
+        $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
+    });
+
+    if (_action == "add") {
+        $(`#${formName} #select-cus-product-items`).val('').trigger('change');
+    }
+}
 
 var _bank_account = [];
 function callGetActiveBankAccount() {
@@ -480,10 +512,15 @@ function callGetItemOptions() {
         let calStyle = $(`#${divId} #select-cus-product-style`).val();
         let calFloor = $(`#${divId} #input-cus-product-floor`).val();
         let calZone = $(`#${divId} #input-cus-product-zone`).val();
+
         let calType = $(`#${divId} #select-cus-product-type`).val();
+        let calTypePrice = $(`#${divId} #select-cus-product-type option:selected`).attr('price');
+        let calTypeName = $(`#${divId} #select-cus-product-type option:selected`).attr('name');
         let calItems = $(`#${divId} #select-cus-product-items`).val();
-        let calItemsPrice = $(`#${divId} #select-cus-product-items option:selected`).attr('price');
-        let calItemsName = $(`#${divId} #select-cus-product-items option:selected`).attr('name');
+        let calItemsPrice = ($(`#${divId} #select-cus-product-items option:selected`).attr('price') == undefined || $(`#${divId} #select-cus-product-items option:selected`).attr('price') == "")
+            ? 0 : $(`#${divId} #select-cus-product-items option:selected`).attr('price');
+        let calItemsName = ($(`#${divId} #select-cus-product-items option:selected`).attr('name') == undefined || $(`#${divId} #select-cus-product-items option:selected`).attr('name') == "")
+            ? "" : $(`#${divId} #select-cus-product-items option:selected`).attr('name');
 
         var options = [];
         $.each($(`#${divId} #chkselectOptions-${seq} input[type="checkbox"]`), (i, item) => {
@@ -507,6 +544,8 @@ function callGetItemOptions() {
             floor: calFloor,
             zone: calZone,
             typeId: calType,
+            typePrice: calTypePrice,
+            typeName: calTypeName,
             itemId: calItems,
             itemName: calItemsName,
             itemPrice: calItemsPrice,
@@ -524,8 +563,11 @@ function callCalculateItemOptions() {
     
     $('#divCalculatePrice #divCalItemOptions').empty();
     _style_list.forEach((v) => {
-        let itemName = v.itemName;
-        let itemPrice = v.itemPrice;
+        let typeName = v.typeName;
+        let typePrice = v.typePrice;
+
+        let itemName = typeName + (v.itemName == "" ? "" : ` ${v.itemName}`);
+        let itemPrice = parseFloat(typePrice) + (v.itemPrice == "" ? 0 : parseFloat(v.itemPrice));
 
         let calSpHeight = 0;
         let calSpHeightPercentage = 0;
@@ -1114,7 +1156,7 @@ function renderCustStyleDiv(data) {
                         </div>
 
                         <div class="row col-sm-12 mb-2">
-                            <label class="col-sm-3 col-form-label text-end">เลือก Items<span class="text-danger">*</span></label>
+                            <label class="col-sm-3 col-form-label text-end">เลือก Items</label>
                             <div class="col-sm-9">
                                 <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}">
                                     <option></option>
@@ -1178,7 +1220,7 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่<span class="text-danger">*</span></label>
                             <div class="col-sm-9">
-                                <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}">
+                                <select class="form-select" id="select-cus-product-type" onchange="callGetProductItemSelect2ByType(this);" data-seq="${newSeq}">
                                     <option></option>
                                 </select>
                             </div>
@@ -1209,7 +1251,8 @@ function renderCustStyleDiv(data) {
         let formName = `formCreateStyle-${newSeq}`;
         callGetStyleSelect2(formName);
         callGetProductTypeSelect2(formName);
-        callGetProductItemSelect2(formName);
+        //callGetProductItemSelect2(formName);
+        renderProductItemSelect2(formName);
     });
 }
 function renderCustStyle() {

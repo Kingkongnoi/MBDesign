@@ -140,5 +140,16 @@ namespace DataLayerMBDesign
 
             return conn.Query<tbProductType>(queryString, new { }, transaction: trans).ToList();
         }
+
+        public List<ProductTypeView> GetSaleProductTypeSelect2(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select typeId, typeName, typeName + ' - ' + convert(varchar(50),typePrice) fullTypePrice, typePrice
+                                from tbProductType
+                                where isDeleted = 0 and status = 1
+                                group by typeId, typeName,typePrice
+                                order by typeName";
+
+            return conn.Query<ProductTypeView>(queryString, new { }, transaction: trans).ToList();
+        }
     }
 }

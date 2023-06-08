@@ -56,6 +56,15 @@ namespace MBDesignApi.Controllers.Sale
         }
 
         [HttpGet]
+        public JsonResult GetSelect2ProductItemByTypeId(int typeId)
+        {
+            var data = _saleService.GetProductItemSelect2ByTypeId(typeId);
+
+            return new JsonResult(data);
+        }
+
+
+        [HttpGet]
         public JsonResult GetSelect2ProductItemOptionsByItemId(int itemId)
         {
             var data = _saleService.GetProductItemSelect2(itemId);

@@ -172,13 +172,13 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Style
 
         #region Product Type
-        public List<tbProductType> GetProductTypeSelect2()
+        public List<ProductTypeView> GetProductTypeSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _productTypeRepository.GetProductTypeSelect2(conn);
+                return _productTypeRepository.GetSaleProductTypeSelect2(conn);
             }
         }
         #endregion Product Type
@@ -191,6 +191,15 @@ namespace BusinessLogicMBDesign.Sale
                 conn.Open();
 
                 return _productItemRepository.GetProductItemSelect2(conn);
+            }
+        }
+        public List<ProductItemView> GetProductItemSelect2ByTypeId(int typeId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemRepository.GetProductItemSelect2ByTypeId(typeId, conn);
             }
         }
         #endregion Product Item

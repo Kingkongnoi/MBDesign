@@ -29,6 +29,7 @@ namespace EntitiesMBDesign
     {
         public string createByName { get; set; } = string.Empty;
         public string updateByName { get; set; } = string.Empty;
+        public string fullTypePrice { get; set; } = string.Empty;
     }
 
     public class ProductTypeModel
