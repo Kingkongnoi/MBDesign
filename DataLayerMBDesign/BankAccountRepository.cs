@@ -68,6 +68,7 @@ namespace DataLayerMBDesign
                                 ,a.accountType
                                 ,a.bank
                                 ,a.countUsage
+                                ,case when a.accountType = N'บัญชีนามบริษัท' then '' else convert(varchar(50), a.countUsage) end countUsageDisplay
                                 ,a.status
                                 ,a.createDate
                                 ,a.createBy

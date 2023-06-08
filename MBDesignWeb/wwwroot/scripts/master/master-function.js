@@ -2866,9 +2866,9 @@ function renderGetAccountList(data) {
                 },
                 {
                     targets: 3,
-                    data: 'countUsage',
+                    data: 'countUsageDisplay',
                     render: function (data, type, row) {
-                        return (row.status) ? row.countUsage : "";
+                        return (row.status) ? row.countUsageDisplay : "";
                     },
                 },
                 {
