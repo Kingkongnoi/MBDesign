@@ -96,6 +96,30 @@ let validateInputFormCustomerData = function () {
         });
         return false;
     }
+    else if ($(`#${newCusForm} #input-cus-tel`).val().length < 10 || $(`#${newCusForm} #input-cus-tel`).val().length > 10) {
+        Swal.fire({
+            text: "กรุณากรอกเบอร์โทรศัพท์ลูกค้า 10 หลัก",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`#${newCusForm} #input-cus-tel`).focus();
+        });
+        return false;
+    }
+    else if ($.isNumeric($(`#${newCusForm} #input-cus-tel`).val()) == false) {
+        Swal.fire({
+            text: "กรุณากรอกเบอร์โทรศัพท์ลูกค้าเป็นตัวเลข",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`#${newCusForm} #input-cus-tel`).focus();
+        });
+        return false;
+    }
     else {
         return true;
     }
@@ -284,9 +308,7 @@ function renderCreateStyleDiv() {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกโซน</label>
                             <div class="col-sm-9">
-                                <div class="col-sm-9">
                                     <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
-                                </div>
                             </div>
                         </div>
 
@@ -1151,7 +1173,7 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกโซน</label>
                             <div class="col-sm-9">
-                                    <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
+                                <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
                             </div>
                         </div>
 
