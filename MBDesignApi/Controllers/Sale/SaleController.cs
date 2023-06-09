@@ -205,6 +205,7 @@ namespace MBDesignApi.Controllers.Sale
 
         [HttpPost]
         [DisableRequestSizeLimit]
+        [AllowAnonymous]
         public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();

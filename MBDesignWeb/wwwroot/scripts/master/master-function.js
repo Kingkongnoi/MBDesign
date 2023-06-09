@@ -763,11 +763,11 @@ function callAddOrUpdateEmployee() {
         success: (res) => {
             //if (res.result) {
             if (res.msg.isResult) {
-                callAddOrUpdateSignatureFile(empId);
+                callAddOrUpdateSignatureFile();
                 callSuccessAlert();
+                $('.btn-modal-save-emp').removeLoading();
                 $(`#modal-createEmployee`).modal('hide');
                 callGetEmployeeList();
-                $('.btn-modal-save-emp').removeLoading();
             }
             else {
                 Swal.fire({
@@ -786,7 +786,7 @@ function callAddOrUpdateEmployee() {
     });
 
 }
-function callAddOrUpdateSignatureFile(empId) {
+function callAddOrUpdateSignatureFile() {
     var control = document.getElementById(`select-emp-signature`);
     var files = control.files;
     var formData = new FormData();
@@ -794,7 +794,7 @@ function callAddOrUpdateSignatureFile(empId) {
         formData.append("files", files[i]);
     }
 
-    let url = `${app_settings.api_url}/api/Employee/DoUpdateSignatureFile?empCode=${empId}&loginCode=${_userCode}`;
+    let url = `${app_settings.api_url}/api/Employee/DoUpdateSignatureFile?empId=${_empId}&loginCode=${_userCode}`;
 
     $.ajax({
         url: url,
@@ -1224,6 +1224,8 @@ function callAddOrUpdateRole() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-role').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -1233,11 +1235,13 @@ function callAddOrUpdateRole() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-role').removeLoading();
                 $(`#modal-createRole`).modal('hide');
                 callGetRoleList();
             }
         },
         error: () => {
+            $('.btn-modal-save-role').removeLoading();
         }
     });
 
@@ -1261,19 +1265,19 @@ function callGetRoleList() {
     let roleName = ($(`${formId} #input-search-role`).val() == '') ? null : $(`${formId} #input-search-role`).val();
     let status = ($(`${formId} #select-search-role-status`).val() == '') ? null : $(`${formId} #select-search-role-status`).val();
 
-    //let loaded = $('#tb-employee-list');
+    let loaded = $('#tb-role-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetRoleList?roleName=${roleName}&status=${status}`,
         success: function (data) {
             renderGetRoleList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1531,6 +1535,8 @@ function callAddOrUpdateHoliday() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-holiday').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -1540,12 +1546,14 @@ function callAddOrUpdateHoliday() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-holiday').removeLoading();
                 $(`#${_modal_holiday_name}`).modal('hide');
                 callSelect2SearchHolidayYear();
                 callGetHolidayList();
             }
         },
         error: () => {
+            $('.btn-modal-save-holiday').removeLoading();
         }
     });
 
@@ -1755,6 +1763,8 @@ function callAddOrUpdateDepartment() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-department').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -1764,6 +1774,7 @@ function callAddOrUpdateDepartment() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-department').removeLoading();
                 $(`#${_modal_department_name}`).modal('hide');
                 callGetDepartmentList();
             }
@@ -1780,9 +1791,11 @@ function callAddOrUpdateDepartment() {
                         $('#form-createDepartment #input-department-name').focus();
                     });
                 }
+                $('.btn-modal-save-department').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-department').removeLoading();
         }
     });
 
@@ -1943,6 +1956,8 @@ function callAddOrUpdatePosition() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-position').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -1952,6 +1967,7 @@ function callAddOrUpdatePosition() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-position').removeLoading();
                 $(`#${_modal_position_name}`).modal('hide');
                 callGetPositionList();
             }
@@ -1968,9 +1984,11 @@ function callAddOrUpdatePosition() {
                         $('#form-createPosition #input-position-name').focus();
                     });
                 }
+                $('.btn-modal-save-position').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-position').removeLoading();
         }
     });
 
@@ -2164,6 +2182,8 @@ function callAddOrUpdateItem() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-product').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -2173,6 +2193,7 @@ function callAddOrUpdateItem() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-product').removeLoading();
                 $(`#modal-createProduct`).modal('hide');
                 callGetItemList();
             }
@@ -2189,9 +2210,11 @@ function callAddOrUpdateItem() {
                         $('#form-createProduct #input-product-name').focus();
                     });
                 }
+                $('.btn-modal-save-product').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-product').removeLoading();
         }
     });
 
@@ -2418,6 +2441,8 @@ function callAddOrUpdateType() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-type').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -2427,6 +2452,7 @@ function callAddOrUpdateType() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-type').removeLoading();
                 $(`#modal-createType`).modal('hide');
                 callGetTypeList();
             }
@@ -2443,9 +2469,11 @@ function callAddOrUpdateType() {
                         $('#form-createType #input-type-name').focus();
                     });
                 }
+                $('.btn-modal-save-type').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-type').removeLoading();
         }
     });
 
@@ -2613,6 +2641,8 @@ function callAddOrUpdateStyle() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-style').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -2622,6 +2652,7 @@ function callAddOrUpdateStyle() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-style').removeLoading();
                 $(`#modal-createStyle`).modal('hide');
                 callGetStyleList();
             }
@@ -2638,9 +2669,11 @@ function callAddOrUpdateStyle() {
                         $('#form-createStyle #input-style-name').focus();
                     });
                 }
+                $('.btn-modal-save-style').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-style').removeLoading();
         }
     });
 
@@ -2840,6 +2873,8 @@ function callAddOrUpdateAccount() {
         loginCode: _userCode
     };
 
+    $('.btn-modal-save-account').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -2849,6 +2884,7 @@ function callAddOrUpdateAccount() {
         success: (res) => {
             if (res.result) {
                 callSuccessAlert();
+                $('.btn-modal-save-account').removeLoading();
                 $(`#modal-createAccount`).modal('hide');
                 callGetAccountList();
             }
@@ -2865,9 +2901,11 @@ function callAddOrUpdateAccount() {
 
                     });
                 }
+                $('.btn-modal-save-account').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-account').removeLoading();
         }
     });
 

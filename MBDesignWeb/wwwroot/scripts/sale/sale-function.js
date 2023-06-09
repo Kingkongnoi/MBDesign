@@ -7,6 +7,8 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _loader = $('<div/>').addClass('loader');
+
 var _permission = [];
 function renderPermissionMenu() {
     let loginId = localStorage.getItem('loginId');
@@ -773,6 +775,8 @@ function saveQuotation() {
 
     var data = JSON.stringify(obj);
 
+    $('.btn-save-and-create-quotation').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -781,11 +785,13 @@ function saveQuotation() {
             if (res != "") {
                 callSuccessAlert();
                 renderQuotationNumber(res);
+                $('.btn-save-and-create-quotation').removeLoading();
                 $('.nav-pills a[href="#nav-sale-fileUpload-tab"]').tab('show');
                 clearAllInputCreateStyle();
             }
         },
         error: () => {
+            $('.btn-save-and-create-quotation').removeLoading();
         },
         contentType: 'application/json',
         dataType: "json",
@@ -822,19 +828,19 @@ function callGetQuotationList() {
     let quotationCusName = ($(`${formId} #input-search-quotation-cusName`).val() == '') ? null : $(`${formId} #input-search-quotation-cusName`).val();
     let status = ($(`${formId} #select-search-quotation-status`).val() == '') ? null : $(`${formId} #select-search-quotation-status`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-quotation-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Sale/GetQuotationList?quotationNumber=${quotationNumber}&quotationCusName=${quotationCusName}&status=${status}`,
         success: function (data) {
             renderGetQuotationList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1046,6 +1052,7 @@ function saveUpload() {
     if (rsltUpload.isResult) {
         callSuccessAlert();
         clearUploadRefForm();
+        $('.btn-save-cus-upload-ref').removeLoading();
         $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
     }
     else {
@@ -1056,6 +1063,7 @@ function saveUpload() {
             confirmButtonColor: _modal_primary_color_code,
             confirmButtonText: 'ตกลง'
         }).then((result) => {
+            $('.btn-save-cus-upload-ref').removeLoading();
         });
     }
 }
@@ -1071,6 +1079,9 @@ let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "
     }
 
     var returnResult;
+
+    $('.btn-save-cus-upload-ref').addLoading();
+
     $.ajax({
         url: url,
         type: "POST",
@@ -1556,19 +1567,19 @@ function callGetContractList() {
     let contractStatus = ($(`${formId} #select-search-doc-contract-status`).val() == '') ? null : $(`${formId} #select-search-doc-contract-status`).val();
     let contractDate = ($(`${formId} #input-search-doc-date`).val() == '') ? null : $(`${formId} #input-search-doc-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-cus-doc-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Sale/GetContractList?contractNumber=${contractNumber}&quotationNumber=${quotationNumber}&cusName=${cusName}&contractStatus=${contractStatus}&contractDate=${contractDate}`,
         success: function (data) {
             renderGetContractList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1788,19 +1799,19 @@ function callGetCommissionList() {
     let commissionDate = ($(`${formId} #input-search-commission-date`).val() == '') ? null : $(`${formId} #input-search-commission-date`).val();
     let commissionStatus = ($(`${formId} #select-search-commission-status`).val() == '') ? null : $(`${formId} #select-search-commission-status`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-commission-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Sale/GetCommissionList?commissionDate=${commissionDate}&commissionStatus=${commissionStatus}&loginCode=${_userCode}`,
         success: function (data) {
             renderGetCommissionList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }

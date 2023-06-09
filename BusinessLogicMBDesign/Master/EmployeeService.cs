@@ -297,7 +297,7 @@ namespace BusinessLogicMBDesign.Master
                         signatureFileName = model.signatureFileName,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode,
-                        empCode = model.empId
+                        id = model.id
                     };
 
                     updated = _empDataRepository.UpdateSignatureFileName(obj, conn, transaction);
