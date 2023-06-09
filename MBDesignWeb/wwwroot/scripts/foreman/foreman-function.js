@@ -17,6 +17,8 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _loader = $('<div/>').addClass('loader');
+
 function clearSearchForemanForm() {
     let formId = '#form-search-foreman-queue';
 
@@ -33,19 +35,19 @@ function callGetForemanQueueList() {
     let foremanStatus = ($(`${formId} #select-search-foreman-status`).val() == '') ? null : $(`${formId} #select-search-foreman-status`).val();
     let installDate = ($(`${formId} #input-search-foreman-install-date`).val() == '') ? null : $(`${formId} #input-search-foreman-install-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-foreman-queue-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Foreman/GetForemanQueueList?quotationNumber=${quotationNumber}&cusName=${cusName}&foremanStatus=${foremanStatus}&installDate=${installDate}`,
         success: function (data) {
             renderGetForemanQueueList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -722,6 +724,8 @@ function DoSaveForeman() {
         });
     });
 
+    $('#modal-editForeman .btn-modal-save-foreman').addLoading();
+
     var control = document.getElementById(`select-upload-foreman-disposite`);
     var files = control.files;
     var formData = new FormData();
@@ -766,6 +770,7 @@ function DoSaveForeman() {
 
     if (resultUpdate) {
         callSuccessAlert();
+        $('#modal-editForeman .btn-modal-save-foreman').removeLoading();
         $(`#modal-editForeman`).modal('hide');
         callGetForemanQueueList();
     }

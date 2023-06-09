@@ -7,6 +7,8 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _loader = $('<div/>').addClass('loader');
+
 function clearSearchForm() {
     let formId = '#form-search-3d-queue';
 
@@ -23,19 +25,19 @@ function callGet3DQueueList() {
     let checklistStatus = ($(`${formId} #select-search-3d-checklist-status`).val() == '') ? null : $(`${formId} #select-search-3d-checklist-status`).val();
     let installDate = ($(`${formId} #input-search-3d-install-date`).val() == '') ? null : $(`${formId} #input-search-3d-install-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-3d-queue-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Design3D/Get3DQueueList?quotationNumber=${quotationNumber}&empName=${empName}&checklistStatus=${checklistStatus}&installDate=${installDate}`,
         success: function (data) {
             renderGet3DQueueList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -428,6 +430,8 @@ function DoSave3dDesign() {
         formData.append("files", files[i]);
     }
 
+    $('.btn-modal-save-3d').addLoading();
+
     $.ajax({
         url: url,
         type: "POST",
@@ -438,13 +442,14 @@ function DoSave3dDesign() {
         success: function (result) {
             if (result.isResult == true) {
                 callSuccessAlert();
+                $('.btn-modal-save-3d').removeLoading();
                 $(`#modal-editDesign3D`).modal('hide');
                 callGetChecklistStatusSelect2();
                 callGet3DQueueList();
             }
         },
         error: function (err) {
-            
+            $('.btn-modal-save-3d').removeLoading();
         }
     });
 }

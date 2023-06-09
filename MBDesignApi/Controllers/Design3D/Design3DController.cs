@@ -2,6 +2,7 @@
 using BusinessLogicMBDesign.Design3D;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -70,6 +71,7 @@ namespace MBDesignApi.Controllers.Design3D
         #region POST
         [HttpPost]
         [DisableRequestSizeLimit]
+        [AllowAnonymous]
         public ActionResult DoUpdateDesign3D([FromQuery] int orderId, [FromQuery] int empId, [FromQuery] string dueDate, [FromQuery] bool final3d, [FromQuery] int design3dId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();

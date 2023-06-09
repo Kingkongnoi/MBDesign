@@ -5,20 +5,22 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
-function GetWaitApproveList() {
-    //let loaded = $('#tb-quotation-list');
+let _loader = $('<div/>').addClass('loader');
 
-    //loaded.prepend(loader);
+function GetWaitApproveList() {
+    let loaded = $('#tb-approve-list');
+
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Approve/GetWaitApproveList`,
         success: function (data) {
             renderGetWaitApproveList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -76,19 +78,19 @@ function renderGetWaitApproveList(data) {
     );
 }
 function GetApproveHistoryList() {
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-approve-history-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Approve/GetApproveHistoryList`,
         success: function (data) {
             renderGetApproveHistoryList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -875,6 +877,8 @@ function DoApproveProcess() {
 
     var data = JSON.stringify(obj);
 
+    $('.btn-modal-save-approve').addLoading();
+
     $.ajax({
         url: url,
         type: 'POST',
@@ -882,6 +886,7 @@ function DoApproveProcess() {
         success: (res) => {
             if (res.isResult == true) {
                 callSuccessAlert();
+                $('.btn-modal-save-approve').removeLoading();
                 $(`#modal-editApprove`).modal('hide');
                 GetWaitApproveList();
                 callCountCustOrderWaitForApprove();
