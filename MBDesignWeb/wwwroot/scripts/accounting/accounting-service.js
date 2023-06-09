@@ -729,7 +729,7 @@ function renderEditInvoiceSelect2() {
 }
 
 function callCustomerInformation(e) {
-    let orderId = $(e).val();
+    let orderId = $(e).val() == "" ? 0 : $(e).val();
 
     let formId = '#form-createInvoice';
 
@@ -1270,4 +1270,173 @@ async function renderReceiptHtml(data) {
     //html2pdf().from(element).set(options).save();
     //html2pdf(element);
     html2pdf().from(element).set(options).save();
+}
+
+function callIdCardComCert() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Accounting/GetIdCardComCert`,
+        success: function (data) {
+            let idCardFileName = "";
+            let comcertFileName = "";
+            if (data != null) {
+                idCardFileName = data.imgIdCardFileName;
+                comcertFileName = data.imgComCertFileName;
+            }
+            renderIdCard(idCardFileName);
+            renderComcert(comcertFileName);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderIdCard(imgIdCardFileName) {
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (imgIdCardFileName != "") {
+        //data.forEach((a) => {
+        lstUrl.push(`${imgIdCardFileName}`);
+
+        var addPreview = {
+            caption: "Id Card",
+            //width: '120px',
+            //url: '/localhost/public/delete',
+            //key: data.uploadId,
+            //extra: {
+            //    id: data.uploadId
+            //},
+        };
+
+        lstPreviewImg.push(addPreview);
+        //});
+    }
+
+    $(`#form-uploadBoardIdCard #select-upload-board-idcard`).fileinput('destroy');
+    if (imgIdCardFileName != "") {
+        $(`#form-uploadBoardIdCard #select-upload-board-idcard`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: true,
+            showCaption: true,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`#form-uploadBoardIdCard #select-upload-board-idcard`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
+            showUpload: true,
+        });
+    }
+}
+function renderComcert(imgComCertFileName) {
+    var lstUrl = [];
+    var lstPreviewImg = [];
+    if (imgComCertFileName != "") {
+        //data.forEach((a) => {
+        lstUrl.push(`${imgComCertFileName}`);
+
+        var addPreview = {
+            caption: "CompanyCertificate.pdf",
+            type: "pdf",
+            size: 8000,
+        };
+
+        lstPreviewImg.push(addPreview);
+    }
+
+    $(`#form-uploadCompanyCert #select-upload-company-cert`).fileinput('destroy');
+    if (imgComCertFileName != "") {
+        $(`#form-uploadCompanyCert #select-upload-company-cert`).fileinput({
+            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            showBrowse: true,
+            showUpload: true,
+            showCaption: true,
+            initialPreview: lstUrl,
+            initialPreviewAsData: true,
+            initialPreviewFileType: 'image', 
+            initialPreviewConfig: [
+                lstPreviewImg
+            ],
+            browseOnZoneClick: true,
+            browseLabel: 'เลือกไฟล์'
+        });
+    }
+    else {
+        $(`#form-uploadCompanyCert #select-upload-company-cert`).fileinput({
+            uploadUrl: "Home/UploadFiles", // this is your home controller method url
+            //maxFileCount: 1,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
+            showUpload: true,
+        });
+    }
+}
+function saveIdCard() {
+    var control = document.getElementById(`select-upload-board-idcard`);
+    var files = control.files;
+    var formData = new FormData();
+
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    let url = `${app_settings.api_url}/api/Accounting/DoUpdateIdCard?loginCode=${_userCode}`;
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        success: function (result) {
+            if (result.isResult == true) {
+                callSuccessAlert();
+                callIdCardComCert();
+            }
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function saveComCert() {
+    var control = document.getElementById(`select-upload-company-cert`);
+    var files = control.files;
+    var formData = new FormData();
+
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    let url = `${app_settings.api_url}/api/Accounting/DoUpdateComCert?loginCode=${_userCode}`;
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        success: function (result) {
+            if (result.isResult == true) {
+                callSuccessAlert();
+                callIdCardComCert();
+            }
+        },
+        error: function (err) {
+
+        }
+    });
 }

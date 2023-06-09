@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
@@ -25,6 +26,7 @@ namespace BusinessLogicMBDesign.Accounting
         private readonly InvoiceRepository _invoiceRepository;
         private readonly ReceiptRepository _receiptRepository;
         private readonly CommissionRepository _commissionRepository;
+        private readonly IdCardComCertRepository _idCardComCertRepository;
 
         public AccountingService(IConfiguration configuration)
         {
@@ -38,6 +40,7 @@ namespace BusinessLogicMBDesign.Accounting
             _invoiceRepository = new InvoiceRepository();
             _receiptRepository = new ReceiptRepository();
             _commissionRepository = new CommissionRepository();
+            _idCardComCertRepository = new IdCardComCertRepository();
         }
 
         public List<CustOrderView> GetAccountingList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
@@ -573,6 +576,116 @@ namespace BusinessLogicMBDesign.Accounting
 
 
             return (commission, bonus);
+        }
+
+        public tbIdCardComCert GetIdCardComCert()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _idCardComCertRepository.GetFirstIdCardComCert(conn);
+            }
+        }
+
+        public ResultMessage DoUpdateIdCard(UploadFiles files, string loginCode)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var exists = _idCardComCertRepository.GetFirstIdCardComCert(conn, transaction);
+                    if(exists == null)
+                    {
+                        var added = new tbIdCardComCert
+                        {
+                            imgIdCardFileName = files.imageUrl,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode
+                        };
+
+                        int? newId = _idCardComCertRepository.Add(added, conn, transaction);
+                    }
+                    else
+                    {
+                        var updated = new tbIdCardComCert
+                        {
+                            imgIdCardFileName = files.imageUrl,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = loginCode,
+                            id = exists.id
+                        };
+
+                        int updateId = _idCardComCertRepository.UpdateIdCard(updated, conn, transaction);
+                    }
+                    
+                    msg.isResult = true;
+                    transaction.Commit();
+                }
+                catch
+                {
+                    msg.isResult = false;
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+
+        public ResultMessage DoUpdateComCert(UploadFiles files, string loginCode)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var exists = _idCardComCertRepository.GetFirstIdCardComCert(conn, transaction);
+                    if (exists == null)
+                    {
+                        var added = new tbIdCardComCert
+                        {
+                            imgComCertFileName = files.imageUrl,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode
+                        };
+
+                        int? newId = _idCardComCertRepository.Add(added, conn, transaction);
+                    }
+                    else
+                    {
+                        var updated = new tbIdCardComCert
+                        {
+                            imgComCertFileName = files.imageUrl,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = loginCode,
+                            id= exists.id
+                        };
+
+                        int updateId = _idCardComCertRepository.UpdateComCert(updated, conn, transaction);
+                    }
+
+                    msg.isResult = true;
+                    transaction.Commit();
+                }
+                catch
+                {
+                    msg.isResult = false;
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
         }
     }
 }

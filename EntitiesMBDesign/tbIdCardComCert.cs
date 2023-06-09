@@ -12,6 +12,13 @@ namespace EntitiesMBDesign
         [Key]
         public int id { get; set; }
         public string idCardComCertId { get; set; } = string.Empty;
-
+        public string imgIdCardFileName { get; set; } = string.Empty;
+        public string imgComCertFileName { get; set; } = string.Empty;
+        public bool status { get; set; } = true;
+        public DateTime createDate { get; set; }
+        public string createBy { get; set; } = string.Empty;
+        public DateTime? updateDate { get; set; }
+        public string? updateBy { get; set; }
+        public bool isDeleted { get; set; } = false;
     }
 }

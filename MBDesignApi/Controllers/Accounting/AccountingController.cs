@@ -1,4 +1,5 @@
 ﻿using AspNetCore.Reporting;
+using BusinessLogicMBDesign;
 using BusinessLogicMBDesign.Accounting;
 using BusinessLogicMBDesign.Approve;
 using BusinessLogicMBDesign.Design3D;
@@ -6,6 +7,7 @@ using BusinessLogicMBDesign.Master;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace MBDesignApi.Controllers.Accounting
 {
@@ -15,12 +17,14 @@ namespace MBDesignApi.Controllers.Accounting
     {
         private readonly IConfiguration _configuration;
         private readonly AccountingService _accountingService;
+        private readonly UploadToAwsService _uploadToAwsService;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public AccountingController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _accountingService = new AccountingService(_configuration);
+            _uploadToAwsService = new UploadToAwsService(_configuration);
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -118,7 +122,8 @@ namespace MBDesignApi.Controllers.Accounting
         [HttpGet]
         public JsonResult GetCustomerInformationByOrderId(int orderId, int invoiceId = 0)
         {
-            var custOrder = _accountingService.GetCustOrderByOrderId(orderId);
+            var custOrder = new CustOrderView();
+            custOrder = _accountingService.GetCustOrderByOrderId(orderId);
             var invoice = new tbInvoice();
             if (invoiceId != 0)
             {
@@ -176,6 +181,13 @@ namespace MBDesignApi.Controllers.Accounting
             return new JsonResult(data);
         }
 
+        [HttpGet]
+        public JsonResult GetIdCardComCert()
+        {
+            var data = _accountingService.GetIdCardComCert();
+
+            return new JsonResult(data);
+        }
         #endregion GET
 
         #region POST
@@ -209,6 +221,125 @@ namespace MBDesignApi.Controllers.Accounting
             var data = _accountingService.DoUpdateInvoice(obj);
 
             return new JsonResult(data);
+        }
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public ActionResult DoUpdateIdCard([FromQuery] string loginCode, List<IFormFile> files)
+        {
+            var msg = new ResultMessage();
+            var addedUpload = new UploadFiles();
+
+            string path = Directory.GetCurrentDirectory();
+            foreach (IFormFile source in files)
+            {
+                string folderName = string.Format("{0}\\upload\\images\\", path);
+
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+
+                FileInfo file = new FileInfo(filename);
+                string fileExtension = file.Extension;
+
+                string oldFilePath = string.Format("{0}{1}", folderName, filename);
+                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+
+                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+
+                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+                FileStream output = System.IO.File.Create(fullFilePath);
+
+                source.CopyTo(output);
+                output.Dispose();
+
+                addedUpload = new UploadFiles
+                {
+                    fileName = newFileName,
+                    filePath = fullFilePath,
+                    fileSize = source.Length,
+                    originalFileName = filename,
+                };
+
+                msg = _uploadToAwsService.DoUploadToAws(addedUpload);
+                addedUpload.imageUrl = msg.strResult;
+                if (msg.isResult == false)
+                {
+                    return Json(msg);
+                }
+            }
+
+            ///Update data
+            var result = _accountingService.DoUpdateIdCard(addedUpload, loginCode);
+            if (result.isResult == false)
+            {
+                msg.isResult = result.isResult;
+                return Json(msg);
+            }
+            return Json(msg);
+
+        }
+
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public ActionResult DoUpdateComCert([FromQuery] string loginCode, List<IFormFile> files)
+        {
+            var msg = new ResultMessage();
+            var addedUpload = new UploadFiles();
+
+            string path = Directory.GetCurrentDirectory();
+            foreach (IFormFile source in files)
+            {
+                string folderName = string.Format("{0}\\upload\\documents\\", path);
+
+                if (!Directory.Exists(folderName))
+                {
+                    Directory.CreateDirectory(folderName);
+                }
+
+                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+
+                FileInfo file = new FileInfo(filename);
+                string fileExtension = file.Extension;
+
+                string oldFilePath = string.Format("{0}{1}", folderName, filename);
+                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+
+                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+
+                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+                FileStream output = System.IO.File.Create(fullFilePath);
+
+                source.CopyTo(output);
+                output.Dispose();
+
+                addedUpload = new UploadFiles
+                {
+                    fileName = newFileName,
+                    filePath = fullFilePath,
+                    fileSize = source.Length,
+                    originalFileName = filename,
+                };
+
+                msg = _uploadToAwsService.DoUploadToAws(addedUpload);
+                addedUpload.imageUrl = msg.strResult;
+                if (msg.isResult == false)
+                {
+                    return Json(msg);
+                }
+            }
+
+            ///Update data
+            var result = _accountingService.DoUpdateComCert(addedUpload, loginCode);
+            if (result.isResult == false)
+            {
+                msg.isResult = result.isResult;
+                return Json(msg);
+            }
+            return Json(msg);
+
         }
         #endregion POST
     }

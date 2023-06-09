@@ -13,6 +13,8 @@
     callGetInvoiceList();
     callGetReceiptList();
 
+    callIdCardComCert();
+
     $('#form-search-accounting .btn-clear-search-accounting').on('click', function () {
         clearSearchForm();
         callGetAccountingList();
@@ -45,6 +47,12 @@
         }
         else if (target == "#nav-bill") {
             callGetReceiptList();
+        }
+        else if (target == "#nav-idcard") {
+            callIdCardComCert();
+        }
+        else if (target == "#nav-cert") {
+            callIdCardComCert();
         }
     });
 
@@ -100,4 +108,37 @@
     $(document).on('click', '.btn-print-receipt', function () {
         printReceipt($(this).data('receiptid'));
     });
+
+    $('#nav-idcard .btn-save-board-idcard').on('click', function () {
+        Swal.fire({
+            title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'บันทึก',
+            cancelButtonText: `ยกเลิก`,
+            confirmButtonColor: _modal_primary_color_code,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.close();
+                saveIdCard();
+            }
+        });
+    });
+
+    $('#nav-cert .btn-save-company-cert').on('click', function () {
+        Swal.fire({
+            title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'บันทึก',
+            cancelButtonText: `ยกเลิก`,
+            confirmButtonColor: _modal_primary_color_code,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.close();
+                saveComCert();
+            }
+        });
+    });
+
 });
