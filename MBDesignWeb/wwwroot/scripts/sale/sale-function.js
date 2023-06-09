@@ -490,6 +490,9 @@ function renderProductItemSelect2ByType(formName, data) {
     if (_action == "add") {
         $(`#${formName} #select-cus-product-items`).val('').trigger('change');
     }
+    else if (_action == "edit") {
+        $(`#${formName} #select-cus-product-items`).val(_items[0].itemId).trigger('change');
+    }
 }
 
 var _bank_account = [];
