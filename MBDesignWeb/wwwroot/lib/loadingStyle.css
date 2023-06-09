@@ -1,26 +1,119 @@
-﻿.loader {
-    position: relative;
-    width: 2.5em;
-    height: 2.5em;
-    transform: rotate(165deg);
+﻿/*.loader {
+  position: relative;
+  width: 2.5em;
+  height: 2.5em;
+  transform: rotate(165deg);
+}
+.loader:before, .loader:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: 0.5em;
+  height: 0.5em;
+  border-radius: 0.25em;
+  transform: translate(-50%, -50%);
+}
+.loader:before {
+  animation: before 2s infinite;
+}
+.loader:after {
+  animation: after 2s infinite;
 }
 
-    .loader:before, .loader:after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        display: block;
-        width: 0.5em;
-        height: 0.5em;
-        border-radius: 0.25em;
-        transform: translate(-50%, -50%);
-    }
 
-    .loader:before {
-        animation: before 2s infinite;
-    }
+@keyframes before {
+  0% {
+    width: 0.5em;
+    box-shadow: 1em -0.5em rgba(232, 84, 66, 0.75), -1em 0.5em rgba(74, 147, 204, 0.75);
+  }
+  35% {
+    width: 2.5em;
+    box-shadow: 0 -0.5em rgba(232, 84, 66, 0.75), 0 0.5em rgba(74, 147, 204, 0.75);
+  }
+  70% {
+    width: 0.5em;
+    box-shadow: -1em -0.5em rgba(232, 84, 66, 0.75), 1em 0.5em rgba(74, 147, 204, 0.75);
+  }
+  100% {
+    box-shadow: 1em -0.5em rgba(232, 84, 66, 0.75), -1em 0.5em rgba(74, 147, 204, 0.75);
+  }
+}
+@keyframes after {
+  0% {
+    height: 0.5em;
+    box-shadow: 0.5em 1em rgba(106, 193, 125, 0.75), -0.5em -1em rgba(240, 195, 20, 0.75);
+  }
+  35% {
+    height: 2.5em;
+    box-shadow: 0.5em 0 rgba(106, 193, 125, 0.75), -0.5em 0 rgba(240, 195, 20, 0.75);
+  }
+  70% {
+    height: 0.5em;
+    box-shadow: 0.5em -1em rgba(106, 193, 125, 0.75), -0.5em 1em rgba(240, 195, 20, 0.75);
+  }
+  100% {
+    box-shadow: 0.5em 1em rgba(106, 193, 125, 0.75), -0.5em -1em rgba(240, 195, 20, 0.75);
+  }
+}*/
 
+.loader {
+    /*width: 150px;*/ /* control the size */
+    width: 3em;
+    height: 3em;
+    aspect-ratio: 1;
+    display: grid;
+    -webkit-mask: conic-gradient(from 15deg, #0003,#000);
+    mask: conic-gradient(from 15deg, #0003,#000);
+    animation: load 1s steps(12) infinite;
+}
+
+    .loader,
+    .loader:before,
     .loader:after {
-        animation: after 2s infinite;
+        background: radial-gradient(circle closest-side,currentColor 90%,#0000 98%) 50% -150%/20% 80% repeat-y, radial-gradient(circle closest-side,currentColor 90%,#0000 98%) -150% 50%/80% 20% repeat-x;
     }
+
+        .loader:before,
+        .loader:after {
+            content: "";
+            grid-area: 1/1;
+            transform: rotate(30deg);
+        }
+
+        .loader:after {
+            transform: rotate(60deg);
+        }
+
+@keyframes load {
+    from {
+        transform: rotate(0turn)
+    }
+
+    to {
+        transform: rotate(1turn)
+    }
+}
+
+/**
+ * Attempt to center the whole thing!
+ */
+html,
+body {
+  height: 100%;
+}
+
+.loader {
+  position: absolute;
+  top: calc(50% - 1.25em);
+  left: calc(50% - 1.25em);
+}
+
+.loader-text {
+    width: 100%;
+    position: absolute;
+    top: 55%;
+    text-align: center;
+}
+

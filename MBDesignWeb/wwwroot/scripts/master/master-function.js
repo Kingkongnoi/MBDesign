@@ -1,4 +1,4 @@
-﻿let loader = $('<div/>').addClass('loader');
+﻿let _loader = $('<div/>').addClass('loader');
 
 let _modal_holiday_name = 'modal-createHoliday';
 let _holiday_action = 'add';
@@ -712,11 +712,13 @@ function DoAddOrUpdateEmployee(modal) {
         //cancelButtonColor: _modal_default_color_code,
     }).then((result) => {
         if (result.isConfirmed) {
-            callAddOrUpdateEmployee(_emp_action);
+            callAddOrUpdateEmployee();
         }
     });
 }
 function callAddOrUpdateEmployee() {
+    $('.btn-modal-save-emp').addLoading();
+
     let url = (_emp_action == 'add') ? `${app_settings.api_url}/api/Employee/AddEmployee` : `${app_settings.api_url}/api/Employee/UpdateEmployee`;
 
     let empFormId = '#form-createEmployee';
@@ -765,6 +767,7 @@ function callAddOrUpdateEmployee() {
                 callSuccessAlert();
                 $(`#modal-createEmployee`).modal('hide');
                 callGetEmployeeList();
+                $('.btn-modal-save-emp').removeLoading();
             }
             else {
                 Swal.fire({
@@ -774,9 +777,11 @@ function callAddOrUpdateEmployee() {
                     confirmButtonColor: _modal_primary_color_code,
                     confirmButtonText: 'ตกลง'
                 });
+                $('.btn-modal-save-emp').removeLoading();
             }
         },
         error: () => {
+            $('.btn-modal-save-emp').removeLoading();
         }
     });
 
@@ -813,19 +818,19 @@ function callGetEmployeeList() {
     let positionId = ($(`${formId} #select-search-emp-position`).val() == '' || $(`${formId} #select-search-emp-position`).val() == undefined || $(`${formId} #select-search-emp-position`).val() == null) ? null : $(`${formId} #select-search-emp-position`).val();
     let status = ($(`${formId} #select-search-emp-status`).val() == '') ? null : $(`${formId} #select-search-emp-status`).val();
 
-    //let loaded = $('#tb-employee-list');
+    let loaded = $('#tb-employee-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetEmpList?empId=${empId}&empName=${empName}&departmentId=${departmentId}&positionId=${positionId}&status=${status}`,
         success: function (data) {
             renderGetEmployeeList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1567,17 +1572,17 @@ function callGetHolidayList() {
 
     let loaded = $('#tb-holiday-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetHolidayList?year=${year}&day=${day}&holidayDate=${holidayDate}&holiday=${holiday}&status=${status}`,
         success: function (data) {
             renderGetHolidayList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1801,17 +1806,17 @@ function callGetDepartmentList() {
 
     let loaded = $('#tb-department-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetDepartmentList?departmentName=${departmentName}&status=${status}`,
         success: function (data) {
             renderGetDepartmentList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1989,17 +1994,17 @@ function callGetPositionList() {
 
     let loaded = $('#tb-position-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetPositionList?positionName=${positionName}&status=${status}`,
         success: function (data) {
             renderGetPositionList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -2211,17 +2216,17 @@ function callGetItemList() {
 
     let loaded = $('#tb-product-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Product/GetItemList?itemName=${itemName}&typeId=${typeId}&status=${status}`,
         success: function (data) {
             renderGetItemList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -2466,17 +2471,17 @@ function callGetTypeList() {
 
     let loaded = $('#tb-type-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Product/GetTypeList?typeName=${typeName}&status=${status}`,
         success: function (data) {
             renderGetTypeList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -2661,17 +2666,17 @@ function callGetStyleList() {
 
     let loaded = $('#tb-style-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Product/GetStyleList?styleName=${styleName}&status=${status}`,
         success: function (data) {
             renderGetStyleList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -2877,17 +2882,17 @@ function callGetAccountList() {
 
     let loaded = $('#tb-account-list');
 
-    loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/BankAccount/GetBankAccountList?bank=${bank}&accountName=${accountName}&accountNumber=${accountNumber}&accountType=${accountType}&status=${status}`,
         success: function (data) {
             renderGetAccountList(data);
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }

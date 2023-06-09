@@ -213,7 +213,7 @@ namespace BusinessLogicMBDesign.Master
                         }
                     }
 
-                    int empId = (empExists != null) ? empExists.id : 0;
+                    //int empId = (empExists != null) ? empExists.id : 0;
 
                     var updatedObject = new tbEmpData
                     {
@@ -244,7 +244,7 @@ namespace BusinessLogicMBDesign.Master
                         var addedRoleEmp = new tbRoleEmpData
                         {
                             roleId = model.roleId,
-                            empId = empId,
+                            empId = model.id,
                             status = model.status,
                             createDate = DateTime.UtcNow,
                             createBy = model.loginCode
@@ -258,7 +258,7 @@ namespace BusinessLogicMBDesign.Master
                         {
                             roleEmpDataId = roleEmpDataId,
                             roleId = model.roleId,
-                            empId = empId,
+                            empId = model.id,
                             status = model.status,
                             updateDate = DateTime.UtcNow,
                             updateBy = model.loginCode

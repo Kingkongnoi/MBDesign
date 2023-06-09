@@ -73,6 +73,10 @@
         border-color: transparent /*#0d6efd*/;
         font-size: 16px;
     }
+
+    .loader {
+        z-index: 99;
+    }
 </style>
 
 <div class="row">
@@ -91,7 +95,7 @@
         </nav>
         <div class="tab-content" id="nav-tab-master-tabContent">
             <div class="tab-pane fade show active" id="nav-master-empData" role="tabpanel" aria-labelledby="nav-master-empData-tab">
-                <div class="container-fluid">
+                <div class="container-fluid" id="divEmployee">
                     <div class="row mt-2">
                         <form id="form-search-employee">
                             <div class="row col-sm-12">

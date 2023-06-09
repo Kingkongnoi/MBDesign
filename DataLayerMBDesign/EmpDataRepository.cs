@@ -20,7 +20,8 @@ namespace DataLayerMBDesign
         public int Update(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbEmpData
-                                set empFirstName = @empFirstName,
+                                set empCode = @empCode,
+                                empFirstName = @empFirstName,
                                 empLastName = @empLastName,
                                 departmentId = @departmentId,
                                 positionId = @positionId,
@@ -33,24 +34,24 @@ namespace DataLayerMBDesign
                                 updateBy = @updateBy,
                                 status = @status,
                                 idCard = @idCard
-                                where isDeleted = 0 and empCode = @empCode
+                                where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.empFirstName, obj.empLastName, obj.departmentId, obj.positionId, obj.salaryType, 
-                obj.salary, obj.hiringDate/* obj.signatureFileName*/, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.idCard, obj.empCode }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.empCode, obj.empFirstName, obj.empLastName, obj.departmentId, obj.positionId, obj.salaryType, 
+                obj.salary, obj.hiringDate/* obj.signatureFileName*/, obj.timeStampType, obj.updateDate, obj.updateBy, obj.status, obj.idCard, obj.id }, transaction: trans);
         }
 
         public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbEmpData
                                 set signatureFileName = @signatureFileName
-                                where isDeleted = 0 and empCode = @empCode
+                                where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new
             {
                 obj.signatureFileName,
-                obj.empCode
+                obj.id
             }, transaction: trans);
         }
 
