@@ -477,8 +477,8 @@ namespace BusinessLogicMBDesign.Accounting
 
                 try
                 {
-                    string currDate = DateTime.UtcNow.ToString("dd/yyyy");
-                    var exists = _commissionRepository.GetFirstCommissionByDate(currDate, saleEmpCode, conn, transaction);
+                    //string currDate = DateTime.UtcNow.ToString("dd/yyyy");
+                    var exists = _commissionRepository.GetFirstCommissionByDate(DateTime.UtcNow, saleEmpCode, conn, transaction);
                     if(exists == null)
                     {
                         var calMonthlySales = grandTotal * Convert.ToDecimal(0.5);

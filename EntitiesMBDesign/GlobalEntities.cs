@@ -45,6 +45,10 @@ namespace EntitiesMBDesign
 
     public class GlobalUploadCategory
     {
+        public static string custOrderPlan = "CustOrderPlan";
+        public static string custOrderReference = "CustOrderReference";
+        public static string custOrderDisposite = "CustOrderDisposite";
+        public static string custOrderIdCard = "CustOrderIdCard";
         public static string approved3d = "3dApproved";
         public static string foremanUpload = "foremanUpload";
         public static string secondDisposite = "CustOrderSecondDisposite";

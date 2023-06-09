@@ -153,4 +153,8 @@
     $('#form-search-commission .btn-search-commission').on('click', function () {
         callGetCommissionList();
     });
+
+    $(document).on('click', '.btn-view-commission', function () {
+        callGetCommissionDetail($(this).data('id'));
+    });
 });

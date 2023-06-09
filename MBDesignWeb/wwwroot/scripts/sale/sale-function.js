@@ -1850,7 +1850,7 @@ function renderGetCommissionList(data) {
                     orderable: false,
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn-add-custom btn-view-commission" data-id="${row.commissionId}"  title="ดูเอกสาร">
+                        return `<button type="button" class="btn-add-custom btn-view-commission" data-id="${row.commissionId}"  title="ดูข้อมูล">
                         <img src="/images/analysis.png" width="25px" /></button>`;
                     },
                 },
@@ -1863,4 +1863,60 @@ function callSelect2CommissionStatus() {
     $(`#form-search-commission #select-search-commission-status`).append(`<option value="">ทั้งหมด</option>`);
     $(`#form-search-commission #select-search-commission-status`).append(`<option value="จ่ายแล้ว">จ่ายแล้ว</option>`);
     $(`#form-search-commission #select-search-commission-status`).append(`<option value="รอจ่าย">รอจ่าย</option>`);
+}
+
+function callGetCommissionDetail(id) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Sale/GetCommissionDetail?commissionId=${id}`,
+        success: function (data) {
+            renderGetCommissionList(data);
+            //loaded.find(loader).remove();
+        },
+        error: function (err) {
+            //loaded.find(loader).remove();
+        }
+    });
+}
+function renderCommissionDetail(data) {
+    let formId = "#form-viewCommission";
+
+    $(`${formId} #input-commission-dateYear`).val(data[0].cvtCommissionDate);
+    $(`${formId} #input-commission`).val(data[0].commission);
+    $(`${formId} #input-commission-salesMonth`).val(data[0].monthlySales);
+    $(`${formId} #input-commission-bonus`).val(data[0].bonus);
+
+    $('#tb-commission-detail-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.commissionId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'quotationNumber',
+                },
+                {
+                    targets: 1,
+                    data: 'unitPrice',
+                    className: "text-right"
+                },
+                {
+                    targets: 2,
+                    data: 'commissionBillStatus',
+                },
+            ],
+        }
+    );
 }

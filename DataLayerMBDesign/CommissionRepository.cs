@@ -35,7 +35,7 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(commissionDate) && commissionDate != "null")
             {
-                condition += string.Format(" and FORMAT(a.commissionDate, 'dd/yyyy') = N'{0}'", commissionDate);
+                condition += string.Format(" and FORMAT(a.commissionDate, 'dd/yyyy') = N'{0}'", Convert.ToDateTime(commissionDate));
             }
 
             if (!string.IsNullOrEmpty(commissionStatus) && commissionStatus != "null")
@@ -66,7 +66,7 @@ namespace DataLayerMBDesign
             return conn.Query<CommissionView>(queryString,new { loginCode }, transaction: trans).ToList();
         }
 
-        public CommissionView GetFirstCommissionByDate(string commissionDate, string loginCode, SqlConnection conn, SqlTransaction? trans = null)
+        public CommissionView GetFirstCommissionByDate(DateTime commissionDate, string loginCode, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"SELECT a.commissionId
                             ,a.commissionDate
@@ -85,10 +85,41 @@ namespace DataLayerMBDesign
                             , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.saleEmpCode and isDeleted = 0),'') saleEmpName
                             FROM tbCommission a
                             where a.isDeleted = 0 and a.status = 1 and a.saleEmpCode = @loginCode
-                            and FORMAT(a.commissionDate, 'dd/yyyy') = @commissionDate
+                            and FORMAT(a.commissionDate, 'dd/yyyy') = FORMAT(@commissionDate, 'dd/yyyy')
                             order by FORMAT(a.commissionDate, 'dd/yyyy')";
 
             return conn.QueryFirstOrDefault<CommissionView>(queryString, new { commissionDate, loginCode }, transaction: trans);
         }
+
+        public List<CommissionView> GetCommissionDetail(int commissionId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"SELECT a.commissionId
+                                ,a.commissionDate
+                                ,a.monthlySales
+                                ,a.commission
+                                ,a.bonus
+                                ,a.commissionStatus
+                                ,a.saleEmpCode
+                                ,a.status
+                                ,a.createDate
+                                ,a.createBy
+                                ,a.updateDate
+                                ,a.updateBy
+                                ,a.isDeleted
+                                , FORMAT(a.commissionDate, 'dd/yyyy') cvtCommissionDate
+                                , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.saleEmpCode and isDeleted = 0),'') saleEmpName
+                                ,b.quotationNumber
+                                ,b.unitPrice
+                                ,b.period
+                                ,b.invoiceStatus
+                                , N'เก็บเงิน' + b.period commissionBillStatus
+                                FROM tbCommission a inner join tbInvoice b on a.saleEmpCode = b.createBy 
+                                where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1 and a.commissionId = @commissionId
+                                and b.period in (N'งวดที่ 2', N'งวดที่ 4')
+                                order by b.quotationNumber";
+
+            return conn.Query<CommissionView>(queryString, new { commissionId }, transaction: trans).ToList();
+        }
+
     }
 }

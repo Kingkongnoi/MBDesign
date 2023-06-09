@@ -965,6 +965,15 @@ namespace BusinessLogicMBDesign.Sale
                 return _commissionRepository.GetCommissionList(commissionDate, commissionStatus, loginCode, conn);
             }
         }
+        public List<CommissionView> GetCommissionDetail(int commissionId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _commissionRepository.GetCommissionDetail(commissionId, conn);
+            }
+        }
         #endregion Commission
     }
 }

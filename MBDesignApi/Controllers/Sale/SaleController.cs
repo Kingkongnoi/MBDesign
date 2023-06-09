@@ -130,6 +130,13 @@ namespace MBDesignApi.Controllers.Sale
 
             return new JsonResult(data);
         }
+        [HttpGet]
+        public JsonResult GetCommissionDetail(int commissionId)
+        {
+            var data = _saleService.GetCommissionDetail(commissionId);
+
+            return new JsonResult(data);
+        }
         #endregion GET
 
         #region POST

@@ -29,5 +29,10 @@ namespace EntitiesMBDesign
     {
         public string cvtCommissionDate { get; set; } = string.Empty;
         public string saleEmpName { get; set; } = string.Empty;
+        public string quotationNumber { get; set; } = string.Empty;
+        public decimal unitPrice { get; set; }
+        public string period { get; set; } = string.Empty;
+        public string invoiceStatus { get; set; } = string.Empty;
+        public string commissionBillStatus { get; set; } = string.Empty;
     }
 }
