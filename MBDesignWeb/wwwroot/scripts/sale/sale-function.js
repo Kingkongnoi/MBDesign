@@ -1049,23 +1049,25 @@ function saveUpload() {
         rsltUpload = callSaveUpload(orderId, "CustOrderIdCard", "select-upload-idcard");
     }
 
-    if (rsltUpload.isResult) {
-        callSuccessAlert();
-        clearUploadRefForm();
-        $('.btn-save-cus-upload-ref').removeLoading();
-        $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
-    }
-    else {
-        Swal.fire({
-            text: rsltUpload.message,
-            icon: 'error',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $('.btn-save-cus-upload-ref').removeLoading();
-        });
-    }
+    //if (rsltUpload != null) {
+    //    if (rsltUpload.isResult) {
+    callSuccessAlert();
+    clearUploadRefForm();
+    $('.btn-save-cus-upload-ref').removeLoading();
+    $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
+    //    }
+    //    else {
+    //        Swal.fire({
+    //            text: rsltUpload.message,
+    //            icon: 'error',
+    //            showCancelButton: false,
+    //            confirmButtonColor: _modal_primary_color_code,
+    //            confirmButtonText: 'ตกลง'
+    //        }).then((result) => {
+    //            $('.btn-save-cus-upload-ref').removeLoading();
+    //        });
+    //    }
+    //}
 }
 let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "") {
     let url = /*(_action == "add") ? */`${app_settings.api_url}/api/Sale/AddUpload?orderId=${orderId}&categoryName=${categoryName}&loginCode=${_userCode}`/* : ``*/;
@@ -1088,13 +1090,14 @@ let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "
         contentType: false, // Do not set any content header
         processData: false, // Do not process data
         data: formData,
-        async: false,
-        success: function (result) {
-            returnResult = result
-        },
-        error: function (err) {
-            returnResult = result
-        }
+        //async: true,
+        //success: function (result) {
+        //    console.log(result);
+        //    returnResult = result
+        //},
+        //error: function (err) {
+        //    returnResult = result
+        //}
     });
 
     return returnResult;

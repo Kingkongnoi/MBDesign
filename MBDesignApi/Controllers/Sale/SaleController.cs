@@ -205,8 +205,7 @@ namespace MBDesignApi.Controllers.Sale
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        [AllowAnonymous]
-        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
+        public async Task<ActionResult> AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -256,9 +255,10 @@ namespace MBDesignApi.Controllers.Sale
             }
 
             ///Update data
-            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
+            var result = await _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
             if(result == false)
             {
+                msg.isResult = false;
                 return Json(msg);
             }
             return Json(msg);
