@@ -117,7 +117,6 @@ namespace MBDesignApi.Controllers.Master
 
         [HttpPost]
         [DisableRequestSizeLimit]
-        [AllowAnonymous]
         public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();

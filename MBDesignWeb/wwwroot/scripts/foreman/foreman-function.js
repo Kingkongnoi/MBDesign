@@ -832,7 +832,7 @@ function callSummarySubTotal(indx, custOrderDetailId) {
     let height = $(`#form-foreman-items-${indx} #input-cus-product-height`).val() == "" ? 0 : $(`#form-foreman-items-${indx} #input-cus-product-height`).val();
     if (parseFloat(height) >= 2.7) {
         $(`#form-foreman-items-${indx} #chkSpecialHeight-${indx}`).prop('checked', true);
-        calSpHeightPercentage = (100 / 2.60 * parseFloat(height)) - 100;
+        calSpHeightPercentage = Math.ceil((100 / 2.60 * parseFloat(height)) - 100)/100;
         calSpHeight = (parseFloat(itemsPrice) + parseFloat(calSpHeightPercentage)) + parseFloat(itemsPrice);
         showItemPrice = calSpHeight.toFixed(2);
     }

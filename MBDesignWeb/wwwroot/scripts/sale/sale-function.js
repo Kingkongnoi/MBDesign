@@ -341,7 +341,7 @@ function renderCreateStyleDiv() {
                                 <div class="col-sm-4">
                                     <label class="col-sm-4 col-form-label">ความสูง</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" onblur="setCheckedSpecialHeight(${newSeq});" onkeydown="setCheckedSpecialHeight(${newSeq});" />
                                     </div>
                                 </div>
                             </div>
@@ -355,7 +355,7 @@ function renderCreateStyleDiv() {
                                     <label class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
                                              <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}" disabled>
                                                     <label class="form-check-label">
                                                     ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
                                                     </label>
@@ -600,7 +600,7 @@ function callCalculateItemOptions() {
         let calSpHeightPercentage = 0;
 
         if (v.spHeight) {
-            calSpHeightPercentage = (100 / 2.60 * v.orderHeight) - 100;
+            calSpHeightPercentage = Math.ceil((100 / 2.60 * v.orderHeight) - 100)/100;
         }
 
         var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
@@ -608,7 +608,7 @@ function callCalculateItemOptions() {
 
         let showItemPrice = 0;
         if (v.spHeight) {
-            calSpHeight = (parseFloat(itemPrice) * parseFloat(calSpHeightPercentage)) + parseFloat(itemPrice);
+            calSpHeight = ((parseFloat(itemPrice) * parseFloat(calSpHeightPercentage)) + parseFloat(itemPrice)).toFixed(2);
             showItemPrice = calSpHeight;
         }
         else {
@@ -1218,7 +1218,7 @@ function renderCustStyleDiv(data) {
                                 <div class="col-sm-4">
                                     <label class="col-sm-4 col-form-label">ความสูง</label>
                                     <div class="col-sm-12">
-                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
+                                        <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" onblur="setCheckedSpecialHeight(${newSeq});" onkeydown="setCheckedSpecialHeight(${newSeq});" />
                                     </div>
                                 </div>
                             </div>
@@ -1232,7 +1232,7 @@ function renderCustStyleDiv(data) {
                                     <label class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
                                              <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}">
+                                                    <input class="form-check-input" type="checkbox" value="" id="chkSpecialHeight-${newSeq}" disabled>
                                                     <label class="form-check-label">
                                                     ความสูงพิเศษ (มากกว่าหรือเท่ากับ 2.70 เมตรขึ้นไป จะถูกคำนวณราคาเพิ่ม)
                                                     </label>
@@ -1548,7 +1548,12 @@ function clearCalPriceForm() {
     $(`${formId} #radioBankPersonal`).prop('checked', true);
     $(`${formId} #input-cal-approve`).val('');
 }
-
+function setCheckedSpecialHeight(seq) {
+    if (parseFloat($(`#formCreateStyle-${seq} #input-cus-product-height`).val()) >= 2.7) {
+        $(`#chkSpecialHeight-${seq}`).prop('checked', true);
+    }
+    else { $(`#chkSpecialHeight-${seq}`).prop('checked', false); }
+}
 function clearSearchContractForm() {
     let formId = '#form-search-cus-contract-document';
 

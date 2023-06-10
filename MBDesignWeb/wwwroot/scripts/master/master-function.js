@@ -802,10 +802,13 @@ function callAddOrUpdateSignatureFile() {
         contentType: false, // Do not set any content header
         processData: false, // Do not process data
         data: formData,
-        async: false,
+        async: true,
+        //disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
         success: function (result) {
+            console.log(result);
         },
         error: function (err) {
+            console.log(err);
         }
     });
 }
