@@ -15,7 +15,6 @@ namespace DataLayerMBDesign
         {
             return conn.Insert(obj, transaction: trans);
         }
-
         public int Update(tbCustOrder obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbCustOrder
@@ -431,6 +430,40 @@ namespace DataLayerMBDesign
             order by a.orderId", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
+        }
+        public CustOrderView GetCustOrderByQuotationNumber(string quotationNumber, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select top 1 a.orderId
+            ,a.quotationType
+            ,a.custId
+            ,a.installDate
+            ,a.orderNote
+            ,a.discount
+            ,a.vat
+            ,a.subTotal
+            ,a.grandTotal
+            ,a.disposite
+            ,a.accountId
+            ,a.quotationNumber
+            ,a.quotationFileName
+            ,a.status
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+            ,a.quotationNumberGen
+            ,a.quotationNumberType
+            ,a.orderStatus
+            ,a.quotationComment
+            ,a.orderNotePrice, b.accountName, b.accountNumber, b.accountType, b.bank
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
+            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName  
+            from tbCustOrder a inner join tbBankAccount b on a.accountId = b.accountId
+            where a.quotationNumber = @quotationNumber and a.isDeleted = 0 and b.isDeleted = 0
+            order by a.orderId desc";
+
+            return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { quotationNumber }, transaction: trans);
         }
     }
 }

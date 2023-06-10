@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,6 +20,7 @@ namespace BusinessLogicMBDesign.Document
         private readonly CustRepository _custRepository;
         private readonly CustOrderRepository _custOrderRepository;
         private readonly ReceiptRepository _receiptRepository;
+        private readonly ContractAgreementRepository _contractAgreementRepository;
 
         public DocumentService(IConfiguration configuration)
         {
@@ -29,6 +31,7 @@ namespace BusinessLogicMBDesign.Document
             _custRepository = new CustRepository();
             _custOrderRepository  = new CustOrderRepository();
             _receiptRepository = new ReceiptRepository();
+            _contractAgreementRepository = new ContractAgreementRepository();
         }
 
         public tbInvoice GetInvoiceByInvoiceId(int invoiceId)
@@ -64,6 +67,24 @@ namespace BusinessLogicMBDesign.Document
             {
                 conn.Open();
                 return _custOrderRepository.GetCustOrderByOrderId(orderId, conn);
+            }
+        }
+
+        public tbContractAgreement GetContractByContractId(int contractId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                return _contractAgreementRepository.GetFirstByContractId(contractId, conn);
+            }
+        }
+
+        public CustOrderView GetCustOrderByQuotationNumber(string quotationNumber)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                return _custOrderRepository.GetCustOrderByQuotationNumber(quotationNumber, conn);
             }
         }
     }

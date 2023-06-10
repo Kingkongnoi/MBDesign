@@ -1934,3 +1934,35 @@ function renderCommissionDetail(data) {
         }
     );
 }
+
+function printContract(contractId) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetContractByContractId?contractId=${contractId}`,
+        success: function (data) {
+            if (data.contract != null) {
+                generateContractDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+async function generateContractDocument(data) {
+    await renderContractHtml(data);
+}
+async function renderContractHtml(data) {
+    let options = {
+        margin: 0.25,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "png", quality: 0.98 },
+        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Contract_${data.contract.contractNumber}`,
+    };
+
+    var element = document.getElementById("contractElement");
+    //html2pdf().from(element).set(options).save();
+    //html2pdf(element);
+    html2pdf().from(element).set(options).save();
+}

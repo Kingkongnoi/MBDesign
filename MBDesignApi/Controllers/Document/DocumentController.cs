@@ -104,5 +104,27 @@ namespace MBDesignApi.Controllers.Document
 
             return Json(result);
         }
+
+        [HttpGet]
+        public JsonResult GetContractByContractId(int contractId)
+        {
+            var contract = _documentService.GetContractByContractId(contractId);
+            var cust = new tbCust();
+            var custOrder = new CustOrderView();
+            if (contract != null)
+            {
+                cust = _documentService.GetCustomerDataByCustId(contract.custId);
+                custOrder = _documentService.GetCustOrderByQuotationNumber(contract.quotationNumber);
+            }
+
+            var result = new
+            {
+                contract = contract,
+                cust = cust,
+                custOrder = custOrder,
+            };
+
+            return Json(result);
+        }
     }
 }

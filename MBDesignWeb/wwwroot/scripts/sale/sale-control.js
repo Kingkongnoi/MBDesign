@@ -157,4 +157,8 @@
     $(document).on('click', '.btn-view-commission', function () {
         callGetCommissionDetail($(this).data('id'));
     });
+
+    $(document).on('click', '.btn-view-cus-contract', function () {
+        printContract($(this).data('id'));
+    })
 });
