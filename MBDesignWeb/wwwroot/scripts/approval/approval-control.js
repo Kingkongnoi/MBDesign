@@ -6,6 +6,7 @@
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
+        console.log(target);
         if (target == "#nav-approve") {
             GetWaitApproveList();
         }

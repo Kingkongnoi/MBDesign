@@ -111,7 +111,7 @@ function renderAccountingList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: "dt-center",
+                    className: `dt-center ${_role_class_display}`,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-accounting" data-orderid="${row.orderId}" data-custid="${row.custId}" data-contractid="${row.contractId}" data-invoiceid="${row.invoiceId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
@@ -551,7 +551,7 @@ function renderInvoiceingList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: "dt-center",
+                    className: `dt-center ${_role_class_display}`,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-invoice" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;

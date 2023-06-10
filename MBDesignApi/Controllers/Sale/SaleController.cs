@@ -152,7 +152,10 @@ namespace MBDesignApi.Controllers.Sale
                 var lstOptions = new List<SaleOptions>();
                 foreach (var option in item["options"])
                 {
-                    lstOptions.Add(new SaleOptions { optionsId = Convert.ToInt32(option["optionsId"]) });
+                    if(option["optionsId"] != null || option["optionsId"] != "")
+                    {
+                        lstOptions.Add(new SaleOptions { optionsId = Convert.ToInt32(option["optionsId"]) });
+                    }
                 }
 
                 lstItems.Add(new SaleItem
@@ -161,7 +164,7 @@ namespace MBDesignApi.Controllers.Sale
                     floor = item["floor"],
                     zone = item["zone"],
                     typeId = Convert.ToInt32(item["typeId"]),
-                    itemId = Convert.ToInt32(item["itemId"]),
+                    itemId = item["itemId"] == "" || item["itemId"] == null ? 0 : Convert.ToInt32(item["itemId"]),
                     orderLength = item["orderLength"] == "" ? 0 : Convert.ToDecimal(item["orderLength"]),
                     orderDepth = item["orderDepth"] == "" ? 0 : Convert.ToDecimal(item["orderDepth"]),
                     orderHeight = item["orderHeight"] == "" ? 0 : Convert.ToDecimal(item["orderHeight"]),
@@ -203,9 +206,10 @@ namespace MBDesignApi.Controllers.Sale
             return new JsonResult(data);
         }
 
+        //[AllowAnonymous]
         [HttpPost]
         [DisableRequestSizeLimit]
-        public async Task<ActionResult> AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
+        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
@@ -255,7 +259,7 @@ namespace MBDesignApi.Controllers.Sale
             }
 
             ///Update data
-            var result = await _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
+            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
             if(result == false)
             {
                 msg.isResult = false;

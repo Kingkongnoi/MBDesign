@@ -904,7 +904,7 @@ function renderGetQuotationList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: "dt-center",
+                    className: `dt-center ${_role_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
@@ -1088,16 +1088,19 @@ let callSaveUpload = function(orderId = 0, categoryName = "", intputFileName = "
         url: url,
         type: "POST",
         contentType: false, // Do not set any content header
-        processData: false, // Do not process data
+        //processData: false, // Do not process data
         data: formData,
-        //async: true,
-        //success: function (result) {
-        //    console.log(result);
-        //    returnResult = result
-        //},
-        //error: function (err) {
-        //    returnResult = result
-        //}
+        async: false,
+        //cache: false,
+        //contentType: false,
+        //contentType: 'image/png',
+        processData: false,
+        success: function (result) {
+            returnResult = result
+        },
+        error: function (err) {
+            console.log(err);
+        }
     });
 
     return returnResult;

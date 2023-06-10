@@ -107,7 +107,7 @@ function renderGetForemanQueueList(data) {
                     targets: 6,
                     data: null,
                     orderable: false,
-                    className: "dt-center",
+                    className: `dt-center ${_role_class_display}`,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-foreman" data-orderid="${row.orderId}" data-foremanid="${row.foremanId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;

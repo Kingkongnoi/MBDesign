@@ -653,7 +653,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Quotation
 
         #region UploadRef
-        public async Task<bool> DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
+        public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
