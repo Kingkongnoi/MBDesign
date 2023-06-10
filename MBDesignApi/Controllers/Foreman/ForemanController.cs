@@ -134,7 +134,7 @@ namespace MBDesignApi.Controllers.Foreman
         }
         [HttpPost]
         [DisableRequestSizeLimit]
-        [AllowAnonymous]
+        //[AllowAnonymous]
         public JsonResult DoUpdateForeman([FromQuery] int orderId, [FromQuery] string orderNote, [FromQuery] decimal orderNotePrice, [FromQuery] decimal subTotal
             , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, [FromQuery] string loginCode, List<IFormFile> files)
         {
