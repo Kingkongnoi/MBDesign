@@ -600,7 +600,7 @@ function callCalculateItemOptions() {
         let calSpHeightPercentage = 0;
 
         if (v.spHeight) {
-            calSpHeightPercentage = Math.ceil((100 / 2.60 * v.orderHeight) - 100)/100;
+            calSpHeightPercentage = ((100 / 2.60 * v.orderHeight) - 100)/100;
         }
 
         var activeOptions = v.options.filter(c => { return c.optionsChecked == true; });
@@ -608,7 +608,7 @@ function callCalculateItemOptions() {
 
         let showItemPrice = 0;
         if (v.spHeight) {
-            calSpHeight = ((parseFloat(itemPrice) * parseFloat(calSpHeightPercentage)) + parseFloat(itemPrice)).toFixed(2);
+            calSpHeight = Math.ceil(((parseFloat(itemPrice) * parseFloat(calSpHeightPercentage)) + parseFloat(itemPrice))).toFixed(2);
             showItemPrice = calSpHeight;
         }
         else {
