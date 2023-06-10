@@ -37,8 +37,11 @@ namespace DataLayerMBDesign
             ,b.itemName
             ,b.itemPrice
             ,(select top 1 styleName from tbProductStyle where styleId = a.styleId and isDeleted = 0) styleName
+            ,c.typeName
+			,c.typePrice
             FROM tbCustOrderDetail a inner join tbProductItem b on a.itemId = b.itemId
-            where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbProductType c on a.typeId = c.typeId
+            where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0 and c.isDeleted = 0
             order by a.custOrderDetailId";
 
             return conn.Query<CustOrderDetailView>(queryString, new { orderId }, transaction: trans).ToList();

@@ -212,8 +212,14 @@ function renderForemanItemList(data) {
         insideBodyDiv  += `<div class="tab-pane fade show ${setActive}" id="nav-foreman-items-${bodyIndx + 1}" role="tabpanel" aria-labelledby="nav-foreman-items-${bodyIndx + 1}-tab">`
         insideBodyDiv += '<div class="container-fluid">';
 
-        let showItem = `${v.itemName}`
-        let showItemPrice = v.itemPrice;
+        let typeName = v.typeName;
+        let typePrice = v.typePrice;
+
+        let itemName = typeName + (v.itemName == "" ? "" : ` ${v.itemName}`);
+        let itemPrice = parseFloat(typePrice) + (v.itemPrice == "" ? 0 : parseFloat(v.itemPrice));
+
+        let showItem = `${itemName}`
+        let showItemPrice = itemPrice;
         var optionsList = data.itemsOptions.filter(x => { return x.custOrderDetailId == v.custOrderDetailId });
         if (optionsList.length > 0) {
             optionsList.forEach((a) => {
@@ -689,6 +695,7 @@ function callSaveForeman() {
     });
 }
 function DoSaveForeman() {
+    $('#modal-editForeman .btn-modal-save-foreman').addLoading();
     ///Save items
     let resultUpdate = true;
     _items_list.forEach((v) => {
@@ -724,7 +731,7 @@ function DoSaveForeman() {
         });
     });
 
-    $('#modal-editForeman .btn-modal-save-foreman').addLoading();
+    swal.close();
 
     var control = document.getElementById(`select-upload-foreman-disposite`);
     var files = control.files;
@@ -820,18 +827,21 @@ function callSummarySubTotal(indx, custOrderDetailId) {
 
     let calSpHeight = 0;
     let calSpHeightPercentage = 0;
+    let showItemPrice = 0;
 
     let height = $(`#form-foreman-items-${indx} #input-cus-product-height`).val() == "" ? 0 : $(`#form-foreman-items-${indx} #input-cus-product-height`).val();
     if (parseFloat(height) >= 2.7) {
         $(`#form-foreman-items-${indx} #chkSpecialHeight-${indx}`).prop('checked', true);
         calSpHeightPercentage = (100 / 2.60 * parseFloat(height)) - 100;
-        calSpHeight = parseFloat(itemsPrice) + parseFloat(calSpHeightPercentage);
+        calSpHeight = (parseFloat(itemsPrice) + parseFloat(calSpHeightPercentage)) + parseFloat(itemsPrice);
+        showItemPrice = calSpHeight.toFixed(2);
     }
     else {
         $(`#form-foreman-items-${indx} #chkSpecialHeight-${indx}`).prop('checked', false);
+        showItemPrice = (parseFloat(itemsPrice).toFixed(2));
     }
 
-    let showItemPrice = (parseFloat(itemsPrice) + parseFloat(calSpHeight)).toFixed(2);
+    //showItemPrice = (parseFloat(itemsPrice) + parseFloat(calSpHeight)).toFixed(2);
     items[0].showItemPrice = showItemPrice;
     $(`#form-foreman-cal #input-foreman-items-price-${indx}`).val(showItemPrice);
 

@@ -2,6 +2,7 @@
 using BusinessLogicMBDesign.Foreman;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 
@@ -73,6 +74,7 @@ namespace MBDesignApi.Controllers.Foreman
         #region POST
         [HttpPost]
         [DisableRequestSizeLimit]
+        [AllowAnonymous]
         public JsonResult DoUpdateForemanItems([FromQuery] int orderId, [FromQuery] int custOrderDetailId, [FromQuery] decimal length, [FromQuery] decimal depth, [FromQuery] decimal height, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
@@ -132,6 +134,7 @@ namespace MBDesignApi.Controllers.Foreman
         }
         [HttpPost]
         [DisableRequestSizeLimit]
+        [AllowAnonymous]
         public JsonResult DoUpdateForeman([FromQuery] int orderId, [FromQuery] string orderNote, [FromQuery] decimal orderNotePrice, [FromQuery] decimal subTotal
             , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, [FromQuery] string loginCode, List<IFormFile> files)
         {
