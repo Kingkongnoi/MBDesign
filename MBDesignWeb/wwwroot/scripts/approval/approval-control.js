@@ -5,14 +5,13 @@
     GetApproveHistoryList();
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        var target = $(e.target).data("bs-target") // activated tab
-        console.log(target);
-        if (target == "#nav-approve") {
-            GetWaitApproveList();
-        }
-        else if (target == "#nav-approve-history") {
-            GetApproveHistoryList();
-        }
+        //var target = $(e.target).data("bs-target") // activated tab
+        //if (target == "#nav-approve") {
+        //    GetWaitApproveList();
+        //}
+        //else if (target == "#nav-approve-history") {
+        //    GetApproveHistoryList();
+        //}
     });
 
     $(document).on('click', '.btn-edit-approve', function () {

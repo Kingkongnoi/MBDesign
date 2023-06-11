@@ -108,6 +108,7 @@ function callRoleNavMenu() {
         url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
         success: function (data) {
             data.forEach((v) => {
+                debugger;
                 setShowAndHiddenNavMenu(v.menuName, v.parentMenuName, v);
             })
         },
@@ -184,8 +185,7 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
         if (obj.canView) {
             $('#nav-master').removeClass('nav-no-display');
         }
-        _master_all_role = "";
-
+        
         if (obj.menuName == "ทั้งหมด") {
             $('#nav-emp').addClass('no-display');
             $('#nav-product').addClass('no-display');
@@ -229,7 +229,7 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
 
                 $('.btn-add-account').removeClass('no-display');
             }
-            debugger;
+
             _role_class_display = "no-display"
             if (obj.canEdit) {
                 _master_all_role = "all"
