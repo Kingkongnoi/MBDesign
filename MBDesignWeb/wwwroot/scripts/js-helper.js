@@ -107,7 +107,6 @@ function callRoleNavMenu() {
         type: 'GET',
         url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
         success: function (data) {
-            console.log(data);
             data.forEach((v) => {
                 setShowAndHiddenNavMenu(v.menuName, v.parentMenuName, v);
             })
@@ -185,7 +184,8 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
         if (obj.canView) {
             $('#nav-master').removeClass('nav-no-display');
         }
-        
+        _master_all_role = "";
+
         if (obj.menuName == "ทั้งหมด") {
             $('#nav-emp').addClass('no-display');
             $('#nav-product').addClass('no-display');
@@ -259,9 +259,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                             $('.btn-add-position').removeClass('no-display');
                         }
 
-                        _role_class_display = "no-display"
+                        _role_emp_class_display = "no-display"
                         if (obj.canEdit) {
-                            _role_class_display = ""
+                            _role_emp_class_display = ""
                         }
                         break;
                     case "ตั้งค่าสินค้าและราคา":
@@ -281,9 +281,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                             $('.btn-add-style').removeClass('no-display');
                         }
 
-                        _role_class_display = "no-display"
+                        _role_product_class_display = "no-display"
                         if (obj.canEdit) {
-                            _role_class_display = ""
+                            _role_product_class_display = ""
                         }
                         break;
                     case "ตั้งค่าสูตรคำนวณ":
@@ -309,9 +309,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                             $('.btn-add-account').removeClass('no-display');
                         }
 
-                        _role_class_display = "no-display"
+                        _role_bank_class_display = "no-display"
                         if (obj.canEdit) {
-                            _role_class_display = ""
+                            _role_bank_class_display = ""
                         }
                         break;
                     case "ข้อมูลรถขนส่ง":
@@ -338,7 +338,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
 }
 
 let _master_active = "";
-let _role_class_display = "";
+let _role_emp_class_display = "";
+let _role_product_class_display = "";
+let _role_bank_class_display = "";
 let _master_all_role = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');

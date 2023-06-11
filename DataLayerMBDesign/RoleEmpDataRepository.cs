@@ -66,5 +66,13 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbRoleEmpData>(queryString, new { empId }, transaction: trans);
         }
+
+        public int HardDeleteRoleByEmpId(int empId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"delete tbRoleEmpData where empId = @empId
+                                  select @@ROWCOUNT;";
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { empId }, transaction: trans);
+        }
     }
 }

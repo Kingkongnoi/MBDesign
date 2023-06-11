@@ -802,7 +802,7 @@ function callAddOrUpdateSignatureFile() {
         contentType: false, // Do not set any content header
         processData: false, // Do not process data
         data: formData,
-        //async: true,
+        async: false,
         //disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
         success: function (result) {
             console.log(result);
@@ -908,7 +908,7 @@ function renderGetEmployeeList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_emp_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-employee" data-id="${row.id}"  title="แก้ไข">
@@ -1347,7 +1347,7 @@ function renderGetRoleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_emp_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-role" data-id="${row.roleId}"  title="แก้ไข">
@@ -1671,7 +1671,7 @@ function renderGetHolidayList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_emp_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-holiday" data-id="${row.holidayId}"  title="แก้ไข">
@@ -1900,7 +1900,7 @@ function renderGetDepartmentList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_emp_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-department" data-id="${row.departmentId}"  title="แก้ไข">
@@ -2092,7 +2092,7 @@ function renderGetPositionList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_emp_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-position" data-id="${row.positionId}"  title="แก้ไข">
@@ -2329,7 +2329,7 @@ function renderGetItemList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-product" data-id="${row.itemId}" data-typeid="${row.typeId}"  title="แก้ไข">
@@ -2584,7 +2584,7 @@ function renderGetTypeList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-type" data-id="${row.typeId}"  title="แก้ไข">
@@ -2780,7 +2780,7 @@ function renderGetStyleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-style" data-id="${row.styleId}"  title="แก้ไข">
@@ -3016,7 +3016,7 @@ function renderGetAccountList(data) {
                     targets: 10,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_bank_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-account" data-id="${row.accountId}"  title="แก้ไข">

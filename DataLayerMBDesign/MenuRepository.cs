@@ -50,11 +50,12 @@ namespace DataLayerMBDesign
 
         public List<MenuView> GetMenuPermissionPerEmpData(int empId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select a.menuId, a.name menuName, b.canAdd, b.canApprove, b.canEdit, b.canView, c.roleId, c.empId, a.parentMenuId, isnull(d.name,'') parentMenuName
+            string queryString = @"select a.menuId, a.name menuName, b.canAdd, b.canApprove, b.canEdit, b.canView, c.roleId, c.empId, a.parentMenuId, isnull(d.name,'') parentMenuName, a.orderMenu
             from tbMenu a inner join tbRoleMenu b on a.menuId = b.menuId and a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1
             inner join tbRoleEmpData c on b.roleId = c.roleId and c.isDeleted = 0 and c.status = 1
-            left join tbMenu d on a.parentMenuId = d.menuId and isnull(d.isDeleted,0) = 0 and isnull(d.status,1) = 1
+            inner join tbMenu d on a.parentMenuId = d.menuId and isnull(d.isDeleted,0) = 0 and isnull(d.status,1) = 1
             where c.empId = @empId
+            group by a.menuId, a.name, b.canAdd, b.canApprove, b.canEdit, b.canView, c.roleId, c.empId, a.parentMenuId, isnull(d.name,''), a.orderMenu
             order by a.orderMenu"
             ;
 
