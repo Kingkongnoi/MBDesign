@@ -2462,7 +2462,7 @@ function callAddOrUpdateType() {
             else {
                 if (res.resultStatus == 'duplicate') {
                     Swal.fire({
-                        text: "ชื่อสไตล์มีอยู่แล้ว กรุณากรอกชื่อสไตล์อีกครั้ง",
+                        text: "ชื่อหมวดหมู่มีอยู่แล้ว กรุณากรอกชื่อหมวดหมู่อีกครั้ง",
                         icon: 'warning',
                         showCancelButton: false,
                         confirmButtonColor: _modal_primary_color_code,
