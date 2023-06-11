@@ -160,5 +160,9 @@
 
     $(document).on('click', '.btn-view-cus-contract', function () {
         printContract($(this).data('id'));
-    })
+    });
+
+    $('#divUploadRef .btn-previous-cus-upload-ref').on('click', function () {
+        $('.nav-pills a[href="#nav-sale-calculate-tab"]').tab('show');
+    });
 });
