@@ -78,19 +78,19 @@
                                 </a>
                         </li>*@
                         <li class="nav-item" id="nav-sale">
-                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index"><img src="~/images/sales.png" width="20px" /> การขาย</a>
+                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index"><img id="imgSale" src="~/images/sales.png" width="20px" /> <span id="spnSale"> การขาย</span></a>
                         </li>
                         <li class="nav-item" id="nav-3d">
-                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index"><img src="~/images/graphic-design.png" width="20px" /> การออกแบบ 3D</a>
+                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index"><img id="img3D" src="~/images/graphic-design.png" width="20px" /> <span id="spn3D"> การออกแบบ 3D</span></a>
                         </li>
                         <li class="nav-item" id="nav-foreman">
-                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index"><img src="~/images/foreman.png" width="20px" /> โฟร์แมน</a>
+                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index"><img id="imgForeman" src="~/images/foreman.png" width="20px" /> <span id="spnForeman"> โฟร์แมน</span></a>
                         </li>
                         <li class="nav-item" id="nav-accounting">
-                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index"><img src="~/images/accounting.png" width="20px" /> บัญชีและเอกสาร</a>
+                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index"><img id="imgAccounting" src="~/images/accounting.png" width="20px" /> <span id="spnAccounting"> บัญชีและเอกสาร</span></a>
                         </li>
                         <li class="nav-item" id="nav-master">
-                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index"><img src="~/images/data-processing.png" width="20px" /> ข้อมูลหลัก</a>
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index"><img id="imgMaster" src="~/images/data-processing.png" width="20px" /> <span id="spnMaster"> ข้อมูลหลัก</span></a>
                         </li>
                     </ul>
 
@@ -101,7 +101,7 @@
                             @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
                             <a class="nav-link" asp-area="" asp-controller="Approval" asp-action="Index">
                                 <i class="fa fa-bell fa-lg"></i>
-                                <span class="badge rounded-pill badge-notification bg-danger bagde-visible" style="" id="spnApproveNumber"></span>
+                                <span class="badge rounded-pill badge-notification bg-danger bagde-visible" id="spnApproveNumber"></span>
                             </a>
                         </li>
                         <li class="nav-item dropdown">
@@ -123,6 +123,7 @@
 
                 callRoleNavMenu();
                 callCountCustOrderWaitForApprove();
+
             });
         </script>
     </header>

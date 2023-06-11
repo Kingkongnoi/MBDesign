@@ -26,7 +26,29 @@
     .no-display {
         display: none;
     }
+
+    .mnu-active {
+        color: #F09723;
+    }
 </style>
+
+<script>
+    $(function () {
+        $('#spnForeman').addClass('mnu-active');
+        $('#imgForeman').attr('src', '/images/foreman_2.png');
+
+        $('#spnSale').removeClass('mnu-active');
+        $('#spn3D').removeClass('mnu-active');
+        $('#spnMaster').removeClass('mnu-active');
+        $('#spnAccounting').removeClass('mnu-active');
+
+        $('#imgSale').attr('src', '/images/sales.png');
+        $('#img3D').attr('src', '/images/graphic-design.png');
+        $('#imgMaster').attr('src', '/images/data-processing.png');
+        $('#imgAccounting').attr('src', '/images/accounting.png');
+    });
+</script>
+
 
 <div class="row">
     <h4>โฟร์แมน</h4>

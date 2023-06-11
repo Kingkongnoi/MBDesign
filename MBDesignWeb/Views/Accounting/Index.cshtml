@@ -35,7 +35,28 @@
     .no-display{
         display: none;
     }
+
+    .mnu-active {
+        color: #F09723;
+    }
 </style>
+
+<script>
+    $(function () {
+        $('#spnAccounting').addClass('mnu-active');
+        $('#imgAccounting').attr('src', '/images/accounting_2.png');
+
+        $('#spnSale').removeClass('mnu-active');
+        $('#spn3D').removeClass('mnu-active');
+        $('#spnForeman').removeClass('mnu-active');
+        $('#spnMaster').removeClass('mnu-active');
+
+        $('#imgSale').attr('src', '/images/sales.png');
+        $('#img3D').attr('src', '/images/graphic-design.png');
+        $('#imgForeman').attr('src', '/images/foreman.png');
+        $('#imgMaster').attr('src', '/images/accounting.png');
+    });
+</script>
 
 <div class="row">
     <h4>บัญชีและเอกสาร</h4>
