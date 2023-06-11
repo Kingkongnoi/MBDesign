@@ -196,6 +196,12 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
 
             if (obj.canView) {
                 _master_all_role = "all";
+
+                if (_master_active == "") {
+                    _master_active = "active";
+                    $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show');
+                }
+
                 $('#nav-emp').removeClass('no-display');
                 $('#nav-product').removeClass('no-display');
                 $('#nav-calculate').removeClass('no-display');
@@ -244,6 +250,11 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                         $('#nav-emp').addClass('no-display');
                         if (obj.canView) {
                             $('#nav-emp').removeClass('no-display');
+
+                            if (_master_active == "") {
+                                _master_active = "active";
+                                $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show');
+                            }
                         }
 
                         $('.btn-add-employee').addClass('no-display');
@@ -270,6 +281,11 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                             $('#nav-master').removeClass('nav-no-display');
 
                             $('#nav-product').removeClass('no-display');
+
+                            if (_master_active == "") {
+                                _master_active = "active";
+                                $('.nav-pills a[href="#nav-mas-product-tab"]').tab('show');
+                            }
                         }
 
                         $('.btn-add-product').addClass('no-display');
@@ -302,6 +318,11 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                         $('#nav-accounting').addClass('no-display');
                         if (obj.canView) {
                             $('#nav-accounting').removeClass('no-display');
+
+                            if (_master_active == "") {
+                                _master_active = "active";
+                                $('.nav-pills a[href="#nav-mas-account-tab"]').tab('show');
+                            }
                         }
 
                         $('.btn-add-account').addClass('no-display');
@@ -368,208 +389,208 @@ function callGetRolePerMenu() {
         }
     });
 }
-function setPermissionMenu(v) {
-    if (v.menuName == "ภาพรวมข้อมูล" || v.parentMenuName == "ภาพรวมข้อมูล") {
+////function setPermissionMenu(v) {
+////    if (v.menuName == "ภาพรวมข้อมูล" || v.parentMenuName == "ภาพรวมข้อมูล") {
 
-    }
-    else if (v.menuName == "การขาย" || v.parentMenuName == "การขาย") {
-        setPermissionSaleMenu(v);
-    }
-    else if (v.menuName == "การออกแบบ 3D" || v.parentMenuName == "การออกแบบ 3D") {
+////    }
+////    else if (v.menuName == "การขาย" || v.parentMenuName == "การขาย") {
+////        setPermissionSaleMenu(v);
+////    }
+////    else if (v.menuName == "การออกแบบ 3D" || v.parentMenuName == "การออกแบบ 3D") {
         
-    }
-    else if (v.menuName == "โฟร์แมน" || v.parentMenuName == "โฟร์แมน") {
+////    }
+////    else if (v.menuName == "โฟร์แมน" || v.parentMenuName == "โฟร์แมน") {
         
-    }
-    else if (v.menuName == "บัญชีและเอกสาร" || v.parentMenuName == "บัญชีและเอกสาร") {
+////    }
+////    else if (v.menuName == "บัญชีและเอกสาร" || v.parentMenuName == "บัญชีและเอกสาร") {
         
-    }
-    else if (v.menuName == "ข้อมูลหลัก" || v.parentMenuName == "ข้อมูลหลัก") {
-        setPermissionMasterMenu(v);
-    }
-    else if (v.menuName == "การอนุมัติใบเสนอราคา" || v.parentMenuName == "การอนุมัติใบเสนอราคา") {
+////    }
+////    else if (v.menuName == "ข้อมูลหลัก" || v.parentMenuName == "ข้อมูลหลัก") {
+////        setPermissionMasterMenu(v);
+////    }
+////    else if (v.menuName == "การอนุมัติใบเสนอราคา" || v.parentMenuName == "การอนุมัติใบเสนอราคา") {
         
-    }
-}
-function setPermissionMasterMenu(v) {
+////    }
+////}
+////function setPermissionMasterMenu(v) {
 
-    switch (v.menuName) {
-        case "ทั้งหมด":
-            if (v.canView) {
-                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show'); }
+////    switch (v.menuName) {
+////        case "ทั้งหมด":
+////            if (v.canView) {
+////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show'); }
 
-                $('#nav-emp').removeClass('no-display');
-                $('#nav-product').removeClass('no-display');
-                $('#nav-calculate').removeClass('no-display');
-                $('#nav-inventory').removeClass('no-display');
-                $('#nav-accounting').removeClass('no-display');
-                $('#nav-transpotation').removeClass('no-display');
-            }
-            else {
-                $('#nav-emp').addClass('no-display');
-                $('#nav-product').addClass('no-display');
-                $('#nav-calculate').addClass('no-display');
-                $('#nav-inventory').addClass('no-display');
-                $('#nav-accounting').addClass('no-display');
-                $('#nav-transpotation').addClass('no-display');
-            }
+////                $('#nav-emp').removeClass('no-display');
+////                $('#nav-product').removeClass('no-display');
+////                $('#nav-calculate').removeClass('no-display');
+////                $('#nav-inventory').removeClass('no-display');
+////                $('#nav-accounting').removeClass('no-display');
+////                $('#nav-transpotation').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-emp').addClass('no-display');
+////                $('#nav-product').addClass('no-display');
+////                $('#nav-calculate').addClass('no-display');
+////                $('#nav-inventory').addClass('no-display');
+////                $('#nav-accounting').addClass('no-display');
+////                $('#nav-transpotation').addClass('no-display');
+////            }
 
-            if (v.canAdd) {
-                $('#nav-master-empData .btn-add-employee').removeClass('no-display');
-                $('#nav-master-role .btn-add-role').removeClass('no-display');
-                $('#nav-master-holiday .btn-add-holiday').removeClass('no-display');
-                $('#nav-master-department .btn-add-department').removeClass('no-display');
-                $('#nav-master-position .btn-add-position').removeClass('no-display');
-            }
-            else {
-                $('#nav-master-empData .btn-add-employee').addClass('no-display');
-                $('#nav-master-role .btn-add-role').addClass('no-display');
-                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
-                $('#nav-master-department .btn-add-department').addClass('no-display');
-                $('#nav-master-position .btn-add-position').addClass('no-display');
+////            if (v.canAdd) {
+////                $('#nav-master-empData .btn-add-employee').removeClass('no-display');
+////                $('#nav-master-role .btn-add-role').removeClass('no-display');
+////                $('#nav-master-holiday .btn-add-holiday').removeClass('no-display');
+////                $('#nav-master-department .btn-add-department').removeClass('no-display');
+////                $('#nav-master-position .btn-add-position').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-master-empData .btn-add-employee').addClass('no-display');
+////                $('#nav-master-role .btn-add-role').addClass('no-display');
+////                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
+////                $('#nav-master-department .btn-add-department').addClass('no-display');
+////                $('#nav-master-position .btn-add-position').addClass('no-display');
 
-                $('#nav-master-productData .btn-add-product').addClass('no-display');
-                $('#nav-master-productType .btn-add-type').addClass('no-display');
-                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
+////                $('#nav-master-productData .btn-add-product').addClass('no-display');
+////                $('#nav-master-productType .btn-add-type').addClass('no-display');
+////                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
 
-                $('#divBankAccount .btn-add-account').addClass('no-display');
-            }
-            break;
-        case "ข้อมูลพนักงาน":
-            if (v.canView) {
-                if (_master_active == "")
-                {
-                    _master_active = "active";
-                    $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show');
-                }
-                $('#nav-emp').removeClass('no-display');
-            }
-            else {
-                $('#nav-emp').addClass('no-display');
-            }
+////                $('#divBankAccount .btn-add-account').addClass('no-display');
+////            }
+////            break;
+////        case "ข้อมูลพนักงาน":
+////            if (v.canView) {
+////                if (_master_active == "")
+////                {
+////                    _master_active = "active";
+////                    $('.nav-pills a[href="#nav-mas-empData-tab"]').tab('show');
+////                }
+////                $('#nav-emp').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-emp').addClass('no-display');
+////            }
 
-            if (v.canAdd) {
-                $('#nav-master-empData .btn-add-employee').removeClass('no-display');
-                $('#nav-master-role .btn-add-role').removeClass('no-display');
-                $('#nav-master-holiday .btn-add-holiday').removeClass('no-display');
-                $('#nav-master-department .btn-add-department').removeClass('no-display');
-                $('#nav-master-position .btn-add-position').removeClass('no-display');
+////            if (v.canAdd) {
+////                $('#nav-master-empData .btn-add-employee').removeClass('no-display');
+////                $('#nav-master-role .btn-add-role').removeClass('no-display');
+////                $('#nav-master-holiday .btn-add-holiday').removeClass('no-display');
+////                $('#nav-master-department .btn-add-department').removeClass('no-display');
+////                $('#nav-master-position .btn-add-position').removeClass('no-display');
 
-                $('#nav-master-productData .btn-add-product').removeClass('no-display');
-                $('#nav-master-productType .btn-add-type').removeClass('no-display');
-                $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
+////                $('#nav-master-productData .btn-add-product').removeClass('no-display');
+////                $('#nav-master-productType .btn-add-type').removeClass('no-display');
+////                $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
 
-                $('#divBankAccount .btn-add-account').removeClass('no-display');
-            }
-            else {
-                $('#nav-master-empData .btn-add-employee').addClass('no-display');
-                $('#nav-master-role .btn-add-role').addClass('no-display');
-                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
-                $('#nav-master-department .btn-add-department').addClass('no-display');
-                $('#nav-master-position .btn-add-position').addClass('no-display');
-            }
-            break;
+////                $('#divBankAccount .btn-add-account').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-master-empData .btn-add-employee').addClass('no-display');
+////                $('#nav-master-role .btn-add-role').addClass('no-display');
+////                $('#nav-master-holiday .btn-add-holiday').addClass('no-display');
+////                $('#nav-master-department .btn-add-department').addClass('no-display');
+////                $('#nav-master-position .btn-add-position').addClass('no-display');
+////            }
+////            break;
 
-        case "ตั้งค่าสินค้าและราคา":
-            if (v.canView) {
-                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-product-tab"]').tab('show'); }
-                $('#nav-product').removeClass('no-display');
-            }
-            else {
-                $('#nav-product').addClass('no-display');
-            }
+////        case "ตั้งค่าสินค้าและราคา":
+////            if (v.canView) {
+////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-product-tab"]').tab('show'); }
+////                $('#nav-product').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-product').addClass('no-display');
+////            }
 
-            if (v.canAdd) {
-                $('#nav-master-productData .btn-add-product').removeClass('no-display');
-                $('#nav-master-productType .btn-add-type').removeClass('no-display');
-                $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
-            }
-            else {
-                $('#nav-master-productData .btn-add-product').addClass('no-display');
-                $('#nav-master-productType .btn-add-type').addClass('no-display');
-                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
-            }
+////            if (v.canAdd) {
+////                $('#nav-master-productData .btn-add-product').removeClass('no-display');
+////                $('#nav-master-productType .btn-add-type').removeClass('no-display');
+////                $('#nav-master-productStyle .btn-add-style').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-master-productData .btn-add-product').addClass('no-display');
+////                $('#nav-master-productType .btn-add-type').addClass('no-display');
+////                $('#nav-master-productStyle .btn-add-style').addClass('no-display');
+////            }
 
-            break;
-        case "ตั้งค่าสูตรคำนวณ":
-            if (v.canView) {
-                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-calculate-tab"]').tab('show'); }
-                $('#nav-calculate').removeClass('no-display');
-            }
-            else {
-                $('#nav-calculate').addClass('no-display');
-            }
+////            break;
+////        case "ตั้งค่าสูตรคำนวณ":
+////            if (v.canView) {
+////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-calculate-tab"]').tab('show'); }
+////                $('#nav-calculate').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-calculate').addClass('no-display');
+////            }
 
-            break;
-        case "ข้อมูลคลังสินค้า":
-            if (v.canView) {
-                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-inventory-tab"]').tab('show'); }
+////            break;
+////        case "ข้อมูลคลังสินค้า":
+////            if (v.canView) {
+////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-inventory-tab"]').tab('show'); }
                 
-                $('#nav-inventory').removeClass('no-display');
-            }
-            else {
-                $('#nav-inventory').addClass('no-display');
-            }
+////                $('#nav-inventory').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-inventory').addClass('no-display');
+////            }
 
-            break;
-        case "ข้อมูลบัญชีรับเงิน":
-            if (v.canView) {
-                if (_master_active == "") {
-                    _master_active = "active";
-                    $('.nav-pills a[href="#nav-mas-account-tab"]').tab('show');
-                }
+////            break;
+////        case "ข้อมูลบัญชีรับเงิน":
+////            if (v.canView) {
+////                if (_master_active == "") {
+////                    _master_active = "active";
+////                    $('.nav-pills a[href="#nav-mas-account-tab"]').tab('show');
+////                }
                
-                $('#nav-accounting').removeClass('no-display');
-            }
-            else {
-                $('#nav-accounting').addClass('no-display');
-            }
+////                $('#nav-accounting').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-accounting').addClass('no-display');
+////            }
 
-            if (v.canAdd) {
-                $('#divBankAccount .btn-add-account').removeClass('no-display');
-            }
-            else {
-                $('#divBankAccount .btn-add-account').addClass('no-display');
-            }
-            break;
-        case "ข้อมูลรถขนส่ง":
-            if (v.canView) {
-                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-transpotation-tab"]').tab('show'); }
+////            if (v.canAdd) {
+////                $('#divBankAccount .btn-add-account').removeClass('no-display');
+////            }
+////            else {
+////                $('#divBankAccount .btn-add-account').addClass('no-display');
+////            }
+////            break;
+////        case "ข้อมูลรถขนส่ง":
+////            if (v.canView) {
+////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-transpotation-tab"]').tab('show'); }
                 
-                $('#nav-transpotation').removeClass('no-display');
-            }
-            else {
-                $('#nav-transpotation').addClass('no-display');
-            }
-            break;
-    }
+////                $('#nav-transpotation').removeClass('no-display');
+////            }
+////            else {
+////                $('#nav-transpotation').addClass('no-display');
+////            }
+////            break;
+////    }
 
-}
-function setPermissionSaleMenu(v) {
-    $('#nav-quotation').addClass('no-display');
-    $('#nav-document').addClass('no-display');
-    $('#nav-commision').addClass('no-display');
+////}
+////function setPermissionSaleMenu(v) {
+////    $('#nav-quotation').addClass('no-display');
+////    $('#nav-document').addClass('no-display');
+////    $('#nav-commision').addClass('no-display');
 
-    $('#nav-cus').addClass('no-display');
-    $('#nav-style').addClass('no-display');
-    $('#nav-calculate').addClass('no-display');
-    $('#nav-upload').addClass('no-display');
+////    $('#nav-cus').addClass('no-display');
+////    $('#nav-style').addClass('no-display');
+////    $('#nav-calculate').addClass('no-display');
+////    $('#nav-upload').addClass('no-display');
 
-    if (v.canView) {
-        $('#nav-quotation').removeClass('no-display');
-        $('#nav-document').removeClass('no-display');
-        $('#nav-commision').removeClass('no-display');
-    }
+////    if (v.canView) {
+////        $('#nav-quotation').removeClass('no-display');
+////        $('#nav-document').removeClass('no-display');
+////        $('#nav-commision').removeClass('no-display');
+////    }
 
-    if (v.canAdd) {
-        $('#nav-cus').removeClass('no-display');
-        $('#nav-style').removeClass('no-display');
-        $('#nav-calculate').removeClass('no-display');
-        $('#nav-upload').removeClass('no-display');
-    }
+////    if (v.canAdd) {
+////        $('#nav-cus').removeClass('no-display');
+////        $('#nav-style').removeClass('no-display');
+////        $('#nav-calculate').removeClass('no-display');
+////        $('#nav-upload').removeClass('no-display');
+////    }
 
-    _role_class_display = "no-display"
-    if (v.canEdit) {
-        _role_class_display = ""
-    }
-}
+////    _role_class_display = "no-display"
+////    if (v.canEdit) {
+////        _role_class_display = ""
+////    }
+////}
