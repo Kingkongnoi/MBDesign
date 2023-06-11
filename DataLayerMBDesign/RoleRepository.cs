@@ -56,7 +56,7 @@ namespace DataLayerMBDesign
                                 FROM tbRole a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.roleId", condition);
+                                order by a.roleId desc", condition);
 
             return conn.Query<RoleView>(queryString, new { }, transaction: trans).ToList();
         }

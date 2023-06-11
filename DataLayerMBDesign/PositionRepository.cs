@@ -57,7 +57,7 @@ namespace DataLayerMBDesign
                                 from tbPosition a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.positionId", condition);
+                                order by a.positionId desc", condition);
 
             return conn.Query<PositionView>(queryString, new { }, transaction: trans).ToList();
         }

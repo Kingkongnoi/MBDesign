@@ -62,7 +62,7 @@ namespace DataLayerMBDesign
                                 from tbProductStyle a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.styleId", condition);
+                                order by a.styleId desc", condition);
 
             return conn.Query<ProductStyleView>(queryString, new { }, transaction: trans).ToList();
         }

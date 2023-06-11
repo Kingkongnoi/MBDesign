@@ -75,7 +75,7 @@ namespace DataLayerMBDesign
                                 from tbCompanyHoliday a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.holidayId", condition);
+                                order by a.holidayId desc", condition);
 
             return conn.Query<CompanyHolidayView>(queryString, new { }, transaction: trans).ToList();
         }

@@ -57,7 +57,7 @@ namespace DataLayerMBDesign
                                 from tbDepartment a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.departmentId", condition);
+                                order by a.departmentId desc", condition);
 
             return conn.Query<DepartmentView>(queryString, new {  }, transaction: trans).ToList();
         }

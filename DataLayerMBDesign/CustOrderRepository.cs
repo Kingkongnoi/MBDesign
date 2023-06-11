@@ -152,11 +152,16 @@ namespace DataLayerMBDesign
             ,a.quotationNumberType
             ,a.orderStatus
             ,a.quotationComment
-            ,a.orderNotePrice, b.accountName, b.accountNumber, b.accountType, b.bank
+            ,a.orderNotePrice
+			,isnull((select top 1 accountName from tbBankAccount where accountId = a.accountId and isDeleted = 0),'') accountName
+			,isnull((select top 1 accountNumber from tbBankAccount where accountId = a.accountId and isDeleted = 0),'') accountNumber
+			,isnull((select top 1 accountType from tbBankAccount where accountId = a.accountId and isDeleted = 0),'') accountType
+			,isnull((select top 1 bank from tbBankAccount where accountId = a.accountId and isDeleted = 0),'') bank
+			--,b.accountName, b.accountNumber, b.accountType, b.bank
             , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
             , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName  
-            from tbCustOrder a inner join tbBankAccount b on a.accountId = b.accountId
-            where a.orderId = @orderId and a.isDeleted = 0 and b.isDeleted = 0
+            from tbCustOrder a --inner join tbBankAccount b on a.accountId = b.accountId
+            where a.orderId = @orderId and a.isDeleted = 0 --and b.isDeleted = 0
             order by a.orderId desc";
 
             return conn.QueryFirstOrDefault<CustOrderView>(queryString, new { orderId }, transaction: trans);
