@@ -1075,7 +1075,7 @@ function callSelect2EmpSalaryType() {
     $(`${formName} #select-salary-type`).empty();
     $(`${formName} #select-salary-type`).append(`<option value="">กรุณาเลือก</option>`);
     $(`${formName} #select-salary-type`).append(`<option value="รายวัน">รายวัน</option>`);
-    $(`${formName} #select-salary-type`).append(`<option value="รายสัปดาห์">รายสัปดาห์</option>`);
+    //$(`${formName} #select-salary-type`).append(`<option value="รายสัปดาห์">รายสัปดาห์</option>`);
     $(`${formName} #select-salary-type`).append(`<option value="รายเดือน">รายเดือน</option>`);
 }
 function callSelect2EmpPosition() {

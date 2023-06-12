@@ -295,10 +295,10 @@ namespace BusinessLogicMBDesign.Accounting
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
 
-                            if(model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
+                            /*if(model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
                             {
                                 int? commissionId = this.AddOrUpdateCommission(model.orderId, model.loginCode, custOrder.grandTotal);
-                            }
+                            }*/
                         }
                     }
 
@@ -360,10 +360,10 @@ namespace BusinessLogicMBDesign.Accounting
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
 
-                            if (model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
+                            /*if (model.period == GlobalInvoicePeriod.secondDisposite || model.period == GlobalInvoicePeriod.fourthDisposite)
                             {
                                 int? commissionId = this.AddOrUpdateCommission(model.orderId, model.loginCode, custOrder.grandTotal);
-                            }
+                            }*/
                         }
                     }
 
