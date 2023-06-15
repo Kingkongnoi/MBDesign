@@ -137,7 +137,7 @@ namespace DataLayerMBDesign
             string queryString = @"select *
                                 from (
                                 SELECT YEAR([holidayDate]) holidayYear
-                                FROM [dbo].[tbCompanyHoliday]
+                                FROM [tbCompanyHoliday]
                                 group by YEAR([holidayDate])
                                 ) a
                                 order by holidayYear desc";

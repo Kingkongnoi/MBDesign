@@ -90,7 +90,7 @@ namespace DataLayerMBDesign
                                 ,[updateDate]
                                 ,[updateBy]
                                 ,[isDeleted]
-                                FROM [dbo].[tbProductItem]
+                                FROM [tbProductItem]
                                 where isDeleted = 0 and itemId = @itemId
                                 order by itemId";
 
@@ -109,7 +109,7 @@ namespace DataLayerMBDesign
                                 ,[updateDate]
                                 ,[updateBy]
                                 ,[isDeleted]
-                                FROM [dbo].[tbProductItem]
+                                FROM [tbProductItem]
                                 where isDeleted = 0 and itemName = N'{0}'", itemName);
 
             return conn.QueryFirstOrDefault<tbProductItem>(queryString, new { itemName }, transaction: trans);
