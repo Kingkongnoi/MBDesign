@@ -29,6 +29,7 @@ namespace MBDesignWeb.Controllers
         {
             ViewBag.apiUrl = _configuration.GetSection("apiUrl").Value;
             ViewBag.webUrl = _configuration.GetSection("webUrl").Value;
+            ViewBag.imageUrl = _configuration.GetSection("imageUrl").Value;
             return View();
         }
 

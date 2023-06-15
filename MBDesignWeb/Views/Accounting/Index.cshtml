@@ -43,18 +43,21 @@
 
 <script>
     $(function () {
+        let imageUrl = localStorage.getItem('imageUrl');
+        let path = (imageUrl == "") ? ".." : imageUrl;
+
         $('#spnAccounting').addClass('mnu-active');
-        $('#imgAccounting').attr('src', '../images/accounting_2.png');
+        $('#imgAccounting').attr('src', `${path}/images/accounting_2.png`);
 
         $('#spnSale').removeClass('mnu-active');
         $('#spn3D').removeClass('mnu-active');
         $('#spnForeman').removeClass('mnu-active');
         $('#spnMaster').removeClass('mnu-active');
 
-        $('#imgSale').attr('src', '../images/sales.png');
-        $('#img3D').attr('src', '../images/graphic-design.png');
-        $('#imgForeman').attr('src', '../images/foreman.png');
-        $('#imgMaster').attr('src', '../images/accounting.png');
+        $('#imgSale').attr('src', `${path}/images/sales.png`);
+        $('#img3D').attr('src', `${path}/images/graphic-design.png`);
+        $('#imgForeman').attr('src', `${path}/images/foreman.png`);
+        $('#imgMaster').attr('src', `${path}/images/accounting.png`);
     });
 </script>
 
