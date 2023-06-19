@@ -1,0 +1,2382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2016/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <AutoRefresh>0</AutoRefresh>
+  <ReportSections>
+    <ReportSection>
+      <Body>
+        <ReportItems>
+          <Textbox Name="Textbox4">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>สัญญาซื้อขายเฟอร์นิเจอร์พร้อมติดตั้ง</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Center</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox4</rd:DefaultName>
+            <Top>0.16194in</Top>
+            <Left>0.18972in</Left>
+            <Height>0.25in</Height>
+            <Width>6.11806in</Width>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+          <Textbox Name="Textbox5">
+            <CanGrow>true</CanGrow>
+            <KeepTogether>true</KeepTogether>
+            <Paragraphs>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>           สัญญานี้ทำขึ้นที่ บริษัท เอ็ม บิ้วดิ้ง จำกัด เลขทะเบียน 0205558020588 ที่อยู่ 102/9 ซอยหลังวัดต้นสน ตำบลบางปลาสร้อย อำเภอเมืองชลบุรี จังหวัดชลบุรี 20000 โดย นางสาวพิมพ์จิรา นิลกำแหง ที่อยู่ 1/38 หมู่ที่ 3 ตำบลเสม็ด อำเภอเมืองชลบุรี จังหวัดชลบุรี โทร 089-6057840 ตำแหน่งกรรมการผู้จัดการ ซึ่งต่อไปนี้จะเรียกในสัญญานี้ว่า “ผู้ขาย” </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>           ฝ่ายหนึ่งกับ </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Parameters!customer.Value</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ต่อไปในสัญญานี้จะเรียกว่า “ผู้ซื้อ” อีกฝ่ายหนึ่ง คู่สัญญาทั้งสองฝ่ายตกลงทำสัญญานี้ดังมี เงื่อนไขรายละเอียดต่อไปนี้ :</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          คู่สัญญาทั้งสองฝ่ายตกลงให้ถือเอาเอกสารที่แนบท้ายสัญญานี้เป็นส่วนหนึ่งแห่งสัญญานี้ด้วย คือ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>1.1  ใบเสนอราคาของผู้ขาย ลงวันที่ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Parameters!qtDate.Value</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> จำนวน 1 ฉบับ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>35.45pt</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>1.2  ใบแสดงรายละเอียดรายการและรูปแบบชิ้นงานเฟอร์นิเจอร์ จำนวน 1 ฉบับ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>0.5in</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ข้อ 1.  ข้อตกลงซื้อขาย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ผู้ขายตกลงขาย และผู้ซื้อตกลงซื้อสินค้าของผู้ขาย ตามรายการดังต่อไปนี้</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>35.45pt</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>=Parameters!itemOptions.Value</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>35.45pt</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>จำนวนทั้งหมด </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Parameters!itemOptionsQty.Value</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>โดยผู้ขายจะนำสินค้าที่ซื้อขายดังกล่าวในข้อนี้ ไปส่งและติดตั้งเฟอร์นิเจอร์ให้แก่ผู้ซื้อ ณ </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>=Parameters!customerAddress.Value</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>35.45pt</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          หมายเหตุ     ค่าไฟฟ้า ค่าประปา ขณะบริการติดตั้งชิ้นงานเฟอร์นิเจอร์ ผู้ซื้อเป็นผู้รับผิดชอบ ราคาที่เสนอไปครอบคลุมเฉพาะรายการสินค้าและบริการที่เสนอไว้แล้วเท่านั้น หากมีรายการสินค้าเพิ่มเติมอื่นๆ นอกเหนือจากที่ตกลงตามสัญญานี้ ทางผู้ขาย จะเสนอราคาขายแก่ผู้ซื้อก่อนทุกครั้ง</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ลงชื่อ ........................................ ผู้ซื้อ                                     ลงชื่อ ........................................ ผู้ขาย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>        ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นายเจษฎา  โตวิรัตน์ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)                                                           ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นางสาวพิมพ์จิรา นิลกำแหง </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>บริษัท เอ็ม บิ้วดิ้ง จำกัด</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>TH SarabunPSK</FontFamily>
+                      <FontSize>4pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>  ลงชื่อ ........................................ พยาน                                 ลงชื่อ ........................................ พยาน</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>     ( ................................................ )                                      ( ................................................ ) </Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          อุปกรณ์เสริมอื่นๆ ที่อาจเกี่ยวข้องต่อการติดตั้งชิ้นงานเฟอร์นิเจอร์ เช่น ตะแกรงใส่ของใต้เคาน์เตอร์ครัว ซิ้งอ่างล้างจาน ก๊อกน้ำ เครื่องดูดควัน หรืออุปกรณ์อื่นๆ ผู้ซื้อเป็นผู้จัดหาและรับผิดชอบในการติดตั้งเอง หากต้องการใช้บริการผู้ขายในการติดตั้ง จะมีค่าใช้จ่าย ชุดละ 1,500 บาท (หนึ่งพันห้าร้อยบาทถ้วน) การติดตั้งแบรคเกอร์ไฟฟ้าแยกจุดสำหรับเตาไฟฟ้า หรือเครื่องดูดควัน มีค่าใช้จ่ายเพิ่ม ชุดละ 3,000 บาท (สามพันบาท) ชำระแยกต่างหากจากยอดตามสัญญานี้</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ระบบไฟฟ้าเฟอร์นิเจอร์ เฉพาะรวมเฉพาะไฟในตู้ตามการออกแบบเท่านั้น และจุดที่มีปลั๊กเดิมจะทำการย้ายจุดให้โดยไม่มีค่าใช้จ่าย หากต้องการเพิ่มจุดปลั๊กจากจุดที่มีเดิม มีค่าบริการจุดละ 500 บาท  ในกรณีที่การออกแบบ 3D มีไฟซ่อน แต่หน้างานจริงไม่มีจุดไฟ หรือต้องการเพิ่มปลั้ก ในบริเวณที่ไม่มีจุดปลั๊กเดิม จะมีค่าใช้จ่ายเดินสายไฟเพิ่มเติมมาลงจุดนั้นๆ จุดละ 3,000 บาท  การติดตั้งโคมไฟ ไฟห้อยระย้า หรือการติดตั้งอุปกรณ์เสริมต่างๆ มีค่าบริการเริ่มต้น จุดละ 2,000 บาท  ทางบริษัทจะเสนอราคาให้ผู้ว่าจ้างทราบก่อนดำเนินการทุกครั้ง</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ระบบสัญญาณ ผู้ซื้อจะต้องหาช่างชำนาญเรื่องสัญญาณ จัดเตรียมเพิ่มความยาวของสายสัญญาณไว้ ประมาณ 1 เมตร เนื่องจากช่างติดตั้งเฟอร์นิเจอร์ไม่มีอุปกรณ์ในการทำสายสัญญาณ หากผู้ซื้อมิได้ใช้งานสัญญาณดังกล่าว สามารถแจ้งเพื่อปิดจุดนั้นๆได้</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          สัญญานี้ไม่รวมถึงการวางเงินค้ำประกันเพื่อเข้าติดตั้งงานเฟอร์นิเจอร์ที่ต้องค้ำประกันกับทางนิติ-บุคคล ชิ้นงานเฟอร์นิเจอร์ทุกชิ้น เป็นกรรมสิทธิ์ของผู้ขาย จนกว่าผู้ซื้อจะชำระเงินงวดสุดท้ายครบเต็มจำนวนค่าสินค้าที่ตกลงไว้ในสัญญานี้</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>         ข้อ 2.  ค่าสินค้า และบริการ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ราคาเฟอร์นิเจอร์ที่ตกลงซื้อขาย รวมเป็นเงิน </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>90,000 บาท (เก้าหมื่นบาทถ้วน) </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>และฟรีค่าบริการติดตั้ง ซึ่งผู้ซื้อจะแบ่งชำระให้ผู้ขายเป็นงวดๆ ดังนี้</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          งวดที่ 1</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> เมื่อตกลงนัดผู้ขายสำรวจพื้นที่ติดตั้งชิ้นงานเฟอร์นิเจอร์ ชำระ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>5,000 บาท (ห้าพันบาทถ้วน) </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>เงินจำนวนนี้เป็นส่วนหนึ่งของมูลค่าสินค้า</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>งวดที่ 2</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> เมื่อตกลงซื้อชิ้นงานเฟอร์นิเจอร์ 50% เป็นเงิน </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>45,000 บาท (สี่หมื่นห้าพันบาทถ้วน)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>งวดที่ 3</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> เมื่อชิ้นงานเฟอร์นิเจอร์นำส่งถึงสถานที่ติดตั้ง 40% เป็นเงิน </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>36,000 บาท (สามหมื่นหกพันบาทถ้วน)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>งวดที่ 4</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> เมื่อผู้ขายและทีมงานบริการติดตั้งแล้วเสร็จ พร้อมส่งงาน ชำระยอดคงค้างที่เหลือ 10%   หักลบ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>5,000 บาท</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>แรกออก คงเหลือทั้งสิ้น </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>4,000 บาท (สี่พันบาทถ้วน)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>การชำระเงิน ผู้ซื้อ จะชำระเงินให้แก่ผู้ขายเป็นเงินสด หรือ โอนเงินเข้าบัญชีเงินฝากธนาคารของผู้ขาย </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ธนาคารกรุงศรีฯ สาขาเมกาบางนา เลขบัญชี 688-1-43123-6 ชื่อบัญชี นางสาวพิมพ์จิรา นิลกำแหง</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ลงชื่อ ........................................ ผู้ซื้อ                                     ลงชื่อ ........................................ ผู้ขาย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>        ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นายเจษฎา  โตวิรัตน์ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)                                                           ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นางสาวพิมพ์จิรา นิลกำแหง </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>บริษัท เอ็ม บิ้วดิ้ง จำกัด</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>TH SarabunPSK</FontFamily>
+                      <FontSize>4pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>  ลงชื่อ ........................................ พยาน                                 ลงชื่อ ........................................ พยาน</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>     ( ................................................ )                                      ( ................................................ )</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>TH SarabunPSK</FontFamily>
+                      <FontSize>16pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">    </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>     ข้อ 3.  กำหนดเวลาส่งนำส่งสินค้า</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ผู้ขายจะทำการนำส่งสินค้า ถึงสถานที่ติดตั้ง ประมาณวันที่ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>24 กุมภาพันธ์ 2566 </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>และเมื่อผู้ขายได้รับชำระเงินงวด 3 แล้ว จะทำการบริการติดตั้งชิ้นงานเฟอร์นิเจอร์ให้แล้วเสร็จพร้อมส่งมอบ ประมาณวันที่ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>24 มีนาคม 2566</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value> รวมกำหนดระยะเวลาตั้งแต่ซื้อขายตลอดจนส่งมอบชิ้นงาน (ไม่รวม</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>วันอาทิตย์และวันหยุดนักขัตฤกษ์)</Value>
+                    <Style>
+                      <FontStyle>Italic</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Italic</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>หากผู้ขายดำเนินการนำส่งสินค้าไปยังสถานที่ติดตั้ง ล่าช้า ผู้ขายยินดีชำระค่าปรับ เป็นเงิน วันละ 300 บาท (สามร้อยบาทถ้วน)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ข้อ 4.  ความรับผิดชอบของผู้ขาย และการรับประกัน</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ผู้ขายจะขายชิ้นงานเฟอร์นิเจอร์ที่มีรายละเอียด และคุณภาพวัสดุถูกต้องตามสัญญาให้แก่ผู้ซื้อ และบริการติดตั้งชิ้นงานเฟอร์นิเจอร์ให้แก่ผู้ซื้อ โดยจะรับผิดชอบต่ออุปัทวเหตุ ภยันตราย หรือความเสียหายใดๆ ที่เกิดขึ้นระหว่างบริการติดตั้งชิ้นงานเฟอร์นิเจอร์ และจะรับผิดชอบในเหตุที่เสียหายอันเกิดแก่สถานที่ติดตั้งของผู้ซื้อภายในบริเวณที่ทำการบริการติดตั้ง โดยเป็นความเสียหายจากการกระทำของพนักงานภายในความดูแลของผู้ขาย ซึ่งมีรายละเอียด ดังนี้</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          งานผนัง งานฝ้า บิ่น เป็นรอย ผู้ขายจะโป้วแดป และทาสีผนัง ให้ใกล้เคียงผนังเดิมมากที่สุด เนื่องจากเฉดสีที่ผสมแต่ละร้านอาจมีค่าความเพี้ยนถึงแม้เป็นโค้ดสีเดียวกัน ดังนั้น ผู้ซื้อจึงต้องเป็นผู้จัดเตรียมสีที่ใช้ในการเก็บงานให้แก่ผู้ขาย โดยจัดซื้อหรือขอแบ่งจากโครงการเตรียมไว้สำหรับการเก็บงานฝ้าและผนัง จำนวนไม่เกิน 3.75 ลิตร</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          งานวอลเปเปอร์ ควรติดตั้งภายหลังงานติดตั้งเฟอร์นิเจอร์ เพราะงานวอลเปเปอร์มีความเสี่ยงสูงที่จะเกิดร่องรอยฉีดขาดระหว่างการขนส่งและติดตั้งได้ ดังนั้น หน้างานที่ผู้ขายรับมอบบ้านที่ติดวอลเปเปอร์มาก่อนแล้ว ผู้ซื้อจะต้องจัดเตรียมวอลเปเปอร์ลายนั้นๆไว้ให้ทางบริษัทสำหรับเก็บงาน 2-3 ม้วน ซึ่งการเก็บงานจะเก็บเป็นจุดๆ ตามความเหมาะสมเท่านั้น มิได้ครอบคลุมถึงการเปลี่ยนแผ่นทั้งผืนของงานวอลเปเปอร์</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          งานพื้นบันไดไม้ งานพื้นไม้ หากมีความจำเป็นต้องเก็บงาน ผู้ขายจะเก็บแต่งเทียบสีเป็นจุด ตามความเหมาะสมเท่านั้น มิได้ครอบคลุมถึงการเปลี่ยนชิ้นไม้ ทั้งนี้ ผู้ซื้อมีความเข้าใจถึงขั้นตอนการขนส่ง และติดตั้งเฟอร์นิเจอร์ ว่าอาจจะมีความเสียหายที่ทำให้เกิดรอย ขีดข่วน บุบ บิ่น ของพื้นที่ หรือม้บันไดได้ ซึ่งการเก็บงานและการติดตั้งเฟอร์นิเจอร์เป็นงานหัตถการ อาจจะมีบางจุดที่ไม่สามารถดำเนินการเก็บงานให้สมบูรณ์ได้ ทั้งนี้ ผู้ขายจะพยายามเก็บงานให้ได้มาตรฐานและไม่มีผลต่อการอยู่อาศัยของผู้ซื้อให้มากที่สุด</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ลงชื่อ ........................................ ผู้ซื้อ                                     ลงชื่อ ........................................ ผู้ขาย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>        ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นายเจษฎา  โตวิรัตน์ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)                                                           ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นางสาวพิมพ์จิรา นิลกำแหง </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>บริษัท เอ็ม บิ้วดิ้ง จำกัด</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>TH SarabunPSK</FontFamily>
+                      <FontSize>4pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>  ลงชื่อ ........................................ พยาน                                 ลงชื่อ ........................................ พยาน</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>     ( ................................................ )                                      ( ................................................ )</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ผู้ขายจะทำความสะอาดเบื้องต้น โดยการกวาด เช็ด เก็บขยะ สถานที่ติดตั้งให้อยู่ในสภาพเรียบร้อย โดยทีมงานติดตั้ง มิได้รวมถึงการว่าจ้างบริษัทฯทำความสะอาด หากต้องการบริการบริษัทฯทำความสะอาด จะมีค่าใช้จ่ายเพิ่มตามจำนวนตารางเมตรของพื้นที่ และหากพบอุปกรณ์ประกอบชิ้นงานเฟอร์นิเจอร์ เช่น บานพับ รางลิ้นชัก ฯลฯ ชิ้นใดอยู่ในสภาพไม่สมบูรณ์ ทางผู้ขายจะทำการเปลี่ยนชิ้นใหม่ให้แก่ผู้ซื้อทันที และจะรับประกันชิ้นงานเฟอร์นิเจอร์ เป็นเวลา 180 วัน นับตั้งแต่วันที่ผู้ขายได้รับชำระเงินงวดสุดท้ายเรียบร้อย ทั้งนี้การรับประกัน ไม่รวมถึงความเสียหายที่เกิดจากการใช้งานทั่วไป ร่องรอยขีดข่วน ใช้งานไม่เหมาะสมหรือผิดประเภท และความเสียหายที่อาจเกิดจากภัยธรรมชาติ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ข้อ 5.  ความรับผิดชอบของผู้ซื้อ</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">        </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ผู้ซื้อจะทำการประสานงานติดต่อและวางเงินค้ำประกันแก่นิติบุคคลเอง กรณีสถานที่ติดตั้งอยู่ในความดูแลของนิติบุคล หากมีการเรียกเก็บค่าสินค้า ผู้ซื้อชำระเงินทันที หลังจากได้รับใบแจ้งหนี้ที่ผู้ขายยื่นต่อผู้ซื้อ โดยผู้ขายจะทำการแจ้งล่วงหน้าก่อนเรียกเก็บค่าสินค้าประมาณ 3-7 วัน หากผู้ซื้อทำการชำระเงินค่าสินค้าล่าช้า ผู้ขายมีสิทธิ์ขยายระยะเวลาในการติดตั้งออกไป ตามจำนวนวันที่ผู้ซื้อชำระล่าช้า</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ในกรณีที่ผู้ซื้อผิดนัด ไม่ชำระราคาสินค้าให้แก่ผู้ขายภายในเวลาที่กำหนด ผู้ขายสามารถนำสินค้าที่ยังคงเป็นกรรมสิทธิ์ของผู้ขายออกจากพื้นที่ได้ ตามมูลค่าที่ผู้ซื้อค้างชำระ พร้อมทั้งผู้ขายมีสิทธิ์ปฏิเสธเงื่อนไขการรับประกันและบริการหลังการขายได้อีกด้วย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <HangingIndent>0.5in</HangingIndent>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve">          </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>ข้อ 6.  แบบรูปและรายละเอียด</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Bold</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          เนื่องจากภาพเสมือนจริง 3D จัดทำขึ้นเพื่อเป็นแนวทางในการผลิตงานเฟอร์นิเจอร์เท่านั้น ซึ่งในบางส่วนของรายละเอียด อาจมีข้อจำกัดต่อการผลิตชิ้นงานจริง ดังนั้น การอนุมัติชิ้นงาน จะยึดถือการอนุมัติแบบจากโปรแกรมสั่งตัดชิ้นงานเท่านั้น เมื่ออนุมัติในขั้นตอนดังกล่าวแล้ว จะไม่สามารถปรับเปลี่ยนรูปแบบได้ หากผลิตชิ้นงานที่อนุมัติแล้ว แต่ผู้ซื้อต้องการปรับเปลี่ยนแบบ จะมีค่าใช้จ่ายในการแก้ไขชิ้นงานใหม่ ทั้งค่าวัสดุและค่าแรงงาน ซึ่งผู้ขายจะนำเสนอราคาก่อนทุกครั้ง</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          ชิ้นงานเฟอร์นิเจอร์ และงานส่วนควบ ได้แก่ หิน กระจก จะตัดจากโรงงานมาตรฐาน ซึ่งจะได้ฉากพอดี หากพื้นที่หน้างานผนังล้มดิ่ง หรือฝ้าตก การติดตั้งอาจเกิดช่องว่างเป็นแนวสามเหลี่ยมได้ ทั้งนี้ผู้ขายจะช่วยเติมเต็มช่องว่างด้วยวัสดุอุดซีลให้เรียบร้อย ซึ่งผู้ซื้อเข้าใจถึงปัญหาที่เกิดขึ้นได้เป็นอย่างดี</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>          หากชิ้นงานเฟอร์นิเจอร์ที่ตกลงซื้อขายนั้นมีรูปแบบที่มีความเสี่ยงเรื่องความแข็งแรงของโครงสร้างชิ้นงานเฟอร์นิเจอร์ ผู้ขายมีสิทธิ์ปรับรูปแบบชิ้นงานเฟอร์นิเจอร์ตามความเหมาะสมโดยจะรักษาสไตล์และภาพรวมของชิ้นงานให้คล้ายเดิมมากที่สุด และผู้ขายจะทำการบอกกล่าวต่อผู้ซื้อให้รับทราบก่อน</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>ลงชื่อ ........................................ ผู้ซื้อ                                     ลงชื่อ ........................................ ผู้ขาย</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>        ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นายเจษฎา  โตวิรัตน์ </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)                                                           ( </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>นางสาวพิมพ์จิรา นิลกำแหง </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value>)</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>บริษัท เอ็ม บิ้วดิ้ง จำกัด</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style />
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>TH SarabunPSK</FontFamily>
+                      <FontSize>4pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>  ลงชื่อ ........................................ พยาน                                 ลงชื่อ ........................................ พยาน</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value />
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+              <Paragraph>
+                <TextRuns>
+                  <TextRun>
+                    <Value>     ( ................................................ )                                      ( ................................................ )</Value>
+                    <Style>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>#000000</Color>
+                    </Style>
+                  </TextRun>
+                </TextRuns>
+                <Style>
+                  <TextAlign>Left</TextAlign>
+                </Style>
+              </Paragraph>
+            </Paragraphs>
+            <rd:DefaultName>Textbox4</rd:DefaultName>
+            <Top>0.45361in</Top>
+            <Left>0.18972in</Left>
+            <Height>24.6875in</Height>
+            <Width>6.11806in</Width>
+            <ZIndex>1</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+              <PaddingLeft>2pt</PaddingLeft>
+              <PaddingRight>2pt</PaddingRight>
+              <PaddingTop>2pt</PaddingTop>
+              <PaddingBottom>2pt</PaddingBottom>
+            </Style>
+          </Textbox>
+        </ReportItems>
+        <Height>25.41889in</Height>
+        <Style />
+      </Body>
+      <Width>6.5in</Width>
+      <Page>
+        <PageHeader>
+          <Height>1.0625in</Height>
+          <PrintOnFirstPage>true</PrintOnFirstPage>
+          <PrintOnLastPage>true</PrintOnLastPage>
+          <ReportItems>
+            <Image Name="headerImage">
+              <Source>Embedded</Source>
+              <Value>mbiconreport</Value>
+              <Sizing>FitProportional</Sizing>
+              <Top>0.14806in</Top>
+              <Left>0.18972in</Left>
+              <Height>0.5in</Height>
+              <Width>0.74306in</Width>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>1pt</PaddingLeft>
+                <PaddingRight>1pt</PaddingRight>
+                <PaddingTop>1pt</PaddingTop>
+                <PaddingBottom>1pt</PaddingBottom>
+              </Style>
+            </Image>
+            <Textbox Name="Textbox1">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>บริษัท เอ็ม บิ้วดิ้ง จำกัด (สำนักงานใหญ่)   </Value>
+                      <Style>
+                        <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>ทะเบียนเลขที่ 0205558020588   ต้นฉบับ/สำเนา</Value>
+                      <Style>
+                        <FontStyle>Normal</FontStyle>
+                        <FontFamily>KaLaTeXa Text Bold</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <FontWeight>Normal</FontWeight>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Top>0.14806in</Top>
+              <Left>1.00222in</Left>
+              <Height>0.25in</Height>
+              <Width>5.30556in</Width>
+              <ZIndex>1</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox2">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>ซอยหลังวัดต้นสน ตำบลบางปลาสร้อย อำเภอเมืองชลบุรี จังหวัดชลบุรี 20000</Value>
+                      <Style>
+                        <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Top>0.43972in</Top>
+              <Left>1.00222in</Left>
+              <Height>0.25in</Height>
+              <Width>5.30556in</Width>
+              <ZIndex>2</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+            <Textbox Name="Textbox3">
+              <CanGrow>true</CanGrow>
+              <KeepTogether>true</KeepTogether>
+              <Paragraphs>
+                <Paragraph>
+                  <TextRuns>
+                    <TextRun>
+                      <Value>โทร 089-6057840, 085-5855185  E-mail m-building@hotmail.com</Value>
+                      <Style>
+                        <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                        <FontSize>11pt</FontSize>
+                        <TextDecoration>None</TextDecoration>
+                        <Color>#000000</Color>
+                      </Style>
+                    </TextRun>
+                  </TextRuns>
+                  <Style />
+                </Paragraph>
+              </Paragraphs>
+              <rd:DefaultName>Textbox1</rd:DefaultName>
+              <Top>0.73139in</Top>
+              <Left>1.00222in</Left>
+              <Height>0.25in</Height>
+              <Width>5.30556in</Width>
+              <ZIndex>3</ZIndex>
+              <Style>
+                <Border>
+                  <Style>None</Style>
+                </Border>
+                <PaddingLeft>2pt</PaddingLeft>
+                <PaddingRight>2pt</PaddingRight>
+                <PaddingTop>2pt</PaddingTop>
+                <PaddingBottom>2pt</PaddingBottom>
+              </Style>
+            </Textbox>
+          </ReportItems>
+          <Style>
+            <Border>
+              <Style>None</Style>
+            </Border>
+          </Style>
+        </PageHeader>
+        <LeftMargin>1in</LeftMargin>
+        <RightMargin>1in</RightMargin>
+        <TopMargin>1in</TopMargin>
+        <BottomMargin>1in</BottomMargin>
+        <Style />
+      </Page>
+    </ReportSection>
+  </ReportSections>
+  <ReportParameters>
+    <ReportParameter Name="customer">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="qtDate">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="itemOptions">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="itemOptionsQty">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="customerAddress">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+  </ReportParameters>
+  <ReportParametersLayout>
+    <GridLayoutDefinition>
+      <NumberOfColumns>4</NumberOfColumns>
+      <NumberOfRows>2</NumberOfRows>
+      <CellDefinitions>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>customer</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>qtDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>itemOptions</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>0</RowIndex>
+          <ParameterName>itemOptionsQty</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>customerAddress</ParameterName>
+        </CellDefinition>
+      </CellDefinitions>
+    </GridLayoutDefinition>
+  </ReportParametersLayout>
+  <EmbeddedImages>
+    <EmbeddedImage Name="mbiconreport">
+      <MIMEType>image/jpeg</MIMEType>
+      <ImageData>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</ImageData>
+    </EmbeddedImage>
+  </EmbeddedImages>
+  <rd:ReportUnitType>Inch</rd:ReportUnitType>
+  <rd:ReportID>c075c85e-76a6-4df3-9667-085f3baa55cd</rd:ReportID>
+</Report>

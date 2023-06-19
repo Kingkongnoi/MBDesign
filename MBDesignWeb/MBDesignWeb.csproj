@@ -14,7 +14,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\reports\rpCustomerContract.rdlc" />
+    <Content Remove="wwwroot\reports\rpInvoice.rdlc" />
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Reports\rpCustomerContract.rdlc" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\reports\rpCustomerContract.rdlc" />
+    <EmbeddedResource Include="wwwroot\reports\rpInvoice.rdlc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Reports\" />
     <Folder Include="wwwroot\lib\datetimepicker\" />
     <Folder Include="wwwroot\lib\file-input\js\locales\" />
   </ItemGroup>
@@ -68,6 +80,22 @@
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogicMBDesign\BusinessLogicMBDesign.csproj" />
     <ProjectReference Include="..\EntitiesMBDesign\EntitiesMBDesign.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ReportDatasets\dsGetQuotationItems.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ReportDatasets\dsGetQuotationItems.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>dsGetQuotationItems.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
   </ItemGroup>
 
 </Project>
