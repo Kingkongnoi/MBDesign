@@ -197,9 +197,24 @@ namespace MBDesignWeb.Controllers
             var groups = from w in simulateItems
                          group w by new { w.typeId };
 
-            foreach (var item in groups)
+            foreach (var t in groups)
             {
-                var exists = simulateItems.Where(w => w.typeId == item.Key.typeId);
+                var exists = simulateItems.Where(w => w.typeId == t.Key.typeId).ToList();
+                if (exists.Count() > 0)
+                {
+                    string typeName = exists.FirstOrDefault().typeName;
+                    string styleName = exists.FirstOrDefault().styleName;
+                    decimal typePrice = exists.FirstOrDefault().typePrice;
+
+                    foreach (var item in exists)
+                    {
+                        if(!string.IsNullOrEmpty(item.itemName))
+                        {
+
+                        }
+                    }
+                }
+                
             }
             string value = "1605000";
             string output = ThaiBaht(value);
