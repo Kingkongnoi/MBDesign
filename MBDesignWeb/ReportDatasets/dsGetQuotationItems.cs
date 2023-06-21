@@ -2,7 +2,7 @@
 {
 }
 
-namespace MBDesignWeb.ReportDatasets
+namespace MBDesignReports.DataSets
 {
 
 

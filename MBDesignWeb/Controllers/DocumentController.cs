@@ -86,138 +86,141 @@ namespace MBDesignWeb.Controllers
                 cust = _documentService.GetCustomerDataByCustId(custOrder.custId);
             }
 
-            var result = new
-            {
-                custOrder = custOrder,
-                cust = cust,
-                items = items,
-                itemsOptions = itemsOptions,
-            };
-
-            var simulateCustOrder = new CustOrderView
-            {
-                quotationNumber = "2066060017",
-                cusName = "บริษัท สุขุมพร็อพเพอร์ตี้ จำกัด"
-            };
-
-            var simulateCust = new tbCust
-            {
-                custFirstName = "บริษัท สุขุมพร็อพเพอร์ตี้",
-                custSurName = "จำกัด",
-                custAddress = "102/5 ซอยหลังวัดต้นสน ตำบลบางปลาสร้อย อำเภอเมืองชลบุรี จังหวัดชลบุรี",
-                custTel = "0909843524"
-            };
+            //var result = new
+            //{
+            //    custOrder = custOrder,
+            //    cust = cust,
+            //    items = items,
+            //    itemsOptions = itemsOptions,
+            //};
 
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpQuotation.rdlc";
 
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
             DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
 
-            string cusName = string.Format("{0} {1}", simulateCust.custFirstName, simulateCust.custSurName);
+            string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
 
+            string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
+            
             Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("qtNumber", simulateCustOrder.quotationNumber);
+            param.Add("qtNumber", custOrder.quotationNumber);
             param.Add("qtDate", currDateThai.ToString("dd/MM/yyyy"));
             param.Add("qtCusName", cusName);
             param.Add("qtCusIdNumber", "0205556012391");
-            param.Add("qtCusAddress", simulateCust.custAddress);
-            param.Add("qtCusTel", simulateCust.custTel);
-
-            var simulateItems = new List<CustOrderDetailView>();
-            simulateItems.Add(new CustOrderDetailView() {
-                custOrderDetailId = 1,
-                typeId = 1,
-                typeName = "เฟอร์นิเจอร์ไม้บิ้วอิน  ไม้ HMR ทนชื้น เคลือบผิวเมลามีน",
-                typePrice = 24000,
-                itemId = 1,
-                itemName = "ตู้สูงหน้าบานทึบ", 
-                styleName = string.Format("Style : {0}", "Minimal"),
-                itemPrice = 5000,
-                orderLength = Convert.ToDecimal(1.60),
-                orderDepth = Convert.ToDecimal(0.50),
-                orderHeight = Convert.ToDecimal(2.43),
-            });
-            simulateItems.Add(new CustOrderDetailView()
-            {
-                custOrderDetailId = 2,
-                typeId = 2,
-                typeName = "เฟอร์นิเจอร์ไม้บิ้วอิน",
-                typePrice = 35000,
-                itemId = 1,
-                itemName = "เก้าอี้ Top เบาะ",
-                styleName = string.Format("Style : {0}", "Maximal"),
-                itemPrice = 35000,
-                orderLength = Convert.ToDecimal(1.60),
-                orderDepth = Convert.ToDecimal(0.50),
-                orderHeight = Convert.ToDecimal(2.70),
-            });
-            simulateItems.Add(new CustOrderDetailView()
-            {
-                custOrderDetailId = 3,
-                typeId = 2,
-                typeName = "เฟอร์นิเจอร์ไม้บิ้วอิน",
-                typePrice = 35000,
-                itemId = 1,
-                itemName = "เก้าอี้ Top เบาะ 1",
-                styleName = string.Format("Style : {0}", "Maximal"),
-                itemPrice = 2000,
-                orderLength = Convert.ToDecimal(1.60),
-                orderDepth = Convert.ToDecimal(0.50),
-                orderHeight = Convert.ToDecimal(2.70),
-            });
-
-            var simulateItemsOptions = new List<CustOrderItemOptionsView>();
-            simulateItemsOptions.Add(new CustOrderItemOptionsView()
-            {
-                custOrderDetailId = 1,
-                optionsId = 1,
-                options = "มีช่องงวางของซ่อนไฟ 2 ฝั่ง (0.80)",
-                optionsPrice = 5000
-            });
-            simulateItemsOptions.Add(new CustOrderItemOptionsView()
-            {
-                custOrderDetailId = 2,
-                optionsId = 2,
-                options = "ด้านล่างลิ้นชักบานทึบ",
-                optionsPrice = 4000
-            });
-            simulateItemsOptions.Add(new CustOrderItemOptionsView()
-            {
-                custOrderDetailId = 1,
-                optionsId = 3,
-                options = "ด้านล่างลิ้นชักบานทึบ 1",
-                optionsPrice = 500
-            });
+            param.Add("qtCusAddress", cust.custAddress);
+            param.Add("qtCusTel", cust.custTel);
+            param.Add("qtAccount", account);
 
             var reportResult = new List<QuotationItemsList>();
             //var groups = from w in simulateItems
             //             group w by w.typeId;
-            var groups = from w in simulateItems
+            var groups = from w in items
                          group w by new { w.typeId };
 
             foreach (var t in groups)
             {
-                var exists = simulateItems.Where(w => w.typeId == t.Key.typeId).ToList();
+                var exists = items.Where(w => w.typeId == t.Key.typeId).ToList();
                 if (exists.Count() > 0)
                 {
-                    string typeName = exists.FirstOrDefault().typeName;
-                    string styleName = exists.FirstOrDefault().styleName;
-                    decimal typePrice = exists.FirstOrDefault().typePrice;
+                    var getFirst = exists.FirstOrDefault();
+                    string typeName = getFirst.typeName;
+                    string styleName = string.Format("Style : {0}", getFirst.styleName);
+                    string size = string.Format("ยาว {0} x {1} x {2}", getFirst.orderLength, getFirst.orderDepth, getFirst.orderHeight);
 
-                    foreach (var item in exists)
+                    decimal calSpHeightPercentage = 0;
+                    if (getFirst.orderHeight >= Convert.ToDecimal(2.70))
                     {
-                        if(!string.IsNullOrEmpty(item.itemName))
-                        {
+                        #region Calculate special height
+                        calSpHeightPercentage = calSpHeightPercentage = ((100 / Convert.ToDecimal(2.60) * getFirst.orderHeight) - 100) / 100;
+                        #endregion Calculate special height
+                    }
 
+                    //decimal unitPrice = getFirst.typePrice;
+
+                    if (getFirst.itemId != 0)
+                    {
+                        int indx = 1;
+                        foreach(var item in exists)
+                        {
+                            var options = itemsOptions.Where(w => w.custOrderDetailId == item.custOrderDetailId).ToList();
+                            string itemName = item.itemName;
+                            decimal unitPrice = 0;
+                            decimal calUnitPrice = getFirst.typePrice + item.itemPrice;
+                            if (options.Count() > 0)
+                            {
+                                foreach(var o in options)
+                                {
+                                    calUnitPrice = calUnitPrice + o.optionsPrice;
+                                    itemName = itemName + " " + o.options;
+                                }
+                            }
+
+                            int qty = 1;
+                            if (calSpHeightPercentage != 0)
+                            {
+                                unitPrice = decimal.Ceiling((calUnitPrice * calSpHeightPercentage) + calUnitPrice);
+                            }
+                            else
+                            {
+                                unitPrice = calUnitPrice;
+                            }
+
+                            reportResult.Add(new QuotationItemsList
+                            {
+                                typeName = typeName,
+                                styleName = styleName,
+                                itemNo = indx,
+                                itemName = itemName,
+                                size = size,
+                                unitPrice = unitPrice,
+                                qty = qty,
+                                amount = unitPrice * qty,
+                                subTotal = custOrder.subTotal,
+                                discount = custOrder.discount,
+                                vat = custOrder.vat,
+                                grandTotal = custOrder.grandTotal,
+                                grandTotalThaiBath = this.ThaiBaht(custOrder.grandTotal.ToString())
+                            });
+
+                            indx++;
                         }
+                    }
+                    else
+                    {
+                        decimal unitPrice = 0;
+                        int qty = 1;
+                        if (calSpHeightPercentage != 0)
+                        {
+                            unitPrice = decimal.Ceiling((getFirst.typePrice * calSpHeightPercentage) + getFirst.typePrice);
+                        }
+                        else
+                        {
+                            unitPrice = getFirst.typePrice;
+                        }
+
+                        reportResult.Add(new QuotationItemsList
+                        {
+                            typeName = typeName,
+                            styleName = styleName,
+                            itemNo = 1,
+                            itemName = typeName,
+                            size = size,
+                            unitPrice = unitPrice,
+                            qty = qty,
+                            amount = unitPrice * qty,
+                            subTotal = custOrder.subTotal,
+                            discount = custOrder.discount,
+                            vat = custOrder.vat,
+                            grandTotal = custOrder.grandTotal,
+                            grandTotalThaiBath = this.ThaiBaht(custOrder.grandTotal.ToString())
+                        });
                     }
                 }
                 
             }
-            string value = "1605000";
-            string output = ThaiBaht(value);
 
             LocalReport localReport = new LocalReport(path);
             localReport.AddDataSource("dsGetQuotationItems", reportResult);

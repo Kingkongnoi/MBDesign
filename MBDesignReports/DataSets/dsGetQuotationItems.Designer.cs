@@ -285,13 +285,13 @@ namespace MBDesignReports.DataSets {
             
             private global::System.Data.DataColumn columnoptions;
             
-            private global::System.Data.DataColumn columnoptionsUnitPrice;
+            private global::System.Data.DataColumn columnunitPrice;
             
-            private global::System.Data.DataColumn columnoptionsSize;
+            private global::System.Data.DataColumn columnsize;
             
-            private global::System.Data.DataColumn columnoptionsQty;
+            private global::System.Data.DataColumn columnqty;
             
-            private global::System.Data.DataColumn columnoptionsAmount;
+            private global::System.Data.DataColumn columnamount;
             
             private global::System.Data.DataColumn columnsubTotal;
             
@@ -366,33 +366,33 @@ namespace MBDesignReports.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn optionsUnitPriceColumn {
+            public global::System.Data.DataColumn unitPriceColumn {
                 get {
-                    return this.columnoptionsUnitPrice;
+                    return this.columnunitPrice;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn optionsSizeColumn {
+            public global::System.Data.DataColumn sizeColumn {
                 get {
-                    return this.columnoptionsSize;
+                    return this.columnsize;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn optionsQtyColumn {
+            public global::System.Data.DataColumn qtyColumn {
                 get {
-                    return this.columnoptionsQty;
+                    return this.columnqty;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public global::System.Data.DataColumn optionsAmountColumn {
+            public global::System.Data.DataColumn amountColumn {
                 get {
-                    return this.columnoptionsAmount;
+                    return this.columnamount;
                 }
             }
             
@@ -489,16 +489,16 @@ namespace MBDesignReports.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public tbGetQuotationItemsRow AddtbGetQuotationItemsRow(string styleName, string itemName, string options, string optionsUnitPrice, string optionsSize, string optionsQty, string optionsAmount, string subTotal, string vat, string grandTotal, string grandTotalThaiBath, string itemNo, string discount, string typeName) {
+            public tbGetQuotationItemsRow AddtbGetQuotationItemsRow(string styleName, string itemName, string options, string unitPrice, string size, string qty, string amount, string subTotal, string vat, string grandTotal, string grandTotalThaiBath, string itemNo, string discount, string typeName) {
                 tbGetQuotationItemsRow rowtbGetQuotationItemsRow = ((tbGetQuotationItemsRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         styleName,
                         itemName,
                         options,
-                        optionsUnitPrice,
-                        optionsSize,
-                        optionsQty,
-                        optionsAmount,
+                        unitPrice,
+                        size,
+                        qty,
+                        amount,
                         subTotal,
                         vat,
                         grandTotal,
@@ -531,10 +531,10 @@ namespace MBDesignReports.DataSets {
                 this.columnstyleName = base.Columns["styleName"];
                 this.columnitemName = base.Columns["itemName"];
                 this.columnoptions = base.Columns["options"];
-                this.columnoptionsUnitPrice = base.Columns["optionsUnitPrice"];
-                this.columnoptionsSize = base.Columns["optionsSize"];
-                this.columnoptionsQty = base.Columns["optionsQty"];
-                this.columnoptionsAmount = base.Columns["optionsAmount"];
+                this.columnunitPrice = base.Columns["unitPrice"];
+                this.columnsize = base.Columns["size"];
+                this.columnqty = base.Columns["qty"];
+                this.columnamount = base.Columns["amount"];
                 this.columnsubTotal = base.Columns["subTotal"];
                 this.columnvat = base.Columns["vat"];
                 this.columngrandTotal = base.Columns["grandTotal"];
@@ -553,14 +553,14 @@ namespace MBDesignReports.DataSets {
                 base.Columns.Add(this.columnitemName);
                 this.columnoptions = new global::System.Data.DataColumn("options", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnoptions);
-                this.columnoptionsUnitPrice = new global::System.Data.DataColumn("optionsUnitPrice", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnoptionsUnitPrice);
-                this.columnoptionsSize = new global::System.Data.DataColumn("optionsSize", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnoptionsSize);
-                this.columnoptionsQty = new global::System.Data.DataColumn("optionsQty", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnoptionsQty);
-                this.columnoptionsAmount = new global::System.Data.DataColumn("optionsAmount", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnoptionsAmount);
+                this.columnunitPrice = new global::System.Data.DataColumn("unitPrice", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnunitPrice);
+                this.columnsize = new global::System.Data.DataColumn("size", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnsize);
+                this.columnqty = new global::System.Data.DataColumn("qty", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnqty);
+                this.columnamount = new global::System.Data.DataColumn("amount", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnamount);
                 this.columnsubTotal = new global::System.Data.DataColumn("subTotal", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnsubTotal);
                 this.columnvat = new global::System.Data.DataColumn("vat", typeof(string), null, global::System.Data.MappingType.Element);
@@ -765,66 +765,65 @@ namespace MBDesignReports.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string optionsUnitPrice {
+            public string unitPrice {
                 get {
                     try {
-                        return ((string)(this[this.tabletbGetQuotationItems.optionsUnitPriceColumn]));
+                        return ((string)(this[this.tabletbGetQuotationItems.unitPriceColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'optionsUnitPrice\' in table \'tbGetQuotationItems\' is DBNull." +
-                                "", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'unitPrice\' in table \'tbGetQuotationItems\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletbGetQuotationItems.optionsUnitPriceColumn] = value;
+                    this[this.tabletbGetQuotationItems.unitPriceColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string optionsSize {
+            public string size {
                 get {
                     try {
-                        return ((string)(this[this.tabletbGetQuotationItems.optionsSizeColumn]));
+                        return ((string)(this[this.tabletbGetQuotationItems.sizeColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'optionsSize\' in table \'tbGetQuotationItems\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'size\' in table \'tbGetQuotationItems\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletbGetQuotationItems.optionsSizeColumn] = value;
+                    this[this.tabletbGetQuotationItems.sizeColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string optionsQty {
+            public string qty {
                 get {
                     try {
-                        return ((string)(this[this.tabletbGetQuotationItems.optionsQtyColumn]));
+                        return ((string)(this[this.tabletbGetQuotationItems.qtyColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'optionsQty\' in table \'tbGetQuotationItems\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'qty\' in table \'tbGetQuotationItems\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletbGetQuotationItems.optionsQtyColumn] = value;
+                    this[this.tabletbGetQuotationItems.qtyColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public string optionsAmount {
+            public string amount {
                 get {
                     try {
-                        return ((string)(this[this.tabletbGetQuotationItems.optionsAmountColumn]));
+                        return ((string)(this[this.tabletbGetQuotationItems.amountColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'optionsAmount\' in table \'tbGetQuotationItems\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'amount\' in table \'tbGetQuotationItems\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tabletbGetQuotationItems.optionsAmountColumn] = value;
+                    this[this.tabletbGetQuotationItems.amountColumn] = value;
                 }
             }
             
@@ -979,50 +978,50 @@ namespace MBDesignReports.DataSets {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsoptionsUnitPriceNull() {
-                return this.IsNull(this.tabletbGetQuotationItems.optionsUnitPriceColumn);
+            public bool IsunitPriceNull() {
+                return this.IsNull(this.tabletbGetQuotationItems.unitPriceColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetoptionsUnitPriceNull() {
-                this[this.tabletbGetQuotationItems.optionsUnitPriceColumn] = global::System.Convert.DBNull;
+            public void SetunitPriceNull() {
+                this[this.tabletbGetQuotationItems.unitPriceColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsoptionsSizeNull() {
-                return this.IsNull(this.tabletbGetQuotationItems.optionsSizeColumn);
+            public bool IssizeNull() {
+                return this.IsNull(this.tabletbGetQuotationItems.sizeColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetoptionsSizeNull() {
-                this[this.tabletbGetQuotationItems.optionsSizeColumn] = global::System.Convert.DBNull;
+            public void SetsizeNull() {
+                this[this.tabletbGetQuotationItems.sizeColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsoptionsQtyNull() {
-                return this.IsNull(this.tabletbGetQuotationItems.optionsQtyColumn);
+            public bool IsqtyNull() {
+                return this.IsNull(this.tabletbGetQuotationItems.qtyColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetoptionsQtyNull() {
-                this[this.tabletbGetQuotationItems.optionsQtyColumn] = global::System.Convert.DBNull;
+            public void SetqtyNull() {
+                this[this.tabletbGetQuotationItems.qtyColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public bool IsoptionsAmountNull() {
-                return this.IsNull(this.tabletbGetQuotationItems.optionsAmountColumn);
+            public bool IsamountNull() {
+                return this.IsNull(this.tabletbGetQuotationItems.amountColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "17.0.0.0")]
-            public void SetoptionsAmountNull() {
-                this[this.tabletbGetQuotationItems.optionsAmountColumn] = global::System.Convert.DBNull;
+            public void SetamountNull() {
+                this[this.tabletbGetQuotationItems.amountColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
