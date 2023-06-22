@@ -59,6 +59,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
     </Compile>
+    <Compile Include="DataSets\dsGetReceipt.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsGetReceipt.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -71,6 +76,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Include="rpCustomerContract.rdlc" />
+    <EmbeddedResource Include="rpReceipt.rdlc" />
     <EmbeddedResource Include="rpInvoice.rdlc" />
     <EmbeddedResource Include="rpQuotation.rdlc" />
     <None Include="DataSets\dsGetInvoice.xsc">
@@ -94,6 +100,17 @@
     </None>
     <None Include="DataSets\dsGetQuotationItems.xss">
       <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
+    </None>
+    <None Include="DataSets\dsGetReceipt.xsc">
+      <DependentUpon>dsGetReceipt.xsd</DependentUpon>
+    </None>
+    <None Include="DataSets\dsGetReceipt.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsGetReceipt.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSets\dsGetReceipt.xss">
+      <DependentUpon>dsGetReceipt.xsd</DependentUpon>
     </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -17,6 +17,7 @@
     <Content Remove="wwwroot\reports\rpCustomerContract.rdlc" />
     <Content Remove="wwwroot\reports\rpInvoice.rdlc" />
     <Content Remove="wwwroot\reports\rpQuotation.rdlc" />
+    <Content Remove="wwwroot\reports\rpReceipt.rdlc" />
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
   </ItemGroup>
 
@@ -28,6 +29,7 @@
     <EmbeddedResource Include="wwwroot\reports\rpCustomerContract.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpInvoice.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpQuotation.rdlc" />
+    <EmbeddedResource Include="wwwroot\reports\rpReceipt.rdlc" />
   </ItemGroup>
 
   <ItemGroup>
@@ -94,6 +96,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Update="ReportDatasets\dsGetReceipt.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>dsGetReceipt.xsd</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -105,6 +112,11 @@
     <None Update="ReportDatasets\dsGetQuotationItems.xsd">
       <SubType>Designer</SubType>
       <LastGenOutput>dsGetQuotationItems.Designer.cs</LastGenOutput>
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+    <None Update="ReportDatasets\dsGetReceipt.xsd">
+      <SubType>Designer</SubType>
+      <LastGenOutput>dsGetReceipt.Designer.cs</LastGenOutput>
       <Generator>MSDataSetGenerator</Generator>
     </None>
   </ItemGroup>
