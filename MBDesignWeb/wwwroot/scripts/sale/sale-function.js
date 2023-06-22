@@ -1659,8 +1659,9 @@ function renderGetContractList(data) {
                     orderable: false,
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
-                        <img src="/images/analysis.png" width="25px" /></button>`;
+                        //return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
+                        //<img src="/images/analysis.png" width="25px" /></button>`;
+                        return `<a class="btn btn-view-cus-contract" href="../Document/GetContractByContractId?contractId=${row.id}" target="_blank"><img src="~/images/analysis.png" width="25px" /> ดูเอกสาร</a>`;
                     },
                 },
             ],

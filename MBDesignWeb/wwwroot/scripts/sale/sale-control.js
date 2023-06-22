@@ -127,6 +127,7 @@
         $('.nav-pills a[href="#nav-sale-empData-tab"]').tab('show');
         _action = 'edit';
         _order_id = $(this).data('id');
+        $('#form-createCalculatePrice #custOrderId').val(_order_id);
         clearInputFormCustomerData();
         $('#divCreateStyle').empty();
         renderEditQuotation($(this).data('id'));
@@ -142,7 +143,7 @@
     });
 
     $('#form-createCalculatePrice .btn-print-quotation').on('click', function () {
-        printQuotation();
+        //printQuotation();
     });
 
     $('#form-search-commission .btn-clear-search-commission').on('click', function () {
