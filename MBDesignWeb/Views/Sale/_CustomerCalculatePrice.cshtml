@@ -3,6 +3,7 @@
         visibility:hidden;
     }
 </style>
+
 <div class="container-fluid" id="divCalculatePrice">
 
     <div class="card mt-4">
@@ -23,7 +24,7 @@
                         <input type="hidden" id="custOrderId" />
                         <div class="col-sm-12 text-end">
                             @*<button type="button" class="btn btn-default-custom btn-print-quotation" onclick="printQuotation()"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์ใบเสนอราคา</button>*@
-                            <a class="btn btn-default-custom btn-print-quotation" href="../Document/GetQuotaionByOrderId?orderId=_order_id" target="_blank"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์ใบเสนอราคา</a>
+                            <a class="btn btn-default-custom btn-print-quotation" onclick="printQuotation()"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์ใบเสนอราคา</a>
                         </div>
                     </div>
 

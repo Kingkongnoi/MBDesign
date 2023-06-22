@@ -1,9 +1,12 @@
-﻿using AspNetCore.Reporting;
+﻿using Amazon.Runtime.Internal.Transform;
+using AspNetCore.Reporting;
 using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
 using BusinessLogicMBDesign.Document;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
+using MailKit.Search;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Utilities;
 using PdfSharpCore;
 using PdfSharpCore.Pdf;
 using System;
@@ -104,7 +107,7 @@ namespace MBDesignWeb.Controllers
             string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
 
             string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
-            
+
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("qtNumber", custOrder.quotationNumber);
             param.Add("qtDate", currDateThai.ToString("dd/MM/yyyy"));
@@ -182,7 +185,7 @@ namespace MBDesignWeb.Controllers
                                 discount = custOrder.discount,
                                 vat = custOrder.vat,
                                 grandTotal = custOrder.grandTotal,
-                                grandTotalThaiBath = this.ThaiBaht(custOrder.grandTotal.ToString())
+                                grandTotalThaiBath = this.ConvertToThaiBaht(custOrder.grandTotal.ToString())
                             });
 
                             indx++;
@@ -215,7 +218,7 @@ namespace MBDesignWeb.Controllers
                             discount = custOrder.discount,
                             vat = custOrder.vat,
                             grandTotal = custOrder.grandTotal,
-                            grandTotalThaiBath = this.ThaiBaht(custOrder.grandTotal.ToString())
+                            grandTotalThaiBath = this.ConvertToThaiBaht(custOrder.grandTotal.ToString())
                         });
                     }
                 }
@@ -264,10 +267,14 @@ namespace MBDesignWeb.Controllers
             var contract = _documentService.GetContractByContractId(contractId);
             var cust = new tbCust();
             var custOrder = new CustOrderView();
+            var items = new List<CustOrderDetailView>();
+            var itemsOptions = new List<CustOrderItemOptionsView>();
             if (contract != null)
             {
                 cust = _documentService.GetCustomerDataByCustId(contract.custId);
                 custOrder = _documentService.GetCustOrderByQuotationNumber(contract.quotationNumber);
+                items = _saleService.GetCustOrderDetailByOrderId(custOrder.orderId);
+                itemsOptions = _saleService.GetItemOptionsByOrderId(custOrder.orderId);
             }
 
             var result = new
@@ -281,12 +288,74 @@ namespace MBDesignWeb.Controllers
             int extension = 1;
             var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpCustomerContract.rdlc";
 
+            //*** Thai Format
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime dateThai = Convert.ToDateTime(custOrder.createDate, _cultureTHInfo);
+
+            var groups = from w in items
+                         group w by new { w.typeId };
+
+            string itemString = string.Empty;
+            int itemQty = 0;
+            foreach (var t in groups)
+            {
+                var exists = items.Where(w => w.typeId == t.Key.typeId).ToList();
+                if (exists.Count() > 0)
+                {
+                    var getFirst = exists.FirstOrDefault();
+                    string typeName = getFirst.typeName;
+                    string styleName = string.Format("Style : {0}", getFirst.styleName);
+                    string size = string.Format("ยาว {0} x {1} x {2} เมตร", getFirst.orderLength, getFirst.orderDepth, getFirst.orderHeight);
+
+                    itemString = itemString + string.Format("{0}\n", typeName);
+                    int indx = 0;
+                    foreach (var item in exists)
+                    {
+                        string itemName = item.itemName;
+
+                        var options = itemsOptions.Where(w => w.custOrderDetailId == item.custOrderDetailId).ToList();
+                        if (options.Count() > 0)
+                        {
+                            foreach (var o in options)
+                            {
+                                itemName = itemName + " " + o.options;
+                            }
+                        }
+
+                        itemString = itemString + string.Format("{0}. {1} {2}\n", indx+1, itemName, size);
+
+                        indx++;
+                    }
+
+                    itemQty = itemQty + indx;
+                }
+            }
+
+            string account = string.Format("{0} เลขที่บัญชี {1} ชื่อบัญชี {2}", custOrder.bank, custOrder.accountNumber, custOrder.accountName);
+
             Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("customer", "test");
-            param.Add("qtDate", "test");
-            param.Add("itemOptions", "test");
-            param.Add("itemOptionsQty", "test");
-            param.Add("customerAddress", "test");
+            param.Add("customer", string.Format("{0} {1} ที่อยู่ {2}", cust.custFirstName, cust.custSurName, cust.custAddress));
+            param.Add("qtDate", dateThai.ToString("dd MMMM yyyy", _cultureTHInfo));
+            param.Add("itemOptions", itemString);
+            param.Add("itemOptionsQty", string.Format("{0} ชิ้น", itemQty));
+            param.Add("customerAddress", cust.custInstallAddress);
+            param.Add("grandTotal", string.Format("{0:n} บาท ({1})",custOrder.grandTotal, ConvertToThaiBaht(custOrder.grandTotal.ToString())));
+            param.Add("firstPeriodTotal", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
+            decimal secondTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.5));
+            param.Add("secondPeriodTotal", string.Format("{0:n} บาท ({1})", secondTotal, ConvertToThaiBaht(secondTotal.ToString())));
+
+            decimal thirdTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.4));
+            param.Add("thirdPeriodTotal", string.Format("{0:n} บาท ({1})", thirdTotal, ConvertToThaiBaht(thirdTotal.ToString())));
+            param.Add("disposite", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
+
+            decimal fouthTotal = Convert.ToDecimal((custOrder.grandTotal * Convert.ToDecimal(0.1)) - custOrder.disposite);
+            param.Add("fouthPeriodTotal", string.Format("{0:n} บาท ({1})", fouthTotal, ConvertToThaiBaht(fouthTotal.ToString())));
+            param.Add("bankAccount", account);
+            DateTime predictDeliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
+            param.Add("predictDeliveryDate", predictDeliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
+
+            DateTime deliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
+            param.Add("deliveryDate", deliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
 
             LocalReport localReport = new LocalReport(path);
 
@@ -296,7 +365,7 @@ namespace MBDesignWeb.Controllers
             //return Json(result);
         }
 
-        public string ThaiBaht(string txt)
+        public string ConvertToThaiBaht(string txt)
         {
             string bahtTxt, n, bahtTH = "";
             double amount;

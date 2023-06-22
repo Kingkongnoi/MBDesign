@@ -904,7 +904,7 @@ function renderGetQuotationList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_sale_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-cus-quotation" data-id="${row.orderId}"  title="แก้ไข">
@@ -1661,7 +1661,7 @@ function renderGetContractList(data) {
                     render: function (data, type, row) {
                         //return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
                         //<img src="/images/analysis.png" width="25px" /></button>`;
-                        return `<a class="btn btn-view-cus-contract" href="../Document/GetContractByContractId?contractId=${row.id}" target="_blank"><img src="~/images/analysis.png" width="25px" /> ดูเอกสาร</a>`;
+                        return `<a class="btn btn-view-cus-contract" href="../Document/GetContractByContractId?contractId=${row.id}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
                     },
                 },
             ],
@@ -1690,17 +1690,19 @@ function renderContractStatusSelect2(data) {
 
 
 function printQuotation() {
-    $.ajax({
-        type: 'GET',
-        url: `${app_settings.api_url}/api/Document/GetQuotaionByOrderId?orderId=${_order_id}`,
-        success: function (data) {
-            if (data.custOrder != null) {
-                generateQuotationDocument(data);
-            }
-        },
-        error: function (err) {
-        }
-    });
+    //$.ajax({
+    //    type: 'GET',
+    //    url: `${app_settings.api_url}/api/Document/GetQuotaionByOrderId?orderId=${_order_id}`,
+    //    success: function (data) {
+    //        if (data.custOrder != null) {
+    //            generateQuotationDocument(data);
+    //        }
+    //    },
+    //    error: function (err) {
+    //    }
+    //});
+    $(this).attr('href', `../Document/GetQuotaionByOrderId?orderId=${_order_id}`);
+    $(this).attr("target", "_blank");
 }
 
 async function generateQuotationDocument(data) {

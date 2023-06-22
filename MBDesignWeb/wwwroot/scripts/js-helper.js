@@ -108,7 +108,6 @@ function callRoleNavMenu() {
         url: `${app_settings.api_url}/api/Login/GetMenuPermissionPerEmpData?id=${loginId}`,
         success: function (data) {
             data.forEach((v) => {
-                debugger;
                 setShowAndHiddenNavMenu(v.menuName, v.parentMenuName, v);
             })
         },
@@ -139,9 +138,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('#nav-upload').removeClass('no-display');
         }
 
-        _role_class_display = "no-display"
+        _role_sale_class_display = "no-display"
         if (obj.canEdit) {
-            _role_class_display = ""
+            _role_sale_class_display = ""
         }
     }
     else if (menuName == "การออกแบบ 3D" || parentMenuName == "การออกแบบ 3D") {
@@ -149,9 +148,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('#nav-3d').removeClass('nav-no-display');
         }
 
-        _role_class_display = "no-display"
+        _role_3d_class_display = "no-display"
         if (obj.canEdit) {
-            _role_class_display = ""
+            _role_3d_class_display = ""
         }
     }
     else if (menuName == "โฟร์แมน" || parentMenuName == "โฟร์แมน") {
@@ -159,9 +158,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('#nav-foreman').removeClass('nav-no-display');
         }
 
-        _role_class_display = "no-display"
+        _role_foreman_class_display = "no-display"
         if (obj.canEdit) {
-            _role_class_display = ""
+            _role_foreman_class_display = ""
         }
     }
     else if (menuName == "บัญชีและเอกสาร" || parentMenuName == "บัญชีและเอกสาร") {
@@ -176,9 +175,9 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('.btn-add-invoice').removeClass('no-display');
         }
 
-        _role_class_display = "no-display"
+        _role_account_class_display = "no-display"
         if (obj.canEdit) {
-            _role_class_display = ""
+            _role_account_class_display = ""
         }
     }
     else if (menuName == "ข้อมูลหลัก" || parentMenuName == "ข้อมูลหลัก") {
@@ -236,10 +235,10 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
                 $('.btn-add-account').removeClass('no-display');
             }
 
-            _role_class_display = "no-display"
+            _role_emp_class_display = "no-display"
             if (obj.canEdit) {
                 _master_all_role = "all"
-                _role_class_display = ""
+                _role_emp_class_display = ""
             }
 
         }
@@ -351,9 +350,10 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('#nav-approve').removeClass('nav-no-display');
         }
 
-        _role_class_display = "no-display"
-        if (obj.canApprove) {
-            _role_class_display = ""
+        _role_approve_class_display = "no-display"
+        //if (obj.canApprove) {
+        if (obj.canEdit) {
+            _role_approve_class_display = ""
         }
     }
 }
@@ -363,6 +363,11 @@ let _role_emp_class_display = "";
 let _role_product_class_display = "";
 let _role_bank_class_display = "";
 let _master_all_role = "";
+let _role_sale_class_display = "";
+let _role_3d_class_display = "";
+let _role_foreman_class_display = "";
+let _role_account_class_display = "";
+let _role_approve_class_display = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');
     $('.nav-pills').addClass('no-display');

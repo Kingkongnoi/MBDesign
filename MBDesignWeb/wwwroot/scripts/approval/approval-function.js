@@ -67,7 +67,7 @@ function renderGetWaitApproveList(data) {
                     targets: 4,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_class_display}`,
+                    className: `dt-center ${_role_approve_class_display}`,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-approve" data-orderid="${row.orderId}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;

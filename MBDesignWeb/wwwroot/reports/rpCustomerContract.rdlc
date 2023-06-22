@@ -690,7 +690,18 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>90,000 บาท (เก้าหมื่นบาทถ้วน) </Value>
+                    <Value>=Parameters!grandTotal.Value</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -741,7 +752,18 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>5,000 บาท (ห้าพันบาทถ้วน) </Value>
+                    <Value>=Parameters!firstPeriodTotal.Value</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -803,7 +825,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>45,000 บาท (สี่หมื่นห้าพันบาทถ้วน)</Value>
+                    <Value>=Parameters!secondPeriodTotal.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -854,7 +876,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>36,000 บาท (สามหมื่นหกพันบาทถ้วน)</Value>
+                    <Value>=Parameters!thirdPeriodTotal.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -905,7 +927,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>5,000 บาท</Value>
+                    <Value>=Parameters!disposite.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -927,7 +949,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>4,000 บาท (สี่พันบาทถ้วน)</Value>
+                    <Value>=Parameters!fouthPeriodTotal.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -967,7 +989,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>ธนาคารกรุงศรีฯ สาขาเมกาบางนา เลขบัญชี 688-1-43123-6 ชื่อบัญชี นางสาวพิมพ์จิรา นิลกำแหง</Value>
+                    <Value>=Parameters!bankAccount.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -1253,7 +1275,18 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>24 กุมภาพันธ์ 2566 </Value>
+                    <Value>=Parameters!predictDeliveryDate.Value</Value>
+                    <Style>
+                      <FontStyle>Normal</FontStyle>
+                      <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
+                      <FontSize>11pt</FontSize>
+                      <FontWeight>Normal</FontWeight>
+                      <TextDecoration>None</TextDecoration>
+                      <Color>Red</Color>
+                    </Style>
+                  </TextRun>
+                  <TextRun>
+                    <Value xml:space="preserve"> </Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -1275,7 +1308,7 @@
                     </Style>
                   </TextRun>
                   <TextRun>
-                    <Value>24 มีนาคม 2566</Value>
+                    <Value>=Parameters!deliveryDate.Value</Value>
                     <Style>
                       <FontStyle>Normal</FontStyle>
                       <FontFamily>KaLaTeXa Text DemiBold</FontFamily>
@@ -2321,11 +2354,65 @@
       <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>
+    <ReportParameter Name="grandTotal">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="firstPeriodTotal">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="secondPeriodTotal">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="thirdPeriodTotal">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="disposite">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="fouthPeriodTotal">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="bankAccount">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="deliveryDate">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="predictDeliveryDate">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
   </ReportParameters>
   <ReportParametersLayout>
     <GridLayoutDefinition>
       <NumberOfColumns>4</NumberOfColumns>
-      <NumberOfRows>2</NumberOfRows>
+      <NumberOfRows>4</NumberOfRows>
       <CellDefinitions>
         <CellDefinition>
           <ColumnIndex>0</ColumnIndex>
@@ -2351,6 +2438,51 @@
           <ColumnIndex>0</ColumnIndex>
           <RowIndex>1</RowIndex>
           <ParameterName>customerAddress</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>grandTotal</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>firstPeriodTotal</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>1</RowIndex>
+          <ParameterName>secondPeriodTotal</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>thirdPeriodTotal</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>disposite</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>2</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>fouthPeriodTotal</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>3</ColumnIndex>
+          <RowIndex>2</RowIndex>
+          <ParameterName>bankAccount</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>0</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>deliveryDate</ParameterName>
+        </CellDefinition>
+        <CellDefinition>
+          <ColumnIndex>1</ColumnIndex>
+          <RowIndex>3</RowIndex>
+          <ParameterName>predictDeliveryDate</ParameterName>
         </CellDefinition>
       </CellDefinitions>
     </GridLayoutDefinition>
