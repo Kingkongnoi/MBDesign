@@ -991,7 +991,7 @@ function DoSaveCreateOrUpdateInvoice() {
 
 
 function printInvoice() {
-    $.ajax({
+    /*$.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`,
         success: function (data) {
@@ -1001,7 +1001,9 @@ function printInvoice() {
         },
         error: function (err) {
         }
-    });
+    });*/
+    $(this).attr('href', `../Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`);
+    $(this).attr("target", "_blank");
 }
 async function generateInvoiceDocument(data) {
     await renderInvoiceHtml(data);
@@ -1171,8 +1173,9 @@ function renderReceiptList(data) {
                     orderable: false,
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn-add-custom btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
-                    <img src="/images/printing.png" width="25px" /></button>`;
+                    //    return `<button type="button" class="btn-add-custom btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
+                    //<img src="/images/printing.png" width="25px" /></button>`;
+                        return `<a class="btn btn-print-receipt" href="../Document/GetReceiptByReceiptId?receiptId=${row.receiptId}" target="_blank"><img src="../images/printing.png" width="25px" /></a>`;
                     },
                 },
             ],

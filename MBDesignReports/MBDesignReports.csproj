@@ -46,6 +46,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataSets\dsGetInvoice.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dsGetInvoice.xsd</DependentUpon>
+    </Compile>
     <Compile Include="DataSets\dsGetQuotationItems.cs">
       <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
     </Compile>
@@ -66,7 +71,19 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Include="rpCustomerContract.rdlc" />
+    <EmbeddedResource Include="rpInvoice.rdlc" />
     <EmbeddedResource Include="rpQuotation.rdlc" />
+    <None Include="DataSets\dsGetInvoice.xsc">
+      <DependentUpon>dsGetInvoice.xsd</DependentUpon>
+    </None>
+    <None Include="DataSets\dsGetInvoice.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>dsGetInvoice.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="DataSets\dsGetInvoice.xss">
+      <DependentUpon>dsGetInvoice.xsd</DependentUpon>
+    </None>
     <None Include="DataSets\dsGetQuotationItems.xsc">
       <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
     </None>

@@ -5,7 +5,8 @@
             <div class="modal-header justify-content-center">
                 <div class="col-sm-6 mt-2 justify-content-center"><h4 class="modal-title justify-content-center"><span id="invoiceHeader"></span></h4></div>
                 <div class="col-sm-6 text-end">
-                    <button type="button" class="btn btn-default-custom btn-print-invoice"><img src="~/images/printing.png" width="25px" /> พิมพ์ใบแจ้งหนี้</button>
+                    @*<button type="button" class="btn btn-default-custom btn-print-invoice"><img src="~/images/printing.png" width="25px" /> พิมพ์ใบแจ้งหนี้</button>*@
+                    <a class="btn btn-default-custom btn-print-invoice" onclick="printInvoice()"><img src="~/images/printing.png" width="25px" /> พิมพ์ใบแจ้งหนี้</a>
                 </div>
             </div>
             <div class="modal-body">

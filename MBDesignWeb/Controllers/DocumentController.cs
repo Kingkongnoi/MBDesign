@@ -54,9 +54,9 @@ namespace MBDesignWeb.Controllers
         //    string fileName = string.Format("Invoice_{0}.pdf", invoiceId);
         //    return File(response, "application/pdf", fileName);
         //}
-        [Route("api/[controller]/[action]")]
+        //[Route("api/[controller]/[action]")]
         [HttpGet]
-        public JsonResult GetInvoiceByInvoiceId(int invoiceId)
+        public IActionResult GetInvoiceByInvoiceId(int invoiceId)
         {
             var invoice = _documentService.GetInvoiceByInvoiceId(invoiceId);
             var cust = new tbCust();
@@ -67,13 +67,71 @@ namespace MBDesignWeb.Controllers
                 custOrder = _documentService.GetCustOrderByOrderId(invoice.orderId);
             }
 
-            var result = new
+            //var result = new
+            //{
+            //    invoice = invoice,
+            //    cust = cust,
+            //    custOrder = custOrder,
+            //};
+            //return Json(result);
+            string mimetype = "";
+            int extension = 1;
+            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+
+            string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
+
+            string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
+
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            param.Add("invoiceNumber", invoice.invoiceNumber);
+            param.Add("invoiceDate", currDateThai.ToString("dd/MM/yyyy"));
+            param.Add("invoiceCusName", cusName);
+            param.Add("invoiceCusIdNumber", "0205556012391");
+            param.Add("invoiceCusAddress", cust.custAddress);
+            param.Add("invoiceCusTel", cust.custTel);
+            param.Add("invoiceCusEmail", "");
+            param.Add("invoiceAccount", account);
+
+            var reportResult = new List<InvoiceList>();
+            string fullPeriod = string.Empty;
+            if(invoice.period == GlobalInvoicePeriod.firstDisposite)
             {
-                invoice = invoice,
-                cust = cust,
-                custOrder = custOrder,
-            };
-            return Json(result);
+                fullPeriod = GlobalInvoicePeriod.firstFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.secondDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.secondFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.thridDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.thridFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.fourthDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.fourthFullDisposite;
+            }
+
+            reportResult.Add(new InvoiceList
+            {
+                period = fullPeriod,
+                unitPrice = invoice.unitPrice,
+                qty = 1,
+                amount = invoice.unitPrice,
+                discount = "-",
+                subTotal = invoice.unitPrice,
+                vat = "-",
+                grandTotal = invoice.unitPrice,
+            });
+
+            LocalReport localReport = new LocalReport(path);
+            localReport.AddDataSource("dsGetInvoice", reportResult);
+
+            var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+
+            return File(fileResult.MainStream, "application/pdf");
         }
         
         //[Route("api/[controller]/[action]")]
@@ -235,9 +293,9 @@ namespace MBDesignWeb.Controllers
             //return Json(result);
         }
         
-        [Route("api/[controller]/[action]")]
+        //[Route("api/[controller]/[action]")]
         [HttpGet]
-        public JsonResult GetReceiptByReceiptId(int receiptId)
+        public IActionResult GetReceiptByReceiptId(int receiptId)
         {
             var receipt = _documentService.GetReceiptByReceiptId(receiptId);
             var invoice = _documentService.GetInvoiceByInvoiceId(receipt.invoiceId.Value);
@@ -249,15 +307,73 @@ namespace MBDesignWeb.Controllers
                 custOrder = _documentService.GetCustOrderByOrderId(receipt.orderId.Value);
             }
 
-            var result = new
-            {
-                receipt = receipt,
-                invoice = invoice,
-                cust = cust,
-                custOrder = custOrder,
-            };
+            //var result = new
+            //{
+            //    receipt = receipt,
+            //    invoice = invoice,
+            //    cust = cust,
+            //    custOrder = custOrder,
+            //};
 
-            return Json(result);
+            //return Json(result);
+            string mimetype = "";
+            int extension = 1;
+            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+
+            string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
+
+            string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
+
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            param.Add("receiptNumber", receipt.receiptNumber);
+            param.Add("receiptDate", currDateThai.ToString("dd/MM/yyyy"));
+            param.Add("receiptCusName", cusName);
+            param.Add("receiptCusIdNumber", "0205556012391");
+            param.Add("receiptCusAddress", cust.custAddress);
+            param.Add("receiptCusTel", cust.custTel);
+            param.Add("receiptCusEmail", "");
+            param.Add("receiptAccount", string.Format("เงินโอน {0:n} บาท", invoice.unitPrice));
+
+            var reportResult = new List<InvoiceList>();
+            string fullPeriod = string.Empty;
+            if (invoice.period == GlobalInvoicePeriod.firstDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.firstFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.secondDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.secondFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.thridDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.thridFullDisposite;
+            }
+            else if (invoice.period == GlobalInvoicePeriod.fourthDisposite)
+            {
+                fullPeriod = GlobalInvoicePeriod.fourthFullDisposite;
+            }
+
+            reportResult.Add(new InvoiceList
+            {
+                period = fullPeriod,
+                unitPrice = invoice.unitPrice,
+                qty = 1,
+                amount = invoice.unitPrice,
+                discount = "-",
+                subTotal = invoice.unitPrice,
+                vat = "-",
+                grandTotal = invoice.unitPrice,
+            });
+
+            LocalReport localReport = new LocalReport(path);
+            localReport.AddDataSource("dsGetReceipt", reportResult);
+
+            var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+
+            return File(fileResult.MainStream, "application/pdf");
         }
         
         //[Route("api/[controller]/[action]")]

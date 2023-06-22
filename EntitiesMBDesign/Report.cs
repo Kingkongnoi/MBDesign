@@ -23,4 +23,18 @@ namespace EntitiesMBDesign
         public decimal grandTotal { get; set; }
         public string grandTotalThaiBath { get; set; } = string.Empty;
     }
+
+    public class InvoiceList
+    {
+        public string period { get; set; } = string.Empty;
+        public decimal unitPrice { get; set; }
+        public string size { get; set; } = string.Empty;
+        public int qty { get; set; } = 1;
+        public decimal amount { get; set; }
+        public decimal subTotal { get; set; }
+        public string discount { get; set; } = string.Empty;
+        public string vat { get; set; } = string.Empty;
+        public decimal grandTotal { get; set; }
+        public string grandTotalThaiBath { get; set; } = string.Empty;
+    }
 }

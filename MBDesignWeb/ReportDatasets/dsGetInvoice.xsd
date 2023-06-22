@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="dsGetInvoice" targetNamespace="http://tempuri.org/dsGetInvoice.xsd" xmlns:mstns="http://tempuri.org/dsGetInvoice.xsd" xmlns="http://tempuri.org/dsGetInvoice.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dsGetInvoice" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_UserDSName="dsGetInvoice" msprop:Generator_DataSetName="dsGetInvoice">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="tbGetInvoice" msprop:Generator_RowEvHandlerName="tbGetInvoiceRowChangeEventHandler" msprop:Generator_RowDeletedName="tbGetInvoiceRowDeleted" msprop:Generator_RowDeletingName="tbGetInvoiceRowDeleting" msprop:Generator_RowEvArgName="tbGetInvoiceRowChangeEvent" msprop:Generator_TablePropName="tbGetInvoice" msprop:Generator_RowChangedName="tbGetInvoiceRowChanged" msprop:Generator_RowChangingName="tbGetInvoiceRowChanging" msprop:Generator_TableClassName="tbGetInvoiceDataTable" msprop:Generator_RowClassName="tbGetInvoiceRow" msprop:Generator_TableVarName="tabletbGetInvoice" msprop:Generator_UserTableName="tbGetInvoice">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="period" msdata:Caption="styleName" msprop:Generator_ColumnPropNameInRow="period" msprop:Generator_ColumnPropNameInTable="periodColumn" msprop:Generator_ColumnVarNameInTable="columnperiod" msprop:Generator_UserColumnName="period" type="xs:string" minOccurs="0" />
+              <xs:element name="unitPrice" msprop:Generator_ColumnPropNameInRow="unitPrice" msprop:Generator_ColumnPropNameInTable="unitPriceColumn" msprop:Generator_ColumnVarNameInTable="columnunitPrice" msprop:Generator_UserColumnName="unitPrice" type="xs:string" minOccurs="0" />
+              <xs:element name="qty" msprop:Generator_ColumnPropNameInRow="qty" msprop:Generator_ColumnPropNameInTable="qtyColumn" msprop:Generator_ColumnVarNameInTable="columnqty" msprop:Generator_UserColumnName="qty" type="xs:string" minOccurs="0" />
+              <xs:element name="amount" msprop:Generator_ColumnPropNameInRow="amount" msprop:Generator_ColumnPropNameInTable="amountColumn" msprop:Generator_ColumnVarNameInTable="columnamount" msprop:Generator_UserColumnName="amount" type="xs:string" minOccurs="0" />
+              <xs:element name="subTotal" msprop:Generator_ColumnPropNameInRow="subTotal" msprop:Generator_ColumnPropNameInTable="subTotalColumn" msprop:Generator_ColumnVarNameInTable="columnsubTotal" msprop:Generator_UserColumnName="subTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="vat" msprop:Generator_ColumnPropNameInRow="vat" msprop:Generator_ColumnPropNameInTable="vatColumn" msprop:Generator_ColumnVarNameInTable="columnvat" msprop:Generator_UserColumnName="vat" type="xs:string" minOccurs="0" />
+              <xs:element name="grandTotal" msprop:Generator_ColumnPropNameInRow="grandTotal" msprop:Generator_ColumnPropNameInTable="grandTotalColumn" msprop:Generator_ColumnVarNameInTable="columngrandTotal" msprop:Generator_UserColumnName="grandTotal" type="xs:string" minOccurs="0" />
+              <xs:element name="grandTotalThaiBath" msprop:Generator_ColumnPropNameInRow="grandTotalThaiBath" msprop:Generator_ColumnPropNameInTable="grandTotalThaiBathColumn" msprop:Generator_ColumnVarNameInTable="columngrandTotalThaiBath" msprop:Generator_UserColumnName="grandTotalThaiBath" type="xs:string" minOccurs="0" />
+              <xs:element name="discount" msprop:Generator_ColumnPropNameInRow="discount" msprop:Generator_ColumnPropNameInTable="discountColumn" msprop:Generator_ColumnVarNameInTable="columndiscount" msprop:Generator_UserColumnName="discount" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
