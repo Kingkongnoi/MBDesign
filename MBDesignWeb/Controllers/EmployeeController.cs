@@ -122,6 +122,7 @@ namespace MBDesignApi.Controllers.Master
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
 
+            //string uploadPath = _configuration.GetSection("fileUploadsPath").Value;
             string path = Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
@@ -156,9 +157,9 @@ namespace MBDesignApi.Controllers.Master
                     originalFileName = filename,
                 };
 
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-
+                //msg = _uploadToAwsService.DoUploadToAws(obj);
+                //obj.imageUrl = msg.strResult;
+                obj.imageUrl = fullFilePath;
                 addedUpload.Add(obj);
             }
 
