@@ -1,0 +1,94 @@
+﻿@{
+    ViewData["Title"] = "ฝ่ายบุคคล";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/hr/employee-control.js"></script>
+<script src="~/scripts/hr/employee-function.js"></script>
+
+<style>
+    .nav-tabs .nav-link {
+        background-color: #AFAFAF;
+        color: #FFF;
+    }
+
+        .nav-tabs .nav-link.active {
+            background-color: #F09723;
+            color: #FFF;
+        }
+
+    .no-display {
+        display: none;
+    }
+
+    .mnu-active {
+        color: #F09723;
+    }
+
+</style>
+
+<script>
+    $(function () {
+        let imageUrl = localStorage.getItem('imageUrl');
+        let path = (imageUrl == "") ? ".." : imageUrl;
+
+        $('#spnHR').addClass('mnu-active');
+        $('#imgHR').attr('src', `${path}/images/data-processing_2.png`);
+
+        $('#spnMaster').removeClass('mnu-active');
+        $('#spnSale').removeClass('mnu-active');
+        $('#spn3D').removeClass('mnu-active');
+        $('#spnForeman').removeClass('mnu-active');
+        $('#spnAccounting').removeClass('mnu-active');
+
+        $('#imgMaster').attr('src', `${path}/images/data-processing.png`);
+        $('#imgSale').attr('src', `${path}/images/sales.png`);
+        $('#img3D').attr('src', `${path}/images/graphic-design.png`);
+        $('#imgForeman').attr('src', `${path}/images/foreman.png`);
+        $('#imgAccounting').attr('src', `${path}/images/accounting.png`);
+
+        $("#nav-master").hover(function () {
+            console.log('master');
+        });
+    });
+</script>
+
+<div class="row">
+    <h4>ฝ่ายบุคคล</h4>
+
+    <div class="col-sm-12">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item" id="nav-emp">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-mas-empData-tab">ข้อมูลพนักงาน</a>
+            </li>
+            <li class="nav-item" id="nav-leave">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-leave-tab">การลา</a>
+            </li>
+            <li class="nav-item" id="nav-attendance">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-attendance-tab">เวลาเข้า-ออกงาน</a>
+            </li>
+            <li class="nav-item" id="nav-salary">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-salary-tab">เงินเดือนพนักงาน</a>
+            </li>
+            <li class="nav-item" id="nav-emp-warning">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-emp-warning-tab">ใบเตือน/ใบปลด</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-mas-empData-tab">@Html.Partial("_Employee.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-leave-tab">@Html.Partial("_Leave.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-attendance-tab">@Html.Partial("_Attendance.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-salary-tab">@Html.Partial("_Salary.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-emp-warning-tab">@Html.Partial("_EmpWarning.cshtml")</div>
+        </div>
+    </div>
+</div>
+

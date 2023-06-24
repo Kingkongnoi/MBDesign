@@ -1,0 +1,1005 @@
+﻿@{
+    ViewData["Title"] = "ฝ่ายบุคคล";
+}
+
+<link href="~/lib/file-input/css/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+<link href="~/lib/file-input/font/bootstrap-icons.min.css" rel="stylesheet" crossorigin="anonymous" />
+
+<script src="~/lib/file-input/plugins/buffer.min.js" type="text/javascript"></script>
+@*<script src="~/lib/file-input/plugins/piexif.min.js" type="text/javascript"></script>*@
+
+<script src="~/lib/file-input/umd/popper.min.js"></script>
+<script src="~/lib/file-input/js/fileinput.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/kartik-v/bootstrap-fileinput@5.5.0/js/plugins/piexif.min.js" type="text/javascript"></script>
+
+<script>
+
+</script>
+
+<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .department-details, .position-details, .holiday-details, .emp-details, .role-details {
+        cursor: pointer !important;
+    }
+
+    .table tr th {
+        background-color: #F09723;
+        color: #FFF;
+        text-align: center !important;
+    }
+
+    #tb-menu-list tr th, #tb-view-menu-list tr th {
+        background-color: #e9ecef;
+        color: #000;
+        vertical-align: middle !important;
+    }
+
+    .no-display {
+        display: none;
+    }
+
+    .text-primary-custom {
+        color: #F09723;
+    }
+
+    .file-preview-frame {
+        width: 150px;
+        height: 200px;
+    }
+
+    .krajee-default.file-preview-frame .kv-file-content {
+        width: 130px;
+        height: 150px;
+    }
+
+    .krajee-default .file-footer-caption {
+        display: none;
+    }
+
+    .kv-file-upload, .fileinput-cancel-button, .fileinput-upload-button, .fileinput-remove-button, .fileinput-remove,
+    .btn-toggleheader, .btn-fullscreen, .btn-borderless {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+
+    .loader {
+        z-index: 99;
+    }
+</style>
+
+<div class="row">
+    <div class="col-sm-12 mt-2">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab-master-emp" role="tablist">
+                <button class="nav-link active" id="nav-master-empData-tab" data-bs-toggle="tab" data-bs-target="#nav-master-empData" type="button" role="tab" aria-controls="nav-master-empData" aria-selected="true" style="margin-right:2px;">ข้อมูลพนักงาน</button>
+                <button class="nav-link" id="nav-master-role-tab" data-bs-toggle="tab" data-bs-target="#nav-master-role" type="button" role="tab" aria-controls="nav-master-role" aria-selected="false" style="margin-right:2px;">สิทธิ์การใช้งาน</button>
+                <button class="nav-link" id="nav-master-holiday-tab" data-bs-toggle="tab" data-bs-target="#nav-master-holiday" type="button" role="tab" aria-controls="nav-master-holiday" aria-selected="false" style="margin-right:2px;">วันหยุดบริษัท</button>
+                <button class="nav-link" id="nav-master-department-tab" data-bs-toggle="tab" data-bs-target="#nav-master-department" type="button" role="tab" aria-controls="nav-master-department" aria-selected="false" style="margin-right:2px;">แผนก</button>
+                <button class="nav-link" id="nav-master-position-tab" data-bs-toggle="tab" data-bs-target="#nav-master-position" type="button" role="tab" aria-controls="nav-master-position" aria-selected="false" style="margin-right:2px;">ตำแหน่ง</button>
+                @*<button class="nav-link" id="nav-master-leave-tab" data-bs-toggle="tab" data-bs-target="#nav-master-leave" type="button" role="tab" aria-controls="nav-master-leave" aria-selected="false" style="margin-right:2px;">การลางาน</button>
+                <button class="nav-link" id="nav-master-time-tab" data-bs-toggle="tab" data-bs-target="#nav-master-time" type="button" role="tab" aria-controls="nav-master-time" aria-selected="false" style="margin-right:2px;">เวลาเข้า-ออกงาน</button>
+                <button class="nav-link" id="nav-master-salary-tab" data-bs-toggle="tab" data-bs-target="#nav-master-salary" type="button" role="tab" aria-controls="nav-master-salary" aria-selected="false">เงินเดือนพนักงาน</button>*@
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tab-master-tabContent">
+            <div class="tab-pane fade show active" id="nav-master-empData" role="tabpanel" aria-labelledby="nav-master-empData-tab">
+                <div class="container-fluid" id="divEmployee">
+                    <div class="row mt-2">
+                        <form id="form-search-employee">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>รหัสพนักงาน</label>
+                                    <input type="text" class="form-control" id="input-search-emp-code" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ชื่อพนักงาน</label>
+                                    <input type="text" class="form-control" id="input-search-emp-name" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>แผนก</label>
+                                    <select class="form-select" id="select-search-emp-department">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ตำแหน่ง</label>
+                                    <select class="form-select" id="select-search-emp-position">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-emp-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-emp-data">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-emp-data">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-employee"><img src="~/images/add-user.png" width="25px" /> เพิ่มพนักงาน</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-employee-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสพนักงาน</span></th>
+                                    <th><span>ชื่อพนักงาน</span></th>
+                                    <th><span>แผนก</span></th>
+                                    <th><span>ตำแหน่ง</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-role" role="tabpanel" aria-labelledby="nav-master-role-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-role">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>ชื่อบทบาท</label>
+                                    <input type="text" class="form-control" id="input-search-role" name="input-search-role" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-role-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-8 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-role">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-role">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-role"><img src="~/images/add-user.png" width="25px" /> เพิ่มบทบาท</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-role-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสบทบาท</span></th>
+                                    <th><span>ชื่อบทบาท</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-holiday" role="tabpanel" aria-labelledby="nav-master-holiday-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-holiday">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>ปี</label>
+                                    <select class="form-select" id="select-search-holiday-year">
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>วัน</label>
+                                    <select class="form-select" id="select-search-holiday-day">
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>วันที่</label>
+                                    <input type="date" class="form-control" id="input-search-holiday-date" name="input-search-holiday-date" value="dd/mm/yyyy" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>วันหยุด</label>
+                                    <input type="text" class="form-control" id="input-search-holiday-name" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-holiday-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-holiday">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-holiday">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-holiday"><img src="~/images/add (2).png" width="25px" /> เพิ่มวันหยุด</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-holiday-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>ลำดับ</span></th>
+                                    <th><span>วัน</span></th>
+                                    <th><span>วันที่</span></th>
+                                    <th><span>วันหยุด</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-department" role="tabpanel" aria-labelledby="nav-master-department-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-department">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>ชื่อแผนก</label>
+                                    <input type="text" class="form-control" id="input-search-department" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-department-status">
+                                    </select>
+                                </div>
+                                <div class="col-sm-8 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-department">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-department">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-department"><img src="~/images/add-user.png" width="25px" /> เพิ่มแผนก</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-department-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสแผนก</span></th>
+                                    <th><span>ชื่อแผนก</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-position" role="tabpanel" aria-labelledby="nav-master-position-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-position">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>ชื่อตำแหน่ง</label>
+                                    <input type="text" class="form-control" id="input-search-position" placeholder="" />
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-position-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-8 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-position">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-position">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-position"><img src="~/images/add-user.png" width="25px" /> เพิ่มตำแหน่ง</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-position-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสตำแหน่ง</span></th>
+                                    <th><span>ชื่อตำแหน่ง</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            @*            <div class="tab-pane fade" id="nav-master-leave" role="tabpanel" aria-labelledby="nav-master-leave-tab">...</div>
+            <div class="tab-pane fade" id="nav-master-time" role="tabpanel" aria-labelledby="nav-master-time-tab">...</div>
+            <div class="tab-pane fade" id="nav-master-salary" role="tabpanel" aria-labelledby="nav-master-salary-tab">...</div>*@
+        </div>
+    </div>
+</div>
+
+@*modal for create emp data*@
+<div id="modal-createEmployee" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="empHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createEmployee">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-code" name="input-emp-code" maxlength="5" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อ<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">บทบาท<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">แผนก<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department"></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">วันที่เริ่มงาน<span class="text-danger">*</span></label>
+                                    <div class="input-group" id="datepickerStartDate">
+                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เลขบัตรประชาชน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ตำแหน่ง<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">การรับเงินเดือน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เงินเดือน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" />
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="col-sm-12 control-label mb-2">การตอกบัตร</label>
+                                    <div class="text-center">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked>
+                                            <label class="form-check-label">ตอกบัตร</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard">
+                                            <label class="form-check-label">ไม่ตอกบัตร</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <label for="formFile" class="form-label">ลายเซ็นต์</label>
+                            <input id="select-emp-signature" name="select-emp-signature[]" type="file" class="file" accept="image/png">
+                            <span class="text-primary-custom">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-emp"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view emp data*@
+<div id="modal-viewEmployee" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลพนักงาน</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createEmployee">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-code" name="input-emp-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อ<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">บทบาท<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">แผนก<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department" disabled></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">วันที่เริ่มงาน<span class="text-danger">*</span></label>
+                                    <div class="input-group" id="datepickerStartDate">
+                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" disabled />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เลขบัตรประชาชน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ตำแหน่ง<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">การรับเงินเดือน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เงินเดือน<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" disabled />
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="col-sm-12 control-label mb-2">การตอกบัตร</label>
+                                    <div class="text-center">
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked disabled>
+                                            <label class="form-check-label">ตอกบัตร</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard" disabled>
+                                            <label class="form-check-label">ไม่ตอกบัตร</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <label for="formFile" class="form-label">ลายเซ็นต์</label>
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
+                            <span class="text-primary-custom">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create role*@
+<div id="modal-createRole" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="roleHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createRole">
+                    <div class="row col-sm-12">
+                        <div class="row col-sm-12">
+                            <div class="col-sm-4">
+                                <label>รหัสบทบาท<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="input-role-id" name="input-role-id" placeholder="" disabled />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>ชื่อบทบาท<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="input-role-name" name="input-role-name" placeholder="" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-select" id="select-role-status" data-selected="" name="select-role-status"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mt-3">
+                        <span class="mb-2">สิทธิ์การใช้งาน</span>
+                        <table class="table no-footer" id="tb-menu-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="text-center">หน้าจอการใช้งาน</th>
+                                    <th colspan="5" class="text-center">สิทธิ์การใช้งาน</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">ทั้งหมด</th>
+                                    <th class="text-center">เพิ่ม</th>
+                                    <th class="text-center">แก้ไข</th>
+                                    <th class="text-center">อนุมัติ</th>
+                                    <th class="text-center">ดูข้อมูล</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-role"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view role*@
+<div id="modal-viewRole" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลบทบาท</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createRole">
+                    <div class="row col-sm-12">
+                        <div class="row col-sm-12">
+                            <div class="col-sm-4">
+                                <label>รหัสบทบาท<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="input-role-id" name="input-role-id" placeholder="" disabled />
+                            </div>
+                            <div class="col-sm-4">
+                                <label>ชื่อบทบาท<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="input-role-name" name="input-role-name" placeholder="" />
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="control-label">สถานะ</label>
+                                <select class="form-select" id="select-role-status" data-selected="" name="select-role-status"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row col-sm-12 mt-3">
+                        <span class="mb-2">สิทธิ์การใช้งาน</span>
+                        <table class="table no-footer" id="tb-view-menu-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th rowspan="2" class="text-center">หน้าจอการใช้งาน</th>
+                                    <th colspan="5" class="text-center">สิทธิ์การใช้งาน</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">ทั้งหมด</th>
+                                    <th class="text-center">เพิ่ม</th>
+                                    <th class="text-center">แก้ไข</th>
+                                    <th class="text-center">อนุมัติ</th>
+                                    <th class="text-center">ดูข้อมูล</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create department*@
+<div id="modal-createDepartment" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="departmentHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createDepartment">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสแผนก<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-department-code" name="input-department-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="select2-container form-select" id="select-department-status">
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อแผนก<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-department-name" name="input-department-name" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="col-sm-12">*@
+
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-department"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view department*@
+<div id="modal-viewDepartment" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลแผนก</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createDepartment">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสแผนก<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-department-code" name="input-department-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="select2-container form-select" id="select-department-status" disabled>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อแผนก<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-department-name" name="input-department-name" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                            @*<div class="col-sm-12">*@
+
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create position*@
+<div id="modal-createPosition" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="positionHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createPosition">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            @*<div class="col-sm-12">*@
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสตำแหน่ง<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-position-code" name="input-position-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-select" id="select-position-status" data-selected="" name="select-position-status"></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อตำแหน่ง<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-position-name" name="input-position-name" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-position"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view position*@
+<div id="modal-viewPosition" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลตำแหน่ง</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createPosition">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            @*<div class="col-sm-12">*@
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสตำแหน่ง</label>
+                                        <input class="form-control" type="text" id="input-position-code" name="input-position-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-select" id="select-position-status" data-selected="" name="select-position-status" disabled></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อตำแหน่ง</label>
+                                        <input class="form-control" type="text" id="input-position-name" name="input-position-name" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create holiday*@
+<div id="modal-createHoliday" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="holidayHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createHoliday">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ลำดับ<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-holiday-code" name="input-holiday-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันที่<span class="text-danger">*</span></label>
+                                        <div class="input-group" id="datepickerHoliday">
+                                            <input type="date" class="form-control" id="input-holiday-date" name="input-holiday-date" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-select" id="select-holiday-status" data-selected="" name="select-holiday-status"></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วัน<span class="text-danger">*</span></label>
+                                        <select class="form-select" id="select-holiday-day" data-selected="" name="select-holiday-day"></select>
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันหยุด<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-holiday-name" name="input-holiday-name" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-holiday"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view holiday*@
+<div id="modal-viewHoliday" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลวันหยุด</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createHoliday">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ลำดับ<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-holiday-code" name="input-holiday-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันที่<span class="text-danger">*</span></label>
+                                        <div class="input-group" id="datepickerHoliday">
+                                            <input type="date" class="form-control" id="input-holiday-date" name="input-holiday-date" disabled />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-control" id="select-holiday-status" data-selected="" name="select-holiday-status" disabled></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วัน<span class="text-danger">*</span></label>
+                                        <select class="form-control" id="select-holiday-day" data-selected="" name="select-holiday-day" disabled></select>
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">วันหยุด<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-holiday-name" name="input-holiday-name" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+
+</div>

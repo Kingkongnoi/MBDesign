@@ -63,11 +63,11 @@
     <div class="col-sm-12">
         <!-- Nav pills -->
         <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
-            <li class="nav-item" id="nav-emp">
+          @*  <li class="nav-item" id="nav-emp">
                 <a class="nav-link active" data-bs-toggle="pill" href="#nav-mas-empData-tab">ข้อมูลพนักงาน</a>
-            </li>
+            </li>*@
             <li class="nav-item" id="nav-product">
-                <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-product-tab">ตั้งค่าราคาสินค้า</a>
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-mas-product-tab">ตั้งค่าราคาสินค้า</a>
             </li>
             <li class="nav-item" id="nav-calculate">
                 <a class="nav-link" data-bs-toggle="pill" href="#nav-mas-calculate-tab">ตั้งค่าสูตรคำนวณ</a>
@@ -85,9 +85,9 @@
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-mas-empData-tab">@Html.Partial("_Employee.cshtml")</div>
-
-            <div class="tab-pane fade" id="nav-mas-product-tab">@Html.Partial("_Product.cshtml")</div>
+@*            <div class="tab-pane active" id="nav-mas-empData-tab">@Html.Partial("_Employee.cshtml")</div>
+*@
+            <div class="tab-pane active" id="nav-mas-product-tab">@Html.Partial("_Product.cshtml")</div>
 
             <div class="tab-pane fade" id="nav-mas-calculate-tab"></div>
 
