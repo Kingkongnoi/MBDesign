@@ -464,7 +464,7 @@ namespace MBDesignWeb.Controllers
             param.Add("thirdPeriodTotal", string.Format("{0:n} บาท ({1})", thirdTotal, ConvertToThaiBaht(thirdTotal.ToString())));
             param.Add("disposite", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
 
-            decimal fouthTotal = Convert.ToDecimal((custOrder.grandTotal * Convert.ToDecimal(0.1)) - custOrder.disposite);
+            decimal fouthTotal = 100;/*Convert.ToDecimal((custOrder.grandTotal * Convert.ToDecimal(0.1)) - custOrder.disposite);*/
             param.Add("fouthPeriodTotal", string.Format("{0:n} บาท ({1})", fouthTotal, ConvertToThaiBaht(fouthTotal.ToString())));
             param.Add("bankAccount", account);
             DateTime predictDeliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);

@@ -79,9 +79,9 @@
                         <table class="table no-footer" id="tb-leave-type-list" width="100%">
                             <thead>
                                 <tr>
-                                    <th><span>ลำดับ</span></th>
+                                    <th width="5%"><span>ลำดับ</span></th>
                                     <th><span>ประเภทการลา</span></th>
-                                    <th><span>จำนวนวันลา</span></th>
+                                    <th width="10%"><span>จำนวนวันลา</span></th>
                                     <th><span>รายละเอียดเงื่อนไข</span></th>
                                     <th><span>วันที่แก้ไขล่าสุด</span></th>
                                     <th><span>ผู้แก้ไขล่าสุด</span></th>
@@ -159,58 +159,34 @@
             <div class="tab-pane fade" id="nav-leave-summary" role="tabpanel" aria-labelledby="nav-leave-summary-tab">
                 <div class="container-fluid">
                     <div class="row mt-2">
-                        <form id="form-search-holiday">
+                        <form id="form-search-leave-summary">
                             <div class="row col-sm-12">
                                 <div class="col-sm-2">
-                                    <label>ปี</label>
-                                    <select class="form-select" id="select-search-holiday-year">
-                                    </select>
+                                    <label>รหัสพนักงาน</label>
+                                    <input type="text" class="form-control" id="input-search-leave-emp-code" name="input-search-leave-emp-code" placeholder="" />
                                 </div>
                                 <div class="col-sm-2">
-                                    <label>วัน</label>
-                                    <select class="form-select" id="select-search-holiday-day">
-                                    </select>
+                                    <label>ชื่อพนักงาน</label>
+                                    <input type="text" class="form-control" id="input-search-leave-emp-name" name="input-search-leave-emp-name" placeholder="" />
                                 </div>
-                                <div class="col-sm-2">
-                                    <label>วันที่</label>
-                                    <input type="date" class="form-control" id="input-search-holiday-date" name="input-search-holiday-date" value="dd/mm/yyyy" />
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>วันหยุด</label>
-                                    <input type="text" class="form-control" id="input-search-holiday-name" placeholder="" />
-                                </div>
-                                <div class="col-sm-2">
-                                    <label>สถานะ</label>
-                                    <select class="form-select" id="select-search-holiday-status">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-2 mt-4 text-end">
-                                    <button type="button" class="btn btn-default-custom btn-clear-search-holiday">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-holiday">ค้นหา</button>
+                                <div class="col-sm-8 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-leave-summary">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-leave-summary">ค้นหา</button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
-                    <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn-add-custom btn-add-holiday"><img src="~/images/add (2).png" width="25px" /> เพิ่มวันหยุด</button>
-                    </div>
-
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-holiday-list" width="100%">
+                        <table class="table no-footer" id="tb-leave-summary-list" width="100%">
                             <thead>
                                 <tr>
                                     <th><span>ลำดับ</span></th>
-                                    <th><span>วัน</span></th>
-                                    <th><span>วันที่</span></th>
-                                    <th><span>วันหยุด</span></th>
-                                    <th><span>วันที่สร้าง</span></th>
-                                    <th><span>ผู้สร้าง</span></th>
-                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
-                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
-                                    <th><span>สถานะ</span></th>
-                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                    <th><span>ประเภทการลา</span></th>
+                                    <th><span>รายละเอียดเงื่อนไข</span></th>
+                                    <th><span>จำนวนวันที่ใช้ได้ตามสิทธิ์</span></th>
+                                    <th><span>จำนวนวันลาที่ใช้</span></th>
+                                    <th><span>จำนวนวันลาคงเหลือ</span></th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -223,46 +199,22 @@
     </div>
 </div>
 
-@*modal for create emp data*@
-<div id="modal-createEmployee" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+<div id="modal-editLeaveType" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h4 class="modal-title text-center"><span id="empHeader"></span></h4>
+                <h4 class="modal-title text-center">แก้ไขประเภทการลา</h4>
             </div>
             <div class="modal-body">
-                <form id="form-createEmployee">
+                <form id="form-editLeaveType">
                     <div class="row d-sm-flex">
                         @*<div class="col-sm-12">*@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-code" name="input-emp-code" maxlength="5" />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ชื่อ<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">บทบาท<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role"></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">แผนก<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department"></select>
-                                </div>
-
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">สถานะ</label>
-                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status"></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">วันที่เริ่มงาน<span class="text-danger">*</span></label>
-                                    <div class="input-group" id="datepickerStartDate">
-                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" />
-                                    </div>
+                                    <label class="control-label">ลำดับ</label>
+                                    <input class="form-control" type="text" id="input-leave-type-id" name="input-leave-type-id" disabled />
                                 </div>
 
                             </div>
@@ -272,100 +224,61 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">เลขบัตรประชาชน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ตำแหน่ง<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position"></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">การรับเงินเดือน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type"></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">เงินเดือน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" />
+                                    <label class="control-label">จำนวนวันลา<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-leave-days" name="input-leave-days" />
                                 </div>
 
-                                <div class="col-sm-12 mb-2">
-                                    <label class="col-sm-12 control-label mb-2">การตอกบัตร</label>
-                                    <div class="text-center">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked>
-                                            <label class="form-check-label">ตอกบัตร</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard">
-                                            <label class="form-check-label">ไม่ตอกบัตร</label>
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
                         </div>
 
                         <div class="col-sm-12 mb-2">
-                            <label for="formFile" class="form-label">ลายเซ็นต์</label>
-                            <input id="select-emp-signature" name="select-emp-signature[]" type="file" class="file" accept="image/png">
-                            <span class="text-primary-custom">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รายละเอียดเงื่อนไข</label>
+                                    <textarea class="form-control" id="input-leave-detail" name="input-leave-detail" rows="3" disabled></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-leave-type-status" data-selected="" name="select-leave-type-status"></select>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                 </form>
 
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary btn-modal-save-emp"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-primary btn-modal-save-leave-type"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
                 <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
             </div>
         </div>
     </div>
 </div>
 
-@*modal for view emp data*@
-<div id="modal-viewEmployee" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+<div id="modal-viewLeaveType" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h4 class="modal-title text-center">ดูข้อมูลพนักงาน</h4>
+                <h4 class="modal-title text-center">ดูข้อมูลประเภทการลา</h4>
             </div>
             <div class="modal-body">
-                <form id="form-createEmployee">
+                <form id="form-editLeaveType">
                     <div class="row d-sm-flex">
                         @*<div class="col-sm-12">*@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-code" name="input-emp-code" disabled />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ชื่อ<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-firstName" name="input-emp-firstName" disabled />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">บทบาท<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-role" data-selected="" name="select-emp-role" disabled></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">แผนก<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-department" data-selected="" name="select-emp-department" disabled></select>
-                                </div>
-
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">สถานะ</label>
-                                    <select class="form-select" id="select-emp-status" data-selected="" name="select-emp-status" disabled></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">วันที่เริ่มงาน<span class="text-danger">*</span></label>
-                                    <div class="input-group" id="datepickerStartDate">
-                                        <input type="date" class="form-control" id="input-start-date" name="input-start-date" disabled />
-                                    </div>
+                                    <label class="control-label">ลำดับ</label>
+                                    <input class="form-control" type="text" id="input-leave-type-id" name="input-leave-type-id" disabled />
                                 </div>
 
                             </div>
@@ -375,50 +288,36 @@
                         <div class="col-sm-6">
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">เลขบัตรประชาชน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-idCard" name="input-emp-idCard" maxlength="13" disabled />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">นามสกุล<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-emp-lastName" name="input-emp-lastName" disabled />
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ตำแหน่ง<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-emp-position" data-selected="" name="select-emp-position" disabled></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">การรับเงินเดือน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-salary-type" data-selected="" name="select-salary-type" disabled></select>
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">เงินเดือน<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="number" id="input-emp-salary" name="input-emp-salary" disabled />
+                                    <label class="control-label">จำนวนวันลา<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-leave-days" name="input-leave-days" />
                                 </div>
 
-                                <div class="col-sm-12 mb-2">
-                                    <label class="col-sm-12 control-label mb-2">การตอกบัตร</label>
-                                    <div class="text-center">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpInputCard" value="empInputCard" checked disabled>
-                                            <label class="form-check-label">ตอกบัตร</label>
-                                        </div>
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="radioEmpAttendance" id="radioEmpNoInputCard" value="empNoInputCard" disabled>
-                                            <label class="form-check-label">ไม่ตอกบัตร</label>
-                                        </div>
-                                    </div>
-
-                                </div>
                             </div>
                         </div>
 
                         <div class="col-sm-12 mb-2">
-                            <label for="formFile" class="form-label">ลายเซ็นต์</label>
-                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
-                            <span class="text-primary-custom">การเพิ่มลายเซ็นต์สามารถเลือกไฟล์เป็น .png เท่านั้น</span>
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รายละเอียดเงื่อนไข</label>
+                                    <textarea class="form-control" id="input-leave-detail" name="input-leave-detail" rows="3" disabled></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-leave-type-status" data-selected="" name="select-leave-type-status"></select>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                 </form>
+
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>

@@ -368,6 +368,8 @@ let _role_3d_class_display = "";
 let _role_foreman_class_display = "";
 let _role_account_class_display = "";
 let _role_approve_class_display = "";
+
+let _role_leave_type_class_disaply = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');
     $('.nav-pills').addClass('no-display');
