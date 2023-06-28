@@ -4,7 +4,8 @@ function leaveTypeLoading() {
     callSelect2Status("#modal-editLeaveType #form-editLeaveType #select-leave-type-status", false);
     callSelect2Status("#modal-viewLeaveType #form-editLeaveType #select-leave-type-status", false);
 
-    callSelect2LeaveType(true);
+    callSelect2LeaveType("#form-search-leave-type #select-search-leave-type", true);
+    callSelect2LeaveType("#form-search-leave-information #select-search-leave-type", true);
 
     callGetLeaveTypeList();
 }
@@ -13,27 +14,27 @@ function clearSearchLeaveType() {
     $(`${formId} #select-search-leave-type`).val('').trigger('change');
     $(`${formId} #select-search-leave-status`).val('').trigger('change');
 }
-function callSelect2LeaveType() {
+function callSelect2LeaveType(select2Id, isSearch = true) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/HR/GetSelect2LeaveTypeName`,
         success: function (data) {
-            renderSelect2LeaveType(data);
+            renderSelect2LeaveType(select2Id, data, isSearch);
         },
         error: function (err) {
         }
     });
 }
-function renderSelect2LeaveType(data, isSearch = true) {
-    let formName = (isSearch) ? '#form-search-leave-type' : '';
-    let select2Name = (isSearch) ? '#select-search-leave-type' : '';
+function renderSelect2LeaveType(select2Id, data, isSearch) {
+    //let formName = (isSearch) ? '#form-search-leave-type' : '';
+    //let select2Name = (isSearch) ? '#select-search-leave-type' : '';
     let select2FirstVal = (isSearch) ? 'ทั้งหมด' : 'กรุณาเลือก';
 
-    $(`${formName} ${select2Name}`).empty();
-    $(`${formName} ${select2Name}`).append(`<option value="">${select2FirstVal}</option>`);
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstVal}</option>`);
 
     data.forEach((v) => {
-        $(`${formName} ${select2Name}`).append(`<option value="${v.leaveTypeName}">${v.leaveTypeName}</option>`);
+        $(`${select2Id}`).append(`<option value="${v.leaveTypeName}">${v.leaveTypeName}</option>`);
     });
 }
 function callGetLeaveTypeList() {
@@ -237,4 +238,106 @@ function callUpdateLeaveType() {
         }
     });
 
+}
+
+function clearSearchLeaveInformation() {
+    let formId = '#form-search-leave-information';
+    $(`${formId} input[name="input-search-leave-emp-code"]`).val("");
+    $(`${formId} input[name="input-search-leave-emp-name"]`).val("");
+    $(`${formId} #select-search-leave-type`).val('').trigger('change');
+    $(`${formId} #input-search-leave-start-date`).val('');
+    $(`${formId} #input-search-leave-end-date`).val('');
+}
+function callGetLeaveInformationList() {
+    let formId = '#form-search-leave-type';
+
+    let leaveType = ($(`${formId} #select-search-leave-type`).val() == '') ? null : $(`${formId} #select-search-leave-type`).val();
+    let status = ($(`${formId} #select-search-leave-status`).val() == '') ? null : $(`${formId} #select-search-leave-status`).val();
+
+    let loaded = $('#tb-leave-type-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetLeaveTypeList?leaveType=${leaveType}&status=${status}`,
+        success: function (data) {
+            renderGetLeaveTypeList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetLeaveInformationList(data) {
+    $('#tb-leave-type-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.leaveTypeId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'leaveTypeId',
+                    className: "dt-center",
+                },
+                {
+                    targets: 1,
+                    data: 'leaveTypeName',
+                },
+                {
+                    targets: 2,
+                    data: 'leaveTypeDays',
+                    className: "dt-body-right",
+                },
+                {
+                    targets: 3,
+                    data: 'leaveTypeDetail',
+                },
+                {
+                    targets: 4,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 6,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_leave_type_class_disaply}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-leave-type" data-id="${row.leaveTypeId}"  title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
 }

@@ -326,51 +326,107 @@
     </div>
 </div>
 
-@*modal for create role*@
-<div id="modal-createRole" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+<div id="modal-createLeave" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog modal-lg">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h4 class="modal-title text-center"><span id="roleHeader"></span></h4>
+                <h4 class="modal-title text-center"><span id="leaveHeader"></span></h4>
             </div>
             <div class="modal-body">
-                <form id="form-createRole">
-                    <div class="row col-sm-12">
-                        <div class="row col-sm-12">
-                            <div class="col-sm-4">
-                                <label>รหัสบทบาท<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="input-role-id" name="input-role-id" placeholder="" disabled />
+                <form id="form-createLeave">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-6">
+                            <div class="row">
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-leave-empCode" data-selected="" name="select-leave-empCode"></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ประเภทการลา<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-leave-type" data-selected="" name="select-leave-type"></select>
+                                </div>
+
                             </div>
-                            <div class="col-sm-4">
-                                <label>ชื่อบทบาท<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="input-role-name" name="input-role-name" placeholder="" />
-                            </div>
-                            <div class="col-sm-4">
-                                <label class="control-label">สถานะ</label>
-                                <select class="form-select" id="select-role-status" data-selected="" name="select-role-status"></select>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อพนักงาน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-leave-empName" data-selected="" name="select-leave-empName"></select>
+                                </div>                                
+
                             </div>
                         </div>
-                    </div>
+                        
+                        <div class="col-sm-6">
+                            <div class="row">
 
-                    <div class="row col-sm-12 mt-3">
-                        <span class="mb-2">สิทธิ์การใช้งาน</span>
-                        <table class="table no-footer" id="tb-menu-list" width="100%">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" class="text-center">หน้าจอการใช้งาน</th>
-                                    <th colspan="5" class="text-center">สิทธิ์การใช้งาน</th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center">ทั้งหมด</th>
-                                    <th class="text-center">เพิ่ม</th>
-                                    <th class="text-center">แก้ไข</th>
-                                    <th class="text-center">อนุมัติ</th>
-                                    <th class="text-center">ดูข้อมูล</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">วันที่ลาเริ่มต้น<span class="text-danger">*</span></label>
+                                    <div class="input-group" id="datepickerLeave">
+                                        <input type="date" class="form-control" id="input-leave-start-date" name="input-leave-start-date" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เวลา<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-leave-hour" data-selected="" name="select-leave-hour"></select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">วันที่ลาสิ้นสุด<span class="text-danger">*</span></label>
+                                    <div class="input-group" id="datepickerLeave">
+                                        <input type="date" class="form-control" id="input-leave-end-date" name="input-leave-end-date" />
+                                    </div>
+                                </div>
+
+                                <div class="row col-sm-12 mb-2">
+                                    <div class="col-sm-9 mb-2">
+                                        <label class="control-label">ระยะเวลา</label>
+                                        <input type="number" class="form-control" id="input-leave-days" name="input-leave-days" disabled />
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <button type="button" class="btn btn-default-custom">คำนวณเวลา</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รายละเอียดเงื่อนไข</label>
+                                    <textarea class="form-control" id="input-leave-detail" name="input-leave-detail" rows="3" disabled></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-leave-type-status" data-selected="" name="select-leave-type-status"></select>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
                 </form>
             </div>
