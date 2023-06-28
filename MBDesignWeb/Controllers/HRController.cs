@@ -115,6 +115,15 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(msg);
         }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetLeaveSummaryByEmpData(string empCode, string empName)
+        {
+            var data = _hrService.GetLeaveSummaryByEmpData(empCode, empName);
+
+            return new JsonResult(data);
+        }
         #endregion API
     }
 }

@@ -17,7 +17,6 @@ namespace EntitiesMBDesign
         public DateTime leaveEndDate { get; set; }
         public int leaveHours { get; set; }
         public decimal leaveDays { get; set; }
-        public decimal leaveRemainDays { get; set; }
         public string leaveRemark { get; set; } = string.Empty;
         public string leaveDocument { get; set; } = string.Empty;
         public bool status { get; set; } = true;

@@ -108,5 +108,53 @@ namespace DataLayerMBDesign
 
             return conn.QuerySingleOrDefault<tbLeaveType>(queryString, new { name }, transaction: trans);
         }
+
+        public List<LeaveTypeView> GetLeaveSummaryByEmpData(string empCode, string empName, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            if (string.IsNullOrEmpty(empCode) || empCode == "null")
+            {
+                empCode = "";
+            }
+
+            if (string.IsNullOrEmpty(empName) || empName == "null")
+            {
+                empName = "";
+            }
+
+            string queryString = string.Format(@"DECLARE @empId int;
+
+            if(@empCode <> '')
+            begin
+	            set @empId = (select top 1 id from tbEmpData where isDeleted = 0 and empCode = @empCode);
+            end
+            else if(@empName <> '')
+            begin
+	            set @empId = (select top 1 id from tbEmpData where isDeleted = 0 and (empFirstName + ' ' + empLastName) = N'%' + @empName + '%');
+            end
+
+            if(@empCode = '' and @empName = '')
+            begin
+	            select leaveTypeId, leaveTypeName, leaveTypeDays, leaveTypeDetail, 0 useLeaveDays, 0 remainLeaveDays
+	            FROM tbLeaveType a
+	            where a.isDeleted = 1
+            end
+            else
+            begin
+	            select leaveTypeId, leaveTypeName, leaveTypeDays, leaveTypeDetail, useLeaveDays, sum(leaveTypeDays-useLeaveDays) remainLeaveDays
+	            from (
+	            SELECT a.leaveTypeId
+	            ,a.leaveTypeName
+	            ,a.leaveTypeDays
+	            ,a.leaveTypeDetail
+	            ,(select isnull(sum(leaveDays), 0) from tbLeave where isDeleted = 0 and leaveTypeId = a.leaveTypeId and empId = @empId) useLeaveDays
+	            FROM tbLeaveType a
+	            where a.isDeleted = 0
+	            ) aa
+	            group by leaveTypeId, leaveTypeName, leaveTypeDays, leaveTypeDetail, useLeaveDays
+	            order by leaveTypeId
+            end");
+
+            return conn.Query<LeaveTypeView>(queryString, new { empCode, empName }, transaction: trans).ToList();
+        }
     }
 }

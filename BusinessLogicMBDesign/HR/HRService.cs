@@ -238,5 +238,17 @@ namespace BusinessLogicMBDesign.HR
             return msg;
         }
         #endregion Leave
+
+        #region Leave Summary
+        public List<LeaveTypeView> GetLeaveSummaryByEmpData(string empCode, string empName)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _leaveTypeRepository.GetLeaveSummaryByEmpData(empCode, empName, conn);
+            }
+        }
+        #endregion Leave Summary
     }
 }

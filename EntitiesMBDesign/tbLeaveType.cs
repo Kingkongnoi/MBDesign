@@ -26,6 +26,8 @@ namespace EntitiesMBDesign
     {
         public string createByName { get; set; } = string.Empty;
         public string updateByName { get; set; } = string.Empty;
+        public decimal useLeaveDays { get; set; }
+        public decimal remainLeaveDays { get; set; }
     }
 
     public class LeaveTypeModel

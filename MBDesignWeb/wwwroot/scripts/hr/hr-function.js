@@ -16,6 +16,7 @@ function leaveTypeLoading() {
 
     callGetLeaveTypeList();
     callGetLeaveInformationList();
+    callGetLeaveSummaryList();
 }
 function clearSearchLeaveType() {
     let formId = '#form-search-leave-type';
@@ -728,4 +729,81 @@ function renderLeaveForm(data, modal) {
     $(`${modal} ${formId} #select-leave-hour`).val(data.leaveHours).trigger('change');
     $(`${modal} ${formId} input[name="input-leave-days"]`).val(`${data.leaveDays} วัน`);
     $(`${modal} ${formId} #input-leave-remark`).val(data.leaveRemark);
+}
+
+function clearSearchLeaveSummary() {
+    let formId = '#form-search-leave-summary';
+    $(`${formId} input[name="input-search-leave-emp-code"]`).val("");
+    $(`${formId} input[name="input-search-leave-emp-name"]`).val("");
+}
+function callGetLeaveSummaryList() {
+    let formId = '#form-search-leave-summary';
+
+    let empCode = ($(`${formId} input[name="input-search-leave-emp-code"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-emp-code"]`).val();
+    let empName = ($(`${formId} input[name="input-search-leave-emp-name"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-emp-name"]`).val();
+
+    let loaded = $('#tb-leave-summary-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetLeaveSummaryByEmpData?empCode=${empCode}&empName=${empName}`,
+        success: function (data) {
+            renderGetLeaveSummaryList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetLeaveSummaryList(data) {
+    $('#tb-leave-summary-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.leaveTypeId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'leaveTypeId',
+                },
+                {
+                    targets: 1,
+                    data: 'leaveTypeName',
+                },
+                {
+                    targets: 2,
+                    data: 'leaveTypeDetail',
+                },
+                {
+                    targets: 3,
+                    data: 'leaveTypeDays',
+                    className: "dt-body-right",
+                },
+                {
+                    targets: 4,
+                    data: 'useLeaveDays',
+                    className: "dt-body-right",
+                },
+                {
+                    targets: 5,
+                    data: 'remainLeaveDays',
+                    className: "dt-body-right",
+                },
+            ],
+        }
+    );
 }

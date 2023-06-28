@@ -82,6 +82,15 @@
         $('#form-createLeave #select-leave-empName').val("").trigger("change");
     });
 
+    $('#form-search-leave-summary .btn-clear-search-leave-summary').on('click', function () {
+        clearSearchLeaveSummary();
+        callGetLeaveSummaryList();
+    });
+
+    $('#form-search-leave-summary .btn-search-leave-summary').on('click', function () {
+        callGetLeaveSummaryList();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
@@ -93,7 +102,8 @@
             callGetLeaveInformationList();
         }
         else if (target == "#nav-leave-summary") {
-
+            clearSearchLeaveSummary();
+            callGetLeaveSummaryList();
         }
         
     });
