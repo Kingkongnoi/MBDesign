@@ -52,7 +52,9 @@
         $(`#modal-createLeave #leaveHeader`).text('แก้ไขข้อมูลการลา');
         _leave_action = "edit";
         _leaveId = $(this).data('id');
-        $('#modal-viewLeave').modal('show');
+        clearLeaveForm();
+        callGetLeaveById($(this).data('id'), "#modal-createLeave");
+        $('#modal-createLeave').modal('show');
     });
 
     $('.btn-modal-save-leave').on('click', function () {
@@ -62,6 +64,15 @@
     $('.btn-cal-leave-days').on('click', function () {
         calculateLeaveDays();
     });
+
+    $('#tb-leave-list').on('click', 'tbody tr td:not(:last-child)', function () {
+        var table = $('#tb-leave-list').DataTable();
+        var row = table.row($(this)).data();
+        clearLeaveForm();
+        callGetLeaveById(row.leaveId, "#modal-viewLeave");
+        $('#modal-viewLeave').modal('show');
+    });
+
 
     $('#form-createLeave #select-leave-empName').on("select2:unselecting", function (e) {
         $('#form-createLeave #select-leave-empCode').val("").trigger("change");

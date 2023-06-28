@@ -108,6 +108,15 @@ namespace BusinessLogicMBDesign.HR
             }
         }
 
+        public LeaveView GetLeaveById(int leaveId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _leaveRepository.GetFirstByKeyId(leaveId, conn);
+            }
+        }
         public List<tbEmpData> GetSelect2EmpCode(int empId)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -143,7 +152,9 @@ namespace BusinessLogicMBDesign.HR
                     int leaveTypeId = (leaveType != null) ? leaveType.leaveTypeId : 0;
 
                     #region validation remain days
-
+                    int leaveTypeDays = (leaveType != null) ? leaveType.leaveTypeDays : 0;
+                    var getLeaveDays = Convert.ToDecimal(obj.leaveDays.Split(' ')[0]);
+                    //var leaveRemainDays = (leaveTypeDays - getLeaveDays);
                     #endregion validation remain days
 
                     var added = new tbLeave
@@ -153,7 +164,8 @@ namespace BusinessLogicMBDesign.HR
                         leaveStartDate = obj.leaveStartDate,
                         leaveEndDate = obj.leaveEndDate,
                         leaveHours = obj.leaveHours,
-                        leaveDays = Convert.ToDecimal(obj.leaveDays),
+                        leaveDays = getLeaveDays,
+                        //leaveRemainDays = leaveRemainDays,
                         leaveRemark = obj.leaveRemark,
                         leaveDocument = "",
                         status = true,
@@ -190,6 +202,12 @@ namespace BusinessLogicMBDesign.HR
                     var leaveType = _leaveTypeRepository.GetFirstByName(obj.leaveTypeName, conn, transaction);
                     int leaveTypeId = (leaveType != null) ? leaveType.leaveTypeId : 0;
 
+                    #region validation remain days
+                    int leaveTypeDays = (leaveType != null) ? leaveType.leaveTypeDays : 0;
+                    var getLeaveDays = Convert.ToDecimal(obj.leaveDays.Split(' ')[0]);
+                    //var leaveRemainDays = (leaveTypeDays - getLeaveDays);
+                    #endregion validation remain days
+
                     var updated = new tbLeave
                     {
                         empId = obj.empId,
@@ -197,7 +215,7 @@ namespace BusinessLogicMBDesign.HR
                         leaveStartDate = obj.leaveStartDate,
                         leaveEndDate = obj.leaveEndDate,
                         leaveHours = obj.leaveHours,
-                        leaveDays = Convert.ToDecimal(obj.leaveDays),
+                        leaveDays = getLeaveDays,
                         leaveRemark = obj.leaveRemark,
                         leaveDocument = "",
                         updateDate = DateTime.UtcNow,

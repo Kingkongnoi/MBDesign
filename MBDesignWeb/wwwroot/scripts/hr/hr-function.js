@@ -316,7 +316,10 @@ function renderGetLeaveInformationList(data) {
                     targets: 3,
                     data: null,
                     render: function (data, type, row) {
-                        return `${row.leaveStartDate}-${row.leaveEndDate}`;
+                        let startDate = convertDateTimeFormat(row.leaveStartDate, 'DD/MM/YYYY');
+                        let endDate = convertDateTimeFormat(row.leaveEndDate, 'DD/MM/YYYY');
+
+                        return (startDate == endDate) ? `${startDate}` : `${startDate}-${endDate}`;
                     },
                 },
                 {
@@ -701,4 +704,28 @@ function calculateLeaveDays() {
     var result = (leaveHours == "4") ? Math.round(Math.abs(Difference_In_Days)) + 0.5 : Math.round(Math.abs(Difference_In_Days)) + 1;
     var finalResult = `${result.toString()} วัน`;
     $(`${formId} input[name="input-leave-days"]`).val(finalResult);
+}
+function callGetLeaveById(id, modal) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetLeaveById?leaveId=${id}`,
+        success: function (data) {
+            renderLeaveForm(data, modal);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderLeaveForm(data, modal) {
+    let formId = '#form-createLeave';
+    $(`${modal} ${formId} #select-leave-empCode`).val(data.empId).trigger('change');
+    $(`${modal} ${formId} #select-leave-empName`).val(data.empId).trigger('change');
+    $(`${modal} ${formId} #select-leave-type`).val(data.leaveTypeName).trigger('change');
+
+    $(`${modal} ${formId} #input-leave-start-date`).val(convertDateTimeFormat(data.leaveStartDate, 'YYYY-MM-DD'));
+    $(`${modal} ${formId} #input-leave-end-date`).val(convertDateTimeFormat(data.leaveEndDate, 'YYYY-MM-DD'));
+    $(`${modal} ${formId} #select-leave-hour`).val(data.leaveHours).trigger('change');
+    $(`${modal} ${formId} input[name="input-leave-days"]`).val(`${data.leaveDays} วัน`);
+    $(`${modal} ${formId} #input-leave-remark`).val(data.leaveRemark);
 }

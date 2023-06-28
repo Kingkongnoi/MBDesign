@@ -73,6 +73,15 @@ namespace MBDesignWeb.Controllers
 
         [Route("api/[controller]/[action]")]
         [HttpGet]
+        public JsonResult GetLeaveById(int leaveId)
+        {
+            var data = _hrService.GetLeaveById(leaveId);
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
         public JsonResult GetSelect2EmpCode(int empId = 0)
         {
             var data = _hrService.GetSelect2EmpCode(empId);

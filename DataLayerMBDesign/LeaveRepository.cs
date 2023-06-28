@@ -32,15 +32,15 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(leaveStartDate) && leaveStartDate != "null")
             {
-                condition += string.Format(" and FORMAT([a.leaveStartDate, 'yyyy-MM-dd') = N'{0}'", leaveStartDate);
+                condition += string.Format(" and FORMAT(a.leaveStartDate, 'yyyy-MM-dd') = '{0}'", leaveStartDate);
             }
 
             if (!string.IsNullOrEmpty(leaveEndDate) && leaveEndDate != "null")
             {
-                condition += string.Format(" and FORMAT([a.leaveEndDate, 'yyyy-MM-dd') = N'{0}'", leaveEndDate);
+                condition += string.Format(" and FORMAT(a.leaveEndDate, 'yyyy-MM-dd') = '{0}'", leaveEndDate);
             }
 
-            string queryString = string.Format(@"select a.leaveId, a.empId, a.leaveTypeId, b.empCode, b.empFirstName + ' ' + b.empLastName empFullName, c.leaveTypeName, a.leaveStartDate, a.leaveEndDate, a.leaveDays, a.createDate, a.createBy, b.updateDate, b.updateBy
+            string queryString = string.Format(@"select a.leaveId, a.empId, a.leaveTypeId, b.empCode, b.empFirstName + ' ' + b.empLastName empFullName, c.leaveTypeName, a.leaveStartDate, a.leaveEndDate, a.leaveDays, a.createDate, a.createBy, a.updateDate, a.updateBy
                                 , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
                                 , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName        
                                 from tbLeave a inner join tbEmpData b on a.empId = b.id
@@ -53,27 +53,28 @@ namespace DataLayerMBDesign
             return conn.Query<LeaveView>(queryString, new { }, transaction: trans).ToList();
         }
 
-        public tbLeave GetFirstByKeyId(int leaveId, SqlConnection conn, SqlTransaction? trans = null)
+        public LeaveView GetFirstByKeyId(int leaveId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"
-            SELECT TOP 1 leaveId
-            ,empId
-            ,leaveTypeId
-            ,leaveStartDate
-            ,leaveEndDate
-            ,leaveHours
-            ,leaveDays
-            ,leaveRemark
-            ,[status]
-            ,createDate
-            ,createBy
-            ,updateDate
-            ,updateBy
-            ,isDeleted
-            FROM tbLeave
-            where isDeleted = 0 and leaveId = @leaveId";
+            SELECT TOP 1 a.leaveId
+            ,a.empId
+            ,a.leaveTypeId
+            ,a.leaveStartDate
+            ,a.leaveEndDate
+            ,a.leaveHours
+            ,a.leaveDays
+            ,a.leaveRemark
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+			,b.leaveTypeName
+            FROM tbLeave a inner join tbLeaveType b on a.leaveTypeId = b.leaveTypeId
+            where a.isDeleted = 0 and b.isDeleted = 0 and a.leaveId = @leaveId";
 
-            return conn.QuerySingleOrDefault<tbLeave>(queryString, new { leaveId }, transaction: trans);
+            return conn.QuerySingleOrDefault<LeaveView>(queryString, new { leaveId }, transaction: trans);
         }
 
         public int? Add(tbLeave obj, SqlConnection conn, SqlTransaction? trans = null)

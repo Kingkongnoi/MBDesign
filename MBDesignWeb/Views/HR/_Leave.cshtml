@@ -12,7 +12,7 @@
         z-index: 10000;
     }
 
-    #tb-leave-type-list tbody tr {
+    #tb-leave-type-list tbody tr, #tb-leave-list tbody tr {
         cursor: pointer !important;
     }
 
@@ -474,12 +474,12 @@
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-leave-empCode" data-selected="" name="select-leave-empCode"></select>
+                                    <select class="form-select" id="select-leave-empCode" data-selected="" name="select-leave-empCode" disabled></select>
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ประเภทการลา<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-leave-type" data-selected="" name="select-leave-type"></select>
+                                    <select class="form-select" id="select-leave-type" data-selected="" name="select-leave-type" disabled></select>
                                 </div>
 
                             </div>
@@ -490,7 +490,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ชื่อพนักงาน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-leave-empName" data-selected="" name="select-leave-empName"></select>
+                                    <select class="form-select" id="select-leave-empName" data-selected="" name="select-leave-empName" disabled></select>
                                 </div>
 
                             </div>
@@ -502,13 +502,13 @@
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">วันที่ลาเริ่มต้น<span class="text-danger">*</span></label>
                                     <div class="input-group" id="datepickerLeave">
-                                        <input type="date" class="form-control" id="input-leave-start-date" name="input-leave-start-date" />
+                                        <input type="date" class="form-control" id="input-leave-start-date" name="input-leave-start-date" disabled />
                                     </div>
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">เวลา<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-leave-hour" data-selected="" name="select-leave-hour"></select>
+                                    <select class="form-select" id="select-leave-hour" data-selected="" name="select-leave-hour" disabled></select>
 
                                 </div>
 
@@ -522,14 +522,14 @@
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">วันที่ลาสิ้นสุด<span class="text-danger">*</span></label>
                                     <div class="input-group" id="datepickerLeave">
-                                        <input type="date" class="form-control" id="input-leave-end-date" name="input-leave-end-date" />
+                                        <input type="date" class="form-control" id="input-leave-end-date" name="input-leave-end-date" disabled />
                                     </div>
                                 </div>
 
                                 <div class="row col-sm-12 mb-2">
                                     <div class="col-sm-9 mb-2">
                                         <label class="control-label">ระยะเวลา</label>
-                                        <input type="number" class="form-control" id="input-leave-days" name="input-leave-days" disabled />
+                                        <input type="text" class="form-control" id="input-leave-days" name="input-leave-days" disabled />
                                     </div>
                                     <div class="col-sm-3">
                                         <button type="button" class="btn btn-default-custom btn-cal-leave-days">คำนวณเวลา</button>
@@ -544,7 +544,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">หมายเหตุ</label>
-                                    <textarea class="form-control" id="input-leave-remark" name="input-leave-remark" rows="3"></textarea>
+                                    <textarea class="form-control" id="input-leave-remark" name="input-leave-remark" rows="3" disabled></textarea>
                                 </div>
 
                             </div>
@@ -553,7 +553,7 @@
                         <div class="col-sm-12 mb-2">
                             <div class="row">
                                 <label for="formFile" class="form-label">เอกสารแนบ</label>
-                                <input id="select-leave-document" name="select-leave-document[]" type="file" class="file">
+                                <input id="select-leave-document" name="select-leave-document[]" type="file" class="file" disabled>
                             </div>
                         </div>
 
