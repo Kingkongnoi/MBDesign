@@ -370,6 +370,7 @@ let _role_account_class_display = "";
 let _role_approve_class_display = "";
 
 let _role_leave_type_class_disaply = "";
+let _role_leave_class_disaply = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');
     $('.nav-pills').addClass('no-display');
@@ -404,19 +405,19 @@ function callGetRolePerMenu() {
 ////        setPermissionSaleMenu(v);
 ////    }
 ////    else if (v.menuName == "การออกแบบ 3D" || v.parentMenuName == "การออกแบบ 3D") {
-        
+
 ////    }
 ////    else if (v.menuName == "โฟร์แมน" || v.parentMenuName == "โฟร์แมน") {
-        
+
 ////    }
 ////    else if (v.menuName == "บัญชีและเอกสาร" || v.parentMenuName == "บัญชีและเอกสาร") {
-        
+
 ////    }
 ////    else if (v.menuName == "ข้อมูลหลัก" || v.parentMenuName == "ข้อมูลหลัก") {
 ////        setPermissionMasterMenu(v);
 ////    }
 ////    else if (v.menuName == "การอนุมัติใบเสนอราคา" || v.parentMenuName == "การอนุมัติใบเสนอราคา") {
-        
+
 ////    }
 ////}
 ////function setPermissionMasterMenu(v) {
@@ -532,7 +533,7 @@ function callGetRolePerMenu() {
 ////        case "ข้อมูลคลังสินค้า":
 ////            if (v.canView) {
 ////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-inventory-tab"]').tab('show'); }
-                
+
 ////                $('#nav-inventory').removeClass('no-display');
 ////            }
 ////            else {
@@ -546,7 +547,7 @@ function callGetRolePerMenu() {
 ////                    _master_active = "active";
 ////                    $('.nav-pills a[href="#nav-mas-account-tab"]').tab('show');
 ////                }
-               
+
 ////                $('#nav-accounting').removeClass('no-display');
 ////            }
 ////            else {
@@ -563,7 +564,7 @@ function callGetRolePerMenu() {
 ////        case "ข้อมูลรถขนส่ง":
 ////            if (v.canView) {
 ////                if (_master_active == "") { _master_active = "active"; $('.nav-pills a[href="#nav-mas-transpotation-tab"]').tab('show'); }
-                
+
 ////                $('#nav-transpotation').removeClass('no-display');
 ////            }
 ////            else {
@@ -601,3 +602,33 @@ function callGetRolePerMenu() {
 ////        _role_class_display = ""
 ////    }
 ////}
+function convertDroupDownData(json, addTmp = false) {
+    let arr = [];
+    if (addTmp) {
+        let param = {
+            id: '',
+            header: '',
+            detail: '',
+            rev: ``
+        }
+        arr.push(param);
+    }
+    Array.from(json).forEach((v, i) => {
+        let param = {
+            id: v.id,
+            title: v.header,
+            text: generateRowSelect2(v),
+            detail: v.detail
+        };
+        arr.push(param);
+    });
+    return arr;
+}
+function generateRowSelect2(v) {
+    if (v.loading) {
+        return v.text;
+    }
+    return `<div class='custom-dropdown'>
+                <div class='header-dropdown'>${(v.header || '')}</div>
+            </div>`
+}

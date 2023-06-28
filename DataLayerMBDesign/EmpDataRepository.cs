@@ -180,5 +180,40 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<EmpDataView>(queryString, new { empCode, idCard }, transaction: trans);
         }
 
+        public List<tbEmpData> GetSelect2EmpCode(int empId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = "";
+            if(empId != 0)
+            {
+                condition = string.Format(" and id = {0}", empId);
+            }
+            string queryString = string.Format(@"select id, empCode
+            from tbEmpData
+            where isDeleted = 0 and status = 1
+            {0}
+            group by id, empCode
+            order by empCode", condition);
+
+            return conn.Query<tbEmpData>(queryString, transaction: trans).ToList();
+        }
+        public List<EmpDataView> GetSelect2EmpFullName(int empId, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = "";
+            if (empId != 0)
+            {
+                condition = string.Format(" and id = {0}", empId);
+            }
+            string queryString = string.Format(@"select id, fullName
+            from (
+            select id, empFirstName + ' ' + empLastName fullName
+            from tbEmpData
+            where isDeleted = 0 and status = 1
+            ) a
+            group by id, fullName
+            order by fullName", condition);
+
+            return conn.Query<EmpDataView>(queryString, transaction: trans).ToList();
+        }
+
     }
 }

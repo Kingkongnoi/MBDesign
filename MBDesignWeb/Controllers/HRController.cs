@@ -61,6 +61,51 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(msg);
         }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetLeaveList(string empCode, string empName, string leaveType, string leaveStartDate, string leaveEndDate)
+        {
+            var data = _hrService.GetLeaveList(empCode, empName, leaveType, leaveStartDate, leaveEndDate);
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetSelect2EmpCode(int empId = 0)
+        {
+            var data = _hrService.GetSelect2EmpCode(empId);
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetSelect2EmpFullName(int empId = 0)
+        {
+            var data = _hrService.GetSelect2EmpFullName(empId);
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public JsonResult AddLeave([FromBody] LeaveModel obj)
+        {
+            var msg = _hrService.AddLeave(obj);
+
+            return new JsonResult(msg);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public JsonResult UpdateLeave([FromBody] LeaveModel obj)
+        {
+            var msg = _hrService.UpdateLeave(obj);
+
+            return new JsonResult(msg);
+        }
         #endregion API
     }
 }

@@ -31,6 +31,46 @@
         $('#modal-viewLeaveType').modal('show');
     });
 
+
+    $('#form-search-leave-information .btn-clear-search-leave').on('click', function () {
+        clearSearchLeaveInformation();
+        callGetLeaveInformationList();
+    });
+
+    $('#form-search-leave-information .btn-search-leave').on('click', function () {
+        callGetLeaveInformationList();
+    });
+
+    $('.btn-add-leave').on('click', function () {
+        $(`#modal-createLeave #leaveHeader`).text('เพิ่มข้อมูลการลา');
+        _leave_action = "add";
+        clearLeaveForm();
+        $('#modal-createLeave').modal('show');
+    });
+
+    $(document).on('click', '.btn-edit-leave', function () {
+        $(`#modal-createLeave #leaveHeader`).text('แก้ไขข้อมูลการลา');
+        _leave_action = "edit";
+        _leaveId = $(this).data('id');
+        $('#modal-viewLeave').modal('show');
+    });
+
+    $('.btn-modal-save-leave').on('click', function () {
+        DoUpdateLeave();
+    });
+
+    $('.btn-cal-leave-days').on('click', function () {
+        calculateLeaveDays();
+    });
+
+    $('#form-createLeave #select-leave-empName').on("select2:unselecting", function (e) {
+        $('#form-createLeave #select-leave-empCode').val("").trigger("change");
+    });
+
+    $('#form-createLeave #select-leave-empCode').on("select2:unselecting", function (e) {
+        $('#form-createLeave #select-leave-empName').val("").trigger("change");
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
@@ -38,7 +78,8 @@
             callGetLeaveTypeList();
         }
         else if (target == "#nav-leave-information") {
-
+            clearSearchLeaveInformation();
+            callGetLeaveInformationList();
         }
         else if (target == "#nav-leave-summary") {
 

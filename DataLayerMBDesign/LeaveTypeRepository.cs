@@ -89,5 +89,24 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.leaveTypeDays, obj.updateDate, obj.updateBy, obj.status, obj.leaveTypeId }, transaction: trans);
         }
+
+        public tbLeaveType GetFirstByName(string name, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"
+            SELECT TOP 1 a.leaveTypeId
+            ,a.leaveTypeName
+            ,a.leaveTypeDays
+            ,a.leaveTypeDetail
+            ,a.status
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted
+            FROM tbLeaveType a
+            where a.isDeleted = 0 and a.leaveTypeName = @name";
+
+            return conn.QuerySingleOrDefault<tbLeaveType>(queryString, new { name }, transaction: trans);
+        }
     }
 }
