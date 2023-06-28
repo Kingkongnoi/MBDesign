@@ -7,7 +7,7 @@
         z-index: 10000;
     }
 
-    .department-details, .position-details, .holiday-details, .emp-details, .role-details {
+    #tb-leave-type-list tbody tr {
         cursor: pointer !important;
     }
 
@@ -289,7 +289,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">จำนวนวันลา<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="number" id="input-leave-days" name="input-leave-days" />
+                                    <input class="form-control" type="number" id="input-leave-days" name="input-leave-days" disabled />
                                 </div>
 
                             </div>
@@ -309,7 +309,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
-                                    <select class="form-select" id="select-leave-type-status" data-selected="" name="select-leave-type-status"></select>
+                                    <select class="form-select" id="select-leave-type-status" data-selected="" name="select-leave-type-status" disabled></select>
                                 </div>
 
                             </div>

@@ -1,7 +1,8 @@
 ﻿var _leaveTypeId = 0;
 function leaveTypeLoading() {
     callSelect2Status("#select-search-leave-status", true);
-    callSelect2Status("#select-leave-type-status", false);
+    callSelect2Status("#modal-editLeaveType #form-editLeaveType #select-leave-type-status", false);
+    callSelect2Status("#modal-viewLeaveType #form-editLeaveType #select-leave-type-status", false);
 
     callSelect2LeaveType(true);
 
@@ -135,25 +136,25 @@ function clearEditLeaveTypeForm() {
     $(`${formId} #input-leave-detail`).val("");
     $(`${formId} #select-leave-type-status`).val(1).trigger('change');
 }
-function callGetLeaveTypeById(id) {
+function callGetLeaveTypeById(id, modal) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/HR/GetLeaveTypeById?leaveTypeId=${id}`,
         success: function (data) {
-            renderLeaveTypeForm(data);
+            renderLeaveTypeForm(data, modal);
         },
         error: function (err) {
 
         }
     });
 }
-function renderLeaveTypeForm(data) {
+function renderLeaveTypeForm(data, modal) {
     let status = (data.status) ? 1 : 0;
     let formId = '#form-editLeaveType';
-    $(`${formId} input[name="input-leave-type-id"]`).val(data.leaveTypeId);
-    $(`${formId} input[name="input-leave-days"]`).val(data.leaveTypeDays);
-    $(`${formId} #input-leave-detail`).val(data.leaveTypeDetail);
-    $(`${formId} #select-leave-type-status`).val(status).trigger('change');
+    $(`${modal} ${formId} input[name="input-leave-type-id"]`).val(data.leaveTypeId);
+    $(`${modal} ${formId} input[name="input-leave-days"]`).val(data.leaveTypeDays);
+    $(`${modal} ${formId} #input-leave-detail`).val(data.leaveTypeDetail);
+    $(`${modal} ${formId} #select-leave-type-status`).val(status).trigger('change');
 }
 let validateInputLeaveTypeForm = function () {
     let formId = '#form-editLeaveType';
