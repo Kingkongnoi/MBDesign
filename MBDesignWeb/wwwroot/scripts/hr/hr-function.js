@@ -155,84 +155,26 @@ function renderLeaveTypeForm(data) {
     $(`${formId} #input-leave-detail`).val(data.leaveTypeDetail);
     $(`${formId} #select-leave-type-status`).val(status).trigger('change');
 }
+let validateInputLeaveTypeForm = function () {
+    let formId = '#form-editLeaveType';
+    if ($(`${formId} input[name="input-leave-days"]`).val() == "" || $(`${formId} input[name="input-leave-days"]`).val() == "0") {
+        Swal.fire({
+            text: "กรุณากรอกจำนวนวันลา",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} input[name="input-leave-days"]`).focus();
+        });
+        return false;
+    }
+    else {
+        return true;
+    }
+}
 function DoUpdateLeaveType() {
-    if (!validateInput(modal)) return;
-
-    var control = document.getElementById(`select-emp-signature`);
-    var files = control.files;
-    for (var i = 0; i != files.length; i++) {
-        if (files[i].type != "image/png") {
-            Swal.fire({
-                text: "กรุณาเลือกไฟล์เป็น .png เท่านั้น",
-                icon: 'warning',
-                showCancelButton: false,
-                confirmButtonColor: _modal_primary_color_code,
-                confirmButtonText: 'ตกลง'
-            }).then((result) => {
-
-            });
-            return;
-        }
-    }
-
-    let empFormId = '#form-createEmployee';
-    let empId = $(`${empFormId} input[name="input-emp-code"]`).val();
-    let prefix = empId.substring(0, 2);
-    let suffix = empId.substring(2, empId.length);
-    if (empId.length < 5 || empId.length > 5) {
-        Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 5 หลัก",
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            //cancelButtonColor: _modal_default_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $(`${empFormId} input[name="input-emp-code"]`).focus();
-        });
-        return;
-    }
-    if ($.isNumeric(prefix) == true) {
-        Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 2 ตัวแรกเป็นตัวหนังสือ",
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            //cancelButtonColor: _modal_default_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $(`${empFormId} input[name="input-emp-code"]`).focus();
-        });
-        return;
-    }
-    if ($.isNumeric(suffix) == false) {
-        Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 3 ตัวท้ายเป็นตัวเลข",
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            //cancelButtonColor: _modal_default_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $(`${empFormId} input[name="input-emp-code"]`).focus();
-        });
-        return;
-    }
-
-    let empIdCard = $(`${empFormId} input[name="input-emp-idCard"]`).val();
-    if (empIdCard.length < 13 || empIdCard.length > 13) {
-        Swal.fire({
-            text: "กรุณากรอกเลขบัตรประชาชนจำนวน 13 หลัก",
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            //cancelButtonColor: _modal_default_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $(`${empFormId} input[name="input-emp-idCard"]`).focus();
-        });
-        return;
-    }
+    if (!validateInputLeaveTypeForm()) return;
 
     Swal.fire({
         title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
@@ -244,46 +186,24 @@ function DoUpdateLeaveType() {
         //cancelButtonColor: _modal_default_color_code,
     }).then((result) => {
         if (result.isConfirmed) {
-            callAddOrUpdateEmployee();
+            callUpdateLeaveType();
         }
     });
 }
-function callAddOrUpdateEmployee() {
-    $('.btn-modal-save-emp').addLoading();
+function callUpdateLeaveType() {
+    $('.btn-modal-save-leave-type').addLoading();
 
-    let url = (_emp_action == 'add') ? `${app_settings.api_url}/api/Employee/AddEmployee` : `${app_settings.api_url}/api/Employee/UpdateEmployee`;
+    let url = `${app_settings.api_url}/api/HR/UpdateLeaveType`;
 
-    let empFormId = '#form-createEmployee';
-    let empId = $(`${empFormId} input[name="input-emp-code"]`).val();
-    let empIdCard = $(`${empFormId} input[name="input-emp-idCard"]`).val();
-    let roleId = $(`${empFormId} #select-emp-role`).val();
-    let empFirstName = $(`${empFormId} input[name="input-emp-firstName"]`).val();
-    let empLastName = $(`${empFormId} input[name="input-emp-lastName"]`).val();
-    let departmentId = $(`${empFormId} #select-emp-department`).val();
-    let positionId = $(`${empFormId} #select-emp-position`).val();
-    let salaryType = $(`${empFormId} #select-salary-type`).val();
-    let salary = $(`${empFormId} input[name="input-emp-salary"]`).val();
-    let status = ($(`${empFormId} #select-emp-status`).val() == "1") ? true : false;
-    let hiringDate = $(`${empFormId} input[name="input-start-date"]`).val();
-    //let signatureFileName = $(`${empFormId} input[name="select-emp-signature"]`).val();
-    let timeStampType = $(`${empFormId} #radioEmpInputCard`).prop('checked') == true ? true : false;
+    let formId = '#form-editLeaveType';
+    let leaveTypeDays = $(`${formId} input[name="input-leave-days"]`).val();
+    let status = ($(`${formId} #select-leave-type-status`).val() == "1") ? true : false;
 
     var obj = {
-        empId: empId,
-        roleId: roleId,
-        empFirstName: empFirstName,
-        empLastName: empLastName,
-        departmentId: departmentId,
-        positionId: positionId,
-        salaryType: salaryType,
-        salary: salary,
+        leaveTypeDays: leaveTypeDays,
         status: status,
-        hiringDate: hiringDate,
-        timeStampType: timeStampType,
-        idCard: empIdCard,
-        signatureFileName: "",
-        loginCode: _userCode,
-        id: _empId
+        updateBy: _userCode,
+        leaveTypeId: _leaveTypeId
     };
 
     $.ajax({
@@ -293,27 +213,26 @@ function callAddOrUpdateEmployee() {
         dataType: "json",
         data: JSON.stringify(obj),
         success: (res) => {
-            //if (res.result) {
-            if (res.msg.isResult) {
-                callAddOrUpdateSignatureFile();
+            console.log(res);
+            if (res.isResult) {
                 callSuccessAlert();
-                $('.btn-modal-save-emp').removeLoading();
-                $(`#modal-createEmployee`).modal('hide');
-                callGetEmployeeList();
+                $('.btn-modal-save-leave-type').removeLoading();
+                $(`#modal-editLeaveType`).modal('hide');
+                callGetLeaveTypeList();
             }
             else {
                 Swal.fire({
-                    text: res.msg.strResult,
+                    text: res.strResult,
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
                     confirmButtonText: 'ตกลง'
                 });
-                $('.btn-modal-save-emp').removeLoading();
+                $('.btn-modal-save-leave-type').removeLoading();
             }
         },
         error: () => {
-            $('.btn-modal-save-emp').removeLoading();
+            $('.btn-modal-save-leave-type').removeLoading();
         }
     });
 

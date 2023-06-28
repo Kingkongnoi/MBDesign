@@ -81,9 +81,9 @@ namespace DataLayerMBDesign
         {
             string queryString = @"update tbLeaveType
             set leaveTypeDays = @leaveTypeDays
-            updateDate = @updateDate
-            updateBy = @updateBy
-            status = @status
+            ,updateDate = @updateDate
+            ,updateBy = @updateBy
+            ,status = @status
             where leaveTypeId = @leaveTypeId and isDeleted = 0
             select @@ROWCOUNT;";
 

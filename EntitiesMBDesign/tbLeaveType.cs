@@ -30,6 +30,9 @@ namespace EntitiesMBDesign
 
     public class LeaveTypeModel
     {
-
+        public int leaveTypeId { get; set; }
+        public int leaveTypeDays { get; set; }
+        public bool status { get; set; }
+        public string updateBy { get; set; } = string.Empty;
     }
 }

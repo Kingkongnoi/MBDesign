@@ -53,20 +53,13 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(data);
         }
 
+        [Route("api/[controller]/[action]")]
         [HttpPost]
         public JsonResult UpdateLeaveType([FromBody] LeaveTypeModel obj)
         {
-            var result = true;
-            var resultStatus = "success";
             var msg = _hrService.UpdateLeaveType(obj);
 
-            var returnData = new
-            {
-                result,
-                resultStatus,
-                msg
-            };
-            return new JsonResult(returnData);
+            return new JsonResult(msg);
         }
         #endregion API
     }

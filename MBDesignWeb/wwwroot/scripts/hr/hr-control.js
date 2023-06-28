@@ -19,6 +19,10 @@
         $('#modal-editLeaveType').modal('show');
     });
 
+    $('.btn-modal-save-leave-type').on('click', function () {
+        DoUpdateLeaveType();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {

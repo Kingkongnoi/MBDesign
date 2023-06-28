@@ -68,15 +68,21 @@ namespace BusinessLogicMBDesign.HR
                 {
                     var updated = new tbLeaveType
                     {
-                        //leaveTypeDays = obj
+                        leaveTypeDays = obj.leaveTypeDays,
+                        status = obj.status,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = obj.updateBy,
+                        leaveTypeId = obj.leaveTypeId,
                     };
 
-                    int updateResult = _leaveTypeRepository.UpdateLeaveType(updated, conn);
+                    int updateResult = _leaveTypeRepository.UpdateLeaveType(updated, conn, transaction);
 
                     transaction.Commit();
                 }
-                catch
+                catch (Exception ex)
                 {
+                    msg.isResult = false;
+                    msg.strResult = ex.ToString();
                     transaction.Rollback();
                 }
             }
