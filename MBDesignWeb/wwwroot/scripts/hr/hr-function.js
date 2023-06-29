@@ -15,8 +15,8 @@ function leaveTypeLoading() {
     renderSelect2LeaveHour();
 
     callGetLeaveTypeList();
-    callGetLeaveInformationList();
-    callGetLeaveSummaryList();
+    //callGetLeaveInformationList();
+    //callGetLeaveSummaryList();
 }
 function clearSearchLeaveType() {
     let formId = '#form-search-leave-type';
