@@ -124,6 +124,15 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(data);
         }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public JsonResult AddOtherPaymentModel([FromBody]OtherPaymentModel obj)
+        {
+            var msg = _hrService.AddOtherPaymentModel(obj);
+
+            return new JsonResult(msg);
+        }
         #endregion API
     }
 }

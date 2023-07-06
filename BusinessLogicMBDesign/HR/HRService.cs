@@ -18,6 +18,7 @@ namespace BusinessLogicMBDesign.HR
         private readonly LeaveTypeRepository _leaveTypeRepository;
         private readonly LeaveRepository _leaveRepository;
         private readonly EmpDataRepository _empDataRepository;
+        private readonly OtherPaymentRepository _otherPaymentRepository;
 
         public HRService(IConfiguration configuration)
         {
@@ -27,6 +28,7 @@ namespace BusinessLogicMBDesign.HR
             _leaveTypeRepository = new LeaveTypeRepository();
             _leaveRepository = new LeaveRepository();
             _empDataRepository = new EmpDataRepository();   
+            _otherPaymentRepository = new OtherPaymentRepository();
         }
 
         #region Leave Type
@@ -250,5 +252,47 @@ namespace BusinessLogicMBDesign.HR
             }
         }
         #endregion Leave Summary
+
+        #region 
+        public ResultMessage AddOtherPaymentModel(OtherPaymentModel obj)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var added = new tbOtherPayment
+                    {
+                        empId = obj.empId,
+                        type = obj.type,
+                        amount = obj.amount,
+                        installmentQty = obj.installmentQty,
+                        installmentAmount = obj.installmentAmount,
+                        installmentStartDate = obj.installmentStartDate,
+                        remark = obj.remark,
+                        status = true,
+                        createDate = DateTime.UtcNow,
+                        createBy = obj.userCode,
+                    };
+
+                    int? addResult = _otherPaymentRepository.Add(added, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    msg.isResult = false;
+                    msg.strResult = ex.ToString();
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+        #endregion 
     }
 }

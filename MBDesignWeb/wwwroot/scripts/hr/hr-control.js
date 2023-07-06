@@ -91,6 +91,34 @@
         callGetLeaveSummaryList();
     });
 
+    $('#form-search-salary-other .btn-clear-search-other-payment').on('click', function () {
+        clearSearchInstallmentForm();
+        callGetOtherPaymentList();
+    });
+
+    $('#form-search-salary-other .btn-search-other-payment').on('click', function () {
+        callGetOtherPaymentList();
+    });
+
+    $('.btn-add-other-payment').on('click', function () {
+        clearInstallmentForm();
+        $('#modal-createOtherPayment').modal('show');
+    });
+
+    $('#form-createOtherPayment #select-empName').on("select2:unselecting", function (e) {
+        $('#form-createOtherPayment #select-empCode').val("").trigger("change");
+    });
+
+    $('#form-createOtherPayment #select-empCode').on("select2:unselecting", function (e) {
+        $('#form-createOtherPayment #select-empName').val("").trigger("change");
+    });
+    $('.btn-modal-save-other-payment').on('click', function () {
+        DoAddOtherPayment();
+    });
+    $('.btn-calculate-installment-payment').on('click', function () {
+        calculateInstallmentPayment();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
@@ -105,6 +133,19 @@
             clearSearchLeaveSummary();
             callGetLeaveSummaryList();
         }
-        
+        else if (target == "#nav-salary-attendance") {
+        }
+        else if (target == "#nav-salary-other") {
+            clearSearchInstallmentForm();
+            callGetOtherPaymentList();
+        }
+        else if (target == "#nav-salary-ot") {
+        }
+        else if (target == "#nav-salary-bonus") {
+        }
+        else if (target == "#nav-salary-commission") {
+        }
+        else if (target == "#nav-salary-calculate") {
+        }
     });
 });
