@@ -821,22 +821,20 @@ function clearSearchInstallmentForm() {
 function callGetOtherPaymentList() {
     let formId = '#form-search-salary-other';
 
-    let empCode = ($(`${formId} input[name="input-search-leave-emp-code"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-emp-code"]`).val();
-    let empName = ($(`${formId} input[name="input-search-leave-emp-name"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-emp-name"]`).val();
-    let leaveType = ($(`${formId} #select-search-leave-type`).val() == '') ? null : $(`${formId} #select-search-leave-type`).val();
-    let leaveStartDate = ($(`${formId} input[name="input-search-leave-start-date"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-start-date"]`).val();
-    let leaveEndDate = ($(`${formId} input[name="input-search-leave-end-date"]`).val() == '') ? null : $(`${formId} input[name="input-search-leave-end-date"]`).val();
-    //let status = ($(`${formId} #select-search-leave-status`).val() == '') ? null : $(`${formId} #select-search-leave-status`).val();
+    let empCode = ($(`${formId} input[name="input-search-emp-code"]`).val() == '') ? null : $(`${formId} input[name="input-search-emp-code"]`).val();
+    let empName = ($(`${formId} input[name="input-search-emp-name"]`).val() == '') ? null : $(`${formId} input[name="input-search-emp-name"]`).val();
+    let type = ($(`${formId} #select-search-other-type`).val() == '') ? null : $(`${formId} #select-search-other-type`).val();
+    let installmentStartDate = ($(`${formId} input[name="input-search-start-date"]`).val() == '') ? null : $(`${formId} input[name="input-search-start-date"]`).val();
 
-    let loaded = $('#tb-leave-list');
+    let loaded = $('#tb-other-payment-list');
 
     loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
-        url: `${app_settings.api_url}/api/HR/GetLeaveList?empCode=${empCode}&empName=${empName}&leaveType=${leaveType}&leaveStartDate=${leaveStartDate}&leaveEndDate=${leaveEndDate}`,
+        url: `${app_settings.api_url}/api/HR/GetOtherPaymentList?empCode=${empCode}&empName=${empName}&type=${type}&installmentStartDate=${installmentStartDate}`,
         success: function (data) {
-            renderGetLeaveInformationList(data);
+            renderGetOtherPaymentList(data);
             loaded.find(_loader).remove();
         },
         error: function (err) {
@@ -845,7 +843,7 @@ function callGetOtherPaymentList() {
     });
 }
 function renderGetOtherPaymentList(data) {
-    $('#tb-leave-list').DataTable(
+    $('#tb-other-payment-list').DataTable(
         {
             destroy: true,
             responsive: true,
@@ -859,7 +857,7 @@ function renderGetOtherPaymentList(data) {
                 }
             },
             createdRow: function (row, data) {
-                $(row).attr('data-id', data.leaveId);
+                $(row).attr('data-id', data.otherPaymentId);
             },
             columnDefs: [
                 {
@@ -872,25 +870,43 @@ function renderGetOtherPaymentList(data) {
                 },
                 {
                     targets: 2,
-                    data: 'leaveTypeName',
+                    data: 'type',
                 },
                 {
                     targets: 3,
-                    data: null,
-                    render: function (data, type, row) {
-                        let startDate = convertDateTimeFormat(row.leaveStartDate, 'DD/MM/YYYY');
-                        let endDate = convertDateTimeFormat(row.leaveEndDate, 'DD/MM/YYYY');
-
-                        return (startDate == endDate) ? `${startDate}` : `${startDate}-${endDate}`;
-                    },
+                    data: 'installmentStartDateShow',
                 },
                 {
                     targets: 4,
-                    data: 'leaveDays',
-                    className: "dt-center",
+                    data: 'installmentQty',
                 },
                 {
                     targets: 5,
+                    data: null,
+                    render: function (data, type, row) {
+                        return (row.installment == 0) ? `-` : `${row.installment}`;
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'installmentAmount',
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    render: function (data, type, row) {
+                        return (row.installmentPayment == 0) ? `-` : `${row.installmentPayment}`;
+                    },
+                },
+                {
+                    targets: 8,
+                    data: null,
+                    render: function (data, type, row) {
+                        return parseFloat(row.installmentAmount - row.installmentPayment).toFixed(2);
+                    },
+                },
+                {
+                    targets: 9,
                     data: 'createDate',
                     className: "dt-center",
                     render: function (data, type, row) {
@@ -898,11 +914,11 @@ function renderGetOtherPaymentList(data) {
                     },
                 },
                 {
-                    targets: 6,
+                    targets: 10,
                     data: 'createByName'
                 },
                 {
-                    targets: 7,
+                    targets: 11,
                     data: 'updateDate',
                     className: "dt-center",
                     render: function (data, type, row) {
@@ -910,19 +926,8 @@ function renderGetOtherPaymentList(data) {
                     },
                 },
                 {
-                    targets: 8,
+                    targets: 12,
                     data: 'updateByName'
-                },
-                {
-                    targets: 9,
-                    data: null,
-                    orderable: false,
-                    className: `dt-center ${_role_leave_class_disaply}`,
-                    //className: cls,
-                    render: function (data, type, row) {
-                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-leave" data-id="${row.leaveId}"  title="แก้ไข">
-                    <i class="fa fa-edit"></i></button>`;
-                    },
                 },
             ],
         }
@@ -1072,19 +1077,19 @@ let validateInputOtherPaymentBeforeCalculate = function () {
 }
 var _selected_empCode_other_payment = true;
 var _selected_empName_other_payment = true;
-function onChangeSelect2EmpCodeOtherPayment() {
+function onChangeSelect2EmpCodeOtherPayment(modal) {
     if (_selected_empCode_other_payment) {
-        let empId = $('#form-createOtherPayment #select-empCode').val();
+        let empId = $(`#${modal} #form-createOtherPayment #select-empCode`).val();
         _selected_empName_other_payment = false;
-        $('#form-createOtherPayment #select-empName').val(empId).trigger('change');
+        $(`#${modal} #form-createOtherPayment #select-empName`).val(empId).trigger('change');
     }
     _selected_empCode_other_payment = true;
 }
-function onChangeSelect2EmpNameOtherPayment() {
+function onChangeSelect2EmpNameOtherPayment(modal) {
     if (_selected_empName_other_payment) {
-        let empId = $('#form-createOtherPayment #select-empName').val();
+        let empId = $(`#${modal} #form-createOtherPayment #select-empName`).val();
         _selected_empCode_other_payment = false;
-        $('#form-createOtherPayment #select-empCode').val(empId).trigger('change');
+        $(`#${modal} #form-createOtherPayment #select-empCode`).val(empId).trigger('change');
     }
     _selected_empName_other_payment = true;
 }
@@ -1176,4 +1181,27 @@ function calculateInstallmentPayment() {
     $(`${formId} #input-installment-amount`).val(installmentAmount);
 
     $('.btn-calculate-installment-payment').removeLoading();
+}
+function callGetOtherPaymentById(id, modal) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetOtherPaymentById?otherPaymentId=${id}`,
+        success: function (data) {
+            renderOtherPaymentForm(data, modal);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderOtherPaymentForm(data, modal) {
+    let formId = '#form-createOtherPayment';
+    $(`${modal} ${formId} #select-empCode`).val(data.empId).trigger('change');
+    $(`${modal} ${formId} #select-empName`).val(data.empId).trigger('change');
+    $(`${modal} ${formId} #select-type`).val(data.leaveTypeName).trigger('change');
+    $(`${modal} ${formId} #input-total-amount`).val(data.amount);
+    $(`${modal} ${formId} #input-total-installment`).val(data.installmentQty);
+    $(`${modal} ${formId} #input-installment-amount`).val(data.installmentAmount);
+    $(`${modal} ${formId} #input-start-installment-payment`).val(convertDateTimeFormat(data.installmentStartDate, 'YYYY-MM-DD'));
+    $(`${modal} ${formId} #input-installment-remark`).val(data.remark);
 }

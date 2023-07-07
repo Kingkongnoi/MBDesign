@@ -24,11 +24,17 @@ namespace EntitiesMBDesign
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
+        public int installment { get; set; }
+        public decimal installmentPayment { get; set; }
     }
 
     public class OtherPaymentView : tbOtherPayment
     {
-
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+        public string empCode { get; set; } = string.Empty;
+        public string empFullName { get; set; } = string.Empty;
+        public string installmentStartDateShow { get; set; } = string.Empty;
     }
 
     public class OtherPaymentModel

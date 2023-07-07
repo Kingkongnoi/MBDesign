@@ -118,6 +118,13 @@
     $('.btn-calculate-installment-payment').on('click', function () {
         calculateInstallmentPayment();
     });
+    $('#tb-other-payment-list').on('click', 'tbody tr', function () {
+        var table = $('#tb-other-payment-list').DataTable();
+        var row = table.row($(this)).data();
+        clearInstallmentForm();
+        callGetOtherPaymentById(row.otherPaymentId, "#modal-viewOtherPayment");
+        $('#modal-viewOtherPayment').modal('show');
+    });
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab

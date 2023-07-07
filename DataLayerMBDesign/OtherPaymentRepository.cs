@@ -37,10 +37,10 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(installmentStartDate) && installmentStartDate != "null")
             {
-                condition += string.Format(" and FORMAT(a.installmentStartDate, 'yyyy-MM') = '{0}'", installmentStartDate);
+                condition += string.Format(" and FORMAT(a.installmentStartDate, 'yyyy-MM') = '{0}'", Convert.ToDateTime(installmentStartDate).ToString("yyyy-MM"));
             }
 
-            string queryString = string.Format(@"select a.otherPaymentId, a.empId, a.type, b.empCode, b.empFirstName + ' ' + b.empLastName empFullName, a.amount, a.installmentQty, a.installmentAmount, a.installmentStartDate, a.remark, a.createDate, a.createBy, a.updateDate, a.updateBy
+            string queryString = string.Format(@"select a.otherPaymentId, a.empId, a.type, b.empCode, b.empFirstName + ' ' + b.empLastName empFullName, a.amount, a.installmentQty, a.installmentAmount, format(a.installmentStartDate, 'MM/yyyy') installmentStartDateShow, a.remark, a.createDate, a.createBy, a.updateDate, a.updateBy, a.type
                                 , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName
                                 , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') updateByName        
                                 from tbOtherPayment a inner join tbEmpData b on a.empId = b.id

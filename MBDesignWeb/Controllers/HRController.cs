@@ -125,6 +125,25 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(data);
         }
 
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetOtherPaymentList(string empCode, string empName, string type, string installmentStartDate)
+        {
+            var data = _hrService.GetOtherPaymentList(empCode, empName, type, installmentStartDate);
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetOtherPaymentById(int otherPaymentId)
+        {
+            var data = _hrService.GetOtherPaymentById(otherPaymentId);
+
+            return new JsonResult(data);
+        }
+
         [Route("api/[controller]/[action]")]
         [HttpPost]
         public JsonResult AddOtherPaymentModel([FromBody]OtherPaymentModel obj)

@@ -253,7 +253,25 @@ namespace BusinessLogicMBDesign.HR
         }
         #endregion Leave Summary
 
-        #region 
+        #region Other payment
+        public List<OtherPaymentView> GetOtherPaymentList(string empCode, string empName, string type, string installmentStartDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _otherPaymentRepository.GetAll(empCode, empName, type, installmentStartDate, conn);
+            }
+        }
+        public tbOtherPayment GetOtherPaymentById(int otherPaymentId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _otherPaymentRepository.GetFirstByKeyId(otherPaymentId, conn);
+            }
+        }
         public ResultMessage AddOtherPaymentModel(OtherPaymentModel obj)
         {
             var msg = new ResultMessage();
@@ -293,6 +311,6 @@ namespace BusinessLogicMBDesign.HR
 
             return msg;
         }
-        #endregion 
+        #endregion  Other payment
     }
 }

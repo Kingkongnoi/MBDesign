@@ -14,7 +14,7 @@
         z-index: 10000;
     }
 
-    #tb-leave-type-list tbody tr, #tb-leave-list tbody tr {
+    #tb-leave-type-list tbody tr, #tb-leave-list tbody tr, #tb-other-payment-list tbody tr {
         cursor: pointer !important;
     }
 
@@ -22,12 +22,6 @@
         background-color: #F09723;
         color: #FFF;
         text-align: center !important;
-    }
-
-    #tb-menu-list tr th, #tb-view-menu-list tr th {
-        background-color: #e9ecef;
-        color: #000;
-        vertical-align: middle !important;
     }
 
     .no-display {
@@ -423,7 +417,7 @@
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-empCode" data-selected="" name="select-empCode" onchange="onChangeSelect2EmpCodeOtherPayment();"></select>
+                                    <select class="form-select" id="select-empCode" data-selected="" name="select-empCode" onchange="onChangeSelect2EmpCodeOtherPayment('modal-createOtherPayment');"></select>
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
@@ -449,7 +443,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ชื่อพนักงาน<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-empName" data-selected="" name="select-empName" onchange="onChangeSelect2EmpNameOtherPayment();"></select>
+                                    <select class="form-select" id="select-empName" data-selected="" name="select-empName" onchange="onChangeSelect2EmpNameOtherPayment('modal-createOtherPayment');"></select>
                                 </div>
 
                                 <div class="col-sm-12 mb-2">
@@ -486,6 +480,87 @@
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary btn-modal-save-other-payment"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
                 <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="modal-viewOtherPayment" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">เพิ่มข้อมูลหักชดใช้ค่าใช้จ่าย</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createOtherPayment">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-6">
+                            <div class="row">
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสพนักงาน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-empCode" data-selected="" name="select-empCode" onchange="onChangeSelect2EmpCodeOtherPayment('modal-viewOtherPayment');" disabled></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ประเภทการหักชดใช้<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-type" data-selected="" name="select-type" disabled></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">จำนวนงวดทั้งหมด<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="input-total-installment" name="input-total-installment" disabled />
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ผ่อนจ่ายงวดละ</label>
+                                    <input type="number" class="form-control" id="input-installment-amount" name="input-installment-amount" disabled />
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อพนักงาน<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-empName" data-selected="" name="select-empName" onchange="onChangeSelect2EmpNameOtherPayment('modal-viewOtherPayment');" disabled></select>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">จำนวนเงินทั้งหมด<span class="text-danger">*</span></label>
+                                    <input type="number" class="form-control" id="input-total-amount" name="input-total-amount" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2 mt-4">
+                                    <button type="button" class="btn btn-default-custom btn-calculate-installment-payment" disabled><img src="~/images/calculator.png" width="25px" /> กดคำนวณยอดหักต่องวด</button>
+                                </div>
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">เดือนและปีที่เริ่มผ่อน<span class="text-danger">*</span></label>
+                                    <div class="input-group" id="datepickerLeave">
+                                        <input type="date" class="form-control" id="input-start-installment-payment" name="input-start-installment-payment" disabled />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">หมายเหตุ</label>
+                                    <textarea class="form-control" id="input-installment-remark" name="input-installment-remark" rows="3" disabled></textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
             </div>
         </div>
     </div>
