@@ -76,6 +76,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <EmbeddedResource Include="rpCustomerContract.rdlc" />
+    <EmbeddedResource Include="rpPaySlip.rdlc" />
     <EmbeddedResource Include="rpReceipt.rdlc" />
     <EmbeddedResource Include="rpInvoice.rdlc" />
     <EmbeddedResource Include="rpQuotation.rdlc" />

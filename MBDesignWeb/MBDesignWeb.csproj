@@ -16,6 +16,7 @@
   <ItemGroup>
     <Content Remove="wwwroot\reports\rpCustomerContract.rdlc" />
     <Content Remove="wwwroot\reports\rpInvoice.rdlc" />
+    <Content Remove="wwwroot\reports\rpPaySlip.rdlc" />
     <Content Remove="wwwroot\reports\rpQuotation.rdlc" />
     <Content Remove="wwwroot\reports\rpReceipt.rdlc" />
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
@@ -35,6 +36,7 @@
     <EmbeddedResource Include="reports\rpReceipt.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpCustomerContract.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpInvoice.rdlc" />
+    <EmbeddedResource Include="wwwroot\reports\rpPaySlip.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpQuotation.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpReceipt.rdlc" />
   </ItemGroup>
