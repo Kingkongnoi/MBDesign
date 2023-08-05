@@ -1,6 +1,8 @@
 ﻿var _leaveTypeId = 0;
 var _leaveId = 0;
 var _leave_action = "add";
+var _attendance_setting_action = "add";
+var _attendance_setting_id = 0;
 function leaveTypeLoading() {
     callSelect2Status("#select-search-leave-status", true);
     callSelect2Status("#modal-editLeaveType #form-editLeaveType #select-leave-type-status", false);
@@ -18,6 +20,8 @@ function leaveTypeLoading() {
     callGetLeaveTypeList();
     //callGetLeaveInformationList();
     //callGetLeaveSummaryList();
+
+    callGetAttendanceList();
 }
 function clearSearchLeaveType() {
     let formId = '#form-search-leave-type';
@@ -1204,4 +1208,434 @@ function renderOtherPaymentForm(data, modal) {
     $(`${modal} ${formId} #input-installment-amount`).val(data.installmentAmount);
     $(`${modal} ${formId} #input-start-installment-payment`).val(convertDateTimeFormat(data.installmentStartDate, 'YYYY-MM-DD'));
     $(`${modal} ${formId} #input-installment-remark`).val(data.remark);
+}
+
+function clearSearchAttendanceSettingForm() {
+    let formId = '#form-search-attendance-setting';
+    $(`${formId} #select-search-attendance-setting-department`).val('').trigger('change');
+}
+function clearAttendanceSettingForm() {
+    let formId = '#form-createAttendanceSetting';
+    $(`${formId} #select-attendance-department`).val("").trigger('change');
+    $(`${formId} #select-attendance-status`).val("1").trigger('change');
+
+    $(`${formId} #input-attendance-time-in`).val("");
+    $(`${formId} #input-attendance-time-out`).val("");
+
+    _attendance_setting_id = 0;
+}
+function callSelect2AttendanceDepartmentStatus(id) {
+    $(id).empty();
+    $(id).append(`<option value="1">ใช้งาน</option>`);
+    $(id).append(`<option value="0">ไม่ใช้งาน</option>`);
+}
+function callSelect2ActiveDepartment() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Employee/GetDepartmentSelect2`,
+        success: function (data) {
+            renderSelect2ActiveDepartment(data);
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderSelect2ActiveDepartment(data) {
+    var select2SearchId = '#form-search-attendance-setting #select-search-attendance-setting-department';
+    var select2Id = '#form-createAttendanceSetting #select-attendance-department';
+
+    $(`${select2SearchId}`).empty();
+    $(`${select2SearchId}`).append(`<option value="">ทั้งหมด</option>`);
+
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">กรุณาเลือก</option>`);
+
+    data.forEach((v) => {
+        $(`${select2SearchId}`).append(`<option value="${v.departmentId}">${v.departmentName}</option>`);
+        $(`${select2Id}`).append(`<option value="${v.departmentId}">${v.departmentName}</option>`);
+    });
+}
+function callGetAttendanceSettingList() {
+    let formId = '#form-search-attendance-setting';
+
+    let departmentId = ($(`${formId} #select-search-attendance-setting-department`).val() == '') ? null : $(`${formId} #select-search-attendance-setting-department`).val();
+
+    let loaded = $('#tb-attendance-setting-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceSettingList?departmentId=${departmentId}`,
+        success: function (data) {
+            renderGetAttendanceSettingList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetAttendanceSettingList(data) {
+    $('#tb-attendance-setting-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'rowNo',
+                },
+                {
+                    targets: 1,
+                    data: 'departmentName',
+                },
+                {
+                    targets: 2,
+                    data: 'attendanceTimeIn',
+                    className: "dt-center",
+                },
+                {
+                    targets: 3,
+                    data: 'attendanceTimeOut',
+                    className: "dt-center",
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'createByName'
+                },
+                {
+                    targets: 6,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 8,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 9,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_attendance_class_disaply}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-attendance-setting" data-id="${row.id}"  title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function callGetAttendanceSettingById(id, modal) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceSettingById?id=${id}`,
+        success: function (data) {
+            renderAttendanceSettingForm(data, modal);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderAttendanceSettingForm(data, modal) {
+    let formId = '#form-createAttendanceSetting';
+    $(`${modal} ${formId} #select-attendance-department`).val(data.departmentId).trigger('change');
+
+    $(`${modal} ${formId} #input-attendance-time-in`).val(data.attendanceTimeIn);
+    $(`${modal} ${formId} #input-attendance-time-out`).val(data.attendanceTimeOut);
+
+    var status = (data.status == true) ? "1" : "0";
+    $(`${modal} ${formId} #select-attendance-status`).val(status).trigger('change');
+}
+let validateInputAttendanceSettingForm = function () {
+    let formId = '#form-createAttendanceSetting';
+    if ($(`${formId} #select-attendance-department`).val() == "" || $(`${formId} #select-attendance-department`).val() == null) {
+        Swal.fire({
+            text: "กรุณาเลือกแผนก",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} #select-attendance-department`).focus();
+        });
+        return false;
+    }
+    else if ($(`${formId} #input-attendance-time-in`).val() == "" || $(`${formId} #input-attendance-time-in`).val() == null) {
+        Swal.fire({
+            text: "กรุณากรอกเวลาเข้างาน",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} #input-attendance-time-in`).focus();
+        });
+        return false;
+    }
+    else if ($(`${formId} #input-attendance-time-out`).val() == "" || $(`${formId} #input-attendance-time-out`).val() == null) {
+        Swal.fire({
+            text: "กรุณากรอกเวลาออกงาน",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} #input-attendance-time-out`).focus();
+        });
+        return false;
+    }
+    else if (/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test($(`#form-createAttendanceSetting #input-attendance-time-in`).val()) == false) {
+        Swal.fire({
+            text: "กรุณากรอกเวลาเข้างานด้วย Format HH:mm",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} #input-attendance-time-in`).focus();
+        });
+        return false;
+    }
+    else if (/^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/.test($(`#form-createAttendanceSetting #input-attendance-time-out`).val()) == false) {
+        Swal.fire({
+            text: "กรุณากรอกเวลาออกงานด้วย Format HH:mm",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} #input-attendance-time-out`).focus();
+        });
+        return false;
+    }
+    else {
+        if ($(`#form-createAttendanceSetting #input-attendance-time-in`).val().split(':')[0] > $(`#form-createAttendanceSetting #input-attendance-time-out`).val().split(':')[0]) {
+            Swal.fire({
+                text: "กรุณากรอกเวลาเข้า-ออกงานให้ถูกต้อง",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                $(`${formId} #input-attendance-time-in`).focus();
+            });
+            return false;
+        }
+        else if ($(`#form-createAttendanceSetting #input-attendance-time-in`).val().split(':')[0] == $(`#form-createAttendanceSetting #input-attendance-time-out`).val().split(':')[0] &&
+            $(`#form-createAttendanceSetting #input-attendance-time-in`).val().split(':')[1] >= $(`#form-createAttendanceSetting #input-attendance-time-out`).val().split(':')[1]) {
+            Swal.fire({
+                text: "กรุณากรอกเวลาเข้า-ออกงานให้ถูกต้อง",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+                $(`${formId} #input-attendance-time-in`).focus();
+            });
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+}
+function DoSaveAttendanceSetting() {
+    if (!validateInputAttendanceSettingForm()) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateAttendanceSetting();
+        }
+    });
+}
+function callAddOrUpdateAttendanceSetting() {
+    $('.btn-modal-save-attendance-setting').addLoading();
+
+    let url = (_attendance_setting_action == "add") ? `${app_settings.api_url}/api/HR/AddAttendanceSetting` : `${app_settings.api_url}/api/HR/UpdateAttendanceSetting`;
+
+    let formId = '#form-createAttendanceSetting';
+    let departmentId = $(`${formId} #select-attendance-department`).val();
+    let attendanceTimeIn = $(`${formId} #input-attendance-time-in`).val();
+    let attendanceTimeOut = $(`${formId} #input-attendance-time-out`).val();
+    let status = $(`${formId} #select-attendance-status`).val() == 1 ? true : false;
+
+    var obj = {
+        id: _attendance_setting_id,
+        departmentId: departmentId,
+        attendanceTimeIn: attendanceTimeIn,
+        attendanceTimeOut: attendanceTimeOut,
+        userCode: _userCode,
+        status: status,
+    };
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.isResult) {
+                callSuccessAlert();
+                $('.btn-modal-save-attendance-setting').removeLoading();
+                $(`#modal-createAttendanceSetting`).modal('hide');
+                callGetAttendanceSettingList();
+            }
+            else {
+                Swal.fire({
+                    text: res.strResult,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    confirmButtonText: 'ตกลง'
+                });
+                $('.btn-modal-save-attendance-setting').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-attendance-setting').removeLoading();
+        }
+    });
+
+}
+
+
+function clearSearchAttendanceForm() {
+    let formId = '#form-search-attendance-time';
+    $(`${formId} #input-search-attendance-time-emp-code`).val('');
+    $(`${formId} #input-search-attendance-time-emp-name`).val('');
+    $(`${formId} #input-search-attendance-time-start-date`).val('');
+    $(`${formId} #input-search-attendance-time-end-date`).val('');
+}
+function callGetAttendanceList() {
+    let formId = '#form-search-attendance-time';
+
+    let empCode = ($(`${formId} #input-search-attendance-time-emp-code`).val() == '') ? null : $(`${formId} #input-search-attendance-time-emp-code`).val();
+    let empName = ($(`${formId} #input-search-attendance-time-emp-name`).val() == '') ? null : $(`${formId} #input-search-attendance-time-emp-name`).val();
+    let startDate = ($(`${formId} #input-search-attendance-time-start-date`).val() == '') ? null : $(`${formId} #input-search-attendance-time-start-date`).val();
+    let endDate = ($(`${formId} #input-search-attendance-time-end-date`).val() == '') ? null : $(`${formId} #input-search-attendance-time-end-date`).val();
+
+    let loaded = $('#tb-attendance-time-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceList?empCode=${empCode}&empName=${empName}&startDate=${startDate}&endDate=${endDate}`,
+        success: function (data) {
+            renderGetAttendanceList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetAttendanceList(data) {
+    $('#tb-attendance-time-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.attendanceId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'empCode',
+                },
+                {
+                    targets: 1,
+                    data: 'employeeName',
+                },
+                {
+                    targets: 2,
+                    data: 'attendanceDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.attendanceDate ? convertDateTimeFormat(row.attendanceDate, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 3,
+                    data: 'attendanceTimeIn',
+                    className: "dt-center",
+                },
+                {
+                    targets: 4,
+                    data: 'attendanceTimeOut',
+                    className: "dt-center",
+                },
+                {
+                    targets: 5,
+                    data: 'attendanceHour',
+                    className: "dt-center",
+                },
+                {
+                    targets: 6,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'createByName'
+                },
+            ],
+        }
+    );
 }

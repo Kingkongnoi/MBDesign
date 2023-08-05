@@ -152,6 +152,52 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(msg);
         }
+
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetAttendanceSettingList(string departmentId)
+        {
+            var msg = _hrService.GetAttendanceSettingList(departmentId);
+
+            return new JsonResult(msg);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetAttendanceSettingById(int id)
+        {
+            var msg = _hrService.GetAttendanceSettingById(id);
+
+            return new JsonResult(msg);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public JsonResult AddAttendanceSetting([FromBody] AttendanceDepartmentSettingModel obj)
+        {
+            var msg = _hrService.AddAttendanceSetting(obj);
+
+            return new JsonResult(msg);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        public JsonResult UpdateAttendanceSetting([FromBody] AttendanceDepartmentSettingModel obj)
+        {
+            var msg = _hrService.UpdateAttendanceSetting(obj);
+
+            return new JsonResult(msg);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetAttendanceList(string empCode, string empName, string startDate, string endDate)
+        {
+            var msg = _hrService.GetAttendanceList(empCode, empName, startDate, endDate);
+
+            return new JsonResult(msg);
+        }
         #endregion API
     }
 }

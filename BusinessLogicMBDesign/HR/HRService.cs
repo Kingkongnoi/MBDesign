@@ -19,6 +19,8 @@ namespace BusinessLogicMBDesign.HR
         private readonly LeaveRepository _leaveRepository;
         private readonly EmpDataRepository _empDataRepository;
         private readonly OtherPaymentRepository _otherPaymentRepository;
+        private readonly AttendanceDepartmentSettingRepository _attendanceDepartmentSettingRepository;
+        private readonly AttendanceRepository _attendanceRepository;
 
         public HRService(IConfiguration configuration)
         {
@@ -29,6 +31,8 @@ namespace BusinessLogicMBDesign.HR
             _leaveRepository = new LeaveRepository();
             _empDataRepository = new EmpDataRepository();   
             _otherPaymentRepository = new OtherPaymentRepository();
+            _attendanceDepartmentSettingRepository = new AttendanceDepartmentSettingRepository();   
+            _attendanceRepository = new AttendanceRepository();
         }
 
         #region Leave Type
@@ -312,5 +316,126 @@ namespace BusinessLogicMBDesign.HR
             return msg;
         }
         #endregion  Other payment
+
+        #region Attendance Setting
+        public List<AttendanceDepartmentSettingView> GetAttendanceSettingList(string departmentId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceDepartmentSettingRepository.GetAll(departmentId, conn);
+            }
+        }
+        public tbAttendanceDepartmentSetting GetAttendanceSettingById(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceDepartmentSettingRepository.GetFirstById(id, conn);
+            }
+        }
+        public ResultMessage AddAttendanceSetting(AttendanceDepartmentSettingModel obj)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var atd = _attendanceDepartmentSettingRepository.GetFirstByDepartmentId(obj.departmentId, conn, transaction);
+                    if( atd != null)
+                    {
+                        msg.isResult = false;
+                        msg.strResult = string.Format("กำหนดเวลางานของ {0} มีอยู่แล้ว", atd.departmentName);
+                        return msg;
+                    }
+
+                    var added = new tbAttendanceDepartmentSetting
+                    {
+                        departmentId = obj.departmentId,
+                        attendanceTimeIn = obj.attendanceTimeIn,
+                        attendanceTimeOut = obj.attendanceTimeOut,
+                        status = obj.status,
+                        createDate = DateTime.UtcNow,
+                        createBy = obj.userCode,
+                    };
+
+                    int? addResult = _attendanceDepartmentSettingRepository.Add(added, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    msg.isResult = false;
+                    msg.strResult = ex.ToString();
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+
+        public ResultMessage UpdateAttendanceSetting(AttendanceDepartmentSettingModel obj)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var atd = _attendanceDepartmentSettingRepository.GetFirstByDepartmentId(obj.departmentId, conn, transaction);
+                    if (atd != null && atd.id != obj.id)
+                    {
+                        msg.isResult = false;
+                        msg.strResult = string.Format("กำหนดเวลางานของแผนก {0} มีอยู่แล้ว", atd.departmentName);
+                        return msg;
+                    }
+
+                    var updated = new tbAttendanceDepartmentSetting
+                    {
+                        id = obj.id,
+                        departmentId = obj.departmentId,
+                        attendanceTimeIn = obj.attendanceTimeIn,
+                        attendanceTimeOut = obj.attendanceTimeOut,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = obj.userCode,
+                        status = obj.status,
+                    };
+
+                    int updateResult = _attendanceDepartmentSettingRepository.Update(updated, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    msg.isResult = false;
+                    msg.strResult = ex.ToString();
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
+        #endregion Attendance Setting
+
+        #region Attendance
+        public List<AttendanceView> GetAttendanceList(string empCode, string empName, string startDate, string endDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceRepository.GetAll(empCode, empName, startDate, endDate, conn);
+            }
+        }
+        #endregion Attendance
     }
 }

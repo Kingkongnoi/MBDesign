@@ -371,6 +371,7 @@ let _role_approve_class_display = "";
 
 let _role_leave_type_class_disaply = "";
 let _role_leave_class_disaply = "";
+let _role_attendance_class_disaply = "";
 function callGetRolePerMenu() {
     let loginId = localStorage.getItem('loginId');
     $('.nav-pills').addClass('no-display');

@@ -126,7 +126,56 @@
         $('#modal-viewOtherPayment').modal('show');
     });
 
+    $('.btn-add-attendance-time').on('click', function () {
+        //clearLeaveForm();
+        //$('#modal-createAttendanceUpload').modal('show');
+    });
+
+    $('.btn-add-attendance-setting').on('click', function () {
+        $(`#modal-createAttendanceSetting #attendanceSettingHeader`).text('เพิ่มกำหนดเวลางาน');
+        _attendance_setting_action = "add";
+        clearAttendanceSettingForm();
+        $('#modal-createAttendanceSetting').modal('show');
+    });
+    $(document).on('click', '.btn-edit-attendance-setting', function () {
+        $(`#modal-createAttendanceSetting #attendanceSettingHeader`).text('แก้ไขกำหนดเวลางาน');
+        _attendance_setting_action = "edit";
+        _attendance_setting_id = $(this).data('id');
+        clearAttendanceSettingForm();
+        callGetAttendanceSettingById($(this).data('id'), "#modal-createAttendanceSetting");
+        $('#modal-createAttendanceSetting').modal('show');
+    });
+
+    $('#form-search-attendance-setting .btn-clear-search-attendance-setting').on('click', function () {
+        clearSearchAttendanceSettingForm();
+        callGetAttendanceSettingList();
+    });
+
+    $('#form-search-attendance-setting .btn-search-attendance-setting').on('click', function () {
+        callGetAttendanceSettingList();
+    });
+    $('.btn-modal-save-attendance-setting').on('click', function () {
+        DoSaveAttendanceSetting();
+    });
+    $('#tb-attendance-setting-list').on('click', 'tbody tr td:not(:last-child)', function () {
+        var table = $('#tb-attendance-setting-list').DataTable();
+        var row = table.row($(this)).data();
+        clearAttendanceSettingForm();
+        callGetAttendanceSettingById(row.id, "#modal-viewAttendanceSetting");
+        $('#modal-viewAttendanceSetting').modal('show');
+    });
+
+    $('#form-search-attendance-time .btn-clear-search-attendance-time').on('click', function () {
+        clearSearchAttendanceForm();
+        callGetAttendanceList();
+    });
+
+    $('#form-search-attendance-timeg .btn-search-attendance-time').on('click', function () {
+        callGetAttendanceList();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        debugger;
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
             clearSearchLeaveType();
@@ -141,6 +190,7 @@
             callGetLeaveSummaryList();
         }
         else if (target == "#nav-salary-attendance") {
+
         }
         else if (target == "#nav-salary-other") {
             clearSearchInstallmentForm();
@@ -153,6 +203,16 @@
         else if (target == "#nav-salary-commission") {
         }
         else if (target == "#nav-salary-calculate") {
+        }
+        else if (target == "#nav-attendance-time") {
+            //clearSearchAttendanceForm();
+            callGetAttendanceList();
+        }
+        else if (target == "#nav-attendance-setting") {
+            clearSearchAttendanceSettingForm();
+            callSelect2AttendanceDepartmentStatus(`#form-createAttendanceSetting #select-attendance-status`);
+            callSelect2ActiveDepartment();
+            callGetAttendanceSettingList();
         }
     });
 });
