@@ -104,6 +104,7 @@
     <Compile Update="ReportDatasets\dsGetQuotationItems.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
+      <DependentUpon>dsGetQuotationItems.xsd</DependentUpon>
     </Compile>
     <Compile Update="ReportDatasets\dsGetReceipt.Designer.cs">
       <DesignTime>True</DesignTime>
