@@ -23,17 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Reports\rpCustomerContract.rdlc" />
-    <None Remove="reports\rpInvoice.rdlc" />
-    <None Remove="reports\rpQuotation.rdlc" />
-    <None Remove="reports\rpReceipt.rdlc" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="reports\rpCustomerContract.rdlc" />
-    <EmbeddedResource Include="reports\rpInvoice.rdlc" />
-    <EmbeddedResource Include="reports\rpQuotation.rdlc" />
-    <EmbeddedResource Include="reports\rpReceipt.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpCustomerContract.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpInvoice.rdlc" />
     <EmbeddedResource Include="wwwroot\reports\rpPaySlip.rdlc" />
@@ -53,7 +42,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Reports\" />
     <Folder Include="wwwroot\lib\datetimepicker\" />
     <Folder Include="wwwroot\lib\file-input\js\locales\" />
   </ItemGroup>

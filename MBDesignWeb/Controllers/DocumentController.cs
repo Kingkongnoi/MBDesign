@@ -1,6 +1,7 @@
 ﻿using Amazon.Runtime.Internal.Transform;
 using AspNetCore.Reporting;
 using AspNetCore.ReportingServices.ReportProcessing.ReportObjectModel;
+using BusinessLogicMBDesign;
 using BusinessLogicMBDesign.Document;
 using BusinessLogicMBDesign.Sale;
 using EntitiesMBDesign;
@@ -12,6 +13,7 @@ using PdfSharpCore.Pdf;
 using System;
 using System.Drawing.Printing;
 using System.Globalization;
+using System.Net;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace MBDesignWeb.Controllers
@@ -23,11 +25,13 @@ namespace MBDesignWeb.Controllers
 
         private readonly DocumentService _documentService;
         private readonly SaleService _saleService;
+        private readonly ftpProcessService _ftpProcessService;
         public DocumentController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _documentService = new DocumentService(configuration);
             _saleService = new SaleService(configuration);
+            _ftpProcessService = new ftpProcessService(configuration);
             _webHostEnvironment = webHostEnvironment;
         }
 
@@ -76,7 +80,10 @@ namespace MBDesignWeb.Controllers
             //return Json(result);
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+
+            ///Download to current directory
+            _ftpProcessService.DownloadFile("rpInvoice.rdlc");
 
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
             DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
@@ -126,6 +133,9 @@ namespace MBDesignWeb.Controllers
                 grandTotal = invoice.unitPrice,
             });
 
+            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            var path = string.Format("{0}\\rpInvoice.rdlc", targetPath);
+
             LocalReport localReport = new LocalReport(path);
             localReport.AddDataSource("dsGetInvoice", reportResult);
 
@@ -157,7 +167,10 @@ namespace MBDesignWeb.Controllers
 
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpQuotation.rdlc";
+            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpQuotation.rdlc";
+
+            ///Download to current directory
+            _ftpProcessService.DownloadFile("rpQuotation.rdlc");
 
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
             DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
@@ -283,6 +296,9 @@ namespace MBDesignWeb.Controllers
                 
             }
 
+            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            var path = string.Format("{0}\\rpQuotation.rdlc", targetPath);
+
             LocalReport localReport = new LocalReport(path);
             localReport.AddDataSource("dsGetQuotationItems", reportResult);
 
@@ -318,7 +334,10 @@ namespace MBDesignWeb.Controllers
             //return Json(result);
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+
+            ///Download to current directory
+            _ftpProcessService.DownloadFile("rpReceipt.rdlc");
 
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
             DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
@@ -368,7 +387,11 @@ namespace MBDesignWeb.Controllers
                 grandTotal = invoice.unitPrice,
             });
 
+            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            var path = string.Format("{0}\\rpReceipt.rdlc", targetPath);
+
             LocalReport localReport = new LocalReport(path);
+
             localReport.AddDataSource("dsGetReceipt", reportResult);
 
             var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
@@ -402,7 +425,10 @@ namespace MBDesignWeb.Controllers
 
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpCustomerContract.rdlc";
+            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpCustomerContract.rdlc";
+
+            ///Download to current directory
+            _ftpProcessService.DownloadFile("rpCustomerContract.rdlc");
 
             //*** Thai Format
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
@@ -473,6 +499,9 @@ namespace MBDesignWeb.Controllers
             DateTime deliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
             param.Add("deliveryDate", deliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
 
+            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            var path = string.Format("{0}\\rpCustomerContract.rdlc", targetPath);
+
             LocalReport localReport = new LocalReport(path);
 
             var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
@@ -488,7 +517,10 @@ namespace MBDesignWeb.Controllers
             
             string mimetype = "";
             int extension = 1;
-            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpPaySlip.rdlc";
+            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpPaySlip.rdlc";
+
+            ///Download to current directory
+            _ftpProcessService.DownloadFile("rpPaySlip.rdlc");
 
             //*** Thai Format
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
@@ -523,7 +555,10 @@ namespace MBDesignWeb.Controllers
             var totalThai = ConvertToThaiBaht(total.ToString());
             var totalCurrency = string.Format("{0:n}", total);
             param.Add("totalSalaryInformation", string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency));
-          
+
+            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            var path = string.Format("{0}\\rpPaySlip.rdlc", targetPath);
+
             LocalReport localReport = new LocalReport(path);
 
             var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
@@ -599,5 +634,6 @@ namespace MBDesignWeb.Controllers
             
             return bahtTH;
         }
+
     }
 }
