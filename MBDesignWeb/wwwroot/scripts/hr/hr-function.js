@@ -1639,3 +1639,131 @@ function renderGetAttendanceList(data) {
         }
     );
 }
+
+
+function clearSearchSalaryForm() {
+    let formId = '#form-search-salary-calculate';
+    $(`${formId} #input-search-emp-code`).val('');
+    $(`${formId} #input-search-emp-name`).val('');
+    $(`${formId} #input-search-start-date`).val('');
+    $(`${formId} #input-search-end-date`).val('');
+}
+function callGetSalaryList() {
+    let formId = '#form-search-salary-calculate';
+
+    let empCode = ($(`${formId} #input-search-emp-code`).val() == '') ? null : $(`${formId} #input-search-emp-code`).val();
+    let empName = ($(`${formId} #input-search-emp-name`).val() == '') ? null : $(`${formId} #input-search-emp-name`).val();
+    let startDate = ($(`${formId} #input-search-start-date`).val() == '') ? null : $(`${formId} #input-search-start-date`).val();
+    let endDate = ($(`${formId} #input-search-end-date`).val() == '') ? null : $(`${formId} #input-search-end-date`).val();
+
+    let loaded = $('#tb-salary-summary-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetSalaryList?empCode=${empCode}&empName=${empName}&startDate=${startDate}&endDate=${endDate}`,
+        success: function (data) {
+            renderGetSalaryList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetSalaryList(data) {
+    $('#tb-salary-summary-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.salaryId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'empCode',
+                },
+                {
+                    targets: 1,
+                    data: 'employeeName',
+                },
+                {
+                    targets: 2,
+                    data: 'departmentName',
+                },
+                {
+                    targets: 3,
+                    data: 'salaryType',
+                },
+                {
+                    targets: 4,
+                    data: 'paymentPeriod',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.paymentPeriod ? convertDateTimeFormat(row.paymentPeriod, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'diligenceAllowance',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        return row.diligenceAllowance == 0 ? "-" : new Intl.NumberFormat().format(row.diligenceAllowance);
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'totalExpenses',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        return row.totalExpenses == 0 ? "-" : new Intl.NumberFormat().format(row.totalExpenses);
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'ot',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        return row.ot == 0 ? "-" : new Intl.NumberFormat().format(row.ot);
+                    },
+                },
+                {
+                    targets: 8,
+                    data: 'commission',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        return row.commission == 0 ? "-" : new Intl.NumberFormat().format(row.commission);
+                    },
+                },
+                {
+                    targets: 9,
+                    data: 'salary',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        return row.salary == 0 ? "-" : new Intl.NumberFormat().format(row.salary);
+                    },
+                },
+                {
+                    targets: 10,
+                    data: null,
+                    orderable: false,
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return `<a class="btn btn-view-payslip" href="../Document/GetPaySlipBySalaryId?salaryId=${row.salaryId}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
+                    },
+                },
+            ],
+        }
+    );
+}

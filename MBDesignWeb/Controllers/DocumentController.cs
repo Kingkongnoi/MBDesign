@@ -481,6 +481,57 @@ namespace MBDesignWeb.Controllers
             //return Json(result);
         }
 
+        [HttpGet]
+        public IActionResult GetPaySlipBySalaryId(int salaryId)
+        {
+            var paySlip = _documentService.GetPaySlipBySalaryId(salaryId);
+            
+            string mimetype = "";
+            int extension = 1;
+            var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpPaySlip.rdlc";
+
+            //*** Thai Format
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime dateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            param.Add("paySlipGenDate", dateThai.ToString("วันที่ dd MMMM yyyy", _cultureTHInfo));
+            param.Add("empCode", paySlip.empCode);
+            param.Add("departmentName", paySlip.departmentName);
+            param.Add("empName", paySlip.employeeName);
+
+            param.Add("salary", (paySlip.salary == 0) ? "-" : string.Format("{0:n}", paySlip.salary));
+            param.Add("ot", (paySlip.ot == 0) ? "-" : string.Format("{0:n}", paySlip.ot));
+            param.Add("otherIncome", "-");
+            param.Add("homeIncome", "-");
+
+            var totalIncome = (paySlip.salary + paySlip.ot);
+            param.Add("totalIncome", string.Format("{0:n}", totalIncome));
+
+            param.Add("socialPayment", "-");
+            param.Add("taxPayment", "-");
+            param.Add("futherPayment", "-");
+            param.Add("electricityPayment", "-");
+            param.Add("installmentPayment", "-");
+            param.Add("homePayment", "-");
+            param.Add("attendancePayment", "-");
+
+            var totalPayment = 0;
+            param.Add("totalPayment", string.Format("{0:n}", totalPayment));
+
+            var total = totalIncome - totalPayment;
+            var totalThai = ConvertToThaiBaht(total.ToString());
+            var totalCurrency = string.Format("{0:n}", total);
+            param.Add("totalSalaryInformation", string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency));
+          
+            LocalReport localReport = new LocalReport(path);
+
+            var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+
+            return File(fileResult.MainStream, "application/pdf");
+            //return Json(result);
+        }
+
         public string ConvertToThaiBaht(string txt)
         {
             string bahtTxt, n, bahtTH = "";

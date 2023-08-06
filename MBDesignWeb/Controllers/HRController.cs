@@ -198,6 +198,16 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(msg);
         }
+
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetSalaryList(string empCode, string empName, string startDate, string endDate)
+        {
+            var msg = _hrService.GetSalaryList(empCode, empName, startDate, endDate);
+
+            return new JsonResult(msg);
+        }
         #endregion API
     }
 }

@@ -170,8 +170,17 @@
         callGetAttendanceList();
     });
 
-    $('#form-search-attendance-timeg .btn-search-attendance-time').on('click', function () {
+    $('#form-search-attendance-time .btn-search-attendance-time').on('click', function () {
         callGetAttendanceList();
+    });
+
+    $('#form-search-salary-calculate .btn-clear-search-salary-calculate').on('click', function () {
+        clearSearchSalaryForm();
+        callGetSalaryList();
+    });
+
+    $('#form-search-salary-calculate .btn-search-salary-calculate').on('click', function () {
+        callGetSalaryList();
     });
 
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -203,6 +212,7 @@
         else if (target == "#nav-salary-commission") {
         }
         else if (target == "#nav-salary-calculate") {
+            callGetSalaryList();
         }
         else if (target == "#nav-attendance-time") {
             //clearSearchAttendanceForm();

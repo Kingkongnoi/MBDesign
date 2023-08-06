@@ -21,6 +21,7 @@ namespace BusinessLogicMBDesign.Document
         private readonly CustOrderRepository _custOrderRepository;
         private readonly ReceiptRepository _receiptRepository;
         private readonly ContractAgreementRepository _contractAgreementRepository;
+        private readonly SalaryRepository _salaryRepository;
 
         public DocumentService(IConfiguration configuration)
         {
@@ -32,6 +33,7 @@ namespace BusinessLogicMBDesign.Document
             _custOrderRepository  = new CustOrderRepository();
             _receiptRepository = new ReceiptRepository();
             _contractAgreementRepository = new ContractAgreementRepository();
+            _salaryRepository = new SalaryRepository();
         }
 
         public tbInvoice GetInvoiceByInvoiceId(int invoiceId)
@@ -85,6 +87,15 @@ namespace BusinessLogicMBDesign.Document
             {
                 conn.Open();
                 return _custOrderRepository.GetCustOrderByQuotationNumber(quotationNumber, conn);
+            }
+        }
+
+        public SalaryView GetPaySlipBySalaryId(int salaryId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                return _salaryRepository.GetPaySlipDetailBySalaryId(salaryId, conn);
             }
         }
     }

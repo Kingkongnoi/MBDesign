@@ -21,6 +21,7 @@ namespace BusinessLogicMBDesign.HR
         private readonly OtherPaymentRepository _otherPaymentRepository;
         private readonly AttendanceDepartmentSettingRepository _attendanceDepartmentSettingRepository;
         private readonly AttendanceRepository _attendanceRepository;
+        private readonly SalaryRepository _salaryRepository;
 
         public HRService(IConfiguration configuration)
         {
@@ -33,6 +34,7 @@ namespace BusinessLogicMBDesign.HR
             _otherPaymentRepository = new OtherPaymentRepository();
             _attendanceDepartmentSettingRepository = new AttendanceDepartmentSettingRepository();   
             _attendanceRepository = new AttendanceRepository();
+            _salaryRepository = new SalaryRepository();
         }
 
         #region Leave Type
@@ -437,5 +439,17 @@ namespace BusinessLogicMBDesign.HR
             }
         }
         #endregion Attendance
+
+        #region Salary 
+        public List<SalaryView> GetSalaryList(string empCode, string empName, string startDate, string endDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _salaryRepository.GetAll(empCode, empName, startDate, endDate, conn);
+            }
+        }
+        #endregion Salary
     }
 }
