@@ -15,7 +15,7 @@ namespace BusinessLogicMBDesign
         private readonly string _ftpReportPathUrl = string.Empty;
         private readonly string _ftpUsername = string.Empty;
         private readonly string _ftpPassword = string.Empty;
-        private readonly string _downloadReportFolder = string.Empty;
+        private readonly string _downloadReportPath = string.Empty;
 
         public ftpProcessService(IConfiguration configuration)
         {
@@ -24,7 +24,7 @@ namespace BusinessLogicMBDesign
             _ftpReportPathUrl = _configuration.GetSection("ftpReportPathUrl").Value;
             _ftpUsername = _configuration.GetSection("ftpUsername").Value;
             _ftpPassword = _configuration.GetSection("ftpPassword").Value;
-            _downloadReportFolder = _configuration.GetSection("downloadReportFolder").Value;
+            _downloadReportPath = _configuration.GetSection("downloadReportPath").Value;
         }
 
         // Upload File to Specified FTP Url with username and password and Upload Directory 
@@ -56,16 +56,14 @@ namespace BusinessLogicMBDesign
 
         public string DownloadFile(string FileNameToDownload)
         {
-            string currentPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _downloadReportFolder);
-
             string ResponseDescription = "";
             string PureFileName = new FileInfo(FileNameToDownload).Name;
-            string DownloadedFilePath = /*_tempDownloadPath*/currentPath + "/" + PureFileName;
+            string DownloadedFilePath = _downloadReportPath + "/" + PureFileName;
             string downloadUrl = String.Format("{0}/{1}", _ftpReportPathUrl, FileNameToDownload);
 
-            if (!Directory.Exists(currentPath))
+            if (!Directory.Exists(_downloadReportPath))
             {
-                Directory.CreateDirectory(currentPath);
+                Directory.CreateDirectory(_downloadReportPath);
             }
 
             if (File.Exists(DownloadedFilePath))

@@ -133,7 +133,7 @@ namespace MBDesignWeb.Controllers
                 grandTotal = invoice.unitPrice,
             });
 
-            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
             var path = string.Format("{0}\\rpInvoice.rdlc", targetPath);
 
             LocalReport localReport = new LocalReport(path);
@@ -296,7 +296,7 @@ namespace MBDesignWeb.Controllers
                 
             }
 
-            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
             var path = string.Format("{0}\\rpQuotation.rdlc", targetPath);
 
             LocalReport localReport = new LocalReport(path);
@@ -387,7 +387,7 @@ namespace MBDesignWeb.Controllers
                 grandTotal = invoice.unitPrice,
             });
 
-            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
             var path = string.Format("{0}\\rpReceipt.rdlc", targetPath);
 
             LocalReport localReport = new LocalReport(path);
@@ -499,7 +499,7 @@ namespace MBDesignWeb.Controllers
             DateTime deliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
             param.Add("deliveryDate", deliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
 
-            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
             var path = string.Format("{0}\\rpCustomerContract.rdlc", targetPath);
 
             LocalReport localReport = new LocalReport(path);
@@ -556,7 +556,7 @@ namespace MBDesignWeb.Controllers
             var totalCurrency = string.Format("{0:n}", total);
             param.Add("totalSalaryInformation", string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency));
 
-            string targetPath = string.Format("{0}\\{1}", Directory.GetCurrentDirectory(), _configuration.GetSection("downloadReportFolder").Value);
+            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
             var path = string.Format("{0}\\rpPaySlip.rdlc", targetPath);
 
             LocalReport localReport = new LocalReport(path);
