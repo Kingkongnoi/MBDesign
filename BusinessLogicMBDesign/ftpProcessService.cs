@@ -35,14 +35,14 @@ namespace BusinessLogicMBDesign
         //Password of FTP Server
         //[Optional]Specify sub Folder if any
         //Status String from Server
-        public static string UploadFile(string FtpUrl, string fileName, string userName, string password, string UploadDirectory = "")
+        public string UploadFile(string fileName, string UploadDirectory = "")
         {
             string PureFileName = new FileInfo(fileName).Name;
-            string uploadUrl = String.Format("{0}{1}/{2}", FtpUrl, UploadDirectory, PureFileName);
+            string uploadUrl = String.Format("{0}{1}/{2}", _ftpReportPathUrl, UploadDirectory, PureFileName);
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(uploadUrl);
             req.Proxy = null;
             req.Method = WebRequestMethods.Ftp.UploadFile;
-            req.Credentials = new NetworkCredential(userName, password);
+            req.Credentials = new NetworkCredential(_ftpUsername, _ftpPassword);
             req.UseBinary = true;
             req.UsePassive = true;
             byte[] data = File.ReadAllBytes(fileName);

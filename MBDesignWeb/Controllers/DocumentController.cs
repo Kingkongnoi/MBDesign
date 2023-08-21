@@ -14,6 +14,8 @@ using System;
 using System.Drawing.Printing;
 using System.Globalization;
 using System.Net;
+using System.Reflection;
+using System.Text;
 using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace MBDesignWeb.Controllers
@@ -635,5 +637,70 @@ namespace MBDesignWeb.Controllers
             return bahtTH;
         }
 
+        public ActionResult Get(string reportName, int salaryId)
+        {
+            var returnString = GenerateReportAsync(reportName, salaryId);
+            return File(returnString, System.Net.Mime.MediaTypeNames.Application.Pdf/*, reportName + ".pdf"*/);
+        }
+        public byte[] GenerateReportAsync(string reportName, int salaryId)
+        {
+            string fileDirPath = Assembly.GetExecutingAssembly().Location.Replace("MBDesignWeb.dll", string.Empty);
+            string rdlcFilePath = string.Format("{0}ReportFiles\\{1}.rdlc", fileDirPath, reportName);
+            Dictionary<string, string> parameters = new Dictionary<string, string>();
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            Encoding.GetEncoding("windows-1252");
+            LocalReport report = new LocalReport(rdlcFilePath);
+
+            var paySlip = _documentService.GetPaySlipBySalaryId(salaryId);
+
+            //string mimetype = "";
+            //int extension = 1;
+
+            //*** Thai Format
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime dateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+
+            Dictionary<string, string> param = new Dictionary<string, string>();
+            param.Add("paySlipGenDate", dateThai.ToString("วันที่ dd MMMM yyyy", _cultureTHInfo));
+            param.Add("empCode", paySlip.empCode);
+            param.Add("departmentName", paySlip.departmentName);
+            param.Add("empName", paySlip.employeeName);
+
+            param.Add("salary", (paySlip.salary == 0) ? "-" : string.Format("{0:n}", paySlip.salary));
+            param.Add("ot", (paySlip.ot == 0) ? "-" : string.Format("{0:n}", paySlip.ot));
+            param.Add("otherIncome", "-");
+            param.Add("homeIncome", "-");
+
+            var totalIncome = (paySlip.salary + paySlip.ot);
+            param.Add("totalIncome", string.Format("{0:n}", totalIncome));
+
+            param.Add("socialPayment", "-");
+            param.Add("taxPayment", "-");
+            param.Add("futherPayment", "-");
+            param.Add("electricityPayment", "-");
+            param.Add("installmentPayment", "-");
+            param.Add("homePayment", "-");
+            param.Add("attendancePayment", "-");
+
+            var totalPayment = 0;
+            param.Add("totalPayment", string.Format("{0:n}", totalPayment));
+
+            var total = totalIncome - totalPayment;
+            var totalThai = ConvertToThaiBaht(total.ToString());
+            var totalCurrency = string.Format("{0:n}", total);
+            param.Add("totalSalaryInformation", string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency));
+
+            var result = report.Execute(RenderType.Pdf, 1, param);
+            return result.MainStream;
+        }
+
+        [Route("api/[controller]/[action]")]
+        public JsonResult GetFileDirPath(string reportName)
+        {
+            string fileDirPath = Assembly.GetExecutingAssembly().Location.Replace("MBDesignWeb.dll", string.Empty);
+            string rdlcFilePath = string.Format("{0}ReportFiles\\{1}.rdlc", fileDirPath, reportName);
+
+            return Json(new { fileDirPath= fileDirPath, rdlcFilePath= rdlcFilePath });
+        }
     }
 }

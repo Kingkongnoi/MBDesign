@@ -133,7 +133,7 @@ namespace MBDesignApi.Controllers.Master
                     Directory.CreateDirectory(folderName);
                 }
 
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+                string filename = String.Concat(ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Where(c => !Char.IsWhiteSpace(c)));
 
                 FileInfo file = new FileInfo(filename);
                 string fileExtension = file.Extension;
@@ -157,9 +157,16 @@ namespace MBDesignApi.Controllers.Master
                     originalFileName = filename,
                 };
 
-                //msg = _uploadToAwsService.DoUploadToAws(obj);
-                //obj.imageUrl = msg.strResult;
-                obj.imageUrl = fullFilePath;
+                var ftpService = new ftpProcessService(_configuration);
+                var result = ftpService.UploadFile(fullFilePath, "uploads");
+                if (result.Contains("Transfer complete"))
+                {
+                    obj.imageUrl = string.Format("{0}{1}", _configuration.GetSection("uploadUrl").Value, newFileName);
+                }
+                else
+                {
+                    obj.imageUrl = "";
+                }
                 addedUpload.Add(obj);
             }
 
