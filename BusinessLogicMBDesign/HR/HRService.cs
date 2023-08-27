@@ -438,6 +438,7 @@ namespace BusinessLogicMBDesign.HR
                 return _attendanceRepository.GetAll(empCode, empName, startDate, endDate, conn);
             }
         }
+
         #endregion Attendance
 
         #region Salary 
@@ -448,6 +449,26 @@ namespace BusinessLogicMBDesign.HR
                 conn.Open();
 
                 return _salaryRepository.GetAll(empCode, empName, startDate, endDate, conn);
+            }
+        }
+
+        public IEnumerable<AttendanceView> GetAttendanceSalaryList(string empCode, string empName, string leaveType, string startDate, string endDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceRepository.GetAttendanceAndLeaveByCurrentDate(empCode, empName, leaveType, startDate, endDate, conn);
+            }
+        }
+
+        public IEnumerable<AttendanceView> GetAttendanceSalaryType()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceRepository.GetAttendanceTypeSelect2(conn);
             }
         }
         #endregion Salary

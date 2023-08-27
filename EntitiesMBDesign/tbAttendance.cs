@@ -30,5 +30,11 @@ namespace EntitiesMBDesign
         public string employeeName { get; set; } = string.Empty;
         public string createByName { get; set; } = string.Empty;
         public string updateByName { get; set; } = string.Empty;
+        public int departmentId { get; set; }
+        public string departmentName { get; set; } = string.Empty;
+        public string salaryType { get; set; } = string.Empty;
+        public string attendanceType { get; set; } = string.Empty;
+        public string amountDeducted { get; set; } = string.Empty;
+        public string remark { get; set; } = string.Empty;
     }
 }

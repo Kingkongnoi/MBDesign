@@ -1,8 +1,8 @@
 ﻿$(function () {
-    leaveTypeLoading();
+    hrLoading();
 
     $('#click-leave-type').on('click', function () {
-        leaveTypeLoading();
+        hrLoading();
     });
     $('#form-search-leave-type .btn-clear-search-leave-type').on('click', function () {
         clearSearchLeaveType();
@@ -183,8 +183,16 @@
         callGetSalaryList();
     });
 
+    $('#form-search-salary-attendance .btn-search-salary-attendance').on('click', function () {
+        callGetAttendanceSalaryList();
+    });
+
+    $('#form-search-salary-attendance .btn-clear-search-salary-attendance').on('click', function () {
+        clearSearchAttendanceSalaryForm();
+        callGetAttendanceSalaryList();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
-        debugger;
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
             clearSearchLeaveType();
@@ -199,7 +207,8 @@
             callGetLeaveSummaryList();
         }
         else if (target == "#nav-salary-attendance") {
-
+            clearSearchAttendanceSalaryForm();
+            callGetAttendanceSalaryList();
         }
         else if (target == "#nav-salary-other") {
             clearSearchInstallmentForm();
@@ -212,10 +221,11 @@
         else if (target == "#nav-salary-commission") {
         }
         else if (target == "#nav-salary-calculate") {
+            clearSearchSalaryForm();
             callGetSalaryList();
         }
         else if (target == "#nav-attendance-time") {
-            //clearSearchAttendanceForm();
+            clearSearchAttendanceForm();
             callGetAttendanceList();
         }
         else if (target == "#nav-attendance-setting") {

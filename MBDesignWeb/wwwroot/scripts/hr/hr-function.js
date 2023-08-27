@@ -3,7 +3,7 @@ var _leaveId = 0;
 var _leave_action = "add";
 var _attendance_setting_action = "add";
 var _attendance_setting_id = 0;
-function leaveTypeLoading() {
+function hrLoading() {
     callSelect2Status("#select-search-leave-status", true);
     callSelect2Status("#modal-editLeaveType #form-editLeaveType #select-leave-type-status", false);
     callSelect2Status("#modal-viewLeaveType #form-editLeaveType #select-leave-type-status", false);
@@ -18,10 +18,11 @@ function leaveTypeLoading() {
     renderSelect2InstallmentType();
 
     callGetLeaveTypeList();
-    //callGetLeaveInformationList();
-    //callGetLeaveSummaryList();
 
     callGetAttendanceList();
+
+    callSelect2AttendanceSalaryType();
+    callGetAttendanceSalaryList();
 }
 function clearSearchLeaveType() {
     let formId = '#form-search-leave-type';
@@ -1766,4 +1767,146 @@ function renderGetSalaryList(data) {
             ],
         }
     );
+}
+
+function clearSearchAttendanceSalaryForm() {
+    let formId = '#form-search-salary-attendance';
+    $(`${formId} #input-search-emp-code`).val('');
+    $(`${formId} #input-search-emp-name`).val('');
+    $(`${formId} #select-search-attendance-type`).val('').trigger('change');
+    $(`${formId} #input-search-start-date`).val('');
+    $(`${formId} #input-search-end-date`).val('');
+}
+function callGetAttendanceSalaryList() {
+    let formId = '#form-search-salary-attendance';
+
+    let empCode = ($(`${formId} #input-search-emp-code`).val() == '') ? null : $(`${formId} #input-search-emp-code`).val();
+    let empName = ($(`${formId} #input-search-emp-name`).val() == '') ? null : $(`${formId} #input-search-emp-name`).val();
+    let leaveType = ($(`${formId} #select-search-attendance-type`).val() == '' || $(`${formId} #select-search-attendance-type`).val() == null || $(`${formId} #select-search-attendance-type`).val() == undefined) ? null : $(`${formId} #select-search-attendance-type`).val();
+    let startDate = ($(`${formId} #input-search-start-date`).val() == '') ? null : $(`${formId} #input-search-start-date`).val();
+    let endDate = ($(`${formId} #input-search-end-date`).val() == '') ? null : $(`${formId} #input-search-end-date`).val();
+
+    let loaded = $('#tb-salary-attendance-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceSalaryList?empCode=${empCode}&empName=${empName}&leaveType=${leaveType}&startDate=${startDate}&endDate=${endDate}`,
+        success: function (data) {
+            renderGetAttendanceSalaryList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetAttendanceSalaryList(data) {
+    $('#tb-salary-attendance-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.attendanceId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'empCode',
+                },
+                {
+                    targets: 1,
+                    data: 'employeeName',
+                },
+                {
+                    targets: 2,
+                    data: 'departmentName',
+                },
+                {
+                    targets: 3,
+                    data: 'salaryType',
+                },
+                {
+                    targets: 4,
+                    data: 'attendanceType',
+                },
+                {
+                    targets: 5,
+                    data: 'attendanceDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.attendanceDate ? convertDateTimeFormat(row.attendanceDate, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'attendanceTimeIn',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return (row.attendanceTimeIn == "" || row.attendanceTimeIn == 0) ? "-" : row.attendanceTimeIn;
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'attendanceTimeOut',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return (row.attendanceTimeOut == "" || row.attendanceTimeOut == 0) ? "-" : row.attendanceTimeOut;
+                    },
+                },
+                {
+                    targets: 8,
+                    data: 'attendanceHour',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return (row.attendanceHour == 0 || row.attendanceHour == "") ? "-" : row.attendanceHour;
+                    },
+                },
+                {
+                    targets: 9,
+                    data: 'amountDeducted',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        var amount = (row.amountDeducted == 0 || row.amountDeducted == "") ? 0 : parseFloat(row.amountDeducted).toFixed(2);
+                        return (amount == 0) ? "-" : amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    },
+                },
+                {
+                    targets: 10,
+                    data: 'remark'
+                },
+            ],
+        }
+    );
+}
+function callSelect2AttendanceSalaryType() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceSalaryType`,
+        success: function (data) {
+            renderSelect2AttendanceSalaryType(data);
+        },
+        error: function (err) {
+        }
+    });
+}
+function renderSelect2AttendanceSalaryType(data) {
+    var select2SearchId = '#form-search-salary-attendance #select-search-attendance-type';
+
+    $(`${select2SearchId}`).empty();
+    $(`${select2SearchId}`).append(`<option value="">ทั้งหมด</option>`);
+
+    data.forEach((v) => {
+        $(`${select2SearchId}`).append(`<option value="${v.attendanceType}">${v.attendanceType}</option>`);
+    });
 }
