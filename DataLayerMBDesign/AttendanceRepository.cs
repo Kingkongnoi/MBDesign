@@ -77,5 +77,18 @@ namespace DataLayerMBDesign
             return conn.Query<AttendanceView>("spGenerateAttendanceSalaryType",
                     commandType: System.Data.CommandType.StoredProcedure);
         }
+
+        public IEnumerable<AttendanceView> GetAttendanceOTByCurrentDate(string empCode, string empName, string startDate, string endDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            if (empCode == "null") { empCode = string.Empty; }
+            if (empName == "null") { empName = string.Empty; }
+            if (startDate == "null") { startDate = string.Empty; }
+            if (endDate == "null") { endDate = string.Empty; }
+
+            return conn.Query<AttendanceView>("spGenerateAttendanceOT",
+                    param: new { empCode, empName, startDate, endDate },
+                    commandType: System.Data.CommandType.StoredProcedure);
+        }
+
     }
 }

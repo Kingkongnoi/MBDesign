@@ -1866,23 +1866,15 @@ function renderGetAttendanceSalaryList(data) {
                 },
                 {
                     targets: 8,
-                    data: 'attendanceHour',
-                    className: "dt-center",
-                    render: function (data, type, row) {
-                        return (row.attendanceHour == 0 || row.attendanceHour == "") ? "-" : row.attendanceHour;
-                    },
-                },
-                {
-                    targets: 9,
                     data: 'amountDeducted',
                     className: "dt-body-right",
                     render: function (data, type, row) {
-                        var amount = (row.amountDeducted == 0 || row.amountDeducted == "") ? 0 : parseFloat(row.amountDeducted).toFixed(2);
+                        var amount = (row.amountDeducted == "0" || row.amountDeducted == "") ? 0 : parseFloat(row.amountDeducted).toFixed(2);
                         return (amount == 0) ? "-" : amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
                     },
                 },
                 {
-                    targets: 10,
+                    targets: 9,
                     data: 'remark'
                 },
             ],
@@ -1909,4 +1901,108 @@ function renderSelect2AttendanceSalaryType(data) {
     data.forEach((v) => {
         $(`${select2SearchId}`).append(`<option value="${v.attendanceType}">${v.attendanceType}</option>`);
     });
+}
+
+function clearSearchAttendanceOTForm() {
+    let formId = '#form-search-salary-ot';
+    $(`${formId} #input-search-emp-code`).val('');
+    $(`${formId} #input-search-emp-name`).val('');
+    $(`${formId} #input-search-start-date`).val('');
+    $(`${formId} #input-search-end-date`).val('');
+}
+function callGetAttendanceOTList() {
+    let formId = '#form-search-salary-ot';
+
+    let empCode = ($(`${formId} #input-search-emp-code`).val() == '') ? null : $(`${formId} #input-search-emp-code`).val();
+    let empName = ($(`${formId} #input-search-emp-name`).val() == '') ? null : $(`${formId} #input-search-emp-name`).val();
+    let startDate = ($(`${formId} #input-search-start-date`).val() == '') ? null : $(`${formId} #input-search-start-date`).val();
+    let endDate = ($(`${formId} #input-search-end-date`).val() == '') ? null : $(`${formId} #input-search-end-date`).val();
+
+    let loaded = $('#tb-salary-ot-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/HR/GetAttendanceOTList?empCode=${empCode}&empName=${empName}&startDate=${startDate}&endDate=${endDate}`,
+        success: function (data) {
+            renderGetAttendanceOTList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetAttendanceOTList(data) {
+    $('#tb-salary-ot-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.attendanceId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'empCode',
+                },
+                {
+                    targets: 1,
+                    data: 'employeeName',
+                },
+                {
+                    targets: 2,
+                    data: 'departmentName',
+                },
+                {
+                    targets: 3,
+                    data: 'salaryType',
+                },
+                {
+                    targets: 4,
+                    data: 'attendanceDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.attendanceDate ? convertDateTimeFormat(row.attendanceDate, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'diligenceAllowance',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        var amount = (row.diligenceAllowance == "0" || row.diligenceAllowance == "") ? 0 : parseFloat(row.diligenceAllowance).toFixed(2);
+                        return (amount == 0) ? "-" : amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'otHours',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return (row.otHours == "0" || row.otHours == "") ? "-" : row.otHours;
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'ot',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        var amount = (row.ot == "0" || row.ot == "") ? 0 : parseFloat(row.ot).toFixed(2);
+                        return (amount == 0) ? "-" : amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    },
+                },
+            ],
+        }
+    );
 }

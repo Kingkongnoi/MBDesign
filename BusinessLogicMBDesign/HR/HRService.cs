@@ -471,6 +471,16 @@ namespace BusinessLogicMBDesign.HR
                 return _attendanceRepository.GetAttendanceTypeSelect2(conn);
             }
         }
+
+        public IEnumerable<AttendanceView> GetAttendanceOTList(string empCode, string empName, string startDate, string endDate)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _attendanceRepository.GetAttendanceOTByCurrentDate(empCode, empName, startDate, endDate, conn);
+            }
+        }
         #endregion Salary
     }
 }

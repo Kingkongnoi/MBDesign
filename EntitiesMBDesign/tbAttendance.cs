@@ -36,5 +36,8 @@ namespace EntitiesMBDesign
         public string attendanceType { get; set; } = string.Empty;
         public string amountDeducted { get; set; } = string.Empty;
         public string remark { get; set; } = string.Empty;
+        public string diligenceAllowance { get; set; } = string.Empty;
+        public int otHours { get; set; }
+        public string ot { get; set; } = string.Empty;
     }
 }

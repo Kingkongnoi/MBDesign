@@ -1,7 +1,10 @@
 ﻿using BusinessLogicMBDesign.HR;
 using BusinessLogicMBDesign.Master;
+using DataLayerMBDesign;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlClient;
+using UtilitiesMBDesign;
 
 namespace MBDesignWeb.Controllers
 {
@@ -223,6 +226,15 @@ namespace MBDesignWeb.Controllers
         public JsonResult GetAttendanceSalaryType()
         {
             var data = _hrService.GetAttendanceSalaryType();
+
+            return new JsonResult(data);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public JsonResult GetAttendanceOTList(string empCode, string empName, string startDate, string endDate)
+        {
+            var data = _hrService.GetAttendanceOTList(empCode, empName, startDate, endDate);
 
             return new JsonResult(data);
         }

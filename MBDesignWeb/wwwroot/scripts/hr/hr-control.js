@@ -192,6 +192,15 @@
         callGetAttendanceSalaryList();
     });
 
+    $('#form-search-salary-ot .btn-search-salary-ot').on('click', function () {
+        callGetAttendanceOTList();
+    });
+
+    $('#form-search-salary-ot .btn-clear-search-salary-ot').on('click', function () {
+        clearSearchAttendanceOTForm();
+        callGetAttendanceOTList();
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
@@ -215,6 +224,8 @@
             callGetOtherPaymentList();
         }
         else if (target == "#nav-salary-ot") {
+            clearSearchAttendanceOTForm();
+            callGetAttendanceOTList();
         }
         else if (target == "#nav-salary-bonus") {
         }
