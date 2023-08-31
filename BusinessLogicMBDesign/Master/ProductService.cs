@@ -16,6 +16,7 @@ namespace BusinessLogicMBDesign.Master
         private readonly ProductStyleRepository _productStyleRepository;
         private readonly ProductItemRepository _productItemRepository;
         private readonly ProductItemOptionsRepository _productItemOptionsRepository;
+        private readonly ProductItemQuickQTRepository _productItemQuickQTRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -25,6 +26,7 @@ namespace BusinessLogicMBDesign.Master
             _productStyleRepository = new ProductStyleRepository();
             _productItemRepository = new ProductItemRepository();
             _productItemOptionsRepository = new ProductItemOptionsRepository();
+            _productItemQuickQTRepository = new ProductItemQuickQTRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -415,6 +417,102 @@ namespace BusinessLogicMBDesign.Master
         }
 
         #endregion product style
+
+        #region
+        public List<ProductItemQuickQTView> GetProductItemQuickQTList(string itemCode, int typeId, string itemText, string status)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemQuickQTRepository.GetAll(itemCode, typeId, itemText, status, conn);
+            }
+        }
+        public int? AddProductItemQuickQT(ProductItemQuickQTModel model)
+        {
+            int? added = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                var exists = _productItemQuickQTRepository.GetFirstByCode(model.itemCode, conn, transaction);
+                if (exists != null) { return -1; }
+
+                try
+                {
+                    var addedObject = new tbProductItemQuickQT
+                    {
+                        itemCode = model.itemCode,
+                        itemText = model.itemText,
+                        typeId = model.typeId,
+                        itemPrice = model.itemPrice,
+                        status = model.status,
+                        createDate = DateTime.UtcNow,
+                        createBy = model.loginCode
+                    };
+                    added = _productItemQuickQTRepository.Add(addedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return added;
+        }
+
+        public int UpdateProductItemQuickQT(ProductItemQuickQTModel model)
+        {
+            int updated = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                var exists = _productItemQuickQTRepository.GetFirstByCode(model.itemCode, conn, transaction);
+                if (exists != null) { if (exists.itemId != model.itemId) { return -1; } }
+
+                try
+                {
+                    var updatedObject = new tbProductItemQuickQT
+                    {
+                        itemId = model.itemId,
+                        itemText = model.itemText,
+                        itemPrice = model.itemPrice,
+                        typeId = model.typeId,
+                        status = model.status,
+                        updateDate = DateTime.UtcNow,
+                        updateBy = model.loginCode
+                    };
+                    updated = _productItemQuickQTRepository.Update(updatedObject, conn, transaction);
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                }
+            }
+
+            return updated;
+        }
+
+        public tbProductItemQuickQT GetProductItemQuickQTByItemId(int itemId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _productItemQuickQTRepository.GetFirstById(itemId, conn);
+            }
+
+        }
+        #endregion
 
     }
 }

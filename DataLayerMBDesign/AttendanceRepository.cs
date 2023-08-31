@@ -75,7 +75,8 @@ namespace DataLayerMBDesign
         public IEnumerable<AttendanceView> GetAttendanceTypeSelect2(SqlConnection conn, SqlTransaction? trans = null)
         {
             return conn.Query<AttendanceView>("spGenerateAttendanceSalaryType",
-                    commandType: System.Data.CommandType.StoredProcedure);
+                    commandType: System.Data.CommandType.StoredProcedure, 
+                    transaction: trans);
         }
 
         public IEnumerable<AttendanceView> GetAttendanceOTByCurrentDate(string empCode, string empName, string startDate, string endDate, SqlConnection conn, SqlTransaction? trans = null)
@@ -87,7 +88,8 @@ namespace DataLayerMBDesign
 
             return conn.Query<AttendanceView>("spGenerateAttendanceOT",
                     param: new { empCode, empName, startDate, endDate },
-                    commandType: System.Data.CommandType.StoredProcedure);
+                    commandType: System.Data.CommandType.StoredProcedure,
+                    transaction: trans);
         }
 
     }

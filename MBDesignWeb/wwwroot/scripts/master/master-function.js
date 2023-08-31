@@ -27,6 +27,8 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _procutQuickQT_action = "add";
+
 function callSelect2Status(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
@@ -86,6 +88,12 @@ function clearSearchForm(area) {
             $('#form-search-bankAccount #input-search-account-number').val('');
             $('#form-search-bankAccount #select-search-account-type').val('').trigger('change');
             $('#form-search-bankAccount #select-search-account-status').val('').trigger('change');
+            break;
+        case "item-quickQT":
+            $('#form-search-product-QuickQT #input-search-product-items').val('');
+            $('#form-search-product-QuickQT #select-search-product-type').val('');
+            $('#form-search-product-QuickQT #input-search-product-items-text').val('');
+            $('#form-search-product-QuickQT #select-search-product-status').val('').trigger('change');
             break;
     }
 }
@@ -154,6 +162,13 @@ function clearForm(modal) {
             $('#form-createAccount #select-account-status').val(1).trigger('change');
             $('#form-createAccount #select-account-type').val('').trigger('change');
             $('#form-createAccount input[name="input-account-number"]').val('');
+            break;
+        case "modal-createProduct-QuickQT" || "modal-viewProduct-QuickQT":
+            $('#form-createProductQuickQT input[name="input-product-code"]').val('');
+            $('#form-createProductQuickQT #select-product-type').val('').trigger('change');
+            $('#form-createProductQuickQT input[name="input-product-text"]').val('');
+            $('#form-createProductQuickQT input[name="input-product-price"]').val('');
+            $('#form-createProductQuickQT #select-product-status').val(1).trigger('change');
             break;
     }
 }
@@ -613,6 +628,61 @@ let validateInput = function (modal) {
                     confirmButtonText: 'ตกลง'
                 }).then((result) => {
                     $(`${roleFormId} input[name="input-role-name"]`).focus();
+                });
+                return false;
+            }
+            else { return true; }
+            break;
+        case "modal-createProduct-QuickQT":
+            if ($('#form-createProductQuickQT #input-product-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกรหัสสินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createProductQuickQT #input-product-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createProductQuickQT #select-product-type').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกชื่อหมวดหมู่",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createProductQuickQT #select-product-type').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createProductQuickQT #input-product-text').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอก Text (คำอธิบายรายละเอียดที่ใช้ในการแสดงผลในใบเสนอราคา)",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createProductQuickQT #input-product-text').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createProductQuickQT #input-product-price').val() == "" || $('#form-createProductQuickQT #input-product-price').val() == "0") {
+                Swal.fire({
+                    text: "กรุณากรอกราคาต่อเมตร",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createProductQuickQT #input-product-price').focus();
                 });
                 return false;
             }
@@ -1546,3 +1616,244 @@ function renderAccountForm(data) {
     $('#form-createAccount input[name="input-account-number"]').val(data.accountNumber);
 }
 /* Bank Account */
+
+function callGetProductItemQuickQTList() {
+
+    let itemCode = ($('#form-search-product-QuickQT #input-search-product-code').val() == '') ? null : $('#form-search-product-QuickQT #input-search-product-code').val();
+    let itemType = ($('#form-search-product-QuickQT #select-search-product-type').val() == '') ? 0 : $('#form-search-product-QuickQT #select-search-product-type').val();
+    let itemText = ($('#form-search-product-QuickQT #input-search-product-items-text').val() == '') ? null : $('#form-search-product-QuickQT #input-search-product-items-text').val();
+    let status = ($('#form-search-product-QuickQT #select-search-product-status').val() == '') ? null : $('#form-search-product-QuickQT #select-search-product-status').val();
+
+    let loaded = $('#tb-product-quickQT-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetItemQuickQTList?itemCode=${itemCode}&typeId=${itemType}&itemText=${itemText}&status=${status}`,
+        success: function (data) {
+            renderGetProductItemQuickQTList(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderGetProductItemQuickQTList(data) {
+
+    $('#tb-product-quickQT-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.itemId);
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'itemCode',
+                },
+                {
+                    targets: 1,
+                    data: 'typeName',
+                },
+                {
+                    targets: 2,
+                    data: 'itemText',
+                },
+                {
+                    targets: 3,
+                    data: 'price',
+                    className: "dt-body-right",
+                    render: function (data, type, row) {
+                        var price = (row.price == "0" || row.price == "") ? 0 : parseFloat(row.price).toFixed(2);
+                        return (price == 0) ? "-" : price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                    },
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'createByName'
+                },
+                {
+                    targets: 6,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 8,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 9,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_productQuickQT_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-productQuickQT" data-id="${row.itemId}"  title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function DoAddOrUpdateItemQuickQT(modal) {
+    if (!validateInput(modal)) return;
+
+    let formId = '#form-createProductQuickQT';
+    let itemCode = $(`${formId} input[name="input-product-code"]`).val();
+    let prefix = itemCode.substring(0, 3);
+    let suffix = itemCode.substring(3, itemCode.length);
+    if (itemCode.length < 6 || itemCode.length > 6) {
+        Swal.fire({
+            text: "กรุณากรอกรหัสสินค้า 6 หลัก",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} input[name="input-product-code"]`).focus();
+        });
+        return;
+    }
+    if ($.isNumeric(prefix) == true) {
+        Swal.fire({
+            text: "กรุณากรอกรหัสสินค้า 3 ตัวแรกเป็นตัวหนังสือ",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} input[name="input-product-code"]`).focus();
+        });
+        return;
+    }
+    if ($.isNumeric(suffix) == false) {
+        Swal.fire({
+            text: "กรุณากรอกรหัสสินค้า 3 ตัวท้ายเป็นตัวเลข",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $(`${formId} input[name="input-product-code"]`).focus();
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateItemQuickQT(_product_item_action);
+        }
+    });
+}
+function callAddOrUpdateItemQuickQT() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Product/AddItemQuickQT` : `${app_settings.api_url}/api/Product/UpdateItemQuickQT`;
+
+    var obj = {
+        itemCode: $('#form-createProductQuickQT #input-product-code').val(),
+        itemText: $('#form-createProductQuickQT #input-product-text').val(),
+        typeId: $('#form-createProductQuickQT #select-product-type').val(),
+        itemPrice: $('#form-createProductQuickQT #input-product-price').val(),
+        status: ($('#form-createProductQuickQT #select-product-status').val() == "1") ? true : false,
+        loginCode: _userCode
+    };
+
+    $('.btn-modal-save-product-quickQT').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-product-quickQT').removeLoading();
+                $(`#modal-createProduct-QuickQT`).modal('hide');
+                callGetProductItemQuickQTList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "รหัสสินค้ามีอยู่แล้ว กรุณากรอกรหัสสินค้าอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createProductQuickQT #input-product-code').focus();
+                    });
+                }
+                $('.btn-modal-save-product-quickQT').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-product-quickQT').removeLoading();
+        }
+    });
+
+}
+function callGetItemQuickQTById(id, modalId, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetItemQuickQTByItemId?itemId=${id}`,
+        success: function (data) {
+            renderItemQuickQTForm(data.item, modalId);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderItemQuickQTForm(data, modalId) {
+    let status = (data.status) ? 1 : 0;
+    $(`${modalId} #form-createProductQuickQT #select-product-type`).val(data.typeId).trigger('change');
+    $(`${modalId} #form-createProductQuickQT input[name="input-product-code"]`).val(data.itemCode);
+    $(`${modalId} #form-createProductQuickQT input[name="input-product-text"]`).val(data.itemText);
+    $(`${modalId} #form-createProductQuickQT input[name="input-product-price"]`).val(data.itemPrice);
+    $(`${modalId} #form-createProductQuickQT #select-product-status`).val(status).trigger('change');
+}

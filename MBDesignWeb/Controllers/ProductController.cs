@@ -289,5 +289,93 @@ namespace MBDesignApi.Controllers.Master
         #endregion POST
 
         #endregion productStyle
+
+        #region productItemQuickQT
+
+        #region GET
+        //[HttpGet]
+        //public JsonResult GetLastestItemId()
+        //{
+        //    var data = _productService.GetFirstLastestItemId();
+
+        //    return new JsonResult(data);
+        //}
+
+        [HttpGet]
+        public JsonResult GetItemQuickQTList(string itemCode, int typeId, string itemText, string status)
+        {
+            var data = _productService.GetProductItemQuickQTList(itemCode, typeId, itemText, status);
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetItemQuickQTByItemId(int itemId)
+        {
+            var item = _productService.GetProductItemQuickQTByItemId(itemId);
+
+            return new JsonResult(new { item = item });
+        }
+        #endregion GET
+
+        #region POST
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult AddItemQuickQT([FromBody] ProductItemQuickQTModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _productService.AddProductItemQuickQT(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+
+            return new JsonResult(returnData);
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult UpdateItemQuickQT([FromBody] ProductItemQuickQTModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _productService.UpdateProductItemQuickQT(obj);
+
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+
+            return new JsonResult(returnData);
+        }
+        #endregion POST
+
+        #endregion productItemQuickQT
     }
 }

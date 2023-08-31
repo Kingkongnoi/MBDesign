@@ -14,6 +14,11 @@
         cursor:pointer !important; 
     }
 
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
     .no-display {
         display: none;
     }
@@ -33,7 +38,8 @@
             <div class="nav nav-tabs" id="nav-tab-master-product" role="tablist">
                 <button class="nav-link active" id="nav-master-productData-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productData" type="button" role="tab" aria-controls="nav-master-productData" aria-selected="true" style="margin-right:2px;">ข้อมูลสินค้า</button>
                 <button class="nav-link" id="nav-master-productType-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productType" type="button" role="tab" aria-controls="nav-master-productType" aria-selected="false" style="margin-right:2px;">ตั้งค่าหมวดหมู่</button>
-                <button class="nav-link" id="nav-master-productStyle-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productStyle" type="button" role="tab" aria-controls="nav-master-productStyle" aria-selected="false">ตั้งค่าสไตล์</button>
+                <button class="nav-link" id="nav-master-productStyle-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productStyle" type="button" role="tab" aria-controls="nav-master-productStyle" aria-selected="false" style="margin-right:2px;">ตั้งค่าสไตล์</button>
+                <button class="nav-link" id="nav-master-productDataQuickQT-tab" data-bs-toggle="tab" data-bs-target="#nav-master-productDataQuickQT" type="button" role="tab" aria-controls="nav-master-productDataQuickQT" aria-selected="false">ข้อมูลสินค้า (Quick QT)</button>
             </div>
         </nav>
         <div class="tab-content" id="nav-tab-master-product-tabContent">
@@ -188,6 +194,66 @@
                                 <tr>
                                     <th><span>รหัสสไตล์</span></th>
                                     <th><span>สไตล์</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>วันที่แก้ไขล่าสุด</span></th>
+                                    <th><span>ผู้แก้ไขล่าสุด</span></th>
+                                    <th><span>สถานะ</span></th>
+                                    <th id="edit-action"><span>แก้ไข</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-master-productDataQuickQT" role="tabpanel" aria-labelledby="nav-master-productDataQT-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-product-QuickQT">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>รหัสสินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-product-code" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>หมวดหมู่</label>
+                                    <select class="form-select" id="select-search-product-type">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label>Text (คำอธิบายรายละเอียดที่ใช้แสดงผลในใบเสนอราคา)</label>
+                                    <input type="text" class="form-control" id="input-search-product-items-text" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>สถานะ</label>
+                                    <select class="form-select" id="select-search-product-status">
+                                        <option></option>
+                                    </select>
+                                </div>
+
+                                <div class="col-sm-2 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-product-quickQT">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-product-quickQT">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-sm-2 mt-2">
+                        <button type="button" class="btn-add-custom btn-add-product-quickQT"><img src="~/images/shopping-cart.png" width="25px" /> เพิ่มสินค้า</button>
+                    </div>
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-product-quickQT-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>รหัสสินค้า</span></th>
+                                    <th><span>หมวดหมู่</span></th>
+                                    <th><span>Text (คำอธิบายรายละเอียดที่ใช้แสดงผลในใบเสนอราคา)</span></th>
+                                    <th><span>ราคาต่อเมตร</span></th>
                                     <th><span>วันที่สร้าง</span></th>
                                     <th><span>ผู้สร้าง</span></th>
                                     <th><span>วันที่แก้ไขล่าสุด</span></th>
@@ -535,6 +601,126 @@
 
                     </div>
                 </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create product quick QT*@
+<div id="modal-createProduct-QuickQT" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemQuickQTHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProductQuickQT">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type"></select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">Text (คำอธิบายรายละเอียดที่ใช้ในการแสดงผลในใบเสนอราคา)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-text" name="input-product-text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-product-quickQT"><i class="fas fa-save" aria-hidden="true"></i></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view product quick QT*@
+<div id="modal-viewProduct-QuickQT" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลสินค้า (Quick QT)</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProductQuickQT">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">Text (คำอธิบายรายละเอียดที่ใช้ในการแสดงผลในใบเสนอราคา)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-text" name="input-product-text" disabled />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
+                        </div>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer justify-content-center">

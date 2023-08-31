@@ -22,12 +22,18 @@
     callSelect2Status('#form-createAccount #select-account-status');
     callSelect2Status('#form-search-bankAccount #select-search-account-status', true);
 
+    //callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก');
+    callProductTypeSelect2('#form-search-product-QuickQT #select-search-product-type', 'ทั้งหมด');
+    //callSelect2Status('#form-createProductQuickQT #select-product-status');
+    callSelect2Status('#form-search-product-QuickQT #select-search-product-status', true);
+
     renderNewOptions("modal-createProduct");
 
     //$('#states').select2();
 
     callGetAccountList();
     callGetItemList();
+    callGetProductItemQuickQTList();
 
     /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
@@ -207,6 +213,48 @@
         callGetAccountById(id);
     });
 
+    $('#form-search-product-QuickQT .btn-search-product-quickQT').on('click', function () {
+        callGetProductItemQuickQTList();
+    });
+
+    $('#form-search-product-QuickQT .btn-clear-search-product-quickQT').on('click', function () {
+        clearSearchForm('item-quickQT');
+        callGetProductItemQuickQTList();
+    });
+
+    $('.btn-add-product-quickQT').on('click', function () {
+        _procutQuickQT_action = 'add';
+        $(`#modal-createProduct-QuickQT #itemQuickQTHeader`).text('เพิ่มข้อมูลสินค้า (Quick QT)');
+        $('#modal-createProduct-QuickQT').modal('show');
+    });
+
+    $(document).on('click', '.btn-edit-productQuickQT', function () {
+        $(`#modal-createProduct-QuickQT #itemQuickQTHeader`).text('แก้ไขเพิ่มข้อมูลสินค้า (Quick QT)');
+        $(`#modal-createProduct-QuickQT`).modal('show');
+        _procutQuickQT_action = 'edit';
+        var id = $(this).data('id');
+        callGetItemQuickQTById($(this).data('id'), "#modal-createProduct-QuickQT");
+    });
+
+    $(`#modal-createProduct-QuickQT`).on('show.bs.modal', function () {
+        clearForm('modal-createProduct-QuickQT');
+        callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก');
+        callSelect2Status('#form-createProductQuickQT #select-product-status');
+    });
+
+    $('.btn-modal-save-product-quickQT').on('click', function () {
+        DoAddOrUpdateItemQuickQT("modal-createProduct-QuickQT");
+    });
+
+    $('#tb-product-quickQT-list').on('click', 'tbody tr td:not(:last-child)', function () {
+        var table = $('#tb-product-quickQT-list').DataTable();
+        var row = table.row($(this)).data();
+        clearForm('modal-createProduct-QuickQT');
+        callGetItemQuickQTById(row.itemId, "#modal-viewProduct-QuickQT");
+        $('#modal-viewProduct-QuickQT').modal('show');
+    });
+
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-master-empData") {
@@ -245,6 +293,12 @@
         else if (target == "#nav-master-productStyle") {
             clearSearchForm("style");
             callGetStyleList();
+        }
+        else if (target == "#nav-master-productDataQuickQT") {
+            clearSearchForm("item-quickQT");
+            callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก')
+            callProductTypeSelect2('#form-search-product-QuickQT #select-search-product-type', 'ทั้งหมด');
+            callGetProductItemQuickQTList();
         }
     });
 
