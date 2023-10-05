@@ -482,5 +482,57 @@ namespace BusinessLogicMBDesign.HR
             }
         }
         #endregion Salary
+
+        public ResultMessage AddOrUpdateAttendance(List<AttendanceModel> obj)
+        {
+            var msg = new ResultMessage();
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var currDate = DateTime.UtcNow;
+                    foreach (var attendance in obj)
+                    {
+                        var exists = _empDataRepository.GetFirstByEmpCode(attendance.empCode, conn, transaction);
+
+                        if(exists != null)
+                        {
+                            var existsAttendance = _attendanceRepository.GetByEmpIdAndAttendanceDate(exists.id, attendance.attendanceDate, conn, transaction);
+                            if(existsAttendance == null)
+                            {
+                                var added = new tbAttendance
+                                {
+                                    empId = exists.id,
+                                    attendanceDate = attendance.attendanceDate,
+                                    attendanceTimeIn = attendance.attendanceTimeIn,
+                                    attendanceTimeOut = attendance.attendanceTimeOut,
+                                    attendanceHour = attendance.attendanceHour,
+                                    status = true,
+                                    createDate = currDate,
+                                    createBy = attendance.createBy,
+                                    isDeleted = false
+                                };
+
+                                int? inserted = _attendanceRepository.Add(added, conn, transaction);
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    msg.isResult = false;
+                    msg.strResult = ex.ToString();
+                    transaction.Rollback();
+                }
+            }
+
+            return msg;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace EntitiesMBDesign
         public DateTime attendanceDate { get; set; }
         public string attendanceTimeIn { get; set; } = string.Empty;
         public string attendanceTimeOut { get; set; } = string.Empty;
-        public int attendanceHour { get; set; }
+        public decimal attendanceHour { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
@@ -39,5 +39,19 @@ namespace EntitiesMBDesign
         public string diligenceAllowance { get; set; } = string.Empty;
         public int otHours { get; set; }
         public string ot { get; set; } = string.Empty;
+        public string attendanceTime { get; set; } = string.Empty;
+        public string inOut { get; set; } = string.Empty;
+        public string no { get; set; } = string.Empty;
+        public string createdBy { get; set; } = string.Empty;
+    }
+
+    public class AttendanceModel
+    {
+        public string empCode { get; set; } = string.Empty;
+        public DateTime attendanceDate { get; set; }
+        public string attendanceTimeIn { get; set; } = string.Empty;
+        public string attendanceTimeOut { get; set; } = string.Empty;
+        public decimal attendanceHour { get; set; }
+        public string createBy { get; set; } = string.Empty;
     }
 }

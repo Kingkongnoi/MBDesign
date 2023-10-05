@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EntitiesMBDesign;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -60,16 +61,6 @@ namespace BusinessLogicMBDesign
             string PureFileName = new FileInfo(FileNameToDownload).Name;
             string DownloadedFilePath = _downloadReportPath + "/" + PureFileName;
             string downloadUrl = String.Format("{0}/{1}", _ftpReportPathUrl, FileNameToDownload);
-
-            if (!Directory.Exists(_downloadReportPath))
-            {
-                Directory.CreateDirectory(_downloadReportPath);
-            }
-
-            if (File.Exists(DownloadedFilePath))
-            {
-                File.Delete(DownloadedFilePath);
-            }
 
             FtpWebRequest req = (FtpWebRequest)FtpWebRequest.Create(downloadUrl);
             req.Method = WebRequestMethods.Ftp.DownloadFile;

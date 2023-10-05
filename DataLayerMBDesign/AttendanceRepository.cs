@@ -92,5 +92,30 @@ namespace DataLayerMBDesign
                     transaction: trans);
         }
 
+        public int? Add(tbAttendance obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            return conn.Insert(obj, transaction: trans);
+        }
+
+        public tbAttendance GetByEmpIdAndAttendanceDate(int empId, DateTime attendanceDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string query = @"SELECT TOP 1 attendanceId
+            ,empId
+            ,attendanceDate
+            ,attendanceTimeIn
+            ,attendanceTimeOut
+            ,attendanceHour
+            ,status
+            ,createDate
+            ,createBy
+            ,updateDate
+            ,updateBy
+            ,isDeleted
+            FROM tbAttendance
+            WHERE isDeleted = 0 and empId = @empId 
+            and attendanceDate = FORMAT(@attendanceDate, 'yyyy-MM-dd')";
+
+            return conn.QueryFirstOrDefault<tbAttendance>(query, new { empId, attendanceDate }, transaction: trans);
+        }
     }
 }

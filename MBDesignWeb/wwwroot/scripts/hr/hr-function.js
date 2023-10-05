@@ -23,6 +23,7 @@ function hrLoading() {
 
     callSelect2AttendanceSalaryType();
     callGetAttendanceSalaryList();
+    renderEmpWarningDocumentList();
 }
 function clearSearchLeaveType() {
     let formId = '#form-search-leave-type';
@@ -2005,4 +2006,193 @@ function renderGetAttendanceOTList(data) {
             ],
         }
     );
+}
+
+function renderEmpWarningDocumentList() {
+    var data = [];
+
+    data.push({ No: 1, document: "ใบปลด MB", documentUrl: "https://www.mbdesignth.com/fileUploads/files/ใบปลด%20MB.pdf" });
+    data.push({ No: 2, document: "ฟอร์มหนังสือแจ้งการกระทำความผิดทางวินัย", documentUrl: "https://www.mbdesignth.com/fileUploads/files/ฟอร์มหนังสือแจ้งการกระทำความผิดทางวินัย.pdf" });
+
+    $('#tb-emp-warning-document-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'No',
+                },
+                {
+                    targets: 1,
+                    data: 'document',
+                },
+                {
+                    targets: 2,
+                    data: 'documentUrl',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        let btnView = `<a class="btn" href="${row.documentUrl}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
+                        return `${btnView}`;
+                    },
+                },
+                {
+                    targets: 3,
+                    data: null,
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        //let btnDownload = `<a class="btn" href="./HR/DownloadEmpWarning?url=${row.documentUrl}" target="_blank"><img src="../images/pdf.png" width="25px" /></a>`
+                        return ``;
+                    },
+                },
+            ],
+        }
+    );
+}
+
+var _attendanceList = [];
+function clearAttendanceModal() {
+    $('#form-createAttendanceUpload #select-attendance-upload-file').val("");
+    $('#form-createAttendanceUpload #select-attendance-upload-file').fileinput('destroy');
+    $(`#form-createAttendanceUpload #select-attendance-upload-file`).fileinput({
+        showBrowse: true,
+        showUpload: true,
+        showCaption: true,
+        browseOnZoneClick: false,
+        browseLabel: 'เลือกไฟล์'
+    });
+    var cleanData = []
+    renderImportAttendance(cleanData);
+    $('.btn-modal-save-attendance-upload').removeLoading();
+}
+function callImportAttendance() {
+    let loaded = $('#tb-attendance-upload-list');
+
+    loaded.prepend(_loader);
+
+    var control = document.getElementById(`select-attendance-upload-file`);
+    var files = control.files;
+    var formData = new FormData();
+    for (var i = 0; i != files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    let url = `${app_settings.api_url}/api/HR/DoImportAttendance?createBy=${_userCode}`;
+
+    $.ajax({
+        url: url,
+        type: "POST",
+        contentType: false, // Do not set any content header
+        processData: false, // Do not process data
+        data: formData,
+        async: false,
+        //disableImageResize: /Android(?!.*Chrome)|Opera/.test(window.navigator.userAgent),
+        success: function (result) {
+            _attendanceList = result;
+            renderImportAttendance(result);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            console.log(err);
+            loaded.find(_loader).remove();
+        }
+    });
+}
+function renderImportAttendance(data) {
+    $('#tb-attendance-upload-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'empCode',
+                },
+                {
+                    targets: 1,
+                    data: 'attendanceDate',
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.attendanceDate ? convertDateTimeFormat(row.attendanceDate, 'DD/MM/YYYY') : "";
+                    },
+                },
+                {
+                    targets: 2,
+                    data: 'attendanceTimeIn',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.attendanceTimeIn ? row.attendanceTimeIn : "";
+                    },
+                },
+                {
+                    targets: 3,
+                    data: 'attendanceTimeOut',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.attendanceTimeOut ? row.attendanceTimeOut : "";
+                    },
+                },
+            ],
+        }
+    );
+}
+function doInsertOrUpdateAttendance() {
+    let loaded = $('#tb-attendance-upload-list');
+
+    loaded.prepend(_loader);
+
+    $('.btn-modal-save-attendance-upload').addLoading();
+
+    let url = `${app_settings.api_url}/api/HR/AddOrUpdateAttendance`;
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(_attendanceList),
+        success: (res) => {
+            if (res.isResult) {
+                callSuccessAlert();
+                $('.btn-modal-save-attendance-upload').removeLoading();
+                loaded.find(_loader).remove();
+                $(`#modal-createAttendanceUpload`).modal('hide');
+                callGetAttendanceList();
+            }
+            else {
+                Swal.fire({
+                    text: res.strResult,
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    confirmButtonText: 'ตกลง'
+                });
+                $('.btn-modal-save-attendance-upload').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-attendance-upload').removeLoading();
+            loaded.find(_loader).remove();
+        }
+    });
 }

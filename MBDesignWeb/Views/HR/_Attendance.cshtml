@@ -55,6 +55,10 @@
     .select2-selection {
         height: 36px !important;
     }
+
+    .file-preview {
+        display: none;
+    }
 </style>
 
 <div class="row">
@@ -182,7 +186,7 @@
                     <div class="row col-sm-12 mb-2">
                         <label class="col-sm-3 col-form-label text-end">อัพโหลดไฟล์ข้อมูล</label>
                         <div class="col-sm-9">
-                            <input id="select-attendance-upload-file" name="select-attendance-upload-file[]" type="file" class="file">
+                            <input id="select-attendance-upload-file" name="select-attendance-upload-file[]" type="file" class="file" accept=".csv,.xls,.xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                         </div>
                     </div>
 

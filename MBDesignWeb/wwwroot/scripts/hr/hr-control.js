@@ -127,8 +127,29 @@
     });
 
     $('.btn-add-attendance-time').on('click', function () {
-        //clearLeaveForm();
-        //$('#modal-createAttendanceUpload').modal('show');
+        clearAttendanceModal();
+        $('#modal-createAttendanceUpload').modal('show');
+    });
+
+    $('#select-attendance-upload-file').on('change', function () {
+        callImportAttendance();
+    });
+
+    $('.btn-modal-save-attendance-upload').on('click', function () {
+        Swal.fire({
+            title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+            showDenyButton: false,
+            showCancelButton: true,
+            confirmButtonText: 'บันทึก',
+            cancelButtonText: `ยกเลิก`,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                doInsertOrUpdateAttendance();
+            }
+        });
+        
     });
 
     $('.btn-add-attendance-setting').on('click', function () {
