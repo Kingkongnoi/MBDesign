@@ -810,11 +810,12 @@ function DoAddOrUpdateEmployee(modal) {
 
     let empFormId = '#form-createEmployee';
     let empId = $(`${empFormId} input[name="input-emp-code"]`).val();
-    let prefix = empId.substring(0, 2);
-    let suffix = empId.substring(2, empId.length);
-    if (empId.length < 5 || empId.length > 5) {
+    //let prefix = empId.substring(0, 2);
+    //let suffix = empId.substring(2, empId.length);
+    let empLength = 4;
+    if (empId.length < empLength || empId.length > empLength) {
         Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 5 หลัก",
+            text: "กรุณากรอกรหัสพนักงาน 4 หลัก",
             icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: _modal_primary_color_code,
@@ -825,22 +826,36 @@ function DoAddOrUpdateEmployee(modal) {
         });
         return;
     }
-    if ($.isNumeric(prefix) == true) {
+    //if ($.isNumeric(prefix) == true) {
+    //    Swal.fire({
+    //        text: "กรุณากรอกรหัสพนักงาน 2 ตัวแรกเป็นตัวหนังสือ",
+    //        icon: 'warning',
+    //        showCancelButton: false,
+    //        confirmButtonColor: _modal_primary_color_code,
+    //        //cancelButtonColor: _modal_default_color_code,
+    //        confirmButtonText: 'ตกลง'
+    //    }).then((result) => {
+    //        $(`${empFormId} input[name="input-emp-code"]`).focus();
+    //    });
+    //    return;
+    //}
+    //if ($.isNumeric(suffix) == false) {
+    //    Swal.fire({
+    //        text: "กรุณากรอกรหัสพนักงาน 3 ตัวท้ายเป็นตัวเลข",
+    //        icon: 'warning',
+    //        showCancelButton: false,
+    //        confirmButtonColor: _modal_primary_color_code,
+    //        //cancelButtonColor: _modal_default_color_code,
+    //        confirmButtonText: 'ตกลง'
+    //    }).then((result) => {
+    //        $(`${empFormId} input[name="input-emp-code"]`).focus();
+    //    });
+    //    return;
+    //}
+
+    if ($.isNumeric(empId) == false) {
         Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 2 ตัวแรกเป็นตัวหนังสือ",
-            icon: 'warning',
-            showCancelButton: false,
-            confirmButtonColor: _modal_primary_color_code,
-            //cancelButtonColor: _modal_default_color_code,
-            confirmButtonText: 'ตกลง'
-        }).then((result) => {
-            $(`${empFormId} input[name="input-emp-code"]`).focus();
-        });
-        return;
-    }
-    if ($.isNumeric(suffix) == false) {
-        Swal.fire({
-            text: "กรุณากรอกรหัสพนักงาน 3 ตัวท้ายเป็นตัวเลข",
+            text: "กรุณากรอกรหัสพนักงาน 4 ตัวเป็นตัวเลข",
             icon: 'warning',
             showCancelButton: false,
             confirmButtonColor: _modal_primary_color_code,
