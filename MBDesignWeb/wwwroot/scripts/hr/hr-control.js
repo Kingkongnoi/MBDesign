@@ -222,6 +222,10 @@
         callGetAttendanceOTList();
     });
 
+    $(document).on('click', '.btn-download-pdf-warning', function () {
+        console.log('xx');
+    });
+
     $('button[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).data("bs-target") // activated tab
         if (target == "#nav-leave-type") {
@@ -267,4 +271,5 @@
             callGetAttendanceSettingList();
         }
     });
+
 });
