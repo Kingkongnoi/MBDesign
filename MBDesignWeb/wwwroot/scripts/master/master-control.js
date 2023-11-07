@@ -22,6 +22,14 @@
     callSelect2Status('#form-createAccount #select-account-status');
     callSelect2Status('#form-search-bankAccount #select-search-account-status', true);
 
+    callSelect2Status('#form-createGroup #select-group-status');
+    callSelect2Status('#form-search-Group #select-search-group-status', true);
+
+    callSelect2Status('#form-createSubGroup #select-subgroup-status');
+    callSelect2Status('#form-search-subgroup #select-search-subgroup-status', true);
+    callGroupNameBySubGroup('#form-createSubGroup #select-group-name', 'กรุณาเลือก');
+  
+
     //callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก');
     callProductTypeSelect2('#form-search-product-QuickQT #select-search-product-type', 'ทั้งหมด');
     //callSelect2Status('#form-createProductQuickQT #select-product-status');
@@ -34,6 +42,8 @@
     callGetAccountList();
     callGetItemList();
     callGetProductItemQuickQTList();
+    callGetGroupList();
+    callGetSubGroupList();
 
     /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
@@ -41,6 +51,39 @@
         $(`#modal-createProduct #itemHeader`).text('เพิ่มข้อมูลสินค้า (Items)');
         $('#modal-createProduct').modal('show');
     });
+
+    $('#nav-master-Group .btn-add-group').on('click', function () {
+        _product_item_action = 'add';
+        $(`#modal-createGroup #itemHeader`).text('เพิ่มหมวดหมู่หลัก');
+        $('#modal-createGroup').modal('show');
+    });
+
+    $('#nav-master-subGroup .btn-add-subgroup').on('click', function () {
+        _product_item_action = 'add';
+        $(`#modal-createSubGroup #itemHeader`).text('เพิ่มหมวดหมู่ย่อย');
+        $('#modal-createSubGroup').modal('show');
+    });
+
+    $('#form-createSubGroup #select-group-name').on('change', function () {
+        if (this.value != '') {
+            
+            callGetSubGroupcode(this.value);
+        }
+        else {
+            $('#form-createSubGroup input[name="input-subgroup-code"]').val('');
+        }
+        
+    });
+
+    //$(document).on('change', '#select-group-name', function () {
+    //    console.log(this.value);
+    //    //$(`#modal-createProduct #itemHeader`).text('แก้ไขข้อมูลสินค้า (Items)');
+    //    //$(`#modal-createProduct`).modal('show');
+    //    //_product_item_action = 'edit';
+    //    //clearForm('modal-createProduct');
+    //    //$('#modal-createProduct #divOptions').empty();
+    //    //callGetItemById($(this).data('id'), $(this).data('typeid'), 'modal-createProduct');
+    //});
 
     $(document).on('click', '.btn-edit-product', function () {
         $(`#modal-createProduct #itemHeader`).text('แก้ไขข้อมูลสินค้า (Items)');
@@ -51,6 +94,23 @@
         callGetItemById($(this).data('id'), $(this).data('typeid'), 'modal-createProduct');
     });
 
+    $(document).on('click', '.btn-edit-group', function () {
+        $(`#modal-createGroup #itemHeader`).text('แก้ไขข้อมูลหมวดหมู่หลัก');
+        $(`#modal-createGroup`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-createGroup');
+        //$('#modal-createProduct #divOptions').empty();
+        callGetGroupById($(this).data('id'), 'modal-creatGroup');
+    });
+    $(document).on('click', '.btn-edit-subgroup', function () {
+        $(`#modal-createSubGroup #itemHeader`).text('แก้ไขข้อมูลหมวดหมู่ย่อย');
+        $(`#modal-createSubGroup`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-createSubGroup');
+        //$('#modal-createProduct #divOptions').empty();
+        callGetSubGroupById($(this).data('id'), 'modal-creatSubGroup');
+    });
+
     $(`#modal-createProduct`).on('show.bs.modal', function () {
         clearForm("modal-createProduct");
         $('#modal-createProduct #divOptions').empty();
@@ -58,8 +118,26 @@
         if (_product_item_action == 'add') { callGetLastestItemId(); }
     });
 
+    $(`#modal-createGroup`).on('show.bs.modal', function () {
+        clearForm("modal-createGroup");
+        if (_product_item_action == 'add') { callGroupID(); }
+    });
+
+    $(`#modal-createSubGroup`).on('show.bs.modal', function () {
+        clearForm("modal-createSubGroup");
+        if (_product_item_action == 'add') { }
+    });
+
     $('.btn-modal-save-product').on('click', function () {
         DoAddOrUpdateItem("modal-createProduct");
+    });
+
+    $('.btn-modal-save-group').on('click', function () {
+        DoAddOrUpdateGroup("modal-createGroup");
+    });
+
+    $('.btn-modal-save-subgroup').on('click', function () {
+        DoAddOrUpdateSubGroup("modal-createSubGroup");
     });
 
     $('#form-search-product .btn-search-product').on('click', function () {
@@ -69,6 +147,24 @@
     $('#form-search-product .btn-clear-search-product').on('click', function () {
         clearSearchForm("item");
         callGetItemList();
+    });
+
+    $('#form-search-Group .btn-search-group').on('click', function () {
+        callGetGroupList();
+    });
+
+    $('#form-search-Group .btn-clear-search-group').on('click', function () {
+        clearSearchForm("group");
+        callGetGroupList();
+    });
+
+    $('#form-search-subgroup .btn-search-subgroup').on('click', function () {
+        callGetSubGroupList();
+    });
+
+    $('#form-search-subgroup .btn-clear-search-subgroup').on('click', function () {
+        clearSearchForm("subgroup");
+        callGetSubGroupList();
     });
 
     $('#tb-product-list').on('click', 'td.item-details', function () {
@@ -82,6 +178,15 @@
         clearForm('modal-viewProduct');
         $('#modal-viewProduct #divOptions').empty();
         callGetItemById(id, typeId, "modal-viewProduct", true);
+    });
+
+    $('#tb-group-list').on('click', 'td.item-details', function () {
+        var tr = $(this).closest('tr');
+        var id = tr.data('id');
+        $(`#modal-viewGroup`).modal('show');
+        _product_item_action = 'view';
+        clearForm('modal-viewGroup');
+        callGetGroupById(id, "modal-viewGroup", true);
     });
     /* End ProductItem */
 
@@ -299,6 +404,20 @@
             callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก')
             callProductTypeSelect2('#form-search-product-QuickQT #select-search-product-type', 'ทั้งหมด');
             callGetProductItemQuickQTList();
+        }
+        else if (target == "#nav-master-Group") {
+            clearSearchForm("group");
+            //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+      /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            callGetGroupList();
+        
+        }
+        else if (target == "#nav-master-SubGroup") {
+            clearSearchForm("subgroup");
+            //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+            /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            callGetSubGroupList();
+
         }
     });
 

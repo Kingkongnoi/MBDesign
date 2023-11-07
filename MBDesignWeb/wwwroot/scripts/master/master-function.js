@@ -95,6 +95,16 @@ function clearSearchForm(area) {
             $('#form-search-product-QuickQT #input-search-product-items-text').val('');
             $('#form-search-product-QuickQT #select-search-product-status').val('').trigger('change');
             break;
+        case "group":
+            $('#form-search-Group #input-search-groupcode-items').val('');
+            $('#form-search-Group #input-search-groupname-items').val('');
+            $('#form-search-Group #select-search-group-status').val('').trigger('change');
+            break;
+        case "subgroup":
+            $('#form-search-subgroup #input-search-subgroupcode-items').val('');
+            $('#form-search-subgroup #input-search-subgroupname-items').val('');
+            $('#form-search-subgroup #select-search-subgroup-status').val('').trigger('change');
+            break;sub
     }
 }
 function clearForm(modal) {
@@ -170,8 +180,19 @@ function clearForm(modal) {
             $('#form-createProductQuickQT input[name="input-product-price"]').val('');
             $('#form-createProductQuickQT #select-product-status').val(1).trigger('change');
             break;
+        case "modal-createGroup" || "modal-viewGroup":
+            $('#form-createGroup input[name="input-group-code"]').val('');
+            $('#form-createGroup input[name="input-group-name"]').val('');
+            $('#form-createGroup #select-group-status').val(1).trigger('change');
+            break;
+        case "modal-createSubGroup" || "modal-viewSubGroup":
+            $('#form-createSubGroup #select-group-name').val('').trigger('change');
+            $('#form-createSubGroup input[name="input-subgroup-name"]').val('');
+            $('#form-createSubGroup #select-subgroup-status').val(1).trigger('change');
+            break;
     }
 }
+
 let validateInput = function (modal) {
     switch (modal) {
         case _modal_holiday_name:
@@ -688,6 +709,79 @@ let validateInput = function (modal) {
             }
             else { return true; }
             break;
+        case "modal-createGroup":
+            if ($('#form-createGroup #input-group-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณารอระบบ generate รหัสหมวดหมู่หลัก",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createGroup #input-group-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createGroup #input-group-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกชื่อหมวดหมู่หลัก",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createGroup #input-group-name').focus();
+                });
+                return false;
+            }
+           
+            else { return true; }
+            break;
+        case "modal-createSubGroup":
+
+            if ($('#form-createSubGroup #input-subgroup-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณารอระบบ generate รหัสหมวดหมู่ย่อย",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createSubGroup #input-subgroup-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createSubGroup #input-subgroup-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกชื่อหมวดหมู่หลัก",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createSubGroup #input-subgroup-name').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createSubGroup #input-subgroup-name').val() == "" && $('#form-createSubGroup #select-group-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกหมวดหมู่เพื่อ generate รหัสหมวดหมู่ย่อย",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createSubGroup #select-group-name').focus();
+                });
+                return false;
+            }
+            else { return true; }
+            break;
     }
 
 };
@@ -704,12 +798,35 @@ function callProductTypeSelect2(select2Id, select2FirstText) {
         }
     });
 }
+
+function callGroupNameBySubGroup(select2Id, select2FirstText) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/SubGroup/GetGroupNameSelect`,
+        success: function (data) {
+            renderGroupNameSelect(select2Id, select2FirstText, data);
+        },
+        error: function (err) {
+        }
+    });
+}
+
 function renderProductTypeSelect2(select2Id, select2FirstText, data) {
     $(`${select2Id}`).empty();
     $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
 
     data.forEach((v) => {
         $(`${select2Id}`).append(`<option value="${v.typeId}">${v.typeName}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
+}
+
+function renderGroupNameSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.id}">${v.groupname}</option>`);
     });
     $(`${select2Id}`).val('').trigger('change')
 }
@@ -790,6 +907,142 @@ function callAddOrUpdateItem() {
     });
 
 }
+
+function DoAddOrUpdateGroup(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateGroup(_product_item_action);
+        }
+    });
+}
+
+function callAddOrUpdateGroup() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Group/AddItem` : `${app_settings.api_url}/api/Group/UpdateItem`;
+
+
+    var obj = {
+        id: $('#input-group-code').val(),
+        groupname: $('#input-group-name').val(),
+        status: ($('#form-createGroup #select-group-status').val() == "1") ? true : false,
+        loginCode: _userCode
+    };
+
+    $('.btn-modal-save-group').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-group').removeLoading();
+                $(`#modal-createGroup`).modal('hide');
+                callGetGroupList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "ชื่อหมวดหมู่หลักมีอยู่แล้ว กรุณากรอกชื่อหมวดหมู่หลักอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createGroup #input-group-name').focus();
+                    });
+                }
+                $('.btn-modal-save-group').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-group').removeLoading();
+        }
+    });
+
+}
+
+function DoAddOrUpdateSubGroup(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateSubGroup(_product_item_action);
+        }
+    });
+}
+
+function callAddOrUpdateSubGroup() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/SubGroup/AddItem` : `${app_settings.api_url}/api/SubGroup/UpdateItem`;
+
+
+    var obj = {
+        subgroupcode: $('#input-subgroup-code').val(),
+        subgroupname: $('#input-subgroup-name').val(),
+        groupid: $('#select-group-name').val(),
+        status: ($('#form-createSubGroup #select-subgroup-status').val() == "1") ? true : false,
+        loginCode: _userCode
+    };
+
+    $('.btn-modal-save-subgroup').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-subgroup').removeLoading();
+                $(`#modal-createSubGroup`).modal('hide');
+                callGetSubGroupList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "ชื่อหมวดหมู่หลักมีอยู่แล้ว กรุณากรอกชื่อหมวดหมู่หลักอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createSubGroup #input-subgroup-name').focus();
+                    });
+                }
+                $('.btn-modal-save-subgroup').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-subgroup').removeLoading();
+        }
+    });
+
+}
+
 function callGetLastestItemId() {
     let url = `${app_settings.api_url}/api/Product/GetLastestItemId`;
 
@@ -824,6 +1077,221 @@ function callGetItemList() {
         }
     });
 }
+
+function callGetGroupList() {
+    let groupcode = ($('#form-search-Group #input-search-groupcode-items').val() == '' || $('#form-search-Group #input-search-groupcode-items').val() == undefined) ? 0 : $('#form-search-Group #input-search-groupcode-items').val();
+    let groupname = ($('#form-search-Group #input-search-groupname-items').val() == '' || $('#form-search-Group #input-search-groupname-items').val() == undefined) ? null : $('#form-search-Group #input-search-groupname-items').val();
+    let status = ($('#form-search-Group #select-search-group-status').val() == '' || $('#form-search-Group #select-search-group-status').val() == undefined) ? null : $('#form-search-Group #select-search-group-status').val();
+
+    let loaded = $('#tb-group-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Group/GetGroupList?groupName=${groupname}&groupId=${groupcode}&status=${status}`,
+        success: function (data) {
+           
+            if (data.length>0) {
+                renderGetItemGroupList(data);
+                callGroupNameBySubGroup('#form-createSubGroup #select-group-name', 'กรุณาเลือก');
+            } 
+      
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
+function callGetSubGroupList() {
+    let code = ($('#form-search-subgroup #input-search-subgroupcode-items').val() == '' || $('#form-search-subgroup #input-search-subgroupcode-items').val() == undefined) ? null : $('#form-search-subgroup #input-search-subgroupcode-items').val();
+    let name = ($('#form-search-subgroup #input-search-subgroupname-items').val() == '' || $('#form-search-subgroup #input-search-subgroupname-items').val() == undefined) ? null : $('#form-search-subgroup #input-search-subgroupname-items').val();
+    let status = ($('#form-search-subgroup #select-search-subgroup-status').val() == '' || $('#form-search-subgroup #select-search-subgroup-status').val() == undefined) ? null : $('#form-search-subgroup #select-search-subgroup-status').val();
+
+    let loaded = $('#tb-subgroup-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/SubGroup/GetSubGroupList?subgroupCode=${code}&subgroupName=${name}&status=${status}`,
+        success: function (data) {
+
+            if (data.length > 0) {
+                renderGetItemSubGroupList(data);
+            }
+
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
+function renderGetItemSubGroupList(data) {
+
+    $('#tb-subgroup-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "item-details hidecol",
+                },
+                {
+                    targets: 1,
+                    data: 'subgroupcode',
+                },
+                {
+                    targets: 2,
+                    data: 'subgroupname',
+                },
+                {
+                    targets: 3,
+                    data: 'groupname',
+                },
+                {
+                    targets: 4,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'createByName'
+                },
+                {
+                    targets: 6,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 8,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 9,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-subgroup" data-id="${row.id}" title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+function renderGetItemGroupList(data) {
+
+    $('#tb-group-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+             /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "item-details",
+                },
+                {
+                    targets: 1,
+                    data: 'groupname',
+                },
+                {
+                    targets: 2,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 3,
+                    data: 'createByName'
+                },
+                {
+                    targets: 4,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 6,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-group" data-id="${row.id}" title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+
 function renderGetItemList(data) {
 
     $('#tb-product-list').DataTable(
@@ -921,6 +1389,63 @@ function callGetItemById(id, typeId, modal, isView = false) {
         }
     });
 }
+
+function callGetSubGroupcode(id, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/SubGroup/GetLastestSubGroupCode?groupid=${id}`,
+        success: function (data) {
+            console.log(data);
+            $('#form-createSubGroup input[name="input-subgroup-code"]').val(data);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGetGroupById(id, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Group/GetItemByItemId?id=${id}`,
+        success: function (data) {
+            renderGroupForm(data.item);
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGetSubGroupById(id, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/SubGroup/GetItemByItemId?id=${id}`,
+        success: function (data) {
+            renderSubGroupForm(data.item);
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGroupID() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Group/GetLastestItemId`,
+        success: function (data) {
+           
+            $('#form-createGroup input[name="input-group-code"]').val(data.id);
+        },
+        error: function (err) {
+
+        }
+    });
+   
+}
 function renderItemForm(data, typeId) {
     let status = (data.status) ? 1 : 0;
     $('#form-createProduct #select-product-type').val(typeId).trigger('change');
@@ -944,6 +1469,22 @@ function renderItemOptions(data, modal, isView = false) {
     }
     
 }
+
+function renderGroupForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createGroup input[name="input-group-code"]').val(data.id);
+    $('#form-createGroup input[name="input-group-name"]').val(data.groupname);
+    $('#form-createGroup #select-group-status').val(status).trigger('change');
+}
+
+function renderSubGroupForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createSubGroup input[name="input-subgroup-code"]').val(data.subgroupcode);
+    $('#form-createSubGroup input[name="input-subgroup-name"]').val(data.subgroupname);
+    $('#form-createSubGroup #select-group-name').val(data.groupid).trigger('change');
+    $('#form-createSubGroup #select-subgroup-status').val(status).trigger('change');
+}
+
 function renderNewOptions(modal, isView = false) {
     let newSeq = $(`#${modal} div[name="divRenderOptions"]`).length == 0 ? 1 : $(`#${modal} div[name="divRenderOptions"]`).length + 1;
     let removeBtn = (newSeq > 1) ? `
