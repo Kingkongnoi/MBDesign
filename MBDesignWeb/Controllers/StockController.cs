@@ -7,30 +7,29 @@ namespace MBDesignWeb.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class ReceiverController : Controller
+    public class StockController : Controller
     {
-        private readonly ReceiverProductService _receiverproductService;
+        private readonly StockService _stockService;
         private readonly IConfiguration _configuration;
 
-        public ReceiverController(IConfiguration configuration)
+        public StockController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _receiverproductService = new ReceiverProductService(_configuration);
+            _stockService = new StockService(_configuration);
         }
 
-        #region GET
         [HttpGet]
-        public JsonResult GetReceiverList(string empcode, string empname, string status)
+        public JsonResult GetStockList(string stockname, int stockid, string status)
         {
-            var data = _receiverproductService.GetReceiverProductList(empcode, empname, status);
+            var data = _stockService.GetStockList(stockid, stockname, status);
 
             return new JsonResult(data);
         }
-
+        #region GET
         [HttpGet]
-        public JsonResult GetEmpDataSelect()
+        public JsonResult GetLastestItemId()
         {
-            var data = _receiverproductService.GetEmpDataSelect();
+            var data = _stockService.GetFirstLastestItemId();
 
             return new JsonResult(data);
         }
@@ -38,29 +37,21 @@ namespace MBDesignWeb.Controllers
         [HttpGet]
         public JsonResult GetItemByItemId(int id)
         {
-            var item = _receiverproductService.GetReceiverItemById(id);
+            var item = _stockService.GetStockItemById(id);
 
 
             return new JsonResult(new { item = item });
-        }
-
-        [HttpGet]
-        public JsonResult GetempFullName(int empid)
-        {
-            var data = _receiverproductService.GetFullName(empid);
-
-            return new JsonResult(data);
         }
         #endregion
 
         #region Post
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult AddItem([FromBody] ReceiverProductItemModel obj)
+        public JsonResult AddItem([FromBody] StockItemModel obj)
         {
             var result = true;
             var resultStatus = "success";
-            var data = _receiverproductService.AddReceiverProductItem(obj);
+            var data = _stockService.AddStockItem(obj);
 
             if (data == -1)
             {
@@ -84,11 +75,11 @@ namespace MBDesignWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult UpdateItem([FromBody] ReceiverProductItemModel obj)
+        public JsonResult UpdateItem([FromBody] StockItemModel obj)
         {
             var result = true;
             var resultStatus = "success";
-            var data = _receiverproductService.UpdateReceiverProductItem(obj);
+            var data = _stockService.UpdateStockItem(obj);
 
             if (data == -1)
             {

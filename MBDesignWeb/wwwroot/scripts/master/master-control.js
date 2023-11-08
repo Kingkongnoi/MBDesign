@@ -35,6 +35,9 @@
     callSelect2Status('#form-createUnit #select-unit-status');
     callSelect2Status('#form-search-Unit #select-search-unit-status', true);
   
+    callSelect2Status('#form-createReceiver #select-receiver-status');
+    callSelect2Status('#form-search-receiver #select-search-receiver-status', true);
+    callEmpData('#form-createReceiver #select-receiver-empcode', 'กรุณาเลือก');
 
     //callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก');
     callProductTypeSelect2('#form-search-product-QuickQT #select-search-product-type', 'ทั้งหมด');
@@ -52,6 +55,7 @@
     callGetSubGroupList();
     callGetBrandList();
     callGetUnitList();
+    callGetReceiverList();
 
     /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
@@ -82,6 +86,18 @@
         _product_item_action = 'add';
         $(`#modal-createUnit #itemHeader`).text('เพิ่มหน่วยสินค้า');
         $('#modal-createUnit').modal('show');
+    });
+
+    $('#nav-master-Reciever .btn-add-receiver').on('click', function () {
+        _product_item_action = 'add';
+        $(`#modal-createReceiver #itemHeader`).text('เพิ่มผู้รับสินค้า');
+        $('#modal-createReceiver').modal('show');
+    });
+
+    $('#nav-master-Stock .btn-add-stock').on('click', function () {
+        _product_item_action = 'add';
+        $(`#modal-createStock #itemHeader`).text('เพิ่มคลังสินค้า');
+        $('#modal-createStock').modal('show');
     });
     //$('#form-createSubGroup #select-group-name').on('change', function () {
     //    if (this.value != '') {
@@ -154,6 +170,14 @@
         //$('#modal-createProduct #divOptions').empty();
         callGetUnitById($(this).data('id'), 'modal-createUnit');
     });
+    $(document).on('click', '.btn-edit-receiver', function () {
+        $(`#modal-createReceiver #itemHeader`).text('แก้ไขข้อมูลพนักงานรับสินค้า');
+        $(`#modal-createReceiver`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-createReceiver');
+        //$('#modal-createProduct #divOptions').empty();
+        callGetReceiverById($(this).data('id'), 'modal-createReceiver');
+    });
 
     $(`#modal-createProduct`).on('show.bs.modal', function () {
         clearForm("modal-createProduct");
@@ -182,6 +206,16 @@
         if (_product_item_action == 'add') { callUnitID(); }
     });
 
+    $(`#modal-createReceiver`).on('show.bs.modal', function () {
+        clearForm("modal-createReceiver");
+        if (_product_item_action == 'add') { }
+    });
+
+    $(`#modal-createStock`).on('show.bs.modal', function () {
+        clearForm("modal-createStock");
+        if (_product_item_action == 'add') { callStockID(); }
+    });
+
     $('.btn-modal-save-product').on('click', function () {
         DoAddOrUpdateItem("modal-createProduct");
     });
@@ -199,6 +233,14 @@
     });
     $('.btn-modal-save-unit').on('click', function () {
         DoAddOrUpdateUnit("modal-createUnit");
+    });
+
+    $('.btn-modal-save-receiver').on('click', function () {
+        DoAddOrUpdateReceiver("modal-createReceiver");
+    });
+
+    $('.btn-modal-save-stock').on('click', function () {
+        DoAddOrUpdateStock("modal-createStock");
     });
 
     $('#form-search-product .btn-search-product').on('click', function () {
@@ -244,6 +286,15 @@
     $('#form-search-Unit .btn-clear-search-unit').on('click', function () {
         clearSearchForm("unit");
         callGetUnitList();
+    });
+
+    $('#form-search-receiver .btn-search-receiver').on('click', function () {
+        callGetReceiverList();
+    });
+
+    $('#form-search-receiver .btn-clear-search-receiver').on('click', function () {
+        clearSearchForm("receiver");
+        callGetReceiverList();
     });
 
     $('#tb-product-list').on('click', 'td.item-details', function () {
@@ -294,6 +345,15 @@
         _product_item_action = 'view';
         clearForm('modal-viewUnit');
         callGetUnitById(id, "modal-viewUnit", true);
+    });
+
+    $('#tb-receiver-list').on('click', 'td.item-details', function () {
+        var tr = $(this).closest('tr');
+        var id = tr.data('id');
+        $(`#modal-viewReceiver`).modal('show');
+        _product_item_action = 'view';
+        clearForm('modal-viewReceiver');
+        callGetReceiverById(id, "modal-viewReceiver", true);
     });
     /* End ProductItem */
 
@@ -538,6 +598,13 @@
             //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
             /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
             callGetUnitList();
+
+        }
+        else if (target == "#nav-master-Reciever") {
+            clearSearchForm("receiver");
+            //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+            /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            callGetReceiverList();
 
         }
     });

@@ -1,39 +1,46 @@
 ﻿using DataLayerMBDesign;
 using EntitiesMBDesign;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BusinessLogicMBDesign.Master
 {
-    public class ReceiverProductService
+    public class StockService
     {
-        private readonly ReceiverProductRepository _receiverProductRepository;
+        private readonly StockRepository _stockRepository;
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
-        public ReceiverProductService(IConfiguration configuration) 
+
+        public StockService(IConfiguration configuration)
         {
-            _receiverProductRepository = new ReceiverProductRepository();
+            _stockRepository = new StockRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
         }
 
-        public List<ReceiverProductItemModel> GetReceiverProductList(string empcode, string empname, string status)
+        public List<StockItemModel> GetStockList(int stockid, string stockname, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _receiverProductRepository.GetAll(empcode, empname, status, conn);
+                return _stockRepository.GetAll(stockid, stockname, status, conn);
             }
         }
 
-        public int? AddReceiverProductItem(ReceiverProductItemModel model)
+        public tbStock GetStockItemById(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _stockRepository.GetFirstById(id, conn);
+            }
+
+        }
+
+        public int? AddStockItem(StockItemModel model)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -42,19 +49,19 @@ namespace BusinessLogicMBDesign.Master
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
-                var exists = _receiverProductRepository.GetFirstByEmpCode(model.empid, conn, transaction);
+                var exists = _stockRepository.GetFirstByName(model.stockname, conn, transaction);
                 if (exists != null) { return -1; }
 
                 try
                 {
-                    var addedObject = new tbReceiverProduct
+                    var addedObject = new tbStock
                     {
-                        empid = model.empid,
+                        stockname = model.stockname,
                         status = model.status,
                         createDate = DateTime.UtcNow,
                         createBy = model.loginCode
                     };
-                    added = _receiverProductRepository.Add(addedObject, conn, transaction);
+                    added = _stockRepository.Add(addedObject, conn, transaction);
                     transaction.Commit();
                 }
                 catch (Exception ex)
@@ -66,7 +73,7 @@ namespace BusinessLogicMBDesign.Master
             return added;
         }
 
-        public int UpdateReceiverProductItem(ReceiverProductItemModel model)
+        public int UpdateStockItem(StockItemModel model)
         {
             int updated = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -75,20 +82,20 @@ namespace BusinessLogicMBDesign.Master
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
-                var exists = _receiverProductRepository.GetFirstByReceiverID(model.id, conn, transaction);
+                var exists = _stockRepository.GetFirstByName(model.stockname, conn, transaction);
                 if (exists != null) { if (exists.id != model.id) { return -1; } }
 
                 try
                 {
-                    var updatedObject = new tbReceiverProduct
+                    var updatedObject = new tbStock
                     {
                         id = model.id,
-                        empid = model.empid,
+                        stockname = model.stockname,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode
                     };
-                    updated = _receiverProductRepository.Update(updatedObject, conn, transaction);
+                    updated = _stockRepository.Update(updatedObject, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -100,41 +107,15 @@ namespace BusinessLogicMBDesign.Master
             return updated;
         }
 
-        public tbReceiverProduct GetReceiverItemById(int id)
+        public tbStock GetFirstLastestItemId()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _receiverProductRepository.GetFirstById(id, conn);
+                return _stockRepository.GetLastestId(conn);
             }
 
-        }
-
-        public List<tbEmpData> GetEmpDataSelect()
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                return _receiverProductRepository.getEmpData(conn);
-            }
-
-        }
-
-        public string GetFullName(int empid)
-        {
-            string fullName = string.Empty;
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-                tbEmpData empData = _receiverProductRepository.getEmpFullName(empid, conn);
-                if (empData !=null)
-                {
-                    fullName = string.Format("{0} {1}", empData.empFirstName, empData.empLastName);
-                }
-                return fullName;
-            }
         }
     }
 }
