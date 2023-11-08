@@ -229,10 +229,7 @@
                     <div class="row mt-2">
                         <form id="form-search-Group">
                             <div class="row col-sm-12">
-                                @* <div class="col-sm-2">
-                                <label>รหัสสินค้า</label>
-                                <input type="text" class="form-control" id="input-search-product-code" placeholder="">
-                                </div>*@
+  
                                 <div class="col-sm-2">
                                     <label>รหัสหมวดหมู่หลัก</label>
                                     <input type="text" class="form-control" id="input-search-groupcode-items" placeholder="">
@@ -316,7 +313,7 @@
                         <table class="table no-footer" id="tb-subgroup-list" width="100%">
                             <thead>
                                 <tr>
-                                    <th><span>รหัสหมวดหมู่ย่อย</span></th>
+                                    <th><span>id</span></th>
                                     <th><span>รหัสหมวดหมู่ย่อย</span></th>
                                     <th><span>ชื่อหมวดหมู่ย่อย</span></th>
                                     <th><span>ชื่อหมวดหมู่หลัก</span></th>
@@ -337,41 +334,43 @@
             <div class="tab-pane fade" id="nav-master-Brand" role="tabpanel" aria-labelledby="nav-master-Brand-tab">
                 <div class="container-fluid">
                     <div class="row mt-2">
-                        <form id="form-search-style">
+                        <form id="form-search-brand">
                             <div class="row col-sm-12">
-                                @*<div class="col-sm-2">
-                                <label>รหัสสไตล์</label>
-                                <input type="text" class="form-control" id="input-search-style-code" placeholder="">
-                                </div>*@
+           
                                 <div class="col-sm-2">
-                                    <label>สไตล์</label>
-                                    <input type="text" class="form-control" id="input-search-style-name" placeholder="">
+                                    <label>รหัสแบรนด์สินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-brand-code" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ชื่อแบรนด์สินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-brand-name" placeholder="">
                                 </div>
                                 <div class="col-sm-2">
                                     <label>สถานะ</label>
-                                    <select class="form-select" id="select-search-style-status">
+                                    <select class="form-select" id="select-search-brand-status">
                                         <option></option>
                                     </select>
                                 </div>
 
                                 <div class="col-sm-8 mt-4 text-end">
-                                    <button type="button" class="btn btn-default-custom btn-clear-search-style">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-style">ค้นหา</button>
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-brand">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-brand">ค้นหา</button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn-add-custom btn-add-style"><img src="~/images/app.png" width="25px" /> เพิ่มสไตล์</button>
+                        <button type="button" class="btn-add-custom btn-add-brand"><img src="~/images/sale.png" width="25px" /> เพิ่มแบรนด์สินค้า</button>
                     </div>
 
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-style-list" width="100%">
+                        <table class="table no-footer" id="tb-brand-list" width="100%">
                             <thead>
                                 <tr>
-                                    <th><span>รหัสสไตล์</span></th>
-                                    <th><span>สไตล์</span></th>
+                                    <th><span>id</span></th>
+                                    <th><span>รหัสแบรนด์สินค้า</span></th>
+                                    <th><span>ชื่อแบรนด์สินค้า</span></th>
                                     <th><span>วันที่สร้าง</span></th>
                                     <th><span>ผู้สร้าง</span></th>
                                     <th><span>วันที่แก้ไขล่าสุด</span></th>
@@ -389,49 +388,42 @@
             <div class="tab-pane fade" id="nav-master-Unit" role="tabpanel" aria-labelledby="nav-master-Unit-tab">
                 <div class="container-fluid">
                     <div class="row mt-2">
-                        <form id="form-search-product-QuickQT">
+                        <form id="form-search-Unit">
                             <div class="row col-sm-12">
+
                                 <div class="col-sm-2">
-                                    <label>รหัสสินค้า</label>
-                                    <input type="text" class="form-control" id="input-search-product-code" placeholder="">
+                                    <label>รหัสหน่วยสินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-unit-code" placeholder="">
                                 </div>
                                 <div class="col-sm-2">
-                                    <label>หมวดหมู่</label>
-                                    <select class="form-select" id="select-search-product-type">
-                                        <option></option>
-                                    </select>
-                                </div>
-                                <div class="col-sm-4">
-                                    <label>Text (คำอธิบายรายละเอียดที่ใช้แสดงผลในใบเสนอราคา)</label>
-                                    <input type="text" class="form-control" id="input-search-product-items-text" placeholder="">
+                                    <label>ชื่อหน่วยสินค้า</label>
+                                    <input type="text" class="form-control" id="input-search-unit-name" placeholder="">
                                 </div>
                                 <div class="col-sm-2">
                                     <label>สถานะ</label>
-                                    <select class="form-select" id="select-search-product-status">
+                                    <select class="form-select" id="select-search-unit-status">
                                         <option></option>
                                     </select>
                                 </div>
 
-                                <div class="col-sm-2 mt-4 text-end">
-                                    <button type="button" class="btn btn-default-custom btn-clear-search-product-quickQT">ล้างข้อมูล</button>
-                                    <button type="button" class="btn btn-primary btn-search-product-quickQT">ค้นหา</button>
+                                <div class="col-sm-6 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-unit">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-unit">ค้นหา</button>
                                 </div>
                             </div>
                         </form>
                     </div>
 
                     <div class="col-sm-2 mt-2">
-                        <button type="button" class="btn-add-custom btn-add-product-quickQT"><img src="~/images/shopping-cart.png" width="25px" /> เพิ่มสินค้า</button>
+                        <button type="button" class="btn-add-custom btn-add-unit"><img src="~/images/sale.png" width="25px" /> เพิ่มหน่วยสินค้า</button>
                     </div>
 
                     <div class="row col-sm-12 mt-2">
-                        <table class="table no-footer" id="tb-product-quickQT-list" width="100%">
+                        <table class="table no-footer" id="tb-unit-list" width="100%">
                             <thead>
                                 <tr>
-                                    <th><span>รหัสสินค้า</span></th>
-                                    <th><span>หมวดหมู่</span></th>
-                                    <th><span>Text (คำอธิบายรายละเอียดที่ใช้แสดงผลในใบเสนอราคา)</span></th>
-                                    <th><span>ราคาต่อเมตร</span></th>
+                                    <th><span>รหัสหน่วยสินค้า</span></th>
+                                    <th><span>ชื่อหน่วยสินค้า</span></th>
                                     <th><span>วันที่สร้าง</span></th>
                                     <th><span>ผู้สร้าง</span></th>
                                     <th><span>วันที่แก้ไขล่าสุด</span></th>
@@ -670,6 +662,7 @@
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">รหัสหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-subgroup-id" name="input-subgroup-id" />
                                     <input class="form-control" type="text" id="input-subgroup-code" name="input-subgroup-code" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2">
@@ -678,7 +671,7 @@
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">ชื่อหมวดหมู่หลัก</label>
-                                    <select class="form-select" id="select-group-name" data-selected="" name="select-group-name"></select>
+                                    <select class="form-select" id="select-group-name" data-selected="" name="select-group-name" onchange="onGroupListChange();"></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
@@ -710,59 +703,41 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header justify-content-center">
-                <h4 class="modal-title text-center">ดูข้อมูลสินค้า (Items)</h4>
+                <h4 class="modal-title text-center">ดูข้อหมวดหมู่ย่อย</h4>
             </div>
             <div class="modal-body">
-                <form id="form-createProduct">
+                <form id="form-createSubGroup">
                     <div class="row d-sm-flex">
                         @*<div class="col-sm-12">*@
-                        <div class="col-sm-6">
+                        <div class="col-sm-12">
                             <div class="row">
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">รหัสหมวดหมู่หลัก<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-group-code" name="input-group-code" disabled />
+                                    <label class="control-label">รหัสหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-subgroup-id" name="input-subgroup-id" />
+                                    <input class="form-control" type="text" id="input-subgroup-code" name="input-subgroup-code" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-group-name" name="input-group-name" />
+                                    <label class="control-label">ชื่อหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-subgroup-name" name="input-subgroup-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่หลัก</label>
+                                    <select class="form-select" id="select-group-name" data-selected="" name="select-group-name" disabled></select>
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
-                                    <select class="form-select" id="select-group-status" data-selected="" name="select-group-status"></select>
+                                    <select class="form-select" id="select-subgroup-status" data-selected="" name="select-subgroup-status" disabled></select>
                                 </div>
                             </div>
 
                         </div>
 
-                        <div class="col-sm-6">
-                            <div class="row">
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type" disabled></select>
-
-                                </div>
-                                <div class="col-sm-12 mb-2">
-                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="input-product-price" name="input-product-price" disabled />
-                                </div>
-                            </div>
-
-                            @*</div>*@
-                        </div>
+                        
 
                     </div>
                 </form>
 
-                <div class="row">
-                    <div class="row mt-2 mb-2">
-                        <div class="col-sm-7">Options</div>
-                        <div class="col-sm-3">ราคาต่อเมตร (บาท)</div>
-                    </div>
-
-                    <div id="divOptions">
-                    </div>
-
-                </div>
+                
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
@@ -770,6 +745,181 @@
         </div>
     </div>
 </div>
+
+@*modal for create Brand*@
+<div id="modal-createBrand" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createBrand">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสแบรนด์สินค้า<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-brand-id" name="input-brand-id" />
+                                    <input class="form-control" type="text" id="input-brand-code" name="input-brand-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อแบรนด์สินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-brand-name" name="input-brand-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-brand-status" data-selected="" name="select-brand-status"></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-brand"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view Brand*@
+<div id="modal-viewBrand" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลหมวดหมู่หลัก</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createBrand">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสแบรนด์สินค้า<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-brand-id" name="input-brand-id" />
+                                    <input class="form-control" type="text" id="input-brand-code" name="input-brand-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อแบรนด์สินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-brand-name" name="input-brand-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-brand-status" data-selected="" name="select-brand-status" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create Unit*@
+<div id="modal-createUnit" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createUnit">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหน่วยสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-unit-code" name="input-unit-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหน่วยสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-unit-name" name="input-unit-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-unit-status" data-selected="" name="select-unit-status"></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-unit"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view Unit*@
+<div id="modal-viewUnit" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลหมวดหมู่หลัก</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createUnit">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหน่วยสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-unit-code" name="input-unit-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหน่วยสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-unit-name" name="input-unit-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-unit-status" data-selected="" name="select-unit-status" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @*modal for create type*@

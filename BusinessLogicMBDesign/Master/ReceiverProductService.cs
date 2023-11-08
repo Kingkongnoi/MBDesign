@@ -99,5 +99,16 @@ namespace BusinessLogicMBDesign.Master
             }
             return updated;
         }
+
+        public tbReceiverProduct GetUnitItemById(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _receiverProductRepository.GetFirstById(id, conn);
+            }
+
+        }
     }
 }

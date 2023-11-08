@@ -20,11 +20,10 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class UnitMasterItemModel
+    public class UnitMasterItemModel :tbUnitMaster
     {
-        public int id { get; set; }
-        public string unitname { get; set; } = string.Empty;
-        public bool status { get; set; } = true;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
         public string loginCode { get; set; } = string.Empty;
     }
 }

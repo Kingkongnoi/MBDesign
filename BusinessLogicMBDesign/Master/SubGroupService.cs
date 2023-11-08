@@ -1,7 +1,10 @@
 ﻿using DataLayerMBDesign;
 using EntitiesMBDesign;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Data.SqlClient;
+using System.Reflection;
+using System.Transactions;
 
 namespace BusinessLogicMBDesign.Master
 {
@@ -38,7 +41,7 @@ namespace BusinessLogicMBDesign.Master
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
-                var exists = _subgroupRepository.GetFirstByName(model.subgroupname, conn, transaction);
+                var exists = _subgroupRepository.GetFirstByName(model.subgroupname,model.groupid, conn, transaction);
                 if (exists != null) { return -1; }
 
                 try
@@ -73,7 +76,7 @@ namespace BusinessLogicMBDesign.Master
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
-                var exists = _subgroupRepository.GetFirstByName(model.subgroupname, conn, transaction);
+                var exists = _subgroupRepository.GetFirstByName(model.subgroupname,model.groupid, conn, transaction);
                 if (exists != null) { if (exists.id != model.id) { return -1; } }
 
                 try
@@ -83,6 +86,7 @@ namespace BusinessLogicMBDesign.Master
                         id = model.id,
                         groupid = model.groupid,
                         subgroupname = model.subgroupname,
+                        subgroupcode = model.subgroupcode,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode
@@ -99,13 +103,21 @@ namespace BusinessLogicMBDesign.Master
             return updated;
         }
 
-        public string GetFirstLastestSubGroupCode(int groupid)
+        public string GetFirstLastestSubGroupCode(int groupid,string subgroupname)
         {
             string subGroupCode = string.Empty;
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
+
                 conn.Open();
-                int getID = _subgroupRepository.GetLastestId(groupid, conn);
+                SqlTransaction transaction = conn.BeginTransaction();
+                var exists = _subgroupRepository.GetFirstByName(subgroupname, groupid, conn, transaction);
+                if (exists != null) { return exists.subgroupcode; }
+                if (conn.State == ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
+                int getID = _subgroupRepository.GetLastestId(groupid, conn, transaction);
                 if (getID > 0)
                 {
                     subGroupCode = string.Format("CY{0:D4}-{1:D2}", getID, groupid);

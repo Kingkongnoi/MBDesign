@@ -72,5 +72,15 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbReceiverProduct>(queryString.ToString(), new { empcode }, transaction: trans);
         }
+
+        public tbReceiverProduct GetFirstById(int id, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select top 1 *
+                                FROM [tbReceiverProduct]
+                                where isDeleted = 0 and id = @id
+                                order by id";
+
+            return conn.QueryFirstOrDefault<tbReceiverProduct>(queryString, new { id }, transaction: trans);
+        }
     }
 }

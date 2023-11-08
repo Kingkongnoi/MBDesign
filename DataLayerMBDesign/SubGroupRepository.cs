@@ -19,13 +19,14 @@ namespace DataLayerMBDesign
             queryString.Append(" update tbSubGroup");
             queryString.Append(" set groupid = @groupid,");
             queryString.Append(" subgroupname= @subgroupname,");
+            queryString.Append(" subgroupcode= @subgroupcode,");
             queryString.Append(" updateDate = @updateDate,");
             queryString.Append(" updateBy = @updateBy,");
             queryString.Append(" status = @status");
             queryString.Append(" where isDeleted = 0 and id = @id");
             queryString.Append(" select @@ROWCOUNT;");
            
-            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.groupid,obj.subgroupname, obj.updateDate, obj.updateBy, obj.status, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.groupid,obj.subgroupname,obj.subgroupcode, obj.updateDate, obj.updateBy, obj.status, obj.id }, transaction: trans);
         }
 
         public List<SubGroupItemModel> GetAll(string subgroupcode, string subgroupname, string status, SqlConnection conn, SqlTransaction? trans = null)
@@ -55,17 +56,17 @@ namespace DataLayerMBDesign
             queryString.Append(" INNER JOIN tbGroup b on a.groupid = b.id");
             queryString.Append(" where a.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by a.id desc");
+            queryString.Append(" order by a.subgroupcode asc");
 
-            return conn.Query<SubGroupItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
+            return conn.Query<SubGroupItemModel>(queryString.ToString(), new { }, transaction: trans).OrderBy(o=>o.subgroupcode).ToList();
         }
 
-        public tbSubGroup GetFirstByName(string subgroupname, SqlConnection conn, SqlTransaction? trans = null)
+        public tbSubGroup GetFirstByName(string subgroupname,int groupid, SqlConnection conn, SqlTransaction? trans = null)
         {
             StringBuilder queryString = new StringBuilder();
             queryString.Append(" SELECT TOP 1 *");
             queryString.Append(" FROM tbSubGroup");
-            queryString.AppendFormat(" where isDeleted = 0 and subgroupname = N'{0}'", subgroupname);
+            queryString.AppendFormat(" where isDeleted = 0 and subgroupname = N'{0}' and groupid = {1}", subgroupname,groupid);
 
 
             return conn.QueryFirstOrDefault<tbSubGroup>(queryString.ToString(), new { subgroupname }, transaction: trans);
@@ -73,7 +74,7 @@ namespace DataLayerMBDesign
 
         public int GetLastestId(int groupid,SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select Count(groupid)+1 as countgroup from tbSubGroup where groupid = @groupid";
+            string queryString = @"select ISNULL(MAX(CONVERT(int,SUBSTRING(subgroupcode,3,4))),0)+1 as countgroup from tbSubGroup where groupid = @groupid";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { groupid }, transaction: trans);
         }

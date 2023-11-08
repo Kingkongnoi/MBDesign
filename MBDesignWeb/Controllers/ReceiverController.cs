@@ -7,59 +7,52 @@ namespace MBDesignWeb.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    public class SubGroupController : Controller
+    public class ReceiverController : Controller
     {
-        private readonly SubGroupService _subgroupService;
+        private readonly ReceiverProductService _receiverproductService;
         private readonly IConfiguration _configuration;
 
-        public SubGroupController(IConfiguration configuration)
+        public ReceiverController(IConfiguration configuration)
         {
             _configuration = configuration;
-            _subgroupService = new SubGroupService(_configuration);
+            _receiverproductService = new ReceiverProductService(_configuration);
         }
 
-        [HttpGet]
-        public JsonResult GetSubGroupList(string subgroupCode, string subgroupName, string status)
-        {
-            var data = _subgroupService.GetSubGroupList(subgroupCode, subgroupName, status);
-
-            return new JsonResult(data);
-        }
         #region GET
         [HttpGet]
-        public JsonResult GetLastestSubGroupCode(int groupid,string subgroupname)
+        public JsonResult GetUnitList(string empcode, string empname, string status)
         {
-            var data = _subgroupService.GetFirstLastestSubGroupCode(groupid, subgroupname);
+            var data = _receiverproductService.GetReceiverProductList(empcode, empname, status);
 
             return new JsonResult(data);
         }
+
+        //[HttpGet]
+        //public JsonResult GetLastestItemId()
+        //{
+        //    var data = _receiverproductService.GetFirstLastestItemId();
+
+        //    return new JsonResult(data);
+        //}
 
         [HttpGet]
         public JsonResult GetItemByItemId(int id)
         {
-            var item = _subgroupService.GetSubGroupItemById(id);
+            var item = _receiverproductService.GetUnitItemById(id);
 
 
             return new JsonResult(new { item = item });
-        }
-
-        [HttpGet]
-        public JsonResult GetGroupNameSelect()
-        {
-            var data = _subgroupService.GetGroupNameSelect();
-
-            return new JsonResult(data);
         }
         #endregion
 
         #region Post
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult AddItem([FromBody] SubGroupAddItemModel obj)
+        public JsonResult AddItem([FromBody] ReceiverProductItemModel obj)
         {
             var result = true;
             var resultStatus = "success";
-            var data = _subgroupService.AddSubGroupItem(obj);
+            var data = _receiverproductService.AddReceiverProductItem(obj);
 
             if (data == -1)
             {
@@ -83,11 +76,11 @@ namespace MBDesignWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult UpdateItem([FromBody] SubGroupItemModel obj)
+        public JsonResult UpdateItem([FromBody] ReceiverProductItemModel obj)
         {
             var result = true;
             var resultStatus = "success";
-            var data = _subgroupService.UpdateSubGroupItem(obj);
+            var data = _receiverproductService.UpdateReceiverProductItem(obj);
 
             if (data == -1)
             {

@@ -104,7 +104,17 @@ function clearSearchForm(area) {
             $('#form-search-subgroup #input-search-subgroupcode-items').val('');
             $('#form-search-subgroup #input-search-subgroupname-items').val('');
             $('#form-search-subgroup #select-search-subgroup-status').val('').trigger('change');
-            break;sub
+            break; sub
+        case "brand":
+            $('#form-search-brand #input-search-brand-code').val('');
+            $('#form-search-brand #input-search-brand-name').val('');
+            $('#form-search-brand #select-search-brand-status').val('').trigger('change');
+            break;
+        case "unit":
+            $('#form-search-Unit #input-search-unit-code').val('');
+            $('#form-search-Unit #input-search-unit-name').val('');
+            $('#form-search-Unit #select-search-unit-status').val('').trigger('change');
+            break;
     }
 }
 function clearForm(modal) {
@@ -189,6 +199,16 @@ function clearForm(modal) {
             $('#form-createSubGroup #select-group-name').val('').trigger('change');
             $('#form-createSubGroup input[name="input-subgroup-name"]').val('');
             $('#form-createSubGroup #select-subgroup-status').val(1).trigger('change');
+            break;
+        case "modal-createBrand" || "modal-viewBrand":
+            $('#form-createBrand input[name="input-brand-code"]').val('');
+            $('#form-createBrand input[name="input-brand-name"]').val('');
+            $('#form-createBrand #select-brand-status').val(1).trigger('change');
+            break;
+        case "modal-createUnit" || "modal-viewUnit":
+            $('#form-createUnit input[name="input-unit-code"]').val('');
+            $('#form-createUnit input[name="input-unit-name"]').val('');
+            $('#form-createUnit #select-unit-status').val(1).trigger('change');
             break;
     }
 }
@@ -736,7 +756,7 @@ let validateInput = function (modal) {
                 });
                 return false;
             }
-           
+
             else { return true; }
             break;
         case "modal-createSubGroup":
@@ -780,6 +800,96 @@ let validateInput = function (modal) {
                 });
                 return false;
             }
+            else { return true; }
+            break;
+        case "modal-createBrand":
+            if ($('#form-createBrand #input-brand-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณารอระบบ generate รหัสแบรนด์สินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createBrand #input-brand-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createBrand #input-brand-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกชื่อแบรนด์สินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createBrand #input-brand-name').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
+        case "modal-createUnit":
+            if ($('#form-createUnit #input-unit-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณารอระบบ generate รหัสหน่วยสินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createUnit #input-unit-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createUnit #input-unit-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกชื่อหน่วยสินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createUnit #input-unit-name').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
+        case "modal-createStock":
+            if ($('#form-createUnit #input-stock-code').val() == "") {
+                Swal.fire({
+                    text: "กรุณารอระบบ generate รหัสคลังสินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createStock #input-stock-code').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createStock #input-stock-name').val() == "") {
+                Swal.fire({
+                    text: "กรุณากรอกชื่อคลังสินค้า",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createStock #input-stock-name').focus();
+                });
+                return false;
+            }
+
             else { return true; }
             break;
     }
@@ -998,6 +1108,7 @@ function callAddOrUpdateSubGroup() {
 
 
     var obj = {
+        id: $("#input-subgroup-id").val(),
         subgroupcode: $('#input-subgroup-code').val(),
         subgroupname: $('#input-subgroup-name').val(),
         groupid: $('#select-group-name').val(),
@@ -1038,6 +1149,142 @@ function callAddOrUpdateSubGroup() {
         },
         error: () => {
             $('.btn-modal-save-subgroup').removeLoading();
+        }
+    });
+
+}
+
+function DoAddOrUpdateBrand(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateBrand(_product_item_action);
+        }
+    });
+}
+
+function callAddOrUpdateBrand() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Brand/AddItem` : `${app_settings.api_url}/api/Brand/UpdateItem`;
+
+
+    var obj = {
+        id: $('#input-brand-id').val(),
+        brandcode: $('#input-brand-code').val(),
+        brandname: $('#input-brand-name').val(),
+        status: ($('#form-createBrand #select-brand-status').val() == "1") ? true : false,
+        loginCode: _userCode
+    };
+ 
+
+    $('.btn-modal-save-brand').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-brand').removeLoading();
+                $(`#modal-createBrand`).modal('hide');
+                callGetBrandList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "ชื่อแบรนด์สินค้ามีอยู่แล้ว กรุณากรอกชื่อแบรนด์สินค้าอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createBrand #input-brand-name').focus();
+                    });
+                }
+                $('.btn-modal-save-brand').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-brand').removeLoading();
+        }
+    });
+
+}
+
+function DoAddOrUpdateUnit(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateUnit(_product_item_action);
+        }
+    });
+}
+
+function callAddOrUpdateUnit() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Unit/AddItem` : `${app_settings.api_url}/api/Unit/UpdateItem`;
+
+
+    var obj = {
+        id: $('#input-unit-code').val(),
+        unitname: $('#input-unit-name').val(),
+        status: ($('#form-createUnit #select-unit-status').val() == "1") ? true : false,
+        loginCode: _userCode
+    };
+
+    $('.btn-modal-save-unit').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-unit').removeLoading();
+                $(`#modal-createUnit`).modal('hide');
+                callGetUnitList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "ชื่อหมวดหมู่หลักมีอยู่แล้ว กรุณากรอกชื่อหมวดหมู่หลักอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#form-createUnit #input-unit-name').focus();
+                    });
+                }
+                $('.btn-modal-save-unit').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-unit').removeLoading();
         }
     });
 
@@ -1091,12 +1338,12 @@ function callGetGroupList() {
         type: 'GET',
         url: `${app_settings.api_url}/api/Group/GetGroupList?groupName=${groupname}&groupId=${groupcode}&status=${status}`,
         success: function (data) {
-           
-            if (data.length>0) {
+
+            if (data.length > 0) {
                 renderGetItemGroupList(data);
                 callGroupNameBySubGroup('#form-createSubGroup #select-group-name', 'กรุณาเลือก');
-            } 
-      
+            }
+
             loaded.find(_loader).remove();
         },
         error: function (err) {
@@ -1131,6 +1378,60 @@ function callGetSubGroupList() {
     });
 }
 
+function callGetBrandList() {
+    let brandcode = ($('#form-search-brand #input-search-brand-code').val() == '' || $('#form-search-brand #input-search-brand-code').val() == undefined) ? null : $('#form-search-brand #input-search-brand-code').val();
+    let brandname = ($('#form-search-brand #input-search-brand-name').val() == '' || $('#form-search-brand #input-search-brand-name').val() == undefined) ? null : $('#form-search-brand #input-search-brand-name').val();
+    let status = ($('#form-search-brand #select-search-brand-status').val() == '' || $('#form-search-brand #select-search-brand-status').val() == undefined) ? null : $('#form-search-brand #select-search-brand-status').val();
+
+    let loaded = $('#tb-brand-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Brand/GetBrandList?brandcode=${brandcode}&brandname=${brandname}&status=${status}`,
+        success: function (data) {
+
+            if (data.length > 0) {
+                renderGetItemBrandList(data);
+                
+            }
+
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
+function callGetUnitList() {
+    let id = ($('#form-search-Unit #input-search-unit-code').val() == '' || $('#form-search-Unit #input-search-unit-code').val() == undefined) ? 0 : $('#form-search-Unit #input-search-unit-code').val();
+    let unitname = ($('#form-search-Unit #input-search-unit-name').val() == '' || $('#form-search-Unit #input-search-unit-name').val() == undefined) ? null : $('#form-search-Unit #input-search-unit-name').val();
+    let status = ($('#form-search-Unit #select-search-unit-status').val() == '' || $('#form-search-Unit #select-search-unit-status').val() == undefined) ? null : $('#form-search-Unit #select-search-unit-status').val();
+
+    let loaded = $('#tb-unit-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Unit/GetUnitList?id=${id}&unitname=${unitname}&status=${status}`,
+        success: function (data) {
+
+            if (data.length > 0) {
+                renderGetItemUnitList(data);
+               
+            }
+
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
 function renderGetItemSubGroupList(data) {
 
     $('#tb-subgroup-list').DataTable(
@@ -1154,11 +1455,12 @@ function renderGetItemSubGroupList(data) {
                 {
                     targets: 0,
                     data: 'id',
-                    className: "item-details hidecol",
+                    className: "hidecol",
                 },
                 {
                     targets: 1,
                     data: 'subgroupcode',
+                    className: "item-details",
                 },
                 {
                     targets: 2,
@@ -1215,6 +1517,7 @@ function renderGetItemSubGroupList(data) {
         }
     );
 }
+
 function renderGetItemGroupList(data) {
 
     $('#tb-group-list').DataTable(
@@ -1232,7 +1535,7 @@ function renderGetItemGroupList(data) {
             },
             createdRow: function (row, data) {
                 $(row).attr('data-id', data.id);
-             /*   $(row).attr('data-typeid', data.typeId);*/
+                /*   $(row).attr('data-typeid', data.typeId);*/
             },
             columnDefs: [
                 {
@@ -1284,6 +1587,165 @@ function renderGetItemGroupList(data) {
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-group" data-id="${row.id}" title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+
+function renderGetItemBrandList(data) {
+
+    $('#tb-brand-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "hidecol",
+                },
+                {
+                    targets: 1,
+                    data: 'brandcode',
+                    className: "item-details",
+                },
+                {
+                    targets: 2,
+                    data: 'brandname',
+                },
+                {
+                    targets: 3,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 4,
+                    data: 'createByName'
+                },
+                {
+                    targets: 5,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 6,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 7,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 8,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-brand" data-id="${row.id}" title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+
+function renderGetItemUnitList(data) {
+
+    $('#tb-unit-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "item-details",
+                },
+                {
+                    targets: 1,
+                    data: 'unitname',
+                },
+                {
+                    targets: 2,
+                    data: 'createDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.createDate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 3,
+                    data: 'createByName'
+                },
+                {
+                    targets: 4,
+                    data: 'updateDate',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return type === 'sort' ? data : row.updateDate ? convertDateTimeFormat(row.updateDate, 'DD/MM/YYYY HH:mm') : "";
+                    },
+                },
+                {
+                    targets: 5,
+                    data: 'updateByName'
+                },
+                {
+                    targets: 6,
+                    data: 'status',
+                    className: "dt-center",
+                    render: function (data, type, row) {
+                        return row.status == "1" ? "ใช้งาน" : "ไม่ใช้งาน";
+                    },
+                },
+                {
+                    targets: 7,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-unit" data-id="${row.id}" title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
                     },
                 },
@@ -1390,13 +1852,15 @@ function callGetItemById(id, typeId, modal, isView = false) {
     });
 }
 
-function callGetSubGroupcode(id, isView = false) {
+function callGetSubGroupcode(id,subgroupname, isView = false) {
     $.ajax({
         type: 'GET',
-        url: `${app_settings.api_url}/api/SubGroup/GetLastestSubGroupCode?groupid=${id}`,
+        url: `${app_settings.api_url}/api/SubGroup/GetLastestSubGroupCode?groupid=${id}&subgroupname=${subgroupname}`,
         success: function (data) {
-            console.log(data);
-            $('#form-createSubGroup input[name="input-subgroup-code"]').val(data);
+            if (data !='') {
+                $('#form-createSubGroup input[name="input-subgroup-code"]').val(data);
+            }
+          
         },
         error: function (err) {
 
@@ -1410,6 +1874,20 @@ function callGetGroupById(id, modal, isView = false) {
         url: `${app_settings.api_url}/api/Group/GetItemByItemId?id=${id}`,
         success: function (data) {
             renderGroupForm(data.item);
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGetBrandById(id, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Brand/GetItemByItemId?id=${id}`,
+        success: function (data) {
+            renderBrandForm(data.item);
 
         },
         error: function (err) {
@@ -1432,19 +1910,59 @@ function callGetSubGroupById(id, modal, isView = false) {
     });
 }
 
+function callGetUnitById(id, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Unit/GetItemByItemId?id=${id}`,
+        success: function (data) {
+            renderUnitForm(data.item);
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
 function callGroupID() {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Group/GetLastestItemId`,
         success: function (data) {
-           
+
             $('#form-createGroup input[name="input-group-code"]').val(data.id);
         },
         error: function (err) {
 
         }
     });
-   
+}
+
+function callBrandCode() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Brand/GetLastestBrandCode`,
+        success: function (data) {
+
+            $('#form-createBrand input[name="input-brand-code"]').val(data);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callUnitID() {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Unit/GetLastestItemId`,
+        success: function (data) {
+            $('#form-createUnit input[name="input-unit-code"]').val(data);
+        },
+        error: function (err) {
+
+        }
+    });
 }
 function renderItemForm(data, typeId) {
     let status = (data.status) ? 1 : 0;
@@ -1467,7 +1985,7 @@ function renderItemOptions(data, modal, isView = false) {
             $(`#${modal} #divRenderOptions-${seq} #input-options-price-${seq}`).val(v.optionsPrice);
         });
     }
-    
+
 }
 
 function renderGroupForm(data, typeId) {
@@ -1479,10 +1997,27 @@ function renderGroupForm(data, typeId) {
 
 function renderSubGroupForm(data, typeId) {
     let status = (data.status) ? 1 : 0;
+    $('#form-createSubGroup input[name="input-subgroup-id"]').val(data.id);
     $('#form-createSubGroup input[name="input-subgroup-code"]').val(data.subgroupcode);
     $('#form-createSubGroup input[name="input-subgroup-name"]').val(data.subgroupname);
     $('#form-createSubGroup #select-group-name').val(data.groupid).trigger('change');
     $('#form-createSubGroup #select-subgroup-status').val(status).trigger('change');
+    console.log($("#input-subgroup-id").val());
+}
+
+function renderBrandForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createBrand input[name="input-brand-id"]').val(data.id);
+    $('#form-createBrand input[name="input-brand-code"]').val(data.brandcode);
+    $('#form-createBrand input[name="input-brand-name"]').val(data.brandname);
+    $('#form-createBrand #select-brand-status').val(status).trigger('change');
+}
+
+function renderUnitForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createUnit input[name="input-unit-code"]').val(data.id);
+    $('#form-createUnit input[name="input-unit-name"]').val(data.unitname);
+    $('#form-createUnit #select-unit-status').val(status).trigger('change');
 }
 
 function renderNewOptions(modal, isView = false) {
@@ -1626,7 +2161,7 @@ function callGetTypeList() {
     });
 }
 function renderGetTypeList(data) {
-    
+
     $('#tb-type-list').DataTable(
         {
             destroy: true,
@@ -1826,7 +2361,7 @@ function callGetStyleList() {
     });
 }
 function renderGetStyleList(data) {
-    
+
     $('#tb-style-list').DataTable(
         {
             destroy: true,
@@ -2397,4 +2932,24 @@ function renderItemQuickQTForm(data, modalId) {
     $(`${modalId} #form-createProductQuickQT input[name="input-product-text"]`).val(data.itemText);
     $(`${modalId} #form-createProductQuickQT input[name="input-product-price"]`).val(data.itemPrice);
     $(`${modalId} #form-createProductQuickQT #select-product-status`).val(status).trigger('change');
+}
+//$(document).on('change', '#select-group-name', function () {
+//    console.log('1');
+//    if (this.value != '') {
+//        callGetSubGroupcode(this.value);
+//    }
+//    else {
+//        $('#form-createSubGroup input[name="input-subgroup-code"]').val('');
+//    }
+
+//});
+function onGroupListChange() {
+    var val = document.getElementById("select-group-name").value;
+    if (val != '') {
+        var name = document.getElementById("input-subgroup-name").value;
+        callGetSubGroupcode(val, name);
+    }
+    else {
+        $('#form-createSubGroup input[name="input-subgroup-code"]').val('');
+    }
 }

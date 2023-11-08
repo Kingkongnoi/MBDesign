@@ -20,11 +20,12 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class ReceiverProductItemModel
+    public class ReceiverProductItemModel : tbReceiverProduct
     {
-        public int id { get; set; }
-        public int empid { get; set; }
-        public bool status { get; set; } = true;
+        public string empCode { get; set; } = string.Empty;
+        public string empName { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
         public string loginCode { get; set; } = string.Empty;
     }
 }

@@ -19,7 +19,7 @@ namespace BusinessLogicMBDesign.Master
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
         }
 
-        public List<tbUnitMaster> GetUitMasterList(int id,string unitname, string status)
+        public List<UnitMasterItemModel> GetUitMasterList(int id,string unitname, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -94,6 +94,28 @@ namespace BusinessLogicMBDesign.Master
                 }
             }
             return updated;
+        }
+
+        public int GetFirstLastestItemId()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _unitMasterRepository.GetLastestId(conn);
+            }
+
+        }
+
+        public tbUnitMaster GetUnitItemById(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _unitMasterRepository.GetFirstById(id, conn);
+            }
+
         }
     }
 }

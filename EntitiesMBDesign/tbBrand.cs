@@ -16,12 +16,11 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
     }
 
-    public class BrandItemModel
+    public class BrandItemModel : tbBrand
     {
-        public int id { get; set; }
-        public string brandcode { get; set; } = string.Empty;
-        public string brandname { get; set; } = string.Empty;
-        public bool status { get; set; } = true;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+
         public string loginCode { get; set; } = string.Empty;
     }
 }

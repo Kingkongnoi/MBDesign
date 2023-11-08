@@ -1,6 +1,7 @@
 ﻿using DataLayerMBDesign;
 using EntitiesMBDesign;
 using Microsoft.Extensions.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace BusinessLogicMBDesign.Master
@@ -19,7 +20,7 @@ namespace BusinessLogicMBDesign.Master
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
         }
 
-        public List<tbBrand> GetBrandList(string brandcode, string brandname, string status)
+        public List<BrandItemModel> GetBrandList(string brandcode, string brandname, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -27,6 +28,24 @@ namespace BusinessLogicMBDesign.Master
 
                 return _brandRepository.GetAll(brandcode, brandname, status, conn);
             }
+        }
+
+        public string GetFirstLastestBrandCode()
+        {
+            string brandCode = string.Empty;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+
+                conn.Open();
+                
+                int getID = _brandRepository.GetLastestId(conn);
+                if (getID > 0)
+                {
+                    brandCode = string.Format("BR{0:D4}", getID);
+                }
+                return brandCode;
+            }
+
         }
 
         public int? AddBrandItem(BrandItemModel model)
@@ -95,6 +114,17 @@ namespace BusinessLogicMBDesign.Master
                 }
             }
             return updated;
+        }
+
+        public tbBrand GetBrandItemById(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _brandRepository.GetFirstById(id, conn);
+            }
+
         }
     }
 }
