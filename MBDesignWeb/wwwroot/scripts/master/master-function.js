@@ -28,6 +28,10 @@ let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
 let _procutQuickQT_action = "add";
+let _issavecal = false;
+let _issaveglasscal = false;
+let _calCode = "";
+let _calCodeClearGlass = "";
 
 function callSelect2Status(id, isSearch = false) {
     $(id).empty();
@@ -37,6 +41,90 @@ function callSelect2Status(id, isSearch = false) {
     $(id).append(`<option value="1">ใช้งาน</option>`);
     $(id).append(`<option value="0">ไม่ใช้งาน</option>`);
 }
+
+function callSelectDoorType(id, isSearch = false) {
+    $(id).empty();
+    if (isSearch) {
+        $(id).append(`<option value="">-- กรุณาเลือก --</option>`);
+    }
+    $(id).append(`<option value="S">บานเดี่ยว</option>`);
+    $(id).append(`<option value="M">บานคู่</option>`);
+}
+
+function callPrintDoorType(id, isSearch = false) {
+    $(id).empty();
+    if (isSearch) {
+        $(id).append(`<option value="A">-- ทั้งหมด --</option>`);
+    }
+    $(id).append(`<option value="S">บานเดี่ยว</option>`);
+    $(id).append(`<option value="M">บานคู่</option>`);
+}
+//function callProductItemCal(select2Id, select2FirstText) {
+//    $.ajax({
+//        type: 'GET',
+//        url: `${app_settings.api_url}/api/Calculate/GetProductItemSelect`,
+//        success: function (data) {
+//            renderProductItemDataSelect(select2Id, select2FirstText, data);
+//        },
+//        error: function (err) {
+//        }
+//    });
+//}
+
+function callCustItemCal(select2Id, select2FirstText) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCustListSelect`,
+        success: function (data) {
+            renderCustItemDataSelect(select2Id, select2FirstText, data);
+        },
+        error: function (err) {
+        }
+    });
+}
+
+function callCalMaster(CalCode,Type) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCalMasterByCode?calculatecode=${CalCode}`,
+        success: function (data) {
+  
+            var setDate = new Date(data[0].createDate);
+      
+            var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+            if (Type == "F") {
+                $('#form-printFrameCalculate input[name="input-print-createdate"]').val(fulldate);
+            }
+            else {
+                $('#form-printClearglassCalculate input[name="input-print-createdate-clearglass"]').val(fulldate);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+
+function callReCalMaster(CalCode, Type) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCalMasterByCode?calculatecode=${CalCode}`,
+        success: function (data) {
+
+            var setDate = new Date(data[0].createDate);
+
+            var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+            if (Type == "F") {
+                $('#form-ReprintFrameCalculate input[name="input-reprint-createdate"]').val(fulldate);
+            }
+            else {
+                $('#form-ReprintClearglassCalculate input[name="input-reprint-createdate-clearglass"]').val(fulldate);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+
 function clearSearchForm(area) {
     switch (area) {
         case "employee":
@@ -135,7 +223,7 @@ function clearSearchForm(area) {
             $('#form-search-viewstock #select-search-viewstock-stock').val('').trigger('change');
             $('#form-search-viewstock input[name="input-search-viewstock-price"]').val('');
             $('#form-search-viewstock input[name="input-search-viewstock-amount"]').val('');
-            
+
             break;
     }
 }
@@ -257,6 +345,18 @@ function clearForm(modal) {
     }
 }
 
+function clearcalinsert() {
+    $('#form-add-calculate #input-insert-heigh-cupboard').val('');
+    $('#form-add-calculate #input-insert-width-cupboard').val('');
+    $('#form-add-calculate #select-insert-glassdoor-type').val('').trigger('change');
+    $('#form-add-calculate #select-insert-product-item').val('').trigger('change');
+}
+function clearcalglassinsert() {
+    $('#form-add-calculate-clearglass #input-insert-heigh-cupboard-clearglass').val('');
+    $('#form-add-calculate-clearglass #input-insert-width-cupboard-clearglass').val('');
+    $('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass').val('').trigger('change');
+    $('#form-add-calculate-clearglass #select-insert-product-item-clearglass').val('').trigger('change');
+}
 let validateInput = function (modal) {
     switch (modal) {
         case _modal_holiday_name:
@@ -1086,6 +1186,126 @@ let validateInput = function (modal) {
             }
             else { return true; }
             break;
+        case "modal-printFrameCalculate":
+            if ($('#form-printFrameCalculate #input-print-calno').val() == "") {
+                Swal.fire({
+                    text: "กรุณาทำรายการใหม่อีกครั้ง",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-printFrameCalculate #input-print-calno').focus();
+                });
+                return false;
+            }
+            else if ($('#form-printFrameCalculate #select-calprint-cust').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกรายชื่อลูกค้าก่อนทำการพิมพ์",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-printFrameCalculate #select-calprint-cust').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
+        case "modal-printClearglassCalculate":
+            if ($('#form-printClearglassCalculate #input-print-calno-clearglass').val() == "") {
+                Swal.fire({
+                    text: "กรุณาทำรายการใหม่อีกครั้ง",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-printClearglassCalculate #input-print-calno-clearglass').focus();
+                });
+                return false;
+            }
+            else if ($('#form-printClearglassCalculate #select-calprint-clearglass').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกรายชื่อลูกค้าก่อนทำการพิมพ์",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-printClearglassCalculate #select-calprint-clearglass').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
+        case "modal-ReprintFrameCalculate":
+            if ($('#form-ReprintFrameCalculate #input-reprint-calno').val() == "") {
+                Swal.fire({
+                    text: "กรุณาทำรายการใหม่อีกครั้ง",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-ReprintFrameCalculate #input-reprint-calno').focus();
+                });
+                return false;
+            }
+            else if ($('#form-ReprintFrameCalculate #select-calreprint-cust').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกรายชื่อลูกค้าก่อนทำการพิมพ์",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-ReprintFrameCalculate #select-calreprint-cust').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
+        case "modal-ReprintClearglassCalculate":
+            if ($('#form-ReprintClearglassCalculate #input-reprint-calno-clearglass').val() == "") {
+                Swal.fire({
+                    text: "กรุณาทำรายการใหม่อีกครั้ง",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-ReprintClearglassCalculate #input-reprint-calno-clearglass').focus();
+                });
+                return false;
+            }
+            else if ($('#form-ReprintClearglassCalculate #select-calreprint-clearglass').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกรายชื่อลูกค้าก่อนทำการพิมพ์",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-ReprintClearglassCalculate #select-calreprint-clearglass').focus();
+                });
+                return false;
+            }
+
+            else { return true; }
+            break;
     }
 
 };
@@ -1171,6 +1391,17 @@ function callStockData(select2Id, select2FirstText) {
         }
     });
 }
+function callStockProductData(select2Id, select2FirstText) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetStockProductSelect`,
+        success: function (data) {
+            renderStockProductDataSelect(select2Id, select2FirstText, data);
+        },
+        error: function (err) {
+        }
+    });
+}
 function callUnitData(select2Id, select2FirstText) {
     $.ajax({
         type: 'GET',
@@ -1230,6 +1461,26 @@ function renderSubGroupDataSelect(select2Id, select2FirstText, data) {
     });
     $(`${select2Id}`).val('').trigger('change')
 }
+function renderProductItemDataSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.id}">${v.groupname}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
+}
+
+function renderCustItemDataSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.custId}">${v.custFirstName}  ${v.custSurName}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
+}
+
 function renderBrandDataSelect(select2Id, select2FirstText, data) {
     $(`${select2Id}`).empty();
     $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
@@ -1245,6 +1496,15 @@ function renderStockDataSelect(select2Id, select2FirstText, data) {
 
     data.forEach((v) => {
         $(`${select2Id}`).append(`<option value="${v.id}">${v.stockname}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
+}
+function renderStockProductDataSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.productcode}">${v.productcode} - ${v.productname}</option>`);
     });
     $(`${select2Id}`).val('').trigger('change')
 }
@@ -1487,6 +1747,250 @@ function DoAddOrUpdateSubGroup(modal) {
     });
 }
 
+function DoPrintCal(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการพิมพ์สูตรคำนวนหรือไม่',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var calCode = $('#form-printFrameCalculate input[name="input-print-calno"]').val();
+            var CreateDate = $('#form-printFrameCalculate #input-print-createdate').val();
+            var DoorType = $('#form-printFrameCalculate #select-calprint-glassdoortype').val();
+            var InstallDate = $('#form-printFrameCalculate #input-print-installdate').val();
+            var CustName = $('#form-printFrameCalculate #select-calprint-cust option:selected').text();
+            var InstallAddress = document.getElementById('input-print-address').value;
+            callPrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            $('#modal-printFrameCalculate').modal('hide');
+        }
+    });
+}
+
+function DoRePrintCal(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการพิมพ์สูตรคำนวนหรือไม่',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var calCode = $('#form-ReprintFrameCalculate input[name="input-reprint-calno"]').val();
+            var CreateDate = $('#form-ReprintFrameCalculate #input-reprint-createdate').val();
+            var DoorType = $('#form-ReprintFrameCalculate #select-calreprint-glassdoortype').val();
+            var InstallDate = $('#form-ReprintFrameCalculate #input-reprint-installdate').val();
+            var CustName = $('#form-ReprintFrameCalculate #select-calreprint-cust option:selected').text();
+            var InstallAddress = document.getElementById('input-reprint-address').value;
+            callPrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            $('#modal-ReprintFrameCalculate').modal('hide');
+            var table = $('#tb-search-frameglass-list').DataTable();
+
+            //clear datatable
+            table.clear().draw();
+            /*$('#tb-search-frameglass-list').DataTable().clear();*/
+            $('#form-search-calculate input[name="input-search-calulate-code"]').val('');
+            $('.btn-print-search-calculate').css('display', 'none');
+        }
+    });
+}
+
+function DoPrintClearGlassCal(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการพิมพ์สูตรคำนวนหรือไม่',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var calCode = $('#form-printClearglassCalculate input[name="input-print-calno-clearglass"]').val();
+            var CreateDate = $('#form-printClearglassCalculate #input-print-createdate-clearglass').val();
+            var DoorType = $('#form-printClearglassCalculate #select-calprint-glassdoortype-clearglass').val();
+            var InstallDate = $('#form-printClearglassCalculate #input-print-installdate-clearglass').val();
+            var CustName = $('#form-printClearglassCalculate #select-calprint-cust-clearglass option:selected').text();
+            var InstallAddress = document.getElementById('input-print-address-clearglass').value;
+            callPrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            $('#modal-printClearglassCalculate').modal('hide');
+        }
+    });
+}
+
+function DoRePrintClearGlassCal(modal) {
+    if (!validateInput(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการพิมพ์สูตรคำนวนหรือไม่',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var calCode = $('#form-ReprintClearglassCalculate input[name="input-reprint-calno-clearglass"]').val();
+            var CreateDate = $('#form-ReprintClearglassCalculate #input-reprint-createdate-clearglass').val();
+            var DoorType = $('#form-ReprintClearglassCalculate #select-calreprint-glassdoortype-clearglass').val();
+            var InstallDate = $('#form-ReprintClearglassCalculate #input-reprint-installdate-clearglass').val();
+            var CustName = $('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass option:selected').text();
+            var InstallAddress = document.getElementById('input-reprint-address-clearglass').value;
+            callPrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            $('#modal-ReprintClearglassCalculate').modal('hide');
+            var table = $('#tb-search-clearglass-list').DataTable();
+
+            //clear datatable
+            table.clear().draw();
+            /*$('#tb-search-frameglass-list').DataTable().clear();*/
+            $('#form-search-calculate-clearglass input[name="input-search-calulate-code-clearglass"]').val('');
+            $('.btn-print-search-calculate-clearglass').css('display', 'none');
+        }
+    });
+}
+
+function onCustCalChange() {
+    var val = document.getElementById("select-calprint-cust").value;
+    if (val != '') {
+      
+        callGetCustCalDetail(val);
+    }
+    else {
+        $('#form-printFrameCalculate input[name="input-print-installdate"]').val("");
+        $('#form-printFrameCalculate input[name="input-print-address"]').val("");
+    }
+}
+
+function onCustReprintCalChange() {
+    var val = document.getElementById("select-calreprint-cust").value;
+    if (val != '') {
+
+        callGetCustReprintCalDetail(val);
+    }
+    else {
+        $('#form-ReprintFrameCalculate input[name="input-reprint-installdate"]').val("");
+        $('#form-ReprintFrameCalculate input[name="input-reprint-address"]').val("");
+    }
+}
+
+function onCustClearGlassCalChange() {
+    var val = document.getElementById("select-calprint-cust-clearglass").value;
+    if (val != '') {
+
+        callGetCustCalClearDetail(val);
+    }
+    else {
+        $('#form-printClearglassCalculate input[name="input-print-installdate-clearglass"]').val("");
+        $('#form-printClearglassCalculate input[name="input-print-address-clearglass"]').val("");
+    }
+}
+
+function onCustReprintClearGlassCalChange() {
+    var val = document.getElementById("select-calreprint-cust-clearglass").value;
+    if (val != '') {
+
+        callGetCustReCalClearDetail(val);
+    }
+    else {
+        $('#form-ReprintClearglassCalculate input[name="input-reprint-installdate-clearglass"]').val("");
+        $('#form-ReprintClearglassCalculate input[name="input-reprint-address-clearglass"]').val("");
+    }
+}
+
+function callGetCustCalDetail(id, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCustDetailList?id=${id}`,
+        success: function (data) {
+            console.log(data);
+            if (data != '') {
+                var setDate = new Date(data[0].installDate);
+                var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+                $('#form-printFrameCalculate input[name="input-print-installdate"]').val(fulldate);
+                document.getElementById('input-print-address').value = data[0].custInstallAddress;
+                //$('#form-printFrameCalculate input[name="input-print-address"]').val(data[0].custInstallAddress);
+            }
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGetCustReprintCalDetail(id, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCustDetailList?id=${id}`,
+        success: function (data) {
+            console.log(data);
+            if (data != '') {
+                var setDate = new Date(data[0].installDate);
+                var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+                $('#form-ReprintFrameCalculate input[name="input-reprint-installdate"]').val(fulldate);
+                document.getElementById('input-reprint-address').value = data[0].custInstallAddress;
+                //$('#form-printFrameCalculate input[name="input-print-address"]').val(data[0].custInstallAddress);
+            }
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+
+function callGetCustCalClearDetail(id, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCustDetailList?id=${id}`,
+        success: function (data) {
+            console.log(data);
+            if (data != '') {
+                var setDate = new Date(data[0].installDate);
+                var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+                $('#form-printClearglassCalculate input[name="input-print-installdate-clearglass"]').val(fulldate);
+                document.getElementById('input-print-address-clearglass').value = data[0].custInstallAddress;
+                //$('#form-printFrameCalculate input[name="input-print-address"]').val(data[0].custInstallAddress);
+            }
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function callGetCustReCalClearDetail(id, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCustDetailList?id=${id}`,
+        success: function (data) {
+            console.log(data);
+            if (data != '') {
+                var setDate = new Date(data[0].installDate);
+                var fulldate = setDate.getDate() + "/" + (setDate.getMonth() + 1) + "/" + setDate.getFullYear();
+                $('#form-ReprintClearglassCalculate input[name="input-reprint-installdate-clearglass"]').val(fulldate);
+                document.getElementById('input-reprint-address-clearglass').value = data[0].custInstallAddress;
+                //$('#form-printFrameCalculate input[name="input-print-address"]').val(data[0].custInstallAddress);
+            }
+
+        },
+        error: function (err) {
+
+        }
+    });
+}
 function callAddOrUpdateSubGroup() {
     let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/SubGroup/AddItem` : `${app_settings.api_url}/api/SubGroup/UpdateItem`;
 
@@ -1567,7 +2071,7 @@ function callAddOrUpdateBrand() {
         status: ($('#form-createBrand #select-brand-status').val() == "1") ? true : false,
         loginCode: _userCode
     };
- 
+
 
     $('.btn-modal-save-brand').addLoading();
 
@@ -1876,6 +2380,62 @@ function callGetGroupList() {
     });
 }
 
+function callGetFrameList() {
+    
+    let calcode = ($('#form-search-calculate #input-search-calulate-code').val() == '' || $('#form-search-calculate #input-search-calulate-code').val() == undefined) ? null : $('#form-search-calculate #input-search-calulate-code').val();
+
+    let loaded = $('#tb-search-frameglass-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCalByCode?calcode=${calcode}&caltype=F`,
+        success: function (data) {
+
+            if (data.length > 0) {
+                renderCalFrameList(data);
+                $('.btn-print-search-calculate').css('display', '');
+            }
+            else {
+                $('.btn-print-search-calculate').css('display', 'none');
+            }
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
+function callGetClearGlassList() {
+
+    let calcode = ($('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == '' || $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == undefined) ? null : $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val();
+
+    let loaded = $('#tb-search-clearglass-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCalByCode?calcode=${calcode}&caltype=C`,
+        success: function (data) {
+
+            if (data.length > 0) {
+                renderCalClearGlassList(data);
+                $('.btn-print-search-calculate-clearglass').css('display', '');
+            }
+            else {
+                $('.btn-print-search-calculate-clearglass').css('display', 'none');
+            }
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
 function callGetSubGroupList() {
     let code = ($('#form-search-subgroup #input-search-subgroupcode-items').val() == '' || $('#form-search-subgroup #input-search-subgroupcode-items').val() == undefined) ? null : $('#form-search-subgroup #input-search-subgroupcode-items').val();
     let name = ($('#form-search-subgroup #input-search-subgroupname-items').val() == '' || $('#form-search-subgroup #input-search-subgroupname-items').val() == undefined) ? null : $('#form-search-subgroup #input-search-subgroupname-items').val();
@@ -1918,7 +2478,7 @@ function callGetBrandList() {
 
             if (data.length > 0) {
                 renderGetItemBrandList(data);
-                
+
             }
 
             loaded.find(_loader).remove();
@@ -1945,7 +2505,7 @@ function callGetUnitList() {
 
             if (data.length > 0) {
                 renderGetItemUnitList(data);
-               
+
             }
 
             loaded.find(_loader).remove();
@@ -2008,6 +2568,14 @@ function callGetStockList() {
         }
     });
 }
+
+function callPrintCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress) {
+    window.location = `/api/Calculate/ExportFrameCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}`;
+}
+function callPrintClearGlassCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress) {
+    window.location = `/api/Calculate/ExportClearGlassCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}`;
+}
+
 function callGetStockProductList() {
     let productcode = ($('#form-search-viewstock #input-search-viewstock-code').val() == '' || $('#form-search-viewstock #input-search-viewstock-code').val() == undefined) ? null : $('#form-search-viewstock #input-search-viewstock-code').val();
     let productname = ($('#form-search-viewstock #input-search-viewstock-name').val() == '' || $('#form-search-viewstock #input-search-viewstock-name').val() == undefined) ? null : $('#form-search-viewstock #input-search-viewstock-name').val();
@@ -2016,7 +2584,7 @@ function callGetStockProductList() {
     let subgroupid = ($('#form-search-viewstock #select-search-viewstock-subgroup').val() == '' || $('#form-search-viewstock #select-search-viewstock-subgroup').val() == undefined) ? 0 : $('#form-search-viewstock #select-search-viewstock-subgroup').val();
     let brandid = ($('#form-search-viewstock #select-search-viewstock-brand').val() == '' || $('#form-search-viewstock #select-search-viewstock-brand').val() == undefined) ? 0 : $('#form-search-viewstock #select-search-viewstock-brand').val();
     let stockid = ($('#form-search-viewstock #select-search-viewstock-stock').val() == '' || $('#form-search-viewstock #select-search-viewstock-stock').val() == undefined) ? 0 : $('#form-search-viewstock #select-search-viewstock-stock').val();
-  
+
     let loaded = $('#tb-viewstock-list');
 
     loaded.prepend(_loader);
@@ -2035,6 +2603,384 @@ function callGetStockProductList() {
         },
         error: function (err) {
             loaded.find(_loader).remove();
+        }
+    });
+}
+
+function saveCalculate() {
+    let loaded = $('#tb-frameglass-list');
+    loaded.prepend(_loader);
+    var SaveCalculate = {};
+    var calListDetailData = new Array();
+    var calcode = $('#form-add-calculate input[name="input-insert-calulate-code"]').val();
+    if (calcode != '') {
+        $("#tb-frameglass-list tbody tr").each(function () {
+            var row = $(this);
+            var calListDetail = {};
+            calListDetail.product = row.find("td").eq(0).html();
+            calListDetail.glassdoortype = row.find("td").eq(1).html();
+            calListDetail.producttext = row.find("td").eq(2).html();
+            calListDetail.calhm = row.find("td").eq(3).html();
+            calListDetail.calwm = row.find("td").eq(4).html();
+            calListDetail.calh = row.find("td").eq(5).html();
+            calListDetail.calw = row.find("td").eq(6).html();
+            calListDetail.calhdel = row.find("td").eq(7).html();
+            calListDetail.calwdel = row.find("td").eq(8).html();
+            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+            calListDetailData.push(calListDetail);
+        });
+
+        SaveCalculate.calculatecode = calcode;
+        SaveCalculate.userlogin = _userCode;
+        SaveCalculate.listdetail = calListDetailData;
+        _calCode = calcode;
+        $.ajax({
+            type: 'POST',
+            url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify(SaveCalculate),
+            success: function (data) {
+
+                if (data.result && data.resultStatus == "success") {
+                    callSuccessAlert();
+                    callGetCalculateCode();
+                    clearcalinsert();
+                    _issavecal = true;
+                    $("#tb-frameglass-list tbody tr").remove();
+                }
+                else {
+                    Swal.fire({
+                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+
+                    });
+                }
+                loaded.find(_loader).remove();
+            },
+            error: function (err) {
+                loaded.find(_loader).remove();
+            }
+        });
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function saveCalculateClearglass() {
+    let loaded = $('#tb-clearglass-list');
+    loaded.prepend(_loader);
+    var SaveCalculate = {};
+    var calListDetailData = new Array();
+    var calcode = $('#form-add-calculate-clearglass input[name="input-insert-calulate-code-clearglass"]').val();
+    if (calcode != '') {
+        $("#tb-clearglass-list tbody tr").each(function () {
+            var row = $(this);
+            var calListDetail = {};
+            calListDetail.product = row.find("td").eq(0).html();
+            calListDetail.glassdoortype = row.find("td").eq(1).html();
+            calListDetail.producttext = row.find("td").eq(2).html();
+            calListDetail.calhm = row.find("td").eq(3).html();
+            calListDetail.calwm = row.find("td").eq(4).html();
+            calListDetail.calh = row.find("td").eq(5).html();
+            calListDetail.calw = row.find("td").eq(6).html();
+            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+            calListDetailData.push(calListDetail);
+        });
+
+        SaveCalculate.calculatecode = calcode;
+        SaveCalculate.userlogin = _userCode;
+        SaveCalculate.listdetail = calListDetailData;
+        _calCodeClearGlass = calcode;
+        $.ajax({
+            type: 'POST',
+            url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify(SaveCalculate),
+            success: function (data) {
+                if (data.result && data.resultStatus == "success") {
+                    callSuccessAlert();
+                    callGetCalculateCode();
+                    clearcalglassinsert();
+                    _issaveglasscal = true;
+                    $("#tb-clearglass-list tbody tr").remove();
+                }
+                else {
+                    Swal.fire({
+                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+
+                    });
+                }
+                loaded.find(_loader).remove();
+            },
+            error: function (err) {
+                loaded.find(_loader).remove();
+            }
+        });
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function saveCalculatePrint() {
+    let loaded = $('#tb-frameglass-list');
+    loaded.prepend(_loader);
+    var SaveCalculate = {};
+    var calListDetailData = new Array();
+    var calcode = $('#form-add-calculate input[name="input-insert-calulate-code"]').val();
+    if (calcode != '') {
+        $("#tb-frameglass-list tbody tr").each(function () {
+            var row = $(this);
+            var calListDetail = {};
+            calListDetail.product = row.find("td").eq(0).html();
+            calListDetail.glassdoortype = row.find("td").eq(1).html();
+            calListDetail.producttext = row.find("td").eq(2).html();
+            calListDetail.calhm = row.find("td").eq(3).html();
+            calListDetail.calwm = row.find("td").eq(4).html();
+            calListDetail.calh = row.find("td").eq(5).html();
+            calListDetail.calw = row.find("td").eq(6).html();
+            calListDetail.calhdel = row.find("td").eq(7).html();
+            calListDetail.calwdel = row.find("td").eq(8).html();
+            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+            calListDetailData.push(calListDetail);
+        });
+
+        SaveCalculate.calculatecode = calcode;
+        SaveCalculate.userlogin = _userCode;
+        SaveCalculate.listdetail = calListDetailData;
+        _calCode = calcode;
+        $.ajax({
+            type: 'POST',
+            url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify(SaveCalculate),
+            success: function (data) {
+
+                if (data.result && data.resultStatus == "success") {
+
+                    callGetCalculateCode();
+                    clearcalinsert();
+                    _issavecal = true;
+                    $("#tb-frameglass-list tbody tr").remove();
+  
+                    if (_issavecal) {
+                        callCustItemCal('#form-printFrameCalculate #select-calprint-cust', '-- กรุณาเลือก --');
+                        callPrintDoorType('#form-printFrameCalculate #select-calprint-glassdoortype', true);
+                        callCalMaster(_calCode,"F");
+                        $('#form-printFrameCalculate input[name="input-print-calno"]').val(_calCode);
+                        $(`#modal-printFrameCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+                        $('#modal-printFrameCalculate').modal('show');
+                    }
+                }
+                else {
+                    Swal.fire({
+                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+
+                    });
+                }
+                loaded.find(_loader).remove();
+            },
+            error: function (err) {
+                loaded.find(_loader).remove();
+            }
+        });
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function saveCalculateClearglassPrint() {
+    let loaded = $('#tb-clearglass-list');
+    loaded.prepend(_loader);
+    var SaveCalculate = {};
+    var calListDetailData = new Array();
+    var calcode = $('#form-add-calculate-clearglass input[name="input-insert-calulate-code-clearglass"]').val();
+    if (calcode != '') {
+        $("#tb-clearglass-list tbody tr").each(function () {
+            var row = $(this);
+            var calListDetail = {};
+            calListDetail.product = row.find("td").eq(0).html();
+            calListDetail.glassdoortype = row.find("td").eq(1).html();
+            calListDetail.producttext = row.find("td").eq(2).html();
+            calListDetail.calhm = row.find("td").eq(3).html();
+            calListDetail.calwm = row.find("td").eq(4).html();
+            calListDetail.calh = row.find("td").eq(5).html();
+            calListDetail.calw = row.find("td").eq(6).html();
+            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+            calListDetailData.push(calListDetail);
+        });
+
+        SaveCalculate.calculatecode = calcode;
+        SaveCalculate.userlogin = _userCode;
+        SaveCalculate.listdetail = calListDetailData;
+        _calCodeClearGlass = calcode;
+        $.ajax({
+            type: 'POST',
+            url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
+            contentType: 'application/json; charset=utf-8',
+            dataType: "json",
+            data: JSON.stringify(SaveCalculate),
+            success: function (data) {
+                if (data.result && data.resultStatus == "success") {
+                    callGetCalculateCode();
+                    clearcalglassinsert();
+                    _issaveglasscal = true;
+                    $("#tb-clearglass-list tbody tr").remove();
+
+                    if (_issaveglasscal) {
+                        console.log("aa");
+                        callCustItemCal('#form-printClearglassCalculate #select-calprint-cust-clearglass', '-- กรุณาเลือก --');
+                        callPrintDoorType('#form-printClearglassCalculate #select-calprint-glassdoortype-clearglass', true);
+                        callCalMaster(_calCodeClearGlass,"C");
+                        $('#form-printClearglassCalculate input[name="input-print-calno-clearglass"]').val(_calCodeClearGlass);
+                        $(`#modal-printClearglassCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+                        $('#modal-printClearglassCalculate').modal('show');
+                    }
+                }
+                else {
+                    Swal.fire({
+                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+
+                    });
+                }
+                loaded.find(_loader).remove();
+            },
+            error: function (err) {
+                loaded.find(_loader).remove();
+            }
+        });
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function RePrintFrame() {
+  
+    var calcode = $('#form-search-calculate input[name="input-search-calulate-code"]').val();
+    if (calcode != '') {
+       
+        callCustItemCal('#form-ReprintFrameCalculate #select-calreprint-cust', '-- กรุณาเลือก --');
+        callPrintDoorType('#form-ReprintFrameCalculate #select-calreprint-glassdoortype', true);
+        callReCalMaster(calcode, "F");
+        $('#form-ReprintFrameCalculate input[name="input-reprint-calno"]').val(calcode);
+        $(`#modal-ReprintFrameCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+        $('#modal-ReprintFrameCalculate').modal('show');
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function ReprintClearGlass() {
+
+    var calcode = $('#form-search-calculate-clearglass input[name="input-search-calulate-code-clearglass"]').val();
+    if (calcode != '') {
+        callCustItemCal('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass', '-- กรุณาเลือก --');
+        callPrintDoorType('#form-ReprintClearglassCalculate #select-calreprint-glassdoortype-clearglass', true);
+        callReCalMaster(calcode, "C");
+        $('#form-ReprintClearglassCalculate input[name="input-reprint-calno-clearglass"]').val(calcode);
+        $(`#modal-ReprintClearglassCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+        $('#modal-ReprintClearglassCalculate').modal('show');
+    }
+    else {
+        Swal.fire({
+            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            //cancelButtonColor: _modal_default_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+
+        });
+    }
+}
+
+function callGetCalculateCode() {
+    let url = `${app_settings.api_url}/api/Calculate/GetLastestItemId`;
+
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: (res) => {
+            $('#form-add-calculate input[name="input-insert-calulate-code"]').val(res);
+            $('#form-add-calculate-clearglass input[name="input-insert-calulate-code-clearglass"]').val(res);
+        },
+        error: () => {
         }
     });
 }
@@ -2196,6 +3142,124 @@ function renderGetItemGroupList(data) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-group" data-id="${row.id}" title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
                     },
+                },
+            ],
+        }
+    );
+}
+
+function renderCalFrameList(data) {
+
+    $('#tb-search-frameglass-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "hidecol",
+                },
+                {
+                    targets: 1,
+                    data: 'productname',
+                    
+                },
+                {
+                    targets: 2,
+                    data: 'masterheigh',
+                },
+                {
+                    targets: 3,
+                    data: 'masterwidth',
+                },
+                {
+                    targets: 4,
+                    data: 'calheigh',
+                },
+                {
+                    targets: 5,
+                    data: 'calwidth'
+                },
+                {
+                    targets: 6,
+                    data: 'deburringheigh'
+                },
+                {
+                    targets: 7,
+                    data: 'deburringwidth'
+                },
+                {
+                    targets: 8,
+                    data: 'glassdoortype'
+                },
+            ],
+        }
+    );
+}
+
+function renderCalClearGlassList(data) {
+
+    $('#tb-search-clearglass-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "hidecol",
+                },
+                {
+                    targets: 1,
+                    data: 'productname',
+
+                },
+                {
+                    targets: 2,
+                    data: 'masterheigh',
+                },
+                {
+                    targets: 3,
+                    data: 'masterwidth',
+                },
+                {
+                    targets: 4,
+                    data: 'calheigh',
+                },
+                {
+                    targets: 5,
+                    data: 'calwidth'
+                },
+                {
+                    targets: 6,
+                    data: 'glassdoortype'
                 },
             ],
         }
@@ -2389,12 +3453,12 @@ function renderGetItemReceiverList(data) {
                 {
                     targets: 1,
                     data: 'empCode',
-                     className: "item-details",
+                    className: "item-details",
                 },
                 {
                     targets: 2,
                     data: 'empName',
-                   
+
                 },
                 {
                     targets: 3,
@@ -2704,15 +3768,15 @@ function callGetItemById(id, typeId, modal, isView = false) {
     });
 }
 
-function callGetSubGroupcode(id,subgroupname, isView = false) {
+function callGetSubGroupcode(id, subgroupname, isView = false) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/SubGroup/GetLastestSubGroupCode?groupid=${id}&subgroupname=${subgroupname}`,
         success: function (data) {
-            if (data !='') {
+            if (data != '') {
                 $('#form-createSubGroup input[name="input-subgroup-code"]').val(data);
             }
-          
+
         },
         error: function (err) {
 
@@ -3921,10 +4985,24 @@ function onGroupListChange() {
 function onempCodeChangeListChange() {
     var val = document.getElementById("select-receiver-empcode").value;
     if (val != '') {
-       
+
         callGetempNameByEmpCode(val);
     }
     else {
         $('#form-createReceiver input[name="input-receiver-name"]').val('');
     }
+}
+
+function delRowCal(id) {
+    Swal.fire({
+        text: "ยืนยันการลบรายการ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+        confirmButtonText: 'ยืนยัน'
+    }).then((result) => {
+        $(id).remove();
+    });
+
 }

@@ -34,7 +34,7 @@
 
     callSelect2Status('#form-createUnit #select-unit-status');
     callSelect2Status('#form-search-Unit #select-search-unit-status', true);
-  
+
     callSelect2Status('#form-createReceiver #select-receiver-status');
     callSelect2Status('#form-search-receiver #select-search-receiver-status', true);
     callEmpData('#form-createReceiver #select-receiver-empcode', 'กรุณาเลือก');
@@ -44,6 +44,10 @@
 
     callSelect2Status('#form-search-viewstock #select-search-viewstock-status', true);
     callSelect2Status('#form-createStockProduct #select-viewstock-status', true);
+
+    callSelectDoorType('#form-add-calculate #select-insert-glassdoor-type', true);
+    callSelectDoorType('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass', true);
+
     callGroupData('#form-search-viewstock #select-search-viewstock-group', 'ทั้งหมด');
     callGroupData('#form-createStockProduct #select-viewstock-group', 'กรุณาเลือก');
     callSubGroupData('#form-search-viewstock #select-search-viewstock-subgroup', 'ทั้งหมด');
@@ -52,6 +56,8 @@
     callBrandData('#form-createStockProduct #select-viewstock-brand', 'กรุณาเลือก');
     callStockData('#form-search-viewstock #select-search-viewstock-stock', 'ทั้งหมด');
     callStockData('#form-createStockProduct #select-viewstock-stock', 'กรุณาเลือก');
+    callStockProductData('#form-add-calculate #select-insert-product-item', '-- กรุณาเลือก --');
+    callStockProductData('#form-add-calculate-clearglass #select-insert-product-item-clearglass', '-- กรุณาเลือก --');
     callUnitData('#form-createStockProduct #select-viewstock-unit', 'กรุณาเลือก');
 
 
@@ -74,6 +80,7 @@
     callGetReceiverList();
     callGetStockList();
     callGetStockProductList();
+    callGetCalculateCode();
     /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
         _product_item_action = 'add';
@@ -129,7 +136,7 @@
     //    else {
     //        $('#form-createSubGroup input[name="input-subgroup-code"]').val('');
     //    }
-        
+
     //});
 
     //$(document).on('change', '#select-group-name', function () {
@@ -304,6 +311,14 @@
         callGetGroupList();
     });
 
+    $('#form-search-calculate .btn-search-calculate').on('click', function () {
+        callGetFrameList();
+    });
+
+    $('#form-search-calculate-clearglass .btn-search-calculate-clearglass').on('click', function () {
+        callGetClearGlassList();
+    });
+
     $('#form-search-Group .btn-clear-search-group').on('click', function () {
         clearSearchForm("group");
         callGetGroupList();
@@ -325,6 +340,26 @@
     $('#form-search-brand .btn-clear-search-brand').on('click', function () {
         clearSearchForm("brand");
         callGetBrandList();
+    });
+
+    $('#form-search-calculate .btn-clear-search-calculate').on('click', function () {
+        var table = $('#tb-search-frameglass-list').DataTable();
+
+        //clear datatable
+        table.clear().draw();
+        /*$('#tb-search-frameglass-list').DataTable().clear();*/
+        $('#form-search-calculate input[name="input-search-calulate-code"]').val('');
+        $('.btn-print-search-calculate').css('display', 'none');
+    });
+
+    $('#form-search-calculate-clearglass .btn-clear-search-calculate-clearglass').on('click', function () {
+        var table = $('#tb-search-clearglass-list').DataTable();
+
+        //clear datatable
+        table.clear().draw();
+        /*$('#tb-search-frameglass-list').DataTable().clear();*/
+        $('#form-search-calculate-clearglass input[name="input-search-calulate-code-clearglass"]').val('');
+        $('.btn-print-search-calculate-clearglass').css('display', 'none');
     });
 
     $('#form-search-Unit .btn-search-unit').on('click', function () {
@@ -361,6 +396,144 @@
     $('#form-search-viewstock .btn-clear-search-viewstock').on('click', function () {
         clearSearchForm("viewstock");
         callGetStockProductList();
+    });
+
+    $('.btn-save-calculate').on('click', function () {
+        saveCalculate();
+    });
+    $('.btn-clear-add-calculate').on('click', function () {
+        clearcalinsert();
+    });
+
+    $('.btn-save-calculate-clearglass').on('click', function () {
+        saveCalculateClearglass();
+    });
+    $('.btn-clear-add-calculate-clearglass').on('click', function () {
+        clearcalglassinsert();
+    });
+    
+    $('.btn-print-calculate').on('click', function () {
+        saveCalculatePrint();
+    });
+
+    $('.btn-print-calculate-clearglass').on('click', function () {
+        saveCalculateClearglassPrint();
+    });
+
+    $('.btn-print-search-calculate').on('click', function () {
+        RePrintFrame();
+    });
+    $('.btn-print-search-calculate-clearglass').on('click', function () {
+        ReprintClearGlass();
+    });
+
+    $('.btn-modal-print-cal').on('click', function () {
+        DoPrintCal("modal-printFrameCalculate");
+    });
+    $('.btn-modal-reprint-cal').on('click', function () {
+        DoRePrintCal("modal-ReprintFrameCalculate");
+    });
+    $('.btn-modal-print-cal-clearglass').on('click', function () {
+        DoPrintClearGlassCal("modal-printClearglassCalculate");
+    });
+    $('.btn-modal-reprint-cal-clearglass').on('click', function () {
+        DoRePrintClearGlassCal("modal-ReprintClearglassCalculate");
+    });
+
+    $('#form-add-calculate .btn-add-calculate').on('click', function () {
+        var glassdoortype = $('#form-add-calculate #select-insert-glassdoor-type').val();
+        var glassdoortypetext = $('#form-add-calculate #select-insert-glassdoor-type option:selected').text();
+        var product = $('#form-add-calculate #select-insert-product-item').val();
+        var producttext = $('#form-add-calculate #select-insert-product-item option:selected').text();
+        var heigh = $('#form-add-calculate #input-insert-heigh-cupboard').val();
+        var width = $('#form-add-calculate #input-insert-width-cupboard').val();
+        if (glassdoortype != '' && product != '' && heigh != '' && width != '') {
+            var rowid = $('#tb-frameglass-list tr').length;
+            /*$('#form-add-calculate #tb-product-list tbody').empty();*/
+            var calhm = parseInt(heigh);
+            var calwm = parseInt(width);
+            var calh = parseFloat(parseInt(heigh) - 0.3);
+            var calw = parseFloat((parseInt(width) - 0.5) / 2);
+            if (glassdoortype == "S") {
+                calw = parseFloat(width);
+            }
+            var row;
+            row = $('<tr id="row' + rowid + '">');
+            /*  row.append($('<td style="display:none;">').html(length));*/
+            row.append($('<td style="display:none;">').html(product));
+            row.append($('<td style="display:none;">').html(glassdoortype));
+            row.append($('<td>').html(producttext));
+            row.append($('<td>').html(calhm));
+            row.append($('<td>').html(calwm));
+            row.append($('<td>').html(calh));
+            row.append($('<td>').html(calw));
+            row.append($('<td>').html(parseFloat(calh - 0.7)));
+            row.append($('<td>').html(parseFloat(calw - 3.7)));
+            row.append($('<td>').html(glassdoortypetext));
+            row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCal('#${"row"}${rowid}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+            $('#tb-frameglass-list').append(row);
+            clearcalinsert();
+        }
+        else {
+            Swal.fire({
+                text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+
+            });
+        }
+    });
+
+    $('#form-add-calculate-clearglass .btn-add-calculate-clearglass').on('click', function () {
+        var glassdoortype = $('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass').val();
+        var glassdoortypetext = $('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass option:selected').text();
+        var product = $('#form-add-calculate-clearglass #select-insert-product-item-clearglass').val();
+        var producttext = $('#form-add-calculate-clearglass #select-insert-product-item-clearglass option:selected').text();
+        var heigh = $('#form-add-calculate-clearglass #input-insert-heigh-cupboard-clearglass').val();
+        var width = $('#form-add-calculate-clearglass #input-insert-width-cupboard-clearglass').val();
+        if (glassdoortype != '' && product != '' && heigh != '' && width != '') {
+            var rowid = $('#tb-clearglass-list tr').length;
+            /*$('#form-add-calculate #tb-product-list tbody').empty();*/
+            var calhm = parseInt(heigh);
+            var calwm = parseInt(width);
+            var calh = parseFloat(parseInt(heigh) - 0.7);
+            var calw = parseFloat((parseInt(width) - 1) / 2);
+            if (glassdoortype == "S") {
+                calw = parseFloat((parseInt(width) - 0.6));
+            }
+            var row;
+            row = $('<tr id="row' + rowid + '">');
+            /*  row.append($('<td style="display:none;">').html(length));*/
+            row.append($('<td style="display:none;">').html(product));
+            row.append($('<td style="display:none;">').html(glassdoortype));
+            row.append($('<td>').html(producttext));
+            row.append($('<td>').html(calhm));
+            row.append($('<td>').html(calwm));
+            row.append($('<td>').html(calh));
+            row.append($('<td>').html(calw));
+            row.append($('<td>').html(glassdoortypetext));
+            row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCal('#${"row"}${rowid}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+            $('#tb-clearglass-list').append(row);
+            clearcalglassinsert();
+        }
+        else {
+            Swal.fire({
+                text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+
+            });
+        }
     });
 
     $('#tb-product-list').on('click', 'td.item-details', function () {
@@ -658,9 +831,9 @@
         else if (target == "#nav-master-Group") {
             clearSearchForm("group");
             //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
-      /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
             callGetGroupList();
-        
+
         }
         else if (target == "#nav-master-SubGroup") {
             clearSearchForm("subgroup");

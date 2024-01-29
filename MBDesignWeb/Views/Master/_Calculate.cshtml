@@ -1,0 +1,930 @@
+﻿@{
+    ViewData["Title"] = "ตั้งค่าสูตรคำนวน";
+}
+
+@*<script src="~/scripts/config.js"></script>
+<script src="~/scripts/master/product.js"></script>*@
+
+<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .style-details, .type-details, .item-details {
+        cursor: pointer !important;
+    }
+
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
+    .no-display {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+</style>
+
+<div class="row">
+
+    <div class="col-sm-12 mt-2">
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab-master-calculate" role="tablist">
+                <button class="nav-link active" id="nav-calculate-frameglass-tab" data-bs-toggle="tab" data-bs-target="#nav-calculate-frameglass" type="button" role="tab" aria-controls="nav-calculate-frameglass" aria-selected="true" style="margin-right:2px;">การสั่งเฟรมและกระจก</button>
+                <button class="nav-link" id="nav-calculate-clearglass-tab" data-bs-toggle="tab" data-bs-target="#nav-calculate-clearglass" type="button" role="tab" aria-controls="nav-calculate-clearglass" aria-selected="false" style="margin-right:2px;">การสั่งกระจกใสเปลือย</button>
+                <button class="nav-link" id="nav-search-frameglass-tab" data-bs-toggle="tab" data-bs-target="#nav-search-frameglass" type="button" role="tab" aria-controls="nav-search-frameglass" aria-selected="false" style="margin-right:2px;">รายการเฟรมและกระจก</button>
+                <button class="nav-link" id="nav-search-clearglass-tab" data-bs-toggle="tab" data-bs-target="#nav-search-clearglass" type="button" role="tab" aria-controls="nav-search-clearglass" aria-selected="false" style="margin-right:2px;">รายการกระจกใสเปลือย</button>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tab-master-calculate-tabContent">
+            <div class="tab-pane fade show active" id="nav-calculate-frameglass" role="tabpanel" aria-labelledby="nav-calculate-frameglass-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-add-calculate">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>เลขที่ใบรายการ</label>
+                                    <input type="text" class="form-control" id="input-insert-calulate-code" name="input-insert-calulate-code" placeholder="" readonly="readonly">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ประเภทบาน</label>
+                                    <select class="form-select" id="select-insert-glassdoor-type">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>รายการสินค้า</label>
+                                    <select class="form-select" id="select-insert-product-item">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ความสูงตู้</label>
+                                    <input type="text" class="form-control" id="input-insert-heigh-cupboard" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ความกว้างตู้</label>
+                                    <input type="text" class="form-control" id="input-insert-width-cupboard" placeholder="">
+                                </div>
+                                <div class="col-sm-2 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-add-calculate">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-add-calculate">เพิ่มรายการ</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    @*  <div class="col-sm-2 mt-2">
+                    <button type="button" class="btn-add-custom btn-add-product"><img src="~/images/shopping-cart.png" width="25px" /> เพิ่มสินค้า</button>
+                    </div> *@
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-frameglass-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display:none;"><span>productid</span></th>
+                                    <th style="display:none;"><span>glassdoortypeid</span></th>
+                                    <th><span>รายการสินค้า</span></th>
+                                    <th><span>ความสูงตู้ cm</span></th>
+                                    <th><span>ความกว้างตู้ cm</span></th>
+                                    <th><span>สั่งเฟรมสูง</span></th>
+                                    <th><span>สั่งเฟรมกว้าง</span></th>
+                                    <th><span>สั่งกระจกลบคมสูง</span></th>
+                                    <th><span>สั่งกระจกลบคมกว้าง</span></th>
+                                    <th><span>ประเภทบาน</span></th>
+                                    <th id="delete-action"><span>ลบ</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-default-custom btn-save-calculate"><i class="fa fa-save"> บันทึก</i></button>
+                        <button type="button" class="btn btn-primary btn-print-calculate"><i class="fa fa-print"> พิมพ์</i></button>
+                    </div>
+
+                    <div id="modal-printFrameCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-printFrameCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">เลขที่ใบรายการ</label>
+                                                        <input class="form-control" type="text" id="input-print-calno" name="input-print-calno" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">รายชื่อลูกค้า</label>
+                                                        <select class="form-select" id="select-calprint-cust" data-selected="" name="select-calprint-cust" onchange="onCustCalChange();"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">ประเภทบาน</label>
+                                                        <select class="form-select" id="select-calprint-glassdoortype" data-selected="" name="select-calprint-glassdoortype"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่จัด</label>
+                                                        <input class="form-control" type="text" id="input-print-createdate" name="input-print-createdate" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่ส่ง</label>
+                                                        <input class="form-control" type="text" id="input-print-installdate" name="input-print-installdate" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">ที่อยู่</label>
+                                                        <textarea class="form-control" rows="5" id="input-print-address" name="input-print-address" disabled></textarea>
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-print-cal"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-calculate-clearglass" role="tabpanel" aria-labelledby="nav-calculate-clearglass-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-add-calculate-clearglass">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-2">
+                                    <label>เลขที่ใบรายการ</label>
+                                    <input type="text" class="form-control" id="input-insert-calulate-code-clearglass" name="input-insert-calulate-code-clearglass" placeholder="" readonly="readonly">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ประเภทบาน</label>
+                                    <select class="form-select" id="select-insert-glassdoor-type-clearglass">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>รายการสินค้า</label>
+                                    <select class="form-select" id="select-insert-product-item-clearglass">
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ความสูงตู้</label>
+                                    <input type="text" class="form-control" id="input-insert-heigh-cupboard-clearglass" placeholder="">
+                                </div>
+                                <div class="col-sm-2">
+                                    <label>ความกว้างตู้</label>
+                                    <input type="text" class="form-control" id="input-insert-width-cupboard-clearglass" placeholder="">
+                                </div>
+                                <div class="col-sm-2 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-add-calculate-clearglass">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-add-calculate-clearglass">เพิ่มรายการ</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    @*  <div class="col-sm-2 mt-2">
+                    <button type="button" class="btn-add-custom btn-add-product"><img src="~/images/shopping-cart.png" width="25px" /> เพิ่มสินค้า</button>
+                    </div> *@
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-clearglass-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th style="display:none;"><span>productid</span></th>
+                                    <th style="display:none;"><span>glassdoortypeid</span></th>
+                                    <th><span>รายการสินค้า</span></th>
+                                    <th><span>ความสูงตู้ cm</span></th>
+                                    <th><span>ความกว้างตู้ cm</span></th>
+                                    <th><span>สั่งกระจกเจียริมสูง</span></th>
+                                    <th><span>สั่งกระจกเจียริมกว้าง</span></th>
+                                    <th><span>ประเภทบาน</span></th>
+                                    <th id="delete-action"><span>ลบ</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-default-custom btn-save-calculate-clearglass"><i class="fa fa-save"> บันทึก</i></button>
+                        <button type="button" class="btn btn-primary btn-print-calculate-clearglass"><i class="fa fa-print"> พิมพ์</i></button>
+                    </div>
+
+                    <div id="modal-printClearglassCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-printClearglassCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">เลขที่ใบรายการ</label>
+                                                        <input class="form-control" type="text" id="input-print-calno-clearglass" name="input-print-calno-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">รายชื่อลูกค้า</label>
+                                                        <select class="form-select" id="select-calprint-cust-clearglass" data-selected="" name="select-calprint-cust-clearglass" onchange="onCustClearGlassCalChange();"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">ประเภทบาน</label>
+                                                        <select class="form-select" id="select-calprint-glassdoortype-clearglass" data-selected="" name="select-calprint-glassdoortype-clearglass"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่จัด</label>
+                                                        <input class="form-control" type="text" id="input-print-createdate-clearglass" name="input-print-createdate-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่ส่ง</label>
+                                                        <input class="form-control" type="text" id="input-print-installdate-clearglass" name="input-print-installdate-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">ที่อยู่</label>
+                                                        <textarea class="form-control" rows="5" id="input-print-address-clearglass" name="input-print-address-clearglass" disabled></textarea>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-print-cal-clearglass"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-search-frameglass" role="tabpanel" aria-labelledby="nav-search-frameglass-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-calculate">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-6">
+                                    <label>เลขที่ใบรายการ</label>
+                                    <input type="text" class="form-control" id="input-search-calulate-code" name="input-search-calulate-code" placeholder="">
+                                </div>
+                   
+                                <div class="col-sm-6 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-calculate">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-calculate">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-search-frameglass-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>id</span></th>
+                                    <th><span>รายการสินค้า</span></th>
+                                    <th><span>ความสูงตู้ cm</span></th>
+                                    <th><span>ความกว้างตู้ cm</span></th>
+                                    <th><span>สั่งเฟรมสูง</span></th>
+                                    <th><span>สั่งเฟรมกว้าง</span></th>
+                                    <th><span>สั่งกระจกลบคมสูง</span></th>
+                                    <th><span>สั่งกระจกลบคมกว้าง</span></th>
+                                    <th><span>ประเภทบาน</span></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary btn-print-search-calculate" style="display:none;"><i class="fa fa-print"> พิมพ์</i></button>
+                    </div>
+
+                    <div id="modal-ReprintFrameCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-ReprintFrameCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">เลขที่ใบรายการ</label>
+                                                        <input class="form-control" type="text" id="input-reprint-calno" name="input-reprint-calno" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">รายชื่อลูกค้า</label>
+                                                        <select class="form-select" id="select-calreprint-cust" data-selected="" name="select-calreprint-cust" onchange="onCustReprintCalChange();"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">ประเภทบาน</label>
+                                                        <select class="form-select" id="select-calreprint-glassdoortype" data-selected="" name="select-calreprint-glassdoortype"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่จัด</label>
+                                                        <input class="form-control" type="text" id="input-reprint-createdate" name="input-reprint-createdate" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่ส่ง</label>
+                                                        <input class="form-control" type="text" id="input-reprint-installdate" name="input-reprint-installdate" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">ที่อยู่</label>
+                                                        <textarea class="form-control" rows="5" id="input-reprint-address" name="input-reprint-address" disabled></textarea>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-reprint-cal"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="nav-search-clearglass" role="tabpanel" aria-labelledby="nav-search-clearglass-tab">
+                <div class="container-fluid">
+                    <div class="row mt-2">
+                        <form id="form-search-calculate-clearglass">
+                            <div class="row col-sm-12">
+                                <div class="col-sm-6">
+                                    <label>เลขที่ใบรายการ</label>
+                                    <input type="text" class="form-control" id="input-search-calulate-code-clearglass" name="input-search-calulate-code-clearglass" placeholder="">
+                                </div>
+                       
+                                <div class="col-sm-6 mt-4 text-end">
+                                    <button type="button" class="btn btn-default-custom btn-clear-search-calculate-clearglass">ล้างข้อมูล</button>
+                                    <button type="button" class="btn btn-primary btn-search-calculate-clearglass">ค้นหา</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    @*  <div class="col-sm-2 mt-2">
+                    <button type="button" class="btn-add-custom btn-add-product"><img src="~/images/shopping-cart.png" width="25px" /> เพิ่มสินค้า</button>
+                    </div> *@
+
+                    <div class="row col-sm-12 mt-2">
+                        <table class="table no-footer" id="tb-search-clearglass-list" width="100%">
+                            <thead>
+                                <tr>
+                                    <th><span>id</span></th>
+                                    <th><span>รายการสินค้า</span></th>
+                                    <th><span>ความสูงตู้ cm</span></th>
+                                    <th><span>ความกว้างตู้ cm</span></th>
+                                    <th><span>สั่งกระจกเจียริมสูง</span></th>
+                                    <th><span>สั่งกระจกเจียริมกว้าง</span></th>
+                                    <th><span>ประเภทบาน</span></th>
+ 
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div class="text-center">
+                      
+                        <button type="button" class="btn btn-primary btn-print-search-calculate-clearglass" style="display:none"><i class="fa fa-print"> พิมพ์</i></button>
+                    </div>
+
+                    <div id="modal-ReprintClearglassCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-ReprintClearglassCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="col-sm-12">
+                                                <div class="row">
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">เลขที่ใบรายการ</label>
+                                                        <input class="form-control" type="text" id="input-reprint-calno-clearglass" name="input-reprint-calno-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">รายชื่อลูกค้า</label>
+                                                        <select class="form-select" id="select-calreprint-cust-clearglass" data-selected="" name="select-calreprint-cust-clearglass" onchange="onCustReprintClearGlassCalChange();"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">ประเภทบาน</label>
+                                                        <select class="form-select" id="select-calreprint-glassdoortype-clearglass" data-selected="" name="select-calreprint-glassdoortype-clearglass"></select>
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่จัด</label>
+                                                        <input class="form-control" type="text" id="input-reprint-createdate-clearglass" name="input-reprint-createdate-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-6 mb-2">
+                                                        <label class="control-label">วันที่ส่ง</label>
+                                                        <input class="form-control" type="text" id="input-reprint-installdate-clearglass" name="input-reprint-installdate-clearglass" disabled="disabled" />
+                                                    </div>
+                                                    <div class="col-sm-12 mb-2">
+                                                        <label class="control-label">ที่อยู่</label>
+                                                        <textarea class="form-control" rows="5" id="input-reprint-address-clearglass" name="input-reprint-address-clearglass" disabled></textarea>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-reprint-cal-clearglass"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*modal for create product*@
+<div id="modal-createProduct" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProduct">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-name" name="input-product-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status"></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type"></select>
+
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" />
+                                </div>
+                            </div>
+
+                            @*</div>*@
+                        </div>
+
+                    </div>
+                </form>
+
+
+                <div class="row">
+                    <div class="row mt-2 mb-2">
+                        <div class="col-sm-7">Options</div>
+                        <div class="col-sm-3">ราคาต่อเมตร (บาท)</div>
+                    </div>
+
+                    <div id="divOptions">
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-product"><i class="fas fa-save" aria-hidden="true"></i></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view product*@
+<div id="modal-viewProduct" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลสินค้า (Items)</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProduct">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อ Items<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-name" name="input-product-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status" disabled></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type" disabled></select>
+
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-price" name="input-product-price" disabled />
+                                </div>
+                            </div>
+
+                            @*</div>*@
+                        </div>
+
+                    </div>
+                </form>
+
+                <div class="row">
+                    <div class="row mt-2 mb-2">
+                        <div class="col-sm-7">Options</div>
+                        <div class="col-sm-3">ราคาต่อเมตร (บาท)</div>
+                    </div>
+
+                    <div id="divOptions">
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create type*@
+<div id="modal-createType" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="typeHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createType">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหมวดหมู่<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-type-code" name="input-type-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-type-price" name="input-type-price" />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-type-name" name="input-type-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-type-status" data-selected="" name="select-type-status"></select>
+                                </div>
+                            </div>
+
+                            @*</div>*@
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-type"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view type*@
+<div id="modal-viewType" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลหมวดหมู่</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createType">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหมวดหมู่<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-type-code" name="input-type-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-type-price" name="input-type-price" disabled />
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-type-name" name="input-type-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-control" id="select-type-status" data-selected="" name="select-type-status" disabled></select>
+                                </div>
+                            </div>
+
+                            @*</div>*@
+                        </div>
+
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create style*@
+<div id="modal-createStyle" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="styleHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createStyle">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            @*<div class="col-sm-12">*@
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสสไตล์<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-style-code" name="input-style-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-select" id="select-style-status" data-selected="" name="select-style-status"></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อสไตล์<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-style-name" name="input-style-name" />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-style"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view style*@
+<div id="modal-viewStyle" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลสไตล์</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createStyle">
+                    <div class="row d-sm-flex">
+                        <div class="row d-sm-flex">
+                            @*<div class="col-sm-12">*@
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">รหัสสไตล์<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-style-code" name="input-style-code" disabled />
+                                    </div>
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">สถานะ</label>
+                                        <select class="form-control" id="select-style-status" data-selected="" name="select-style-status" disabled></select>
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="row">
+                                    <div class="col-sm-12 mb-2">
+                                        <label class="control-label">ชื่อสไตล์<span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" id="input-style-name" name="input-style-name" disabled />
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create product quick QT*@
+<div id="modal-createProduct-QuickQT" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemQuickQTHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProductQuickQT">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">Text (คำอธิบายรายละเอียดที่ใช้ในการแสดงผลในใบเสนอราคา)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-text" name="input-product-text" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-product-quickQT"><i class="fas fa-save" aria-hidden="true"></i></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view product quick QT*@
+<div id="modal-viewProduct-QuickQT" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลสินค้า (Quick QT)</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createProductQuickQT">
+                    <div class="row d-sm-flex">
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รหัสสินค้า<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-code" name="input-product-code" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-product-type" data-selected="" name="select-product-type" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">Text (คำอธิบายรายละเอียดที่ใช้ในการแสดงผลในใบเสนอราคา)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-product-text" name="input-product-text" disabled />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ราคาต่อเมตร (บาท)<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" id="input-product-price" name="input-product-price" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-product-status" data-selected="" name="select-product-status" disabled></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 mb-2">
+                            <input id="display-emp-signature" name="display-emp-signature[]" type="file" class="file" accept="image/png">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
