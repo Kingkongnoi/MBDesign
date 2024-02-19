@@ -45,6 +45,9 @@
     callSelect2Status('#form-search-viewstock #select-search-viewstock-status', true);
     callSelect2Status('#form-createStockProduct #select-viewstock-status', true);
 
+    callSelect2Status('#form-search-stockin #select-search-stockin-status', true);
+    callSelect2Status('#form-getInStock #select-getInStock-status', false);
+
     callSelectDoorType('#form-add-calculate #select-insert-glassdoor-type', true);
     callSelectDoorType('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass', true);
 
@@ -56,9 +59,14 @@
     callBrandData('#form-createStockProduct #select-viewstock-brand', 'กรุณาเลือก');
     callStockData('#form-search-viewstock #select-search-viewstock-stock', 'ทั้งหมด');
     callStockData('#form-createStockProduct #select-viewstock-stock', 'กรุณาเลือก');
+    callStockData('#form-search-stockin #select-search-stockin-stock', '-- เลือกทั้งหมด --');
+    callStockData('#form-search-withDraw #select-search-withDraw-stock', 'กรุณาเลือก');
+    callStockData('#form-getInStock #select-getInStock-Stock', 'กรุณาเลือก');
     callStockProductData('#form-add-calculate #select-insert-product-item', '-- กรุณาเลือก --');
     callStockProductData('#form-add-calculate-clearglass #select-insert-product-item-clearglass', '-- กรุณาเลือก --');
     callUnitData('#form-createStockProduct #select-viewstock-unit', 'กรุณาเลือก');
+    callRecieverList('#form-getInStock #select-getInStock-by', 'กรุณาเลือก');
+    callRecieverList('#form-search-stockin #select-search-stockin-by', '-- เลือกทั้งหมด --')
 
 
     //callProductTypeSelect2('#form-createProductQuickQT #select-product-type', 'กรุณาเลือก');
@@ -81,6 +89,10 @@
     callGetStockList();
     callGetStockProductList();
     callGetCalculateCode();
+    callGetInList();
+    callGetOutList();
+    callGetFrameList();
+    callGetGlassList();
     /* Begin ProductItem */
     $('#nav-master-productData .btn-add-product').on('click', function () {
         _product_item_action = 'add';
@@ -129,6 +141,24 @@
         $(`#modal-createStockProduct #itemHeader`).text('เพิ่มหมวดหมู่หลัก');
         $('#modal-createStockProduct').modal('show');
     });
+
+    $('#nav-master-getIn .btn-add-getin').on('click', function () {
+        _product_item_action = 'add';
+        clearForm('modal-getInStock');
+        $(`#modal-getInStock #itemHeader`).text('รับเข้าสินค้า');
+        $('#modal-getInStock').modal('show');
+        callSelect2Status('#form-getInStock #select-getInStock-status');
+        callGetLastestGetInItemId();
+    });
+
+    $('#nav-master-getOut .btn-add-getout').on('click', function () {
+        _product_item_action = 'add';
+        clearForm('modal-getOutStock');
+        $(`#modal-getOutStock #itemHeader`).text('รับเข้าสินค้า');
+        $('#modal-getOutStock').modal('show');
+        callSelect2Status('#form-getOutStock #select-getOutStock-status');
+        callGetLastestGetInItemId();
+    });
     //$('#form-createSubGroup #select-group-name').on('change', function () {
     //    if (this.value != '') {
     //        callGetSubGroupcode(this.value);
@@ -176,6 +206,16 @@
         //$('#modal-createProduct #divOptions').empty();
         callGetGroupById($(this).data('id'), 'modal-creatGroup');
     });
+
+    $(document).on('click', '.btn-edit-stockin', function () {
+        $(`#modal-getInStock #itemHeader`).text('แก้ไขรับเข้าสินค้า');
+        $(`#modal-getInStock`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-getInStock');
+        //$('#modal-createProduct #divOptions').empty();
+        callGetGetInListByID($(this).data('id'), 'modal-getInStock');
+    });
+
     $(document).on('click', '.btn-edit-subgroup', function () {
         $(`#modal-createSubGroup #itemHeader`).text('แก้ไขข้อมูลหมวดหมู่ย่อย');
         $(`#modal-createSubGroup`).modal('show');
@@ -294,6 +334,12 @@
     $('.btn-modal-save-stock').on('click', function () {
         DoAddOrUpdateStock("modal-createStock");
     });
+    $('.btn-modal-save-getin').on('click', function () {
+        DoAddOrUpdateGetin("modal-getInStock");
+    });
+    $('.btn-modal-save-getout').on('click', function () {
+        DoAddOrUpdateGetout("modal-getOutStock");
+    });
     $('.btn-modal-save-viewstock').on('click', function () {
         DoAddOrUpdateStockProduct("modal-createStockProduct");
     });
@@ -316,7 +362,7 @@
     });
 
     $('#form-search-calculate-clearglass .btn-search-calculate-clearglass').on('click', function () {
-        callGetClearGlassList();
+        callGetGlassList();
     });
 
     $('#form-search-Group .btn-clear-search-group').on('click', function () {
@@ -388,6 +434,16 @@
         clearSearchForm("stock");
         callGetStockList();
     });
+
+    $('#form-search-stockin .btn-search-stockin').on('click', function () {
+        callGetInList();
+    });
+
+    $('#form-search-stockin .btn-search-stockout').on('click', function () {
+        callGetOutList();
+    });
+
+
 
     $('#form-search-viewstock .btn-search-viewstock').on('click', function () {
         callGetStockProductList();
@@ -627,6 +683,26 @@
         callGetTypeById($(this).data('id'));
     });
 
+    $(document).on('click', '.btn-print-calf', function () {
+        RePrintFrameList($(this).data('id'));
+
+    });
+
+    $(document).on('click', '.btn-print-calc', function () {
+        RePrintGlassList($(this).data('id'));
+
+    });
+
+    $(document).on('click', '.btn-view-calf', function () {
+        getPrintDetail($(this).data('id'));
+
+    });
+
+    $(document).on('click', '.btn-view-calc', function () {
+        getPrintDetailClear($(this).data('id'));
+
+    });
+
     $(`#modal-createType`).on('show.bs.modal', function () {
         clearForm("modal-createType");
         if (_product_type_action == 'add') { callGetLastestTypeId(); }
@@ -643,6 +719,16 @@
     $('#form-search-type .btn-clear-search-type').on('click', function () {
         clearSearchForm("type");
         callGetTypeList();
+    });
+
+    $('#form-search-stockin .btn-clear-search-stockin').on('click', function () {
+        clearSearchForm("stockin");
+        callGetInList();
+    });
+
+    $('#form-search-stockout .btn-clear-search-stockout').on('click', function () {
+        clearSearchForm("stockout");
+        callGetOutList();
     });
 
     $('#tb-type-list').on('click', 'td.type-details', function () {
@@ -875,6 +961,20 @@
             //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
             /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
             callGetStockProductList();
+
+        }
+        else if (target == "#nav-master-getIn") {
+            clearSearchForm("stockin");
+            //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+            /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            callGetInList();
+
+        }
+        else if (target == "#nav-master-getOut") {
+            clearSearchForm("stockout");
+            //callProductTypeSelect2('#form-createProduct #select-product-type', 'กรุณาเลือก')
+            /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
+            callGetOutList();
 
         }
     });

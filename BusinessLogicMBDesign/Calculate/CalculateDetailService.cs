@@ -40,13 +40,23 @@ namespace BusinessLogicMBDesign.Calculate
             }
         }
 
-        public List<CalculateDetailItemModel> GetCalculateList(string calculatecode, string calculatetype)
+        public List<CalculateDetailItemModel> GetCalculateListDetail(string calculatecode, string calculatetype)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
                 return _calculateDetailRepository.GetAll(calculatecode, "", calculatetype, conn);
+            }
+        }
+
+        public List<tbCalculateMaster> GetCalculateList(string calculatecode, string calculatetype)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _calculateDetailRepository.GetAllMaster(calculatecode,calculatetype,"", conn);
             }
         }
 

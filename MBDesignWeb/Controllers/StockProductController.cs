@@ -16,16 +16,18 @@ namespace MBDesignWeb.Controllers
         {
             _configuration = configuration;
             _stockproductService = new StockProductService(_configuration);
+           
         }
 
+
+        #region GET
         [HttpGet]
         public JsonResult GetStockProductList(int groupid, int subgroupid, int brandid, int stockid, string productcode, string productname, string status)
         {
-            var data = _stockproductService.GetStockProductList(groupid,subgroupid,brandid,stockid, productcode,productname, status);
+            var data = _stockproductService.GetStockProductList(groupid, subgroupid, brandid, stockid, productcode, productname, status);
 
             return new JsonResult(data);
         }
-        #region GET
         [HttpGet]
         public JsonResult GetLastestItemId()
         {
@@ -33,6 +35,8 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(data);
         }
+       
+        
 
         [HttpGet]
         public JsonResult GetItemByItemId(int id)
@@ -72,6 +76,14 @@ namespace MBDesignWeb.Controllers
         public JsonResult GetUnitSelect()
         {
             var data = _stockproductService.GetUnitDataSelect();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetStockProductManageByID(int stockid)
+        {
+            var data = _stockproductService.GetStockProductList(stockid);
 
             return new JsonResult(data);
         }
@@ -133,6 +145,8 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(returnData);
         }
+
+      
         #endregion
     }
 }

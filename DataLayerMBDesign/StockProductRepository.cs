@@ -33,10 +33,10 @@ namespace DataLayerMBDesign
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.productname,obj.stockamount,obj.productprice,obj.groupid,obj.subgroupid,obj.brandid,obj.stockid,obj.unitmasterid, obj.updateDate, obj.updateBy, obj.status, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.productname, obj.stockamount, obj.productprice, obj.groupid, obj.subgroupid, obj.brandid, obj.stockid, obj.unitmasterid, obj.updateDate, obj.updateBy, obj.status, obj.id }, transaction: trans);
         }
 
-        public List<StockProductItemModel> GetAll(int groupid,int subgroupid,int brandid,int stockid,string productcode, string productname, string status, SqlConnection conn, SqlTransaction? trans = null)
+        public List<StockProductItemModel> GetAll(int groupid, int subgroupid, int brandid, int stockid, string productcode, string productname, string status, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
 
@@ -50,11 +50,11 @@ namespace DataLayerMBDesign
             }
             if (brandid != 0)
             {
-                condition += string.Format(" and a.subgroupid = {0}", subgroupid);
+                condition += string.Format(" and a.brandid = {0}", brandid);
             }
             if (stockid != 0)
             {
-                condition += string.Format(" and a.subgroupid = {0}", subgroupid);
+                condition += string.Format(" and a.stockid = {0}", stockid);
             }
 
             if (!string.IsNullOrEmpty(productcode) && productcode != "null")
@@ -72,7 +72,9 @@ namespace DataLayerMBDesign
             }
 
             StringBuilder queryString = new StringBuilder();
-            queryString.Append(" SELECT a.id,a.productcode,a.productname,a.stockamount,a.productprice,a.groupid,a.subgroupid,a.brandid,a.stockid,a.unitmasterid,g.groupname,gs.subgroupname,b.brandname,s.stockname,u.unitname");
+            queryString.Append("SELECT a.id,a.productcode,a.productname" +
+                ",ISNULL((SELECT Sum(isnull(amount,0)) from tbStockProductManage where stockproductcode = a.productcode and isDeleted =0 and status =1 and actiontype= 'I'),0) - ISNULL((SELECT Sum(isnull(amount,0)) from tbStockProductManage where stockproductcode = a.productcode and isDeleted =0 and status =1 and actiontype='W'),0) as stockamount" +
+                ",a.productprice,a.groupid,a.subgroupid,a.brandid,a.stockid,a.unitmasterid,g.groupname,gs.subgroupname,b.brandname,s.stockname,u.unitname");
             queryString.Append(" FROM tbStockProduct a");
             queryString.Append(" inner join tbGroup g on g.id = a.groupid");
             queryString.Append(" inner join tbSubGroup gs on gs.id = a.subgroupid");
@@ -120,6 +122,8 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<int>(queryString, transaction: trans);
         }
+
+       
 
         public List<tbGroup> getGroupData(SqlConnection conn, SqlTransaction? trans = null)
         {

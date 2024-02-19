@@ -76,15 +76,29 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(data);
         }
-
         [HttpGet]
         public JsonResult GetCalByCode(string calcode, string caltype)
         {
             var data = _calculateDetailService.GetCalculateList(calcode, caltype);
+          
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
+        public JsonResult GetListMasterF(string calcode, string caltype)
+        {
+            var data = _calculateDetailService.GetCalculateList(calcode, caltype);
+
+            return new JsonResult(data);
+        }
+        [HttpGet]
+        public JsonResult GetCalDetailByCode(string calcode, string caltype)
+        {
+            var data = _calculateDetailService.GetCalculateListDetail(calcode, caltype);
             data.ForEach(x =>
             {
                 x.productname = string.Format("{0}-{1}", x.productcode, x.productname);
-                if (x.glassdoortype =="S")
+                if (x.glassdoortype == "S")
                 {
                     x.glassdoortype = "บานเดี่ยว";
                 }

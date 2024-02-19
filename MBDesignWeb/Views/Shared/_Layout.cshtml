@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap-5.0.2-dist/base.css" />
 
     <link href="~/lib/loadingstyle.css" rel="stylesheet" />
-@*
+    @*
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
     *@
     <link href="~/lib/loadingstyle.css" rel="stylesheet" />
@@ -42,10 +42,21 @@
         localStorage.setItem('apiUrl', '@ViewBag.apiUrl');
         localStorage.setItem('imageUrl', '@ViewBag.imageUrl');
     </script>
-
+    <script>
+        let imageUrl = localStorage.getItem('imageUrl');
+        let path = (imageUrl == "") ? ".." : imageUrl;
+        function onmouseoverAction(x,name) {
+            $(`#${x}`).removeAttr("src");
+            $(`#${x}`).attr('src', `${path}/images/${name}_2.png`);
+        }
+        function onmouseoutAction(x,name) {
+            $(`#${x}`).removeAttr("src");
+            $(`#${x}`).attr('src', `${path}/images/${name}.png`);
+        }
+    </script>
     <style>
-        .bagde-visible{
-            visibility:hidden;
+        .bagde-visible {
+            visibility: hidden;
         }
 
         .loader {
@@ -74,33 +85,33 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @*<li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
-                                <i href="~/images/accounting.png"></i> ภาพรวมข้อมูล
-                                </a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="" asp-action="">
+                        <i href="~/images/accounting.png"></i> ภาพรวมข้อมูล
+                        </a>
                         </li>*@
                         <li class="nav-item" id="nav-sale">
-                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index"><img id="imgSale" src="~/images/sales.png" width="20px" /> <span id="spnSale"> การขาย</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index" onmouseover="onmouseoverAction('imgSale','sales')" onmouseout="onmouseoutAction('imgSale','sales')"><img id="imgSale" src="~/images/sales.png" width="20px" /> <span id="spnSale"> การขาย</span></a>
                         </li>
                         <li class="nav-item" id="nav-3d">
-                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index"><img id="img3D" src="~/images/graphic-design.png" width="20px" /> <span id="spn3D"> การออกแบบ 3D</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Design3D" asp-action="Index" onmouseover="onmouseoverAction('img3D','graphic-design')" onmouseout="onmouseoutAction('img3D','graphic-design')"><img id="img3D" src="~/images/graphic-design.png" width="20px" /> <span id="spn3D"> การออกแบบ 3D</span></a>
                         </li>
                         <li class="nav-item" id="nav-foreman">
-                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index"><img id="imgForeman" src="~/images/foreman.png" width="20px" /> <span id="spnForeman"> โฟร์แมน</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Foreman" asp-action="Index" onmouseover="onmouseoverAction('imgForeman','foreman')" onmouseout="onmouseoutAction('imgForeman','foreman')"><img id="imgForeman" src="~/images/foreman.png" width="20px" /> <span id="spnForeman"> โฟร์แมน</span></a>
                         </li>
                         <li class="nav-item" id="nav-accounting">
-                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index"><img id="imgAccounting" src="~/images/accounting.png" width="20px" /> <span id="spnAccounting"> บัญชีและเอกสาร</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Accounting" asp-action="Index" onmouseover="onmouseoverAction('imgAccounting','accounting')" onmouseout="onmouseoutAction('imgAccounting','accounting')"><img id="imgAccounting" src="~/images/accounting.png" width="20px" /> <span id="spnAccounting"> บัญชีและเอกสาร</span></a>
                         </li>
                         <li class="nav-item" id="nav-master">
-                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index"><img id="imgMaster" src="~/images/data-processing.png" width="20px" /> <span id="spnMaster"> ข้อมูลหลัก</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="Master" asp-action="Index" onmouseover="onmouseoverAction('imgMaster','data-processing')" onmouseout="onmouseoutAction('imgMaster','data-processing')"><img id="imgMaster" src="~/images/data-processing.png" width="20px" /> <span id="spnMaster"> ข้อมูลหลัก</span></a>
                         </li>
                         <li class="nav-item" id="nav-hr">
-                            <a class="nav-link" asp-area="" asp-controller="HR" asp-action="Index"><img id="imgHR" src="~/images/hr-manager_1.png" width="20px" /> <span id="spnHR"> ฝ่ายบุคคล</span></a>
+                            <a class="nav-link" asp-area="" asp-controller="HR" asp-action="Index" onmouseover="onmouseoverAction('imgHR','hr-manager')" onmouseout="onmouseoutAction('imgHR','hr-manager')"><img id="imgHR" src="~/images/hr-manager.png" width="20px" /> <span id="spnHR"> ฝ่ายบุคคล</span></a>
                         </li>
                     </ul>
 
                 </div>
                 <div style="display:inline;float:right;">
-                    <ul class ="navbar-nav flex-grow-1">
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item" id="nav-approve">
                             @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
                             <a class="nav-link" asp-area="" asp-controller="Approve" asp-action="Index">
@@ -111,14 +122,14 @@
                         <li class="nav-item dropdown">
                             @*<a href="/semicon/redline/index" class="commenticon" aria-expanded="false" title="click to view task" target="_blank" onclick="getmenuidbylink('/semicon/redline/index')"><i class="fa-solid fa-bell"></i><span class="badge badge-iconnoti" id="show_task_open">1</span></a>*@
                             <a href="" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"><img src="~/images/girl.png" width="25px" /> <span id="spnloginName"></span></a>
-                            <div class="dropdown-menu" >
+                            <div class="dropdown-menu">
                                 <a class="dropdown-item" asp-controller="Login" asp-action="Index"><i class="fa fa-sign-out" aria-hidden="true"></i> ออกจากระบบ</a>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
-        </nav> 
+        </nav>
 
         <script>
             $(function () {
@@ -133,14 +144,14 @@
     </header>
     <div class="container-fluid">
         @*<main role="main" class="pb-3">*@
-            @RenderBody()
-       @*</main>*@
+        @RenderBody()
+        @*</main>*@
     </div>
 
     @*<footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - MBDesignWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <div class="container">
+    &copy; 2023 - MBDesignWeb - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    </div>
     </footer>*@
 
     @await RenderSectionAsync("Scripts", required: false)

@@ -30,7 +30,17 @@ namespace BusinessLogicMBDesign.Master
             {
                 conn.Open();
 
-                return _stockproductRepository.GetAll(groupid,subgroupid,brandid,stockid,productcode, productname, status, conn);
+                return _stockproductRepository.GetAll(groupid, subgroupid, brandid, stockid, productcode, productname, status, conn);
+            }
+        }
+
+        public List<StockProductItemModel> GetStockProductList(int stockid)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _stockproductRepository.GetAll(0, 0, 0, stockid, string.Empty, string.Empty, "1", conn);
             }
         }
 
@@ -63,7 +73,7 @@ namespace BusinessLogicMBDesign.Master
                     {
                         productcode = model.productcode,
                         productname = model.productname,
-                        stockamount = model.stockamount,
+                        //stockamount = model.stockamount,
                         productprice = model.productprice,
                         groupid = model.groupid,
                         subgroupid = model.subgroupid,
@@ -104,7 +114,7 @@ namespace BusinessLogicMBDesign.Master
                     {
                         id = model.id,
                         productname = model.productname,
-                        stockamount = model.stockamount,
+                        //stockamount = model.stockamount,
                         productprice = model.productprice,
                         groupid = model.groupid,
                         subgroupid = model.subgroupid,
@@ -127,6 +137,8 @@ namespace BusinessLogicMBDesign.Master
             return updated;
         }
 
+       
+
         public string GetFirstLastestItemId()
         {
             string stockproductcode = string.Empty;
@@ -144,6 +156,8 @@ namespace BusinessLogicMBDesign.Master
             }
 
         }
+
+        
 
         public List<tbGroup> GetGroupDataSelect()
         {

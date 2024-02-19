@@ -145,7 +145,7 @@
                                                     <div class="col-sm-12 mb-2">
                                                         <label class="control-label">ที่อยู่</label>
                                                         <textarea class="form-control" rows="5" id="input-print-address" name="input-print-address" disabled></textarea>
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -288,7 +288,7 @@
                                     <label>เลขที่ใบรายการ</label>
                                     <input type="text" class="form-control" id="input-search-calulate-code" name="input-search-calulate-code" placeholder="">
                                 </div>
-                   
+
                                 <div class="col-sm-6 mt-4 text-end">
                                     <button type="button" class="btn btn-default-custom btn-clear-search-calculate">ล้างข้อมูล</button>
                                     <button type="button" class="btn btn-primary btn-search-calculate">ค้นหา</button>
@@ -301,14 +301,19 @@
                             <thead>
                                 <tr>
                                     <th><span>id</span></th>
-                                    <th><span>รายการสินค้า</span></th>
+                                    <th><span>เลขที่ใบรายการ</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>ดูข้อมูล</span></th>
+                                    <th><span>พิมพ์</span></th>
+                                    @*         <th><span>รายการสินค้า</span></th>
                                     <th><span>ความสูงตู้ cm</span></th>
                                     <th><span>ความกว้างตู้ cm</span></th>
                                     <th><span>สั่งเฟรมสูง</span></th>
                                     <th><span>สั่งเฟรมกว้าง</span></th>
                                     <th><span>สั่งกระจกลบคมสูง</span></th>
                                     <th><span>สั่งกระจกลบคมกว้าง</span></th>
-                                    <th><span>ประเภทบาน</span></th>
+                                    <th><span>ประเภทบาน</span></th> *@
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -353,7 +358,7 @@
                                                     </div>
                                                     <div class="col-sm-12 mb-2">
                                                         <label class="control-label">ที่อยู่</label>
-                                                        <textarea class="form-control" rows="5" id="input-reprint-address" name="input-reprint-address" disabled></textarea>
+                                                        <textarea class="form-control" rows="5" id="input-reprint-address" name="input-reprint-address"></textarea>
 
                                                     </div>
                                                 </div>
@@ -362,8 +367,47 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer justify-content-center">
-                                    <button type="button" class="btn btn-primary btn-modal-reprint-cal"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
+                                    <button type="button" class="btn btn-primary btn-modal-reprint-cal"><i class="fa fa-print" aria-hidden="true"></i> พิมพ์</button>
                                     <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modal-ViewprintFrameCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-ViewprintFrameCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="row col-sm-12 mt-2">
+                                                <table class="table no-footer" id="tb-view-frameglass-list" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><span>id</span></th>
+                                                            <th><span>รายการสินค้า</span></th>
+                                                            <th><span>ความสูงตู้ cm</span></th>
+                                                            <th><span>ความกว้างตู้ cm</span></th>
+                                                            <th><span>สั่งเฟรมสูง</span></th>
+                                                            <th><span>สั่งเฟรมกว้าง</span></th>
+                                                            <th><span>สั่งกระจกลบคมสูง</span></th>
+                                                            <th><span>สั่งกระจกลบคมกว้าง</span></th>
+                                                            <th><span>ประเภทบาน</span></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                   
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิด</button>
                                 </div>
                             </div>
                         </div>
@@ -380,7 +424,7 @@
                                     <label>เลขที่ใบรายการ</label>
                                     <input type="text" class="form-control" id="input-search-calulate-code-clearglass" name="input-search-calulate-code-clearglass" placeholder="">
                                 </div>
-                       
+
                                 <div class="col-sm-6 mt-4 text-end">
                                     <button type="button" class="btn btn-default-custom btn-clear-search-calculate-clearglass">ล้างข้อมูล</button>
                                     <button type="button" class="btn btn-primary btn-search-calculate-clearglass">ค้นหา</button>
@@ -398,20 +442,26 @@
                             <thead>
                                 <tr>
                                     <th><span>id</span></th>
+                                    <th><span>เลขที่ใบรายการ</span></th>
+                                    <th><span>วันที่สร้าง</span></th>
+                                    <th><span>ผู้สร้าง</span></th>
+                                    <th><span>ดูข้อมูล</span></th>
+                                    <th><span>พิมพ์</span></th>
+                                    @* <th><span>id</span></th>
                                     <th><span>รายการสินค้า</span></th>
                                     <th><span>ความสูงตู้ cm</span></th>
                                     <th><span>ความกว้างตู้ cm</span></th>
                                     <th><span>สั่งกระจกเจียริมสูง</span></th>
                                     <th><span>สั่งกระจกเจียริมกว้าง</span></th>
-                                    <th><span>ประเภทบาน</span></th>
- 
+                                    <th><span>ประเภทบาน</span></th> *@
+
                                 </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
                     </div>
                     <div class="text-center">
-                      
+
                         <button type="button" class="btn btn-primary btn-print-search-calculate-clearglass" style="display:none"><i class="fa fa-print"> พิมพ์</i></button>
                     </div>
 
@@ -461,6 +511,45 @@
                                 <div class="modal-footer justify-content-center">
                                     <button type="button" class="btn btn-primary btn-modal-reprint-cal-clearglass"><i class="fas fa-print" aria-hidden="true"></i> พิมพ์</button>
                                     <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modal-ViewClearglassCalculate" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+                        <div class="modal-dialog modal-lg">
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header justify-content-center">
+                                    <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form id="form-ViewprintFrameCalculate">
+                                        <div class="row d-sm-flex">
+                                            @*<div class="col-sm-12">*@
+                                            <div class="row col-sm-12 mt-2">
+                                                <table class="table no-footer" id="tb-view-clear-list" width="100%">
+                                                    <thead>
+                                                        <tr>
+                                                            <th><span>id</span></th>
+                                                            <th><span>รายการสินค้า</span></th>
+                                                            <th><span>ความสูงตู้ cm</span></th>
+                                                            <th><span>ความกว้างตู้ cm</span></th>
+                                                            <th><span>สั่งกระจกเจียริมสูง</span></th>
+                                                            <th><span>สั่งกระจกเจียริมกว้าง</span></th>
+                                                           @*  <th><span>สั่งกระจกลบคมสูง</span></th>
+                                                            <th><span>สั่งกระจกลบคมกว้าง</span></th> *@
+                                                            <th><span>ประเภทบาน</span></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+
+                                    <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิด</button>
                                 </div>
                             </div>
                         </div>

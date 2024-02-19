@@ -80,6 +80,42 @@ namespace DataLayerMBDesign
             return conn.Query<CalculateDetailItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
 
+        public List<tbCalculateMaster> GetAllMaster(string calculatecode,string calculatetype,string createdate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string condition = @"";
+            //if (stockid != 0)
+            //{
+            //    condition += string.Format(" and a.id = {0}", stockid);
+            //}
+
+            if (!string.IsNullOrEmpty(calculatecode) && calculatecode != "null")
+            {
+                condition += string.Format(" and a.calculatecode like N'%{0}%'", calculatecode);
+            }
+            if (!string.IsNullOrEmpty(calculatetype) && calculatetype != "null")
+            {
+                condition += string.Format(" and a.calculatetype like N'%{0}%'", calculatetype);
+            }
+            if (!string.IsNullOrEmpty(createdate) && createdate != "null")
+            {
+                condition += string.Format(" and a.createDate = '{0}'", createdate);
+            }
+
+            StringBuilder queryString = new StringBuilder();
+            queryString.Append(" SELECT a.id");
+            queryString.Append(" ,a.calculatecode");
+            queryString.Append(" ,a.createDate");
+            queryString.Append(" ,a.createBy");
+            queryString.Append(" FROM tbCalculateMaster a");
+            //queryString.Append(" INNER JOIN tbCalculateDetail b on a.id = b.calculateMasterID");
+            //queryString.Append(" INNER JOIN tbStockProduct c on b.productcode = c.productcode");
+            queryString.Append(" where a.isDeleted = 0");
+            queryString.AppendFormat(" {0}", condition);
+            queryString.Append(" order by a.id asc");
+
+            return conn.Query<tbCalculateMaster>(queryString.ToString(), new { }, transaction: trans).ToList();
+        }
+
         //public tbStock GetFirstByName(string stockname, SqlConnection conn, SqlTransaction? trans = null)
         //{
         //    StringBuilder queryString = new StringBuilder();
