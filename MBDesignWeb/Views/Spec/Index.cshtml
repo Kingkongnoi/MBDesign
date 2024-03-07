@@ -1,11 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "การออกแบบ 3D";
+    ViewData["Title"] = "การออกแบบ Spec";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <script src="~/scripts/config.js"></script>
-<script src="~/scripts/design3d/design3d-control.js"></script>
-<script src="~/scripts/design3d/design3d-function.js"></script>
+@* <script src="~/scripts/master/master-function.js"></script>
+<script src="~/scripts/master/master-control.js"></script> *@
 
 <style>
     .nav-tabs .nav-link {
@@ -18,11 +19,6 @@
             color: #FFF;
         }
 
-    .table tr th {
-        background-color: #F09723;
-        color: #FFF;
-    }
-
     .no-display {
         display: none;
     }
@@ -34,28 +30,30 @@
 </style>
 
 <script>
-    $(function () {
+    $(function() {
         let imageUrl = localStorage.getItem('imageUrl');
         let path = (imageUrl == "") ? ".." : imageUrl;
 
-        $('#spn3D').addClass('mnu-active');
-        $('#img3D').attr('src', `${path}/images/graphic-design_2.png`);
+        $('#spnMaster').addClass('mnu-active');
+        $('#imgMaster').attr('src', `${path}/images/data-processing_2.png`);
 
         $('#spnSale').removeClass('mnu-active');
-        $('#spnMaster').removeClass('mnu-active');
+        $('#spn3D').removeClass('mnu-active');
         $('#spnForeman').removeClass('mnu-active');
         $('#spnAccounting').removeClass('mnu-active');
         $('#spnHR').removeClass('mnu-active');
-        $('#spnSpec').removeClass('mnu-active');
         $('#spnStore').removeClass('mnu-active');
 
         $('#imgSale').attr('src', `${path}/images/sales.png`);
-        $('#imgMaster').attr('src', `${path}/images/data-processing.png`);
+        $('#img3D').attr('src', `${path}/images/graphic-design.png`);
         $('#imgForeman').attr('src', `${path}/images/foreman.png`);
         $('#imgAccounting').attr('src', `${path}/images/accounting.png`);
         $('#imgHR').attr('src', `${path}/images/hr-manager.png`);
-        $('#imgSpec').attr('src', `${path}/images/spec.png`);
         $('#imgStore').attr('src', `${path}/images/stores.png`);
+
+        $("#nav-master").hover(function() {
+            console.log('master');
+        });
     });
 </script>
 
@@ -67,13 +65,13 @@
         <!-- Nav pills -->
         <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#nav-design3d-queue-tab">คิวงานตามใบเสนอราคา</a>
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-spec-queue-tab">คิวงานตามใบเสนอราคา</a>
             </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-design3d-queue-tab">@Html.Partial("_Design3DQueue.cshtml")</div>
+            <div class="tab-pane active" id="nav-spec-queue-tab">@Html.Partial("_Spec.cshtml")</div>
         </div>
 
     </div>

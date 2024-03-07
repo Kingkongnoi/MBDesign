@@ -1,0 +1,191 @@
+﻿<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .style-details, .type-details, .item-details {
+        cursor: pointer !important;
+    }
+
+    .hidecol {
+        display: none;
+    }
+
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr, #tb-group-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
+
+
+    .no-display {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-stockout">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>เลขที่เอกสารอ้างอิง</label>
+                            <input type="text" class="form-control" id="input-search-getout-doc-code" placeholder="">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label>วันที่บันทึก</label>
+                            <input type="date" class="form-control" id="input-search-getout-date" name="input-search-getout-date" value="mm/dd/yyyy" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label>ผู้ผลิต/ผู้ขาย</label>
+                            <input type="text" class="form-control" id="select-search-getout-saler" placeholder="">
+
+                        </div>
+                        <div class="col-sm-2">
+                            <label>ผู้รับเข้าสินค้า</label>
+                            <select class="form-select" id="select-search-stockout-by">
+                                <option></option>
+                            </select>
+
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label>คลังสินค้า</label>
+                            <select class="form-select" id="select-search-stockout-stock">
+                                <option></option>
+                            </select>
+
+                        </div>
+                        <div class="col-sm-2">
+                            <label>สถานะ</label>
+                            <select class="form-select" id="select-search-stockout-status">
+                                <option></option>
+                            </select>
+                        </div>
+
+                        <div class="col-sm-12 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-stockout">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-stockout">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-2 mt-2">
+                <button type="button" class="btn-add-custom btn-add-getout"><img src="~/images/box.png" width="25px" /> เบิกออกสินค้า</button>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-stockout-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="hidecol"><span>id</span></th>
+                            <th><span>เลขที่เอกสารอ้างอิง</span></th>
+                            <th><span>รหัสสินค้า</span></th>
+                            <th><span>ชื่อสินค้า</span></th>
+                            <th><span>คลังสินค้า</span></th>
+                            <th><span>ผู้เบิกออกสินค้า</span></th>
+                            <th><span>วันที่เบิกออกสินค้า</span></th>
+                            <th><span>หน่วย</span></th>
+                            <th><span>ราคาต้นทุน/หน่วย</span></th>
+                            <th><span>จำนวนสินค้า</span></th>
+                            <th id="edit-action"><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modal-getOutStock" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-getOutStock">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <input type="hidden" id="input-getout-id" name="input-getout-id" />
+                                    <label class="control-label">เลขที่เอกสารอ้างอิง<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-getOutStock-code" name="input-getOutStock-code" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">วันที่รับเข้า<span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="input-getOutStock-date" name="input-getOutStock-date" value="dd/mm/yyyy" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>ผู้ผลิต/ผู้ขาย</label>
+                                    <input class="form-control" type="text" id="input-getOutStock-dealer" name="input-getOutStock-dealer" />
+
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>ผู้รับเข้าสินค้า</label>
+                                    <select class="form-select" id="select-getOutStock-by">
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>คลังสินค้า</label>
+                                    <select class="form-select" id="select-getOutStock-Stock" onchange="onStockListChange('getout');">
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>สินค้า</label>
+                                    <select class="form-select" id="select-getOutStock-Product" disabled>
+                                        <option></option>
+                                    </select>
+
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">จำนวน</label>
+                                    <input id="input-getOutStock-amount" name="input-getOutStock-amount" type="number" class="form-select" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-getOutStock-status" data-selected="" name="select-getOutStock-status"></select>
+                                </div>
+
+
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">หมายเหตุ</label>
+                                    <textarea class="form-control" rows="5" id="input-getOutStock-remark" name="input-getOutStock-remark"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-getout"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
