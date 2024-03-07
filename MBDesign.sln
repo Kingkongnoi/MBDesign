@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicMBDesign", "Bu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UtilitiesMBDesign", "UtilitiesMBDesign\UtilitiesMBDesign.csproj", "{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MBDesignApi", "MBDesignApi\MBDesignApi.csproj", "{72E37D2A-D68C-4785-A98F-14F4068F613C}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MBDesignReports", "MBDesignReports\MBDesignReports.csproj", "{6B23873B-E8D5-43BC-81C3-C51F7DE969F5}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01FCEB03-D58E-4FB8-8C74-530AFE27CE85}.Release|Any CPU.Build.0 = Release|Any CPU
-		{72E37D2A-D68C-4785-A98F-14F4068F613C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{72E37D2A-D68C-4785-A98F-14F4068F613C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{72E37D2A-D68C-4785-A98F-14F4068F613C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{72E37D2A-D68C-4785-A98F-14F4068F613C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6B23873B-E8D5-43BC-81C3-C51F7DE969F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B23873B-E8D5-43BC-81C3-C51F7DE969F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B23873B-E8D5-43BC-81C3-C51F7DE969F5}.Release|Any CPU.ActiveCfg = Release|Any CPU

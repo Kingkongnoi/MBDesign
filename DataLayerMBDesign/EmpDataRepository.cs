@@ -44,13 +44,13 @@ namespace DataLayerMBDesign
         public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbEmpData
-                                set signatureFileName = @signatureFileName
+                                set fileId = @fileId
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new
             {
-                obj.signatureFileName,
+                obj.fileId,
                 obj.id
             }, transaction: trans);
         }
@@ -161,7 +161,7 @@ namespace DataLayerMBDesign
                                 ,salaryType
                                 ,salary
                                 ,hiringDate
-                                ,signatureFileName
+                                --,signatureFileName
                                 ,timeStampType
                                 ,[status]
                                 ,createDate

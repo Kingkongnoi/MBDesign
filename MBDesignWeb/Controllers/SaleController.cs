@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Net.Http.Headers;
+using NPOI.HPSF;
 
 namespace MBDesignWeb.Controllers
 {
@@ -13,12 +14,13 @@ namespace MBDesignWeb.Controllers
         private readonly IConfiguration _configuration;
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
-
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
         public SaleController(IConfiguration configuration)
         {
             _configuration = configuration;
             _saleService = new SaleService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
         public IActionResult Index()
@@ -101,6 +103,15 @@ namespace MBDesignWeb.Controllers
             var items = _saleService.GetCustOrderDetailByOrderId(orderId);
             var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
             var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
+
+            foreach (var u in uploadRef)
+            {
+                if(u.dataFile != null)
+                {
+                    u.dataFile = Convert.FromBase64String(Convert.ToBase64String(u.dataFile));
+                }
+
+            }
 
             var custId = (custOrder != null) ? custOrder.custId : 0;
             var cust = _saleService.GetFirstByCustId(custId);
@@ -221,6 +232,7 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(data);
         }
 
+        /*
         //[AllowAnonymous]
         [Route("api/[controller]/[action]")]
         [HttpPost]
@@ -273,6 +285,26 @@ namespace MBDesignWeb.Controllers
 
                 addedUpload.Add(obj);
             }
+
+            ///Update data
+            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
+            if (result == false)
+            {
+                msg.isResult = false;
+                return Json(msg);
+            }
+            return Json(msg);
+
+        }
+        */
+
+        [Route("api/[controller]/[action]")]
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public ActionResult AddUpload([FromQuery] int orderId, [FromQuery] string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
+        {
+            var msg = new ResultMessage();
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
 
             ///Update data
             var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);

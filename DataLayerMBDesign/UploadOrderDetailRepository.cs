@@ -21,7 +21,7 @@ namespace DataLayerMBDesign
             ,a.orderId
             ,a.orderDetailId
             ,a.uploadCategoryId
-            ,a.urlId
+            ,a.fileId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -29,11 +29,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[url]
+            ,c.[dataFile]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUploadOrderDetail a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadUrl c on a.urlId = c.urlId
+            inner join tbUploadFile c on a.fileId = c.fileId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and a.orderDetailId = @orderDetailId
             order by a.uploadOrderDetailId";
@@ -46,7 +46,7 @@ namespace DataLayerMBDesign
             ,a.orderId
             ,a.orderDetailId
             ,a.uploadCategoryId
-            ,a.urlId
+            ,a.fileId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -54,11 +54,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[url]
+            ,c.[dataFile]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUploadOrderDetail a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadUrl c on a.urlId = c.urlId
+            inner join tbUploadFile c on a.fileId = c.fileId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and a.orderDetailId = @orderDetailId and b.name = @categoryName
             order by a.uploadOrderDetailId";
@@ -71,7 +71,7 @@ namespace DataLayerMBDesign
             ,a.orderId
             ,a.orderDetailId
             ,a.uploadCategoryId
-            ,a.urlId
+            ,a.fileId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -79,11 +79,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[url]
+            ,c.[dataFile]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUploadOrderDetail a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadUrl c on a.urlId = c.urlId
+            inner join tbUploadFile c on a.fileId = c.fileId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and b.name = @categoryName
             order by a.uploadOrderDetailId";

@@ -15,6 +15,7 @@ namespace MBDesignWeb.Controllers
         private readonly ForemanService _foremanService;
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
 
         public ForemanController(IConfiguration configuration)
         {
@@ -22,6 +23,7 @@ namespace MBDesignWeb.Controllers
             _foremanService = new ForemanService(configuration);
             _saleService = new SaleService(configuration);
             _uploadToAwsService = new UploadToAwsService(configuration);
+            _uploadToDatabaseService = new UploadToDatabaseService(configuration);
         }
 
         public IActionResult Index()
@@ -89,51 +91,7 @@ namespace MBDesignWeb.Controllers
         public JsonResult DoUpdateForemanItems([FromQuery] int orderId, [FromQuery] int custOrderDetailId, [FromQuery] decimal length, [FromQuery] decimal depth, [FromQuery] decimal height, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new List<UploadFiles>();
-
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return new JsonResult(msg);
-                }
-
-                addedUpload.Add(obj);
-            }
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
 
             string categoryName = GlobalUploadCategory.foremanUpload;
 
@@ -152,51 +110,7 @@ namespace MBDesignWeb.Controllers
             , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new List<UploadFiles>();
-
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return new JsonResult(msg);
-                }
-
-                addedUpload.Add(obj);
-            }
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
 
             string categoryName = GlobalUploadCategory.secondDisposite;
 

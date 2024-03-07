@@ -33,6 +33,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly InvoiceRepository _invoiceRepository;
         private readonly ReceiptRepository _receiptRepository;
         private readonly CommissionRepository _commissionRepository;
+        private readonly UploadFileRepository _uploadFileRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -55,6 +56,7 @@ namespace BusinessLogicMBDesign.Sale
             _invoiceRepository = new InvoiceRepository();
             _receiptRepository = new ReceiptRepository();
             _commissionRepository = new CommissionRepository();
+            _uploadFileRepository = new UploadFileRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -653,6 +655,7 @@ namespace BusinessLogicMBDesign.Sale
         #endregion Quotation
 
         #region UploadRef
+        /*
         public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -724,6 +727,119 @@ namespace BusinessLogicMBDesign.Sale
                             {
                                 var invoice = new tbInvoice
                                 { 
+                                    period = GlobalDispositePeriod.firstDisposite,
+                                    invoiceStatus = GlobalInvoiceStatus.paid,
+                                    updateDate = DateTime.UtcNow,
+                                    updateBy = loginCode,
+                                    id = exists.id
+                                };
+
+                                int updateInvoie = _invoiceRepository.UpdateInvoiceStatus(invoice, conn, transaction);
+                            }
+                        }
+                    }
+
+                    transaction.Commit();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                }
+            }
+            return true;
+        }
+        */
+
+        public bool DoAddUploadData(List<UploadFiles> file, string categoryName, int orderId, string loginCode)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+
+                try
+                {
+                    var cat = _uploadCategoryRepository.GetFirstByName(categoryName, conn, transaction);
+                    int? categoryId = 0;
+                    if (cat != null)
+                    {
+                        categoryId = cat.id;
+                    }
+                    else
+                    {
+                        var addedCategory = new tbUploadCategory
+                        {
+                            name = categoryName,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        categoryId = _uploadCategoryRepository.Add(addedCategory, conn, transaction);
+                    }
+
+                    foreach (var f in file)
+                    {
+                        var uploadFile = new tbUploadFile
+                        {
+                            fileName = f.fileName,
+                            originalFileName = f.originalFileName,
+                            fileSize = f.fileSize,
+                            fileType = f.fileType,
+                            dataFile = f.dataFile,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? fileId = _uploadFileRepository.Add(uploadFile, conn, transaction);
+
+                        var upload = new tbUpload
+                        {
+                            fileId = fileId.Value,
+                            orderId = orderId,
+                            uploadCategoryId = categoryId.Value,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? uploadId = _uploadRepository.Add(upload, conn, transaction);
+                    }
+
+                    if (categoryName == "CustOrderDisposite")
+                    {
+                        var custOrder = _custOrderRepository.GetCustOrderByOrderId(orderId, conn, transaction);
+                        if (custOrder != null)
+                        {
+                            if (custOrder.accountType == "บัญชีส่วนบุคคล")
+                            {
+                                var bank = new tbBankAccount
+                                {
+                                    accountId = custOrder.accountId,
+                                    updateDate = DateTime.UtcNow,
+                                    updateBy = loginCode
+                                };
+                                var updateCountUsage = _bankAccountRepository.UpdateCountUsage(bank, conn, transaction);
+                            }
+
+                            //Create invoice = จ่ายเงินมัดจำ
+                            var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
+                            if (exists == null)
+                            {
+                                string yearMonth = this.GenerateYearMonth();
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoiceStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite, loginCode);
+
+                                int? receiptId = this.AddReceipt(custOrder.orderId, custOrder.custId, yearMonth, invoiceId, loginCode);
+                            }
+                            else
+                            {
+                                var invoice = new tbInvoice
+                                {
                                     period = GlobalDispositePeriod.firstDisposite,
                                     invoiceStatus = GlobalInvoiceStatus.paid,
                                     updateDate = DateTime.UtcNow,

@@ -156,7 +156,7 @@ namespace BusinessLogicMBDesign.Master
                         salary = model.salary,
                         status = model.status,
                         hiringDate = model.hiringDate,
-                        signatureFileName = "",//model.signatureFileName,
+                        //signatureFileName = "",//model.signatureFileName,
                         timeStampType = model.timeStampType,
                         createDate = DateTime.UtcNow,
                         createBy = model.loginCode,
@@ -294,7 +294,7 @@ namespace BusinessLogicMBDesign.Master
                 {
                     var obj = new tbEmpData
                     {
-                        signatureFileName = model.signatureFileName,
+                        fileId = model.fileId,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode,
                         id = model.id

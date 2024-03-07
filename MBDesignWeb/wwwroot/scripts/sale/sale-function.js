@@ -485,15 +485,18 @@ function callGetProductItemSelect2ByType(obj) {
 function renderProductItemSelect2ByType(formName, data) {
     $(`#${formName} #select-cus-product-items`).empty();
     $(`#${formName} #select-cus-product-items`).append(`<option value="">กรุณาเลือก</option>`);
-    data.forEach((v) => {
-        $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
-    });
+    debugger;
+    if (data.length > 0) {
+        data.forEach((v) => {
+            $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
+        });
 
-    if (_action == "add") {
-        $(`#${formName} #select-cus-product-items`).val('').trigger('change');
-    }
-    else if (_action == "edit") {
-        $(`#${formName} #select-cus-product-items`).val(_items[0].itemId).trigger('change');
+        if (_action == "add") {
+            $(`#${formName} #select-cus-product-items`).val('').trigger('change');
+        }
+        else if (_action == "edit") {
+            $(`#${formName} #select-cus-product-items`).val(_items[0].itemId).trigger('change');
+        }
     }
 }
 
@@ -1366,7 +1369,7 @@ function renderCustUploadRef(data) {
     var lstPlanUrl = [];
     var lstPreviewImg = [];
     planImg.forEach((a) => {
-        lstPlanUrl.push(`${a.url}`);
+        lstPlanUrl.push(`${a.dataFile}`);
 
         var addPreview = {
             caption: a.fileName,

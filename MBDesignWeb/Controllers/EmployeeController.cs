@@ -9,6 +9,11 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Net.Http.Headers;
+using BusinessLogicMBDesign.Sale;
+using MailKit.Search;
+using DataLayerMBDesign;
+using System.Data.SqlClient;
+using UtilitiesMBDesign;
 
 namespace MBDesignApi.Controllers.Master
 {
@@ -18,11 +23,15 @@ namespace MBDesignApi.Controllers.Master
     {
         private readonly EmployeeService _employeeService;
         private readonly UploadToAwsService _uploadToAwsService;
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
         private readonly IConfiguration _configuration;
+        private readonly string _connectionString;
         public EmployeeController(IConfiguration configuration) {
             _configuration = configuration;
+            _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
             _employeeService =  new EmployeeService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
         #region Employee
@@ -115,66 +124,95 @@ namespace MBDesignApi.Controllers.Master
             return new JsonResult(returnData);
         }
 
+        //[HttpPost]
+        //[DisableRequestSizeLimit]
+        //public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, List<IFormFile> files)
+        //{
+        //    var msg = new ResultMessage();
+        //    var addedUpload = new List<UploadFiles>();
+
+        //    //string uploadPath = _configuration.GetSection("fileUploadsPath").Value;
+        //    string path = Directory.GetCurrentDirectory();
+        //    foreach (IFormFile source in files)
+        //    {
+        //        string folderName = string.Format("{0}\\upload\\images\\", path);
+
+        //        if (!Directory.Exists(folderName))
+        //        {
+        //            Directory.CreateDirectory(folderName);
+        //        }
+
+        //        string filename = String.Concat(ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Where(c => !Char.IsWhiteSpace(c)));
+
+        //        FileInfo file = new FileInfo(filename);
+        //        string fileExtension = file.Extension;
+
+        //        string oldFilePath = string.Format("{0}{1}", folderName, filename);
+        //        string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+
+        //        string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+
+        //        string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+        //        FileStream output = System.IO.File.Create(fullFilePath);
+
+        //        source.CopyTo(output);
+        //        output.Dispose();
+
+        //        var obj = new UploadFiles
+        //        {
+        //            fileName = newFileName,
+        //            filePath = fullFilePath,
+        //            fileSize = source.Length,
+        //            originalFileName = filename,
+        //        };
+
+        //        var ftpService = new ftpProcessService(_configuration);
+        //        var result = ftpService.UploadFile(fullFilePath, "uploads");
+        //        if (result.Contains("Transfer complete"))
+        //        {
+        //            obj.imageUrl = string.Format("{0}{1}", _configuration.GetSection("uploadUrl").Value, newFileName);
+        //        }
+        //        else
+        //        {
+        //            obj.imageUrl = "";
+        //        }
+        //        addedUpload.Add(obj);
+        //    }
+
+        //    if(addedUpload.Count > 0)
+        //    {
+        //        var model = new EmpDataModel
+        //        {
+        //            signatureFileName = addedUpload.FirstOrDefault().imageUrl,
+        //            id = empId,
+        //            loginCode = loginCode
+        //        };
+        //        ///Update data
+        //        var result = _employeeService.UpdateSignatureFileName(model);
+        //        if (result > 0)
+        //        {
+        //            msg.isResult = true;
+        //            return new JsonResult(msg);
+        //        }
+        //    }
+            
+        //    return new JsonResult(msg);
+
+        //}
+
         [HttpPost]
         [DisableRequestSizeLimit]
         public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new List<UploadFiles>();
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
 
-            //string uploadPath = _configuration.GetSection("fileUploadsPath").Value;
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
+            if (addedUpload.Count > 0)
             {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = String.Concat(ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Where(c => !Char.IsWhiteSpace(c)));
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                var ftpService = new ftpProcessService(_configuration);
-                var result = ftpService.UploadFile(fullFilePath, "uploads");
-                if (result.Contains("Transfer complete"))
-                {
-                    obj.imageUrl = string.Format("{0}{1}", _configuration.GetSection("uploadUrl").Value, newFileName);
-                }
-                else
-                {
-                    obj.imageUrl = "";
-                }
-                addedUpload.Add(obj);
-            }
-
-            if(addedUpload.Count > 0)
-            {
+                int? fileId = _uploadToDatabaseService.DoAddUploadFile(addedUpload.FirstOrDefault(), "signatureFileName", loginCode);
                 var model = new EmpDataModel
                 {
-                    signatureFileName = addedUpload.FirstOrDefault().imageUrl,
+                    fileId = fileId.Value,
                     id = empId,
                     loginCode = loginCode
                 };
@@ -186,10 +224,12 @@ namespace MBDesignApi.Controllers.Master
                     return new JsonResult(msg);
                 }
             }
-            
+
             return new JsonResult(msg);
 
         }
+
+        
         #endregion POST
 
         #endregion Employee

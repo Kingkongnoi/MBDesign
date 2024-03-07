@@ -17,5 +17,10 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<tbUploadCategory>(queryString, new { name }, transaction:  trans);
         }
+
+        public int? Add(tbUploadCategory obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            return conn.Insert(obj, transaction: trans);
+        }
     }
 }

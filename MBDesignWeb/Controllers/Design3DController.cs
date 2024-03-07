@@ -14,7 +14,7 @@ namespace MBDesignWeb.Controllers
         private readonly Design3DService _design3DService;
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
-
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
         public Design3DController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -22,6 +22,7 @@ namespace MBDesignWeb.Controllers
             _design3DService = new Design3DService(_configuration);
             _saleService = new SaleService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
         public IActionResult Index()
@@ -84,58 +85,12 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateDesign3D([FromQuery] int orderId, [FromQuery] int empId, [FromQuery] string dueDate, [FromQuery] bool final3d, [FromQuery] int design3dId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new List<UploadFiles>();
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
 
             string checklistStatus = string.Empty;
             if (empId != 0)
             {
                 checklistStatus = Global3DStatus.whileDesign3dDraf1;
-            }
-
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                checklistStatus = Global3DStatus.design3dApproved;
-
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return Json(msg);
-                }
-
-                addedUpload.Add(obj);
             }
 
             if (final3d)

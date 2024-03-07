@@ -14,6 +14,7 @@ namespace MBDesignWeb.Controllers
 
         private readonly AccountingService _accountingService;
         private readonly UploadToAwsService _uploadToAwsService;
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
 
         public AccountingController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
@@ -23,6 +24,7 @@ namespace MBDesignWeb.Controllers
 
             _accountingService = new AccountingService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
+            _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
         public IActionResult Index()
@@ -251,49 +253,7 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateIdCard([FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new UploadFiles();
-
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                addedUpload = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(addedUpload);
-                addedUpload.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return Json(msg);
-                }
-            }
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files).FirstOrDefault();
 
             ///Update data
             var result = _accountingService.DoUpdateIdCard(addedUpload, loginCode);
@@ -312,49 +272,7 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateComCert([FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = new UploadFiles();
-
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                string folderName = string.Format("{0}\\upload\\documents\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                addedUpload = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(addedUpload);
-                addedUpload.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return Json(msg);
-                }
-            }
+            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files).FirstOrDefault();
 
             ///Update data
             var result = _accountingService.DoUpdateComCert(addedUpload, loginCode);

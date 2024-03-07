@@ -59,10 +59,10 @@ namespace EntitiesMBDesign
     public class UploadFiles
     {
         public string fileName { get; set; } = string.Empty;
-        public string filePath { get; set; } = string.Empty;
+        public string fileType { get; set; } = string.Empty;
         public long fileSize { get; set; }
         public string originalFileName { get; set; } = string.Empty;
-        public string imageUrl { get; set; } = string.Empty;
+        public byte[] dataFile { get; set; }
 
     }
 

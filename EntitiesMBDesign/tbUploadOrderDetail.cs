@@ -14,7 +14,7 @@ namespace EntitiesMBDesign
         public int orderId { get; set; }
         public int orderDetailId { get; set; }
         public int uploadCategoryId { get; set; }
-        public int urlId { get; set; }
+        public int fileId { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;

@@ -207,67 +207,67 @@ namespace MBDesignApi.Controllers.Sale
         }
 
         //[AllowAnonymous]
-        [HttpPost]
-        [DisableRequestSizeLimit]
-        public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
-        {
-            var msg = new ResultMessage();
-            var addedUpload = new List<UploadFiles>();
+        //[HttpPost]
+        //[DisableRequestSizeLimit]
+        //public ActionResult AddUpload([FromQuery]int orderId,[FromQuery]string categoryName, [FromQuery] string loginCode, List<IFormFile> files)
+        //{
+        //    var msg = new ResultMessage();
+        //    var addedUpload = new List<UploadFiles>();
 
-            string path = Directory.GetCurrentDirectory();
-            foreach (IFormFile source in files)
-            {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
+        //    string path = Directory.GetCurrentDirectory();
+        //    foreach (IFormFile source in files)
+        //    {
+        //        string folderName = string.Format("{0}\\upload\\images\\", path);
                 
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
+        //        if (!Directory.Exists(folderName))
+        //        {
+        //            Directory.CreateDirectory(folderName);
+        //        }
 
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
+        //        string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
 
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
+        //        FileInfo file = new FileInfo(filename);
+        //        string fileExtension = file.Extension;
 
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
+        //        string oldFilePath = string.Format("{0}{1}", folderName, filename);
+        //        string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
 
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
+        //        string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
 
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
+        //        string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
+        //        FileStream output = System.IO.File.Create(fullFilePath);
 
-                source.CopyTo(output);
-                output.Dispose();
+        //        source.CopyTo(output);
+        //        output.Dispose();
                 
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
+        //        var obj = new UploadFiles
+        //        {
+        //            fileName = newFileName,
+        //            filePath = fullFilePath,
+        //            fileSize = source.Length,
+        //            originalFileName = filename,
+        //        };
 
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-                if (msg.isResult == false) 
-                {
-                    return Json(msg);
-                }
+        //        msg = _uploadToAwsService.DoUploadToAws(obj);
+        //        obj.imageUrl = msg.strResult;
+        //        if (msg.isResult == false) 
+        //        {
+        //            return Json(msg);
+        //        }
 
-                addedUpload.Add(obj);
-            }
+        //        addedUpload.Add(obj);
+        //    }
 
-            ///Update data
-            var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
-            if(result == false)
-            {
-                msg.isResult = false;
-                return Json(msg);
-            }
-            return Json(msg);
+        //    ///Update data
+        //    var result = _saleService.DoAddUploadData(addedUpload, categoryName, orderId, loginCode);
+        //    if(result == false)
+        //    {
+        //        msg.isResult = false;
+        //        return Json(msg);
+        //    }
+        //    return Json(msg);
 
-        }
+        //}
 
         [HttpPost]
         public ActionResult DeleteUpload([FromQuery] int uploadId)

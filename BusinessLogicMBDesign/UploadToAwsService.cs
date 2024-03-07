@@ -41,35 +41,35 @@ namespace BusinessLogicMBDesign
 
             try
             {
-                //creating object for    TransferUtilityUploadRequest
-                var fileTransferUtilityRequest = new TransferUtilityUploadRequest
-                {
-                    BucketName = _bucketName,
-                    FilePath = files.filePath,
-                    StorageClass = S3StorageClass.StandardInfrequentAccess,
-                    PartSize = files.fileSize, // 6 MB.  
-                    Key = files.fileName,//filename which u want to save in bucket
-                    CannedACL = S3CannedACL.PublicRead,
-                    //InputStream = fs,
-                };
+                ////creating object for    TransferUtilityUploadRequest
+                //var fileTransferUtilityRequest = new TransferUtilityUploadRequest
+                //{
+                //    BucketName = _bucketName,
+                //    FilePath = files.filePath,
+                //    StorageClass = S3StorageClass.StandardInfrequentAccess,
+                //    PartSize = files.fileSize, // 6 MB.  
+                //    Key = files.fileName,//filename which u want to save in bucket
+                //    CannedACL = S3CannedACL.PublicRead,
+                //    //InputStream = fs,
+                //};
 
-                fileTransferUtility.UploadAsync(fileTransferUtilityRequest).GetAwaiter().GetResult();
+                //fileTransferUtility.UploadAsync(fileTransferUtilityRequest).GetAwaiter().GetResult();
 
-                //To upload without asynchronous
-                fileTransferUtility.Upload(files.filePath, _bucketName, files.fileName);
-                fileTransferUtility.Dispose();
+                ////To upload without asynchronous
+                //fileTransferUtility.Upload(files.filePath, _bucketName, files.fileName);
+                //fileTransferUtility.Dispose();
 
-                GetPreSignedUrlRequest request = new GetPreSignedUrlRequest();
-                request.BucketName = _bucketName;
-                request.Key = files.fileName;
-                request.Expires = DateTime.Now.AddMinutes(1);
-                //request.Protocol = Protocol.HTTPS;
-                string preSignedUrl = s3Client.GetPreSignedURL(request);
+                //GetPreSignedUrlRequest request = new GetPreSignedUrlRequest();
+                //request.BucketName = _bucketName;
+                //request.Key = files.fileName;
+                //request.Expires = DateTime.Now.AddMinutes(1);
+                ////request.Protocol = Protocol.HTTPS;
+                //string preSignedUrl = s3Client.GetPreSignedURL(request);
 
-                string url = preSignedUrl.Split("?")[0];
+                //string url = preSignedUrl.Split("?")[0];
 
                 msg.message = "File Uploaded Successfully!!";
-                msg.strResult = url;
+                //msg.strResult = url;
                 return msg;
             }
             catch (AmazonS3Exception amazonS3Exception)

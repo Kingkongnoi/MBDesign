@@ -23,7 +23,7 @@ namespace BusinessLogicMBDesign.Design3D
         private readonly UploadCategoryRepository _uploadCategoryRepository;
         private readonly ContractAgreementRepository _contractAgreementRepository;
         private readonly ForemanRepository _foremanRepository;
-
+        private readonly UploadFileRepository _uploadFileRepository;
         public Design3DService(IConfiguration configuration) 
         {
             _configuration = configuration;
@@ -37,6 +37,7 @@ namespace BusinessLogicMBDesign.Design3D
             _uploadCategoryRepository = new UploadCategoryRepository();
             _contractAgreementRepository = new ContractAgreementRepository();
             _foremanRepository = new ForemanRepository();
+            _uploadFileRepository = new UploadFileRepository();
         }
 
         public List<CustOrderView> Get3DQueueList(string quotationNumber, string empName, string checklistStatus, string installDate)
@@ -162,28 +163,47 @@ namespace BusinessLogicMBDesign.Design3D
                 try
                 {
                     var cat = _uploadCategoryRepository.GetFirstByName(categoryName, conn, transaction);
-                    int categoryId = (cat != null) ? cat.id : 0;
-
-                    foreach (var f in file)
+                    int? categoryId = 0;
+                    if (cat != null)
                     {
-                        var uploadUrl = new tbUploadUrl
+                        categoryId = cat.id;
+                    }
+                    else
+                    {
+                        var addedCategory = new tbUploadCategory
                         {
-                            url = f.imageUrl,
-                            fileName = f.originalFileName,
-                            fileSize = f.fileSize,
+                            name = categoryName,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode,
                             isDeleted = false
                         };
 
-                        int? uploadUrlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
+                        categoryId = _uploadCategoryRepository.Add(addedCategory, conn, transaction);
+                    }
+
+                    foreach (var f in file)
+                    {
+                        var uploadFile = new tbUploadFile
+                        {
+                            fileName = f.fileName,
+                            originalFileName = f.originalFileName,
+                            fileSize = f.fileSize,
+                            fileType = f.fileType,
+                            dataFile = f.dataFile,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? fileId = _uploadFileRepository.Add(uploadFile, conn, transaction);
 
                         var upload = new tbUpload
                         {
-                            urlId = uploadUrlId.Value,
+                            fileId = fileId.Value,
                             orderId = orderId,
-                            uploadCategoryId = categoryId,
+                            uploadCategoryId = categoryId.Value,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode,

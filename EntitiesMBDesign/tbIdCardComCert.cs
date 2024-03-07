@@ -20,5 +20,7 @@ namespace EntitiesMBDesign
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
+        public int imgIdCardFileId { get; set; }
+        public int imgComCertFileId { get; set; }
     }
 }

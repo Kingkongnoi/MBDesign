@@ -28,6 +28,8 @@ namespace BusinessLogicMBDesign.Accounting
         private readonly CommissionRepository _commissionRepository;
         private readonly IdCardComCertRepository _idCardComCertRepository;
 
+        private readonly UploadToDatabaseService _uploadToDatabaseService;
+
         public AccountingService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -41,6 +43,8 @@ namespace BusinessLogicMBDesign.Accounting
             _receiptRepository = new ReceiptRepository();
             _commissionRepository = new CommissionRepository();
             _idCardComCertRepository = new IdCardComCertRepository();
+
+            _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
         public List<CustOrderView> GetAccountingList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
@@ -597,14 +601,19 @@ namespace BusinessLogicMBDesign.Accounting
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
+                int? fileId = 0;
                 try
                 {
+                    fileId = _uploadToDatabaseService.DoAddUploadFile(files, "imgIdCardFileName", loginCode);
+
                     var exists = _idCardComCertRepository.GetFirstIdCardComCert(conn, transaction);
                     if(exists == null)
                     {
                         var added = new tbIdCardComCert
                         {
-                            imgIdCardFileName = files.imageUrl,
+                            imgComCertFileName = string.Empty,
+                            imgIdCardFileName = string.Empty,
+                            imgIdCardFileId = fileId.Value,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode
@@ -616,7 +625,7 @@ namespace BusinessLogicMBDesign.Accounting
                     {
                         var updated = new tbIdCardComCert
                         {
-                            imgIdCardFileName = files.imageUrl,
+                            imgIdCardFileId = fileId.Value,
                             updateDate = DateTime.UtcNow,
                             updateBy = loginCode,
                             id = exists.id
@@ -647,14 +656,19 @@ namespace BusinessLogicMBDesign.Accounting
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
+                int? fileId = 0;
                 try
                 {
+                    fileId = _uploadToDatabaseService.DoAddUploadFile(files, "imgComCertFileName", loginCode);
+
                     var exists = _idCardComCertRepository.GetFirstIdCardComCert(conn, transaction);
                     if (exists == null)
                     {
                         var added = new tbIdCardComCert
                         {
-                            imgComCertFileName = files.imageUrl,
+                            imgComCertFileName = string.Empty,
+                            imgIdCardFileName = string.Empty,
+                            imgComCertFileId = fileId.Value,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode
@@ -666,7 +680,7 @@ namespace BusinessLogicMBDesign.Accounting
                     {
                         var updated = new tbIdCardComCert
                         {
-                            imgComCertFileName = files.imageUrl,
+                            imgComCertFileId = fileId.Value,
                             updateDate = DateTime.UtcNow,
                             updateBy = loginCode,
                             id= exists.id
