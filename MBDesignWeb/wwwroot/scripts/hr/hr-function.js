@@ -1762,7 +1762,8 @@ function renderGetSalaryList(data) {
                     orderable: false,
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return `<a class="btn btn-view-payslip" href="../Document/GetPaySlipBySalaryId?salaryId=${row.salaryId}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
+                        //return `<a class="btn btn-view-payslip" href="../Document/GetPaySlipBySalaryId?salaryId=${row.salaryId}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
+                        return `<a class="btn btn-view-payslip" target="_blank" onclick="generatePaySlip(${row.salaryId})"><img src="../images/analysis.png" width="25px" /></a>`;
                     },
                 },
             ],
@@ -2234,3 +2235,46 @@ function callDownloadFromUrl(url, fileName) {
         }
     });
 }
+
+function generatePaySlip(salaryId) {
+    let loaded = $('#tb-salary-summary-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetPaySlipInformation?salaryId=${salaryId}`,
+        success: function (data) {
+            renderPaySlipToPdf(data);
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
+
+function renderPaySlipToPdf(data) {
+    let element = document.getElementById("reportPaySlipElement"); 
+    HtmlToPdf(element, "paySlip");
+}
+
+const HtmlToPdf = (element, fileName) => {
+    let opt = {
+        margin: 5,
+        //pagebreak: { mode: "avoid-all", before: "#page2el" },
+        filename: fileName,
+        image: { type: "svg", quality: 0.98 },
+        html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    };
+
+    html2pdf()
+        .set(opt)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+    });
+};

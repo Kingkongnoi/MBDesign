@@ -519,10 +519,10 @@ namespace MBDesignWeb.Controllers
             
             string mimetype = "";
             int extension = 1;
-            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpPaySlip.rdlc";
+            var path = $"ftp://ph11239893361@mbdesignth.com/httpdocs/wwwroot/Reports/rpPaySlip.rdlc";
 
             ///Download to current directory
-            _ftpProcessService.DownloadFile("rpPaySlip.rdlc");
+            //_ftpProcessService.DownloadFile("rpPaySlip.rdlc");
 
             //*** Thai Format
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
@@ -558,9 +558,8 @@ namespace MBDesignWeb.Controllers
             var totalCurrency = string.Format("{0:n}", total);
             param.Add("totalSalaryInformation", string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency));
 
-            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
-            var path = string.Format("{0}\\rpPaySlip.rdlc", targetPath);
-
+            //string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
+            //var path = string.Format("{0}\\rpPaySlip.rdlc", targetPath);
             LocalReport localReport = new LocalReport(path);
 
             var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
@@ -701,6 +700,14 @@ namespace MBDesignWeb.Controllers
             string rdlcFilePath = string.Format("{0}ReportFiles\\{1}.rdlc", fileDirPath, reportName);
 
             return Json(new { fileDirPath= fileDirPath, rdlcFilePath= rdlcFilePath });
+        }
+
+        [Route("api/[controller]/[action]")]
+        public JsonResult GetPaySlipInformation(int salaryId)
+        {
+            var paySlip = _documentService.GetPaySlipBySalaryId(salaryId);
+
+            return Json(paySlip);
         }
     }
 }
