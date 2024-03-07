@@ -1,0 +1,54 @@
+﻿<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-spec-queue">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>เลขที่ใบเสนอราคา</label>
+                            <input type="text" class="form-control" id="input-search-spec-quotation-number" name="input-search-spec-quotation-number" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label>ผู้รับผิดชอบออกแบบ 3D</label>
+                            <input type="text" class="form-control" id="input-search-spec-design-name" name="input-search-spec-design-name" />
+                        </div>
+                        <div class="col-sm-2">
+                            <label>สถานะ Checklist</label>
+                            <select class="form-select" id="select-search-spec-checklist-status">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <label>วันที่พร้อมติดตั้ง</label>
+                            <input type="date" class="form-control" id="input-search-spec-install-date" name="input-search-3d-install-date" />
+                        </div>
+                        <div class="col-sm-4 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-spec">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-spec">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-spec-queue-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th><span>เลขที่ใบเสนอราคา</span></th>
+                            <th><span>วันที่พร้อมติดตั้ง</span></th>
+                            <th><span>ผู้รับผิดชอบออกแบบ 3D</span></th>
+                            <th><span>วันกำหนดส่งงาน</span></th>
+                            <th><span>สถานะ Checklist</span></th>
+                            <th><span>วันที่แก้ไขล่าสุด</span></th>
+                            <th><span>ผู้แก้ไขล่าสุด</span></th>
+                            <th><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.Partial("modal/_spec.cshtml")

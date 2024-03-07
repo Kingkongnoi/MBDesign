@@ -43,6 +43,14 @@ namespace MBDesignWeb.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetLastestGetOutItemId()
+        {
+            var data = _stockmanageService.GetLastestWithDrawItemId();
+
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
         public JsonResult GetItemByItemId(int id)
         {
             var item = _stockmanageService.GetStockProductManageItemById(id);

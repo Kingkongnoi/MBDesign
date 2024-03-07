@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "ข้อมูลหลัก";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@*<link href="~/assets/fontawesome/css/fontawesome.css" rel="stylesheet">
+<link href="~/assets/fontawesome/css/brands.css" rel="stylesheet">
+<link href="~/assets/fontawesome/css/solid.css" rel="stylesheet">*@
+
+<script src="~/scripts/config.js"></script>
+<script src="~/scripts/stores/stores-function.js"></script>
+<script src="~/scripts/stores/stores-control.js"></script>
+
+<style>
+    .nav-tabs .nav-link {
+        background-color: #AFAFAF;
+        color: #FFF;
+    }
+
+        .nav-tabs .nav-link.active {
+            background-color: #F09723;
+            color: #FFF;
+        }
+
+    .no-display {
+        display: none;
+    }
+
+    .mnu-active {
+        color: #F09723;
+    }
+
+</style>
+
+<script>
+    $(function () {
+        let imageUrl = localStorage.getItem('imageUrl');
+        let path = (imageUrl == "") ? ".." : imageUrl;
+
+        $('#spnStore').addClass('mnu-active');
+        $('#imgStore').attr('src', `${path}/images/stores.png`);
+
+
+        $('#spnSale').removeClass('mnu-active');
+        $('#spnMaster').removeClass('mnu-active');
+        $('#spnForeman').removeClass('mnu-active');
+        $('#spnAccounting').removeClass('mnu-active');
+        $('#spnHR').removeClass('mnu-active');
+        $('#spnSpec').removeClass('mnu-active');
+        $('#spn3D').removeClass('mnu-active');
+
+        $('#imgSale').attr('src', `${path}/images/sales.png`);
+        $('#imgMaster').attr('src', `${path}/images/data-processing.png`);
+        $('#imgForeman').attr('src', `${path}/images/foreman.png`);
+        $('#imgAccounting').attr('src', `${path}/images/accounting.png`);
+        $('#imgHR').attr('src', `${path}/images/hr-manager.png`);
+        $('#imgSpec').attr('src', `${path}/images/stores.png`);
+        $('#img3D').attr('src', `${path}/images/graphic-design_2.png`);
+    });
+</script>
+
+<div class="row">
+    <h4>สโตร์</h4>
+
+    <div class="col-sm-12">
+        <!-- Nav pills -->
+        <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
+            <li class="nav-item" id="nav-viewstock">
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-store-viewstock-tab" onclick="TabReload('VIEWSTOCK');">ดูสต็อกสินค้า</a>
+            </li>
+            <li class="nav-item" id="nav-getin">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-getin-tab">รับเข้า</a>
+            </li>
+            <li class="nav-item" id="nav-getout">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-getout-tab">เบิกออก</a>
+            </li>
+            <li class="nav-item" id="nav-group">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-group-tab">สร้างหมวดหมู่หลัก</a>
+            </li>
+            <li class="nav-item" id="nav-subgroup">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-subgroup-tab">สร้างหมวดหมู่ย่อย</a>
+            </li>
+            <li class="nav-item" id="nav-brand">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-brand-tab">สร้างแบรนด์สินค้า</a>
+            </li>
+            <li class="nav-item" id="nav-unit">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-unit-tab">สร้างหน่วยสินค้า</a>
+            </li>
+            <li class="nav-item" id="nav-reciever">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-reciever-tab">สร้างผู้รับสินค้า</a>
+            </li>
+            <li class="nav-item" id="nav-stock">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-store-stock-tab">สร้างคลังสินค้า</a>
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="nav-store-viewstock-tab">@Html.Partial("_ViewStock.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-getin-tab">@Html.Partial("_GetIn.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-getout-tab">@Html.Partial("_GetOut.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-group-tab">@Html.Partial("_Group.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-subgroup-tab">@Html.Partial("_SubGroup.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-brand-tab">@Html.Partial("_Brand.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-unit-tab">@Html.Partial("_Unit.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-reciever-tab">@Html.Partial("_Reciever.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-store-stock-tab">@Html.Partial("_Stock.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-mas-transpotation-tab"></div>
+        </div>
+    </div>
+</div>
+

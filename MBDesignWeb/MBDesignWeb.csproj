@@ -15,6 +15,8 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\scripts\master\product.js~RF75558a5.TMP" />
+    <Content Remove="wwwroot\scripts\stores\stores-control.jsbk" />
+    <Content Remove="wwwroot\scripts\stores\stores-function.jsbk" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +52,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Spec\modal\" />
     <Folder Include="wwwroot\lib\datetimepicker\" />
     <Folder Include="wwwroot\lib\file-input\js\locales\" />
   </ItemGroup>

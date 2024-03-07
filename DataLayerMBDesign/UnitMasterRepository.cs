@@ -37,7 +37,7 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(unitname) && unitname != "null")
             {
-                condition += string.Format(" and a.subgroupname like N'%{0}%'", unitname);
+                condition += string.Format(" and a.unitname like N'%{0}%'", unitname);
             }
 
             if (!string.IsNullOrEmpty(status) && status != "null")

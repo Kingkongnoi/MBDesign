@@ -1,0 +1,185 @@
+﻿<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .style-details, .type-details, .item-details {
+        cursor: pointer !important;
+    }
+
+    .hidecol {
+        display: none;
+    }
+
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr, #tb-group-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
+
+
+    .no-display {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-subgroup">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>รหัสหมวดหมู่ย่อย</label>
+                            <input type="text" class="form-control" id="input-search-subgroupcode-items" placeholder="">
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label>ชื่อหมวดหมู่ย่อย</label>
+                            <input type="text" class="form-control" id="input-search-subgroupname-items" placeholder="">
+                        </div>
+                        <div class="col-sm-2">
+                            <label>สถานะ</label>
+                            <select class="form-select" id="select-search-subgroup-status">
+                                <option></option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-subgroup">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-subgroup">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-2 mt-2">
+                <button type="button" class="btn-add-custom btn-add-subgroup"><img src="~/images/grouptree.png" width="25px" /> เพิ่มหมวดหมู่ย่อย</button>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-subgroup-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="hidecol"><span>id</span></th>
+                            <th><span>รหัสหมวดหมู่ย่อย</span></th>
+                            <th><span>ชื่อหมวดหมู่ย่อย</span></th>
+                            <th><span>ชื่อหมวดหมู่หลัก</span></th>
+                            <th><span>วันที่สร้าง</span></th>
+                            <th><span>ผู้สร้าง</span></th>
+                            <th><span>วันที่แก้ไขล่าสุด</span></th>
+                            <th><span>ผู้แก้ไขล่าสุด</span></th>
+                            <th><span>สถานะ</span></th>
+                            <th id="edit-action"><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal for create SubGroup*@
+<div id="modal-createSubGroup" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createSubGroup">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-subgroup-id" name="input-subgroup-id" />
+                                    <input class="form-control" type="text" id="input-subgroup-code" name="input-subgroup-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-subgroup-name" name="input-subgroup-name" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่หลัก</label>
+                                    <select class="form-select" id="select-group-name" data-selected="" name="select-group-name" onchange="onGroupListChange();" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-subgroup-status" data-selected="" name="select-subgroup-status"></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-subgroup"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view SubGroup*@
+<div id="modal-viewSubGroup" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อหมวดหมู่ย่อย</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createSubGroup">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">รหัสหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-subgroup-id" name="input-subgroup-id" />
+                                    <input class="form-control" type="text" id="input-subgroup-code" name="input-subgroup-code" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่ย่อย<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="input-subgroup-name" name="input-subgroup-name" disabled />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">ชื่อหมวดหมู่หลัก</label>
+                                    <select class="form-select" id="select-group-name" data-selected="" name="select-group-name" disabled></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-subgroup-status" data-selected="" name="select-subgroup-status" disabled></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+
+
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>
