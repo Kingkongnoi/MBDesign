@@ -782,6 +782,7 @@ namespace BusinessLogicMBDesign.Sale
 
                     foreach (var f in file)
                     {
+                        /*
                         var uploadFile = new tbUploadFile
                         {
                             fileName = f.fileName,
@@ -796,10 +797,24 @@ namespace BusinessLogicMBDesign.Sale
                         };
 
                         int? fileId = _uploadFileRepository.Add(uploadFile, conn, transaction);
+                        */
+
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.fileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? urlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
 
                         var upload = new tbUpload
                         {
-                            fileId = fileId.Value,
+                            urlId = urlId.Value,
                             orderId = orderId,
                             uploadCategoryId = categoryId.Value,
                             status = true,

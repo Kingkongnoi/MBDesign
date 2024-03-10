@@ -1364,12 +1364,13 @@ function renderCustCalPrice(data) {
     $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
 }
 function renderCustUploadRef(data) {
+    debugger;
     var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
 
     var lstPlanUrl = [];
     var lstPreviewImg = [];
     planImg.forEach((a) => {
-        lstPlanUrl.push(`${a.dataFile}`);
+        lstPlanUrl.push(`${a.url}`);
 
         var addPreview = {
             caption: a.fileName,

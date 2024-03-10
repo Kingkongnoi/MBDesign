@@ -151,6 +151,7 @@ namespace BusinessLogicMBDesign.Foreman
 
                     foreach (var f in file)
                     {
+                        /*
                         var uploadFile = new tbUploadFile
                         {
                             fileName = f.fileName,
@@ -165,10 +166,23 @@ namespace BusinessLogicMBDesign.Foreman
                         };
 
                         int? fileId = _uploadFileRepository.Add(uploadFile, conn, transaction);
+                        */
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.fileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? urlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
 
                         var upload = new tbUploadOrderDetail
                         {
-                            fileId = fileId.Value,
+                            urlId = urlId.Value,
                             orderId = orderId,
                             orderDetailId = orderDetailId,
                             uploadCategoryId = categoryId.Value,
@@ -242,6 +256,7 @@ namespace BusinessLogicMBDesign.Foreman
                         int deleteUrl = _uploadFileRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
                         int delete = _uploadFileRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
 
+                        /*
                         var uploadFile = new tbUploadFile
                         {
                             fileName = f.fileName,
@@ -256,10 +271,24 @@ namespace BusinessLogicMBDesign.Foreman
                         };
 
                         int? fileId = _uploadFileRepository.Add(uploadFile, conn, transaction);
+                        */
+
+                        var uploadUrl = new tbUploadUrl
+                        {
+                            url = f.imageUrl,
+                            fileName = f.fileName,
+                            fileSize = f.fileSize,
+                            status = true,
+                            createDate = DateTime.UtcNow,
+                            createBy = loginCode,
+                            isDeleted = false
+                        };
+
+                        int? urlId = _uploadUrlRepository.Add(uploadUrl, conn, transaction);
 
                         var upload = new tbUpload
                         {
-                            fileId = fileId.Value,
+                            urlId = urlId.Value,
                             orderId = orderId,
                             uploadCategoryId = categoryId.Value,
                             status = true,

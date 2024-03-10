@@ -21,7 +21,7 @@ namespace DataLayerMBDesign
             string queryString = @"SELECT a.uploadId
             ,a.orderId
             ,a.uploadCategoryId
-            ,a.fileId
+            ,a.urlId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -29,11 +29,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[dataFile]
+            ,c.[url]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadFile c on a.fileId = c.fileId
+            inner join tbUploadUrl c on a.urlId = c.urlId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId
             order by a.uploadId";
@@ -46,7 +46,7 @@ namespace DataLayerMBDesign
             string queryString = @"SELECT a.uploadId
             ,a.orderId
             ,a.uploadCategoryId
-            ,a.fileId
+            ,a.urlId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -54,11 +54,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[dataFile]
+            ,c.[url]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadFile c on a.fileId = c.fileId
+            inner join tbUploadUrl c on a.urlId = c.urlId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and b.name = @categoryName";
 
@@ -70,7 +70,7 @@ namespace DataLayerMBDesign
             string queryString = @"SELECT top 1 a.uploadId
             ,a.orderId
             ,a.uploadCategoryId
-            ,a.fileId
+            ,a.urlId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -78,11 +78,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[dataFile]
+            ,c.[url]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadFile c on a.fileId = c.fileId
+            inner join tbUploadUrl c on a.urlId = c.urlId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and b.name = @categoryName
             order by a.uploadId desc";
@@ -113,7 +113,7 @@ namespace DataLayerMBDesign
             string queryString = @"SELECT a.uploadId
             ,a.orderId
             ,a.uploadCategoryId
-            ,a.fileId
+            ,a.urlId
             ,a.[status]
             ,a.createDate
             ,a.createBy
@@ -121,11 +121,11 @@ namespace DataLayerMBDesign
             ,a.updateBy
             ,a.isDeleted
             ,b.name categoryName
-            ,c.[dataFile]
+            ,c.[url]
             ,c.[fileName]
             ,c.fileSize
             FROM tbUpload a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
-            inner join tbUploadFile c on a.fileId = c.fileId
+            inner join tbUploadUrl c on a.urlId = c.urlId
             where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
             and a.orderId = @orderId and b.name in @categoryName";
 

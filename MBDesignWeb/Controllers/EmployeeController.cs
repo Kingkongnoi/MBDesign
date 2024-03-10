@@ -124,82 +124,40 @@ namespace MBDesignApi.Controllers.Master
             return new JsonResult(returnData);
         }
 
-        //[HttpPost]
-        //[DisableRequestSizeLimit]
-        //public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, List<IFormFile> files)
-        //{
-        //    var msg = new ResultMessage();
-        //    var addedUpload = new List<UploadFiles>();
+        [HttpPost]
+        [DisableRequestSizeLimit]
+        public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, IFormFile files)
+        {
+            var msg = new ResultMessage();
+            //var addedUpload = new List<UploadFiles>();
 
-        //    //string uploadPath = _configuration.GetSection("fileUploadsPath").Value;
-        //    string path = Directory.GetCurrentDirectory();
-        //    foreach (IFormFile source in files)
-        //    {
-        //        string folderName = string.Format("{0}\\upload\\images\\", path);
+            var ftpService = new ftpProcessService(_configuration);
+            if (files != null)
+            {
+                var uploaded = ftpService.DoUploadToFtp(files);
+               
+                if (uploaded != null)
+                {
+                    var model = new EmpDataModel
+                    {
+                        signatureFileName = uploaded.imageUrl,
+                        id = empId,
+                        loginCode = loginCode
+                    };
+                    ///Update data
+                    var result = _employeeService.UpdateSignatureFileName(model);
+                    if (result > 0)
+                    {
+                        msg.isResult = true;
+                        return new JsonResult(msg);
+                    }
+                }
+            }
 
-        //        if (!Directory.Exists(folderName))
-        //        {
-        //            Directory.CreateDirectory(folderName);
-        //        }
+            return new JsonResult(msg);
+        }
 
-        //        string filename = String.Concat(ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Where(c => !Char.IsWhiteSpace(c)));
-
-        //        FileInfo file = new FileInfo(filename);
-        //        string fileExtension = file.Extension;
-
-        //        string oldFilePath = string.Format("{0}{1}", folderName, filename);
-        //        string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-        //        string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-        //        string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-        //        FileStream output = System.IO.File.Create(fullFilePath);
-
-        //        source.CopyTo(output);
-        //        output.Dispose();
-
-        //        var obj = new UploadFiles
-        //        {
-        //            fileName = newFileName,
-        //            filePath = fullFilePath,
-        //            fileSize = source.Length,
-        //            originalFileName = filename,
-        //        };
-
-        //        var ftpService = new ftpProcessService(_configuration);
-        //        var result = ftpService.UploadFile(fullFilePath, "uploads");
-        //        if (result.Contains("Transfer complete"))
-        //        {
-        //            obj.imageUrl = string.Format("{0}{1}", _configuration.GetSection("uploadUrl").Value, newFileName);
-        //        }
-        //        else
-        //        {
-        //            obj.imageUrl = "";
-        //        }
-        //        addedUpload.Add(obj);
-        //    }
-
-        //    if(addedUpload.Count > 0)
-        //    {
-        //        var model = new EmpDataModel
-        //        {
-        //            signatureFileName = addedUpload.FirstOrDefault().imageUrl,
-        //            id = empId,
-        //            loginCode = loginCode
-        //        };
-        //        ///Update data
-        //        var result = _employeeService.UpdateSignatureFileName(model);
-        //        if (result > 0)
-        //        {
-        //            msg.isResult = true;
-        //            return new JsonResult(msg);
-        //        }
-        //    }
-            
-        //    return new JsonResult(msg);
-
-        //}
-
+        /*
         [HttpPost]
         [DisableRequestSizeLimit]
         public ActionResult DoUpdateSignatureFile([FromQuery] int empId, [FromQuery] string loginCode, List<IFormFile> files)
@@ -228,8 +186,8 @@ namespace MBDesignApi.Controllers.Master
             return new JsonResult(msg);
 
         }
+        */
 
-        
         #endregion POST
 
         #endregion Employee

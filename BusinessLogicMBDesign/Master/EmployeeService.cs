@@ -294,7 +294,7 @@ namespace BusinessLogicMBDesign.Master
                 {
                     var obj = new tbEmpData
                     {
-                        fileId = model.fileId,
+                        signatureFileName = model.signatureFileName,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode,
                         id = model.id

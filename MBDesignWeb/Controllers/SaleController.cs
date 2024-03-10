@@ -13,13 +13,13 @@ namespace MBDesignWeb.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly SaleService _saleService;
-        private readonly UploadToAwsService _uploadToAwsService;
+        private readonly ftpProcessService _ftpProcessService;
         private readonly UploadToDatabaseService _uploadToDatabaseService;
         public SaleController(IConfiguration configuration)
         {
             _configuration = configuration;
             _saleService = new SaleService(_configuration);
-            _uploadToAwsService = new UploadToAwsService(_configuration);
+            _ftpProcessService = new ftpProcessService(_configuration);
             _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
         }
 
@@ -104,14 +104,14 @@ namespace MBDesignWeb.Controllers
             var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
             var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
 
-            foreach (var u in uploadRef)
-            {
-                if(u.dataFile != null)
-                {
-                    u.dataFile = Convert.FromBase64String(Convert.ToBase64String(u.dataFile));
-                }
+            //foreach (var u in uploadRef)
+            //{
+            //    if(u.dataFile != null)
+            //    {
+            //        u.dataFile = Convert.FromBase64String(Convert.ToBase64String(u.dataFile));
+            //    }
 
-            }
+            //}
 
             var custId = (custOrder != null) ? custOrder.custId : 0;
             var cust = _saleService.GetFirstByCustId(custId);
@@ -232,7 +232,7 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(data);
         }
 
-        /*
+        
         //[AllowAnonymous]
         [Route("api/[controller]/[action]")]
         [HttpPost]
@@ -242,47 +242,9 @@ namespace MBDesignWeb.Controllers
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
 
-            string path = Directory.GetCurrentDirectory();
             foreach (IFormFile source in files)
             {
-                string folderName = string.Format("{0}\\upload\\images\\", path);
-
-                if (!Directory.Exists(folderName))
-                {
-                    Directory.CreateDirectory(folderName);
-                }
-
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString();
-
-                FileInfo file = new FileInfo(filename);
-                string fileExtension = file.Extension;
-
-                string oldFilePath = string.Format("{0}{1}", folderName, filename);
-                string fileWithoutExtension = Path.GetFileNameWithoutExtension(oldFilePath);
-
-                string newFileName = string.Format("{0}_{1}{2}", fileWithoutExtension, DateTime.UtcNow.ToString("yyyyMMddHHmmss"), fileExtension);
-
-                string fullFilePath = string.Format("{0}{1}", folderName, newFileName);
-                FileStream output = System.IO.File.Create(fullFilePath);
-
-                source.CopyTo(output);
-                output.Dispose();
-
-                var obj = new UploadFiles
-                {
-                    fileName = newFileName,
-                    filePath = fullFilePath,
-                    fileSize = source.Length,
-                    originalFileName = filename,
-                };
-
-                msg = _uploadToAwsService.DoUploadToAws(obj);
-                obj.imageUrl = msg.strResult;
-                if (msg.isResult == false)
-                {
-                    return Json(msg);
-                }
-
+                var obj = _ftpProcessService.DoUploadToFtp(source);
                 addedUpload.Add(obj);
             }
 
@@ -296,8 +258,8 @@ namespace MBDesignWeb.Controllers
             return Json(msg);
 
         }
-        */
-
+        
+        /*
         [Route("api/[controller]/[action]")]
         [HttpPost]
         [DisableRequestSizeLimit]
@@ -316,6 +278,7 @@ namespace MBDesignWeb.Controllers
             return Json(msg);
 
         }
+        */
 
         [Route("api/[controller]/[action]")]
         [HttpPost]

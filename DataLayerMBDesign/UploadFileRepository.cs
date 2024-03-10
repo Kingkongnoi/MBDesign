@@ -19,7 +19,7 @@ namespace DataLayerMBDesign
         public int HardDeleteByParam(int orderId, int uploadCategoryId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"  
-            delete tbUploadFile where fileId in (select fileId from tbUpload where orderId = @orderId and uploadCategoryId = @uploadCategoryId)
+            delete tbUploadFile where urlId in (select urlId from tbUpload where orderId = @orderId and uploadCategoryId = @uploadCategoryId)
             select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { orderId, uploadCategoryId }, transaction:  trans);
@@ -28,7 +28,7 @@ namespace DataLayerMBDesign
         public int HardDeleteByUploadId(int uploadId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"  
-            delete tbUploadFile where fileId in (select fileId from tbUpload where uploadId = @uploadId)
+            delete tbUploadFile where urlId in (select urlId from tbUpload where uploadId = @uploadId)
             select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { uploadId }, transaction: trans);

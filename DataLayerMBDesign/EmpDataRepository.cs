@@ -44,13 +44,17 @@ namespace DataLayerMBDesign
         public int UpdateSignatureFileName(tbEmpData obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbEmpData
-                                set fileId = @fileId
+                                set signatureFileName = @signatureFileName,
+                                updateDate = @updateDate,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new
             {
-                obj.fileId,
+                obj.signatureFileName,
+                obj.updateDate,
+                obj.updateBy,
                 obj.id
             }, transaction: trans);
         }

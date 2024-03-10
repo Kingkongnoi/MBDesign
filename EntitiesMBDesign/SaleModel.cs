@@ -64,7 +64,8 @@ namespace EntitiesMBDesign
         public string originalFileName { get; set; } = string.Empty;
         public byte[] dataFile { get; set; }
 
-    }
+        public string imageUrl { get; set; } = string.Empty;
+    } 
 
     public class CustReturn
     {

@@ -15,6 +15,7 @@ namespace MBDesignWeb.Controllers
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
         private readonly UploadToDatabaseService _uploadToDatabaseService;
+        private readonly ftpProcessService _ftpProcessService;
         public Design3DController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -23,6 +24,7 @@ namespace MBDesignWeb.Controllers
             _saleService = new SaleService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
             _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
+            _ftpProcessService = new ftpProcessService(_configuration);
         }
 
         public IActionResult Index()
@@ -85,7 +87,13 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateDesign3D([FromQuery] int orderId, [FromQuery] int empId, [FromQuery] string dueDate, [FromQuery] bool final3d, [FromQuery] int design3dId, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
+            var addedUpload = new List<UploadFiles>();
+
+            foreach (IFormFile source in files)
+            {
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
+            }
 
             string checklistStatus = string.Empty;
             if (empId != 0)

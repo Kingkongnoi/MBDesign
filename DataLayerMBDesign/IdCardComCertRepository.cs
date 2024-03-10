@@ -20,25 +20,25 @@ namespace DataLayerMBDesign
         {
             string queryString = @"update tbIdCardComCert
                                 set 
-                                imgIdCardFileId = @imgIdCardFileId,
+                                imgIdCardFileName = @imgIdCardFileName,
                                 updateDate = @updateDate,
                                 updateBy = @updateBy
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.imgIdCardFileId, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.imgIdCardFileName, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
         }
 
         public int UpdateComCert(tbIdCardComCert obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"update tbIdCardComCert
-                                set imgComCertFileId = @imgComCertFileId,
+                                set imgComCertFileName = @imgComCertFileName,
                                 updateDate = @updateDate,
                                 updateBy = @updateBy
                                 where isDeleted = 0 and id = @id
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.imgComCertFileId, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.imgComCertFileName, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
         }
 
         public tbIdCardComCert GetFirstIdCardComCert(SqlConnection conn, SqlTransaction? trans = null)
@@ -53,8 +53,6 @@ namespace DataLayerMBDesign
                                 ,[updateDate]
                                 ,[updateBy]
                                 ,[isDeleted]
-                                ,[imgIdCardFileId]
-                                ,[imgComCertFileId]
                                 FROM [tbIdCardComCert]
                                 where [isDeleted] = 0 and [status] = 1
                                 order by [id] desc";

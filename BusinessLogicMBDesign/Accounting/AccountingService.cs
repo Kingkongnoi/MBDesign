@@ -604,16 +604,14 @@ namespace BusinessLogicMBDesign.Accounting
                 int? fileId = 0;
                 try
                 {
-                    fileId = _uploadToDatabaseService.DoAddUploadFile(files, "imgIdCardFileName", loginCode);
+                    //fileId = _uploadToDatabaseService.DoAddUploadFile(files, "imgIdCardFileName", loginCode);
 
                     var exists = _idCardComCertRepository.GetFirstIdCardComCert(conn, transaction);
                     if(exists == null)
                     {
                         var added = new tbIdCardComCert
                         {
-                            imgComCertFileName = string.Empty,
-                            imgIdCardFileName = string.Empty,
-                            imgIdCardFileId = fileId.Value,
+                            imgIdCardFileName = files.imageUrl,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode
@@ -625,7 +623,7 @@ namespace BusinessLogicMBDesign.Accounting
                     {
                         var updated = new tbIdCardComCert
                         {
-                            imgIdCardFileId = fileId.Value,
+                            imgIdCardFileName = files.imageUrl,
                             updateDate = DateTime.UtcNow,
                             updateBy = loginCode,
                             id = exists.id
@@ -666,9 +664,7 @@ namespace BusinessLogicMBDesign.Accounting
                     {
                         var added = new tbIdCardComCert
                         {
-                            imgComCertFileName = string.Empty,
-                            imgIdCardFileName = string.Empty,
-                            imgComCertFileId = fileId.Value,
+                            imgComCertFileName = files.imageUrl,
                             status = true,
                             createDate = DateTime.UtcNow,
                             createBy = loginCode
@@ -680,7 +676,7 @@ namespace BusinessLogicMBDesign.Accounting
                     {
                         var updated = new tbIdCardComCert
                         {
-                            imgComCertFileId = fileId.Value,
+                            imgComCertFileName = files.imageUrl,
                             updateDate = DateTime.UtcNow,
                             updateBy = loginCode,
                             id= exists.id

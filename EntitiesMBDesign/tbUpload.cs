@@ -13,7 +13,7 @@ namespace EntitiesMBDesign
         public int uploadId { get; set; }
         public int orderId { get; set; }
         public int uploadCategoryId { get; set; }
-        public int fileId { get; set; }
+        public int urlId { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
@@ -28,5 +28,6 @@ namespace EntitiesMBDesign
         public byte[] dataFile { get; set; }
         public string fileName { get; set; } = string.Empty;
         public int fileSize { get; set; }
+        public string url { get; set; } = string.Empty;
     }
 }

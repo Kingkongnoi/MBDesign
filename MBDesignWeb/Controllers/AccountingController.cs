@@ -15,6 +15,7 @@ namespace MBDesignWeb.Controllers
         private readonly AccountingService _accountingService;
         private readonly UploadToAwsService _uploadToAwsService;
         private readonly UploadToDatabaseService _uploadToDatabaseService;
+        private readonly ftpProcessService _ftpProcessService;
 
         public AccountingController(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
@@ -25,6 +26,7 @@ namespace MBDesignWeb.Controllers
             _accountingService = new AccountingService(_configuration);
             _uploadToAwsService = new UploadToAwsService(_configuration);
             _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
+            _ftpProcessService = new ftpProcessService(_configuration); 
         }
 
         public IActionResult Index()
@@ -253,10 +255,16 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateIdCard([FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files).FirstOrDefault();
+            var addedUpload = new List<UploadFiles>();
+
+            foreach (IFormFile source in files)
+            {
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
+            }
 
             ///Update data
-            var result = _accountingService.DoUpdateIdCard(addedUpload, loginCode);
+            var result = _accountingService.DoUpdateIdCard(addedUpload.FirstOrDefault(), loginCode);
             if (result.isResult == false)
             {
                 msg.isResult = result.isResult;
@@ -272,10 +280,16 @@ namespace MBDesignWeb.Controllers
         public ActionResult DoUpdateComCert([FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files).FirstOrDefault();
+            var addedUpload = new List<UploadFiles>();
+
+            foreach (IFormFile source in files)
+            {
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
+            }
 
             ///Update data
-            var result = _accountingService.DoUpdateComCert(addedUpload, loginCode);
+            var result = _accountingService.DoUpdateComCert(addedUpload.FirstOrDefault(), loginCode);
             if (result.isResult == false)
             {
                 msg.isResult = result.isResult;

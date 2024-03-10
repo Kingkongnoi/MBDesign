@@ -16,6 +16,7 @@ namespace MBDesignWeb.Controllers
         private readonly SaleService _saleService;
         private readonly UploadToAwsService _uploadToAwsService;
         private readonly UploadToDatabaseService _uploadToDatabaseService;
+        private readonly ftpProcessService _ftpProcessService;
 
         public ForemanController(IConfiguration configuration)
         {
@@ -24,6 +25,7 @@ namespace MBDesignWeb.Controllers
             _saleService = new SaleService(configuration);
             _uploadToAwsService = new UploadToAwsService(configuration);
             _uploadToDatabaseService = new UploadToDatabaseService(configuration);
+            _ftpProcessService = new ftpProcessService(configuration);
         }
 
         public IActionResult Index()
@@ -91,7 +93,13 @@ namespace MBDesignWeb.Controllers
         public JsonResult DoUpdateForemanItems([FromQuery] int orderId, [FromQuery] int custOrderDetailId, [FromQuery] decimal length, [FromQuery] decimal depth, [FromQuery] decimal height, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
+            var addedUpload = new List<UploadFiles>();
+
+            foreach (IFormFile source in files)
+            {
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
+            }
 
             string categoryName = GlobalUploadCategory.foremanUpload;
 
@@ -110,7 +118,13 @@ namespace MBDesignWeb.Controllers
             , [FromQuery] decimal discount, [FromQuery] decimal vat, [FromQuery] decimal grandTotal, [FromQuery] decimal disposite, [FromQuery] string loginCode, List<IFormFile> files)
         {
             var msg = new ResultMessage();
-            var addedUpload = _uploadToDatabaseService.GenerateUploadFilesObject(files);
+            var addedUpload = new List<UploadFiles>();
+
+            foreach (IFormFile source in files)
+            {
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
+            }
 
             string categoryName = GlobalUploadCategory.secondDisposite;
 

@@ -20,7 +20,7 @@ namespace EntitiesMBDesign
         public string salaryType { get; set; } = string.Empty;
         public decimal salary { get; set;}
         public DateTime hiringDate { get; set; }
-        //public string signatureFileName { get; set; } = string.Empty;
+        public string signatureFileName { get; set; } = string.Empty;
         public bool timeStampType { get; set; } = true;
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
@@ -29,8 +29,6 @@ namespace EntitiesMBDesign
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
         public string idCard { get; set; } = string.Empty;
-        public int fileId { get; set; }
-
     }
 
     public class EmpDataView : tbEmpData

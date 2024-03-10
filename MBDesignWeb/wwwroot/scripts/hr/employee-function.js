@@ -997,6 +997,7 @@ function callGetEmployeeById(id) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Employee/GetEmpByEmpId?id=${id}`,
         success: function (data) {
+            console.log(data);
             renderEmployeeForm(data);
             renderEmployeeSignature(data.signatureFileName);
         },
@@ -1034,11 +1035,10 @@ function renderEmployeeSignature(signatureFileName) {
         lstUrl.push(`${signatureFileName}`);
 
         var addPreview = {
-            //caption: data.fileName,
-            //width: '120px',
-            //url: '/localhost/public/delete',
-            //key: data.uploadId,
-            //extra: { id: data.uploadId },
+            caption: "Employee",
+            width: '120px',
+            key: 1,
+            extra: { id: 1 }
         };
 
         lstPreviewImg.push(addPreview);
@@ -1048,15 +1048,15 @@ function renderEmployeeSignature(signatureFileName) {
     $(`${formId}`).fileinput('destroy');
     if (signatureFileName != "") {
         $(`${formId}`).fileinput({
-            //uploadUrl: "Home/UploadFiles", // this is your home controller method url
             showBrowse: true,
-            showUpload: false,
+            showUpload: true,
             showCaption: true,
             initialPreview: lstUrl,
             initialPreviewAsData: true,
             initialPreviewConfig: [
                 lstPreviewImg
             ],
+            overwriteInitial: false,
             browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
@@ -1080,11 +1080,10 @@ function renderEmployeeSignature(signatureFileName) {
         lstViewUrl.push(`${signatureFileName}`);
 
         var addPreview = {
-            //caption: data.fileName,
-            //width: '120px',
-            //url: '/localhost/public/delete',
-            //key: data.uploadId,
-            //extra: { id: data.uploadId },
+            caption: "Employee",
+            width: '120px',
+            key: 1,
+            extra: { id: 1 }
         };
 
         lstViewPreviewImg.push(addPreview);
@@ -1097,7 +1096,7 @@ function renderEmployeeSignature(signatureFileName) {
             //uploadUrl: "Home/UploadFiles", // this is your home controller method url
             showBrowse: false,
             showUpload: false,
-            showCaption: false,
+            showCaption: true,
             initialPreview: lstUrl,
             initialPreviewAsData: true,
             initialPreviewConfig: [

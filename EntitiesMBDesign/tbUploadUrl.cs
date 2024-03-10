@@ -13,6 +13,7 @@ namespace EntitiesMBDesign
         public int urlId { get; set; }
         public string url { get; set; } = string.Empty;
         public string fileName { get; set; } = string.Empty;
+        public string originalFileName { get; set; } = string.Empty;
         public long fileSize { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
