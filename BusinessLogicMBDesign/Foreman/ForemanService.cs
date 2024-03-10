@@ -253,8 +253,8 @@ namespace BusinessLogicMBDesign.Foreman
 
                     foreach (var f in file)
                     {
-                        int deleteUrl = _uploadFileRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
-                        int delete = _uploadFileRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
+                        int deleteUrl = _uploadUrlRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
+                        int delete = _uploadUrlRepository.HardDeleteByParam(orderId, categoryId.Value, conn, transaction);
 
                         /*
                         var uploadFile = new tbUploadFile

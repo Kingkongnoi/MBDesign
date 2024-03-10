@@ -753,7 +753,7 @@ function DoSaveForeman() {
         let disposite = $(`${formId} #input-foreman-cal-disposite`).val() == "" ? 0 : $(`${formId} #input-foreman-cal-disposite`).val();
 
         let url = `${app_settings.api_url}/api/Foreman/DoUpdateForeman?orderId=${_order_id}&orderNote=${orderNote}&orderNotePrice=${orderNotePrice}&subTotal=${subTotal}
-        &discount=${discount}&vat=${vat}&grandTotal=${grandTotal}&disposite=${disposite}`;
+        &discount=${discount}&vat=${vat}&grandTotal=${grandTotal}&disposite=${disposite}&loginCode=${_userCode}`;
 
         $.ajax({
             url: url,

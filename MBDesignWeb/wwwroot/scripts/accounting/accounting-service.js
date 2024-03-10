@@ -427,7 +427,7 @@ function callSendToSaleAndForeman() {
     });
 }
 function DoSendToSaleAndForeman() {
-    let url = `${app_settings.api_url}/api/Accounting/DoSendToSaleAndForeman?orderId=${_order_id}`;
+    let url = `${app_settings.api_url}/api/Accounting/DoSendToSaleAndForeman?orderId=${_order_id}&loginCode=${_userCode}`;
 
     $.ajax({
         url: url,

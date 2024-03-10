@@ -365,7 +365,7 @@ function renderCustOptions() {
 function renderCustCalPrice(data) {
     let formId = '#form-approveCustomerCalculate';
     let custOrder = data.custOrder;
-    console.log(custOrder);
+    
     $(`${formId} input[name="input-cal-note"]`).val(custOrder.orderNote);
     let orderNotePrice = (custOrder.orderNotePrice == 0) ? "" : custOrder.orderNotePrice.toFixed(2);
     $(`${formId} input[name="input-cal-note-price"]`).val(orderNotePrice);

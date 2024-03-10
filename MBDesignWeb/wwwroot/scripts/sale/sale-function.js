@@ -1364,7 +1364,7 @@ function renderCustCalPrice(data) {
     $(`${formId} #input-cal-approve`).val(custOrder.quotationComment);
 }
 function renderCustUploadRef(data) {
-    debugger;
+
     var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
 
     var lstPlanUrl = [];

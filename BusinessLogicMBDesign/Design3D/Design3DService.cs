@@ -115,7 +115,7 @@ namespace BusinessLogicMBDesign.Design3D
                     {
                         string contractStatus = GlobalContractStatus.document3dApproved;
 
-                        int updateContract = _contractAgreementRepository.UpdateContractStatus(orderId, contractStatus, conn, transaction);
+                        int updateContract = _contractAgreementRepository.UpdateContractStatus(orderId, contractStatus, DateTime.UtcNow, loginCode, conn, transaction);
 
                         //Create foreman
                         var foremanExists = _foremanRepository.GetByOrderId(orderId, conn, transaction);

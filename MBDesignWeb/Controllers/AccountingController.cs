@@ -225,9 +225,9 @@ namespace MBDesignWeb.Controllers
 
         [Route("api/[controller]/[action]")]
         [HttpPost]
-        public JsonResult DoSendToSaleAndForeman(int orderId)
+        public JsonResult DoSendToSaleAndForeman(int orderId, string loginCode)
         {
-            var data = _accountingService.DoSendToSaleAndForeman(orderId);
+            var data = _accountingService.DoSendToSaleAndForeman(orderId, loginCode);
 
             return new JsonResult(data);
         }

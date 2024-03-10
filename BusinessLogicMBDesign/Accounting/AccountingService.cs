@@ -225,7 +225,7 @@ namespace BusinessLogicMBDesign.Accounting
 
             return msg;
         }
-        public ResultMessage DoSendToSaleAndForeman(int orderId)
+        public ResultMessage DoSendToSaleAndForeman(int orderId, string loginCode)
         {
             var msg = new ResultMessage();
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -236,7 +236,7 @@ namespace BusinessLogicMBDesign.Accounting
 
                 try
                 {
-                    int updatedRow = _contractAgreementRepository.UpdateContractStatus(orderId, GlobalContractStatus.documentSendToSaleAndForeman, conn, transaction);
+                    int updatedRow = _contractAgreementRepository.UpdateContractStatus(orderId, GlobalContractStatus.documentSendToSaleAndForeman, DateTime.UtcNow, loginCode, conn, transaction);
 
                     msg.isResult = true;
                     transaction.Commit();

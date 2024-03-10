@@ -92,7 +92,7 @@ namespace BusinessLogicMBDesign.Approve
 
                     //Update contract status
                     string contractStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalContractStatus.documentApproved : GlobalContractStatus.documentNotApproved;
-                    int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatus, conn, transaction);
+                    int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatus, DateTime.UtcNow, model.loginCode, conn, transaction);
 
                     //create 3d = บันทึกรับเรื่อง
                     if(model.approveStatus == GlobalApproveStatus.approved)

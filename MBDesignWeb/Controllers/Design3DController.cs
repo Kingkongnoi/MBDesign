@@ -89,16 +89,18 @@ namespace MBDesignWeb.Controllers
             var msg = new ResultMessage();
             var addedUpload = new List<UploadFiles>();
 
-            foreach (IFormFile source in files)
-            {
-                var obj = _ftpProcessService.DoUploadToFtp(source);
-                addedUpload.Add(obj);
-            }
-
             string checklistStatus = string.Empty;
             if (empId != 0)
             {
                 checklistStatus = Global3DStatus.whileDesign3dDraf1;
+            }
+
+            foreach (IFormFile source in files)
+            {
+                checklistStatus = Global3DStatus.design3dApproved;
+
+                var obj = _ftpProcessService.DoUploadToFtp(source);
+                addedUpload.Add(obj);
             }
 
             if (final3d)
