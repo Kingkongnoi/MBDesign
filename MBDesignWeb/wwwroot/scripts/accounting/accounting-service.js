@@ -992,7 +992,7 @@ function DoSaveCreateOrUpdateInvoice() {
 
 
 function printInvoice() {
-    /*$.ajax({
+    $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`,
         success: function (data) {
@@ -1002,9 +1002,9 @@ function printInvoice() {
         },
         error: function (err) {
         }
-    });*/
-    $(this).attr('href', `../Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`);
-    $(this).attr("target", "_blank");
+    });
+    //$(this).attr('href', `../Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`);
+    //$(this).attr("target", "_blank");
 }
 async function generateInvoiceDocument(data) {
     await renderInvoiceHtml(data);
@@ -1080,9 +1080,14 @@ async function renderInvoiceHtml(data) {
     };
 
     var element = document.getElementById("invoiceElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }
 
 function clearSearchReceiptForm() {

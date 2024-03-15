@@ -61,90 +61,90 @@ namespace MBDesignWeb.Controllers
         //    return File(response, "application/pdf", fileName);
         //}
         //[Route("api/[controller]/[action]")]
-        [HttpGet]
-        public IActionResult GetInvoiceByInvoiceId(int invoiceId)
-        {
-            var invoice = _documentService.GetInvoiceByInvoiceId(invoiceId);
-            var cust = new tbCust();
-            var custOrder = new CustOrderView();
-            if (invoice != null)
-            {
-                cust = _documentService.GetCustomerDataByCustId(invoice.custId);
-                custOrder = _documentService.GetCustOrderByOrderId(invoice.orderId);
-            }
+        //[HttpGet]
+        //public IActionResult GetInvoiceByInvoiceId(int invoiceId)
+        //{
+        //    var invoice = _documentService.GetInvoiceByInvoiceId(invoiceId);
+        //    var cust = new tbCust();
+        //    var custOrder = new CustOrderView();
+        //    if (invoice != null)
+        //    {
+        //        cust = _documentService.GetCustomerDataByCustId(invoice.custId);
+        //        custOrder = _documentService.GetCustOrderByOrderId(invoice.orderId);
+        //    }
 
-            //var result = new
-            //{
-            //    invoice = invoice,
-            //    cust = cust,
-            //    custOrder = custOrder,
-            //};
-            //return Json(result);
-            string mimetype = "";
-            int extension = 1;
-            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
+        //    //var result = new
+        //    //{
+        //    //    invoice = invoice,
+        //    //    cust = cust,
+        //    //    custOrder = custOrder,
+        //    //};
+        //    //return Json(result);
+        //    string mimetype = "";
+        //    int extension = 1;
+        //    //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpInvoice.rdlc";
 
-            ///Download to current directory
-            _ftpProcessService.DownloadFile("rpInvoice.rdlc");
+        //    ///Download to current directory
+        //    _ftpProcessService.DownloadFile("rpInvoice.rdlc");
 
-            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
-            DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+        //    System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+        //    DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
 
-            string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
+        //    string cusName = string.Format("{0} {1}", cust.custFirstName, cust.custSurName);
 
-            string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
+        //    string account = string.Format("ชื่อบัญชี {0} เลขที่บัญชี {1}\n{2}", custOrder.accountName, custOrder.accountNumber, custOrder.bank);
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("invoiceNumber", invoice.invoiceNumber);
-            param.Add("invoiceDate", currDateThai.ToString("dd/MM/yyyy"));
-            param.Add("invoiceCusName", cusName);
-            param.Add("invoiceCusIdNumber", "0205556012391");
-            param.Add("invoiceCusAddress", cust.custAddress);
-            param.Add("invoiceCusTel", cust.custTel);
-            param.Add("invoiceCusEmail", "");
-            param.Add("invoiceAccount", account);
+        //    Dictionary<string, string> param = new Dictionary<string, string>();
+        //    param.Add("invoiceNumber", invoice.invoiceNumber);
+        //    param.Add("invoiceDate", currDateThai.ToString("dd/MM/yyyy"));
+        //    param.Add("invoiceCusName", cusName);
+        //    param.Add("invoiceCusIdNumber", "0205556012391");
+        //    param.Add("invoiceCusAddress", cust.custAddress);
+        //    param.Add("invoiceCusTel", cust.custTel);
+        //    param.Add("invoiceCusEmail", "");
+        //    param.Add("invoiceAccount", account);
 
-            var reportResult = new List<InvoiceList>();
-            string fullPeriod = string.Empty;
-            if(invoice.period == GlobalInvoicePeriod.firstDisposite)
-            {
-                fullPeriod = GlobalInvoicePeriod.firstFullDisposite;
-            }
-            else if (invoice.period == GlobalInvoicePeriod.secondDisposite)
-            {
-                fullPeriod = GlobalInvoicePeriod.secondFullDisposite;
-            }
-            else if (invoice.period == GlobalInvoicePeriod.thridDisposite)
-            {
-                fullPeriod = GlobalInvoicePeriod.thridFullDisposite;
-            }
-            else if (invoice.period == GlobalInvoicePeriod.fourthDisposite)
-            {
-                fullPeriod = GlobalInvoicePeriod.fourthFullDisposite;
-            }
+        //    var reportResult = new List<InvoiceList>();
+        //    string fullPeriod = string.Empty;
+        //    if(invoice.period == GlobalInvoicePeriod.firstDisposite)
+        //    {
+        //        fullPeriod = GlobalInvoicePeriod.firstFullDisposite;
+        //    }
+        //    else if (invoice.period == GlobalInvoicePeriod.secondDisposite)
+        //    {
+        //        fullPeriod = GlobalInvoicePeriod.secondFullDisposite;
+        //    }
+        //    else if (invoice.period == GlobalInvoicePeriod.thridDisposite)
+        //    {
+        //        fullPeriod = GlobalInvoicePeriod.thridFullDisposite;
+        //    }
+        //    else if (invoice.period == GlobalInvoicePeriod.fourthDisposite)
+        //    {
+        //        fullPeriod = GlobalInvoicePeriod.fourthFullDisposite;
+        //    }
 
-            reportResult.Add(new InvoiceList
-            {
-                period = fullPeriod,
-                unitPrice = invoice.unitPrice,
-                qty = 1,
-                amount = invoice.unitPrice,
-                discount = "-",
-                subTotal = invoice.unitPrice,
-                vat = "-",
-                grandTotal = invoice.unitPrice,
-            });
+        //    reportResult.Add(new InvoiceList
+        //    {
+        //        period = fullPeriod,
+        //        unitPrice = invoice.unitPrice,
+        //        qty = 1,
+        //        amount = invoice.unitPrice,
+        //        discount = "-",
+        //        subTotal = invoice.unitPrice,
+        //        vat = "-",
+        //        grandTotal = invoice.unitPrice,
+        //    });
 
-            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
-            var path = string.Format("{0}\\rpInvoice.rdlc", targetPath);
+        //    string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
+        //    var path = string.Format("{0}\\rpInvoice.rdlc", targetPath);
 
-            LocalReport localReport = new LocalReport(path);
-            localReport.AddDataSource("dsGetInvoice", reportResult);
+        //    LocalReport localReport = new LocalReport(path);
+        //    localReport.AddDataSource("dsGetInvoice", reportResult);
 
-            var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+        //    var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
 
-            return File(fileResult.MainStream, "application/pdf");
-        }
+        //    return File(fileResult.MainStream, "application/pdf");
+        //}
         
         //[Route("api/[controller]/[action]")]
         /*
@@ -764,5 +764,29 @@ namespace MBDesignWeb.Controllers
 
             return Json(result);
         }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public IActionResult GetInvoiceByInvoiceId(int invoiceId)
+        {
+            var invoice = _documentService.GetInvoiceByInvoiceId(invoiceId);
+            var cust = new tbCust();
+            var custOrder = new CustOrderView();
+            if (invoice != null)
+            {
+                cust = _documentService.GetCustomerDataByCustId(invoice.custId);
+                custOrder = _documentService.GetCustOrderByOrderId(invoice.orderId);
+            }
+
+            var result = new
+            {
+                invoice = invoice,
+                cust = cust,
+                custOrder = custOrder,
+            };
+
+            return Json(result);
+        }
+
     }
 }
