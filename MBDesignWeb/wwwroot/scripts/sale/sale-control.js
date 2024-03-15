@@ -143,9 +143,7 @@
     });
 
     $('#form-createCalculatePrice .btn-print-quotation').on('click', function () {
-        //printQuotation();
-        $(this).attr('href', `../Document/GetQuotaionByOrderId?orderId=${_order_id}`);
-        $(this).attr("target", "_blank");
+        printQuotation();
     });
 
     $('#form-search-commission .btn-clear-search-commission').on('click', function () {

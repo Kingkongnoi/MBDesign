@@ -147,6 +147,7 @@ namespace MBDesignWeb.Controllers
         }
         
         //[Route("api/[controller]/[action]")]
+        /*
         [HttpGet]
         public IActionResult GetQuotaionByOrderId(int orderId)
         {
@@ -172,7 +173,7 @@ namespace MBDesignWeb.Controllers
             //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpQuotation.rdlc";
 
             ///Download to current directory
-            _ftpProcessService.DownloadFile("rpQuotation.rdlc");
+            //_ftpProcessService.DownloadFile("rpQuotation.rdlc");
 
             System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
             DateTime currDateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
@@ -298,9 +299,8 @@ namespace MBDesignWeb.Controllers
                 
             }
 
-            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
-            var path = string.Format("{0}\\rpQuotation.rdlc", targetPath);
-
+            string path = string.Format("{0}/rpQuotation.rdlc", _configuration.GetSection("previewRdlcReportsUrl").Value);
+           
             LocalReport localReport = new LocalReport(path);
             localReport.AddDataSource("dsGetQuotationItems", reportResult);
 
@@ -310,7 +310,8 @@ namespace MBDesignWeb.Controllers
 
             //return Json(result);
         }
-        
+        */
+
         //[Route("api/[controller]/[action]")]
         [HttpGet]
         public IActionResult GetReceiptByReceiptId(int receiptId)
@@ -400,117 +401,118 @@ namespace MBDesignWeb.Controllers
 
             return File(fileResult.MainStream, "application/pdf");
         }
-        
-        //[Route("api/[controller]/[action]")]
-        [HttpGet]
-        public IActionResult GetContractByContractId(int contractId)
-        {
-            var contract = _documentService.GetContractByContractId(contractId);
-            var cust = new tbCust();
-            var custOrder = new CustOrderView();
-            var items = new List<CustOrderDetailView>();
-            var itemsOptions = new List<CustOrderItemOptionsView>();
-            if (contract != null)
-            {
-                cust = _documentService.GetCustomerDataByCustId(contract.custId);
-                custOrder = _documentService.GetCustOrderByQuotationNumber(contract.quotationNumber);
-                items = _saleService.GetCustOrderDetailByOrderId(custOrder.orderId);
-                itemsOptions = _saleService.GetItemOptionsByOrderId(custOrder.orderId);
-            }
 
-            var result = new
-            {
-                contract = contract,
-                cust = cust,
-                custOrder = custOrder,
-            };
+        ////[Route("api/[controller]/[action]")]
 
-            string mimetype = "";
-            int extension = 1;
-            //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpCustomerContract.rdlc";
+        //[HttpGet]
+        //public IActionResult GetContractByContractId(int contractId)
+        //{
+        //    var contract = _documentService.GetContractByContractId(contractId);
+        //    var cust = new tbCust();
+        //    var custOrder = new CustOrderView();
+        //    var items = new List<CustOrderDetailView>();
+        //    var itemsOptions = new List<CustOrderItemOptionsView>();
+        //    if (contract != null)
+        //    {
+        //        cust = _documentService.GetCustomerDataByCustId(contract.custId);
+        //        custOrder = _documentService.GetCustOrderByQuotationNumber(contract.quotationNumber);
+        //        items = _saleService.GetCustOrderDetailByOrderId(custOrder.orderId);
+        //        itemsOptions = _saleService.GetItemOptionsByOrderId(custOrder.orderId);
+        //    }
 
-            ///Download to current directory
-            _ftpProcessService.DownloadFile("rpCustomerContract.rdlc");
+        //    var result = new
+        //    {
+        //        contract = contract,
+        //        cust = cust,
+        //        custOrder = custOrder,
+        //    };
 
-            //*** Thai Format
-            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
-            DateTime dateThai = Convert.ToDateTime(custOrder.createDate, _cultureTHInfo);
+        //    string mimetype = "";
+        //    int extension = 1;
+        //    //var path = $"{this._webHostEnvironment.WebRootPath}\\reports\\rpCustomerContract.rdlc";
 
-            var groups = from w in items
-                         group w by new { w.typeId };
+        //    ///Download to current directory
+        //    _ftpProcessService.DownloadFile("rpCustomerContract.rdlc");
 
-            string itemString = string.Empty;
-            int itemQty = 0;
-            foreach (var t in groups)
-            {
-                var exists = items.Where(w => w.typeId == t.Key.typeId).ToList();
-                if (exists.Count() > 0)
-                {
-                    var getFirst = exists.FirstOrDefault();
-                    string typeName = getFirst.typeName;
-                    string styleName = string.Format("Style : {0}", getFirst.styleName);
-                    string size = string.Format("ยาว {0} x {1} x {2} เมตร", getFirst.orderLength, getFirst.orderDepth, getFirst.orderHeight);
+        //    //*** Thai Format
+        //    System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+        //    DateTime dateThai = Convert.ToDateTime(custOrder.createDate, _cultureTHInfo);
 
-                    itemString = itemString + string.Format("{0}\n", typeName);
-                    int indx = 0;
-                    foreach (var item in exists)
-                    {
-                        string itemName = item.itemName;
+        //    var groups = from w in items
+        //                 group w by new { w.typeId };
 
-                        var options = itemsOptions.Where(w => w.custOrderDetailId == item.custOrderDetailId).ToList();
-                        if (options.Count() > 0)
-                        {
-                            foreach (var o in options)
-                            {
-                                itemName = itemName + " " + o.options;
-                            }
-                        }
+        //    string itemString = string.Empty;
+        //    int itemQty = 0;
+        //    foreach (var t in groups)
+        //    {
+        //        var exists = items.Where(w => w.typeId == t.Key.typeId).ToList();
+        //        if (exists.Count() > 0)
+        //        {
+        //            var getFirst = exists.FirstOrDefault();
+        //            string typeName = getFirst.typeName;
+        //            string styleName = string.Format("Style : {0}", getFirst.styleName);
+        //            string size = string.Format("ยาว {0} x {1} x {2} เมตร", getFirst.orderLength, getFirst.orderDepth, getFirst.orderHeight);
 
-                        itemString = itemString + string.Format("{0}. {1} {2}\n", indx+1, itemName, size);
+        //            itemString = itemString + string.Format("{0}\n", typeName);
+        //            int indx = 0;
+        //            foreach (var item in exists)
+        //            {
+        //                string itemName = item.itemName;
 
-                        indx++;
-                    }
+        //                var options = itemsOptions.Where(w => w.custOrderDetailId == item.custOrderDetailId).ToList();
+        //                if (options.Count() > 0)
+        //                {
+        //                    foreach (var o in options)
+        //                    {
+        //                        itemName = itemName + " " + o.options;
+        //                    }
+        //                }
 
-                    itemQty = itemQty + indx;
-                }
-            }
+        //                itemString = itemString + string.Format("{0}. {1} {2}\n", indx + 1, itemName, size);
 
-            string account = string.Format("{0} เลขที่บัญชี {1} ชื่อบัญชี {2}", custOrder.bank, custOrder.accountNumber, custOrder.accountName);
+        //                indx++;
+        //            }
 
-            Dictionary<string, string> param = new Dictionary<string, string>();
-            param.Add("customer", string.Format("{0} {1} ที่อยู่ {2}", cust.custFirstName, cust.custSurName, cust.custAddress));
-            param.Add("qtDate", dateThai.ToString("dd MMMM yyyy", _cultureTHInfo));
-            param.Add("itemOptions", itemString);
-            param.Add("itemOptionsQty", string.Format("{0} ชิ้น", itemQty));
-            param.Add("customerAddress", cust.custInstallAddress);
-            param.Add("grandTotal", string.Format("{0:n} บาท ({1})",custOrder.grandTotal, ConvertToThaiBaht(custOrder.grandTotal.ToString())));
-            param.Add("firstPeriodTotal", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
-            decimal secondTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.5));
-            param.Add("secondPeriodTotal", string.Format("{0:n} บาท ({1})", secondTotal, ConvertToThaiBaht(secondTotal.ToString())));
+        //            itemQty = itemQty + indx;
+        //        }
+        //    }
 
-            decimal thirdTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.4));
-            param.Add("thirdPeriodTotal", string.Format("{0:n} บาท ({1})", thirdTotal, ConvertToThaiBaht(thirdTotal.ToString())));
-            param.Add("disposite", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
+        //    string account = string.Format("{0} เลขที่บัญชี {1} ชื่อบัญชี {2}", custOrder.bank, custOrder.accountNumber, custOrder.accountName);
 
-            decimal fouthTotal = 100;/*Convert.ToDecimal((custOrder.grandTotal * Convert.ToDecimal(0.1)) - custOrder.disposite);*/
-            param.Add("fouthPeriodTotal", string.Format("{0:n} บาท ({1})", fouthTotal, ConvertToThaiBaht(fouthTotal.ToString())));
-            param.Add("bankAccount", account);
-            DateTime predictDeliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
-            param.Add("predictDeliveryDate", predictDeliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
+        //    Dictionary<string, string> param = new Dictionary<string, string>();
+        //    param.Add("customer", string.Format("{0} {1} ที่อยู่ {2}", cust.custFirstName, cust.custSurName, cust.custAddress));
+        //    param.Add("qtDate", dateThai.ToString("dd MMMM yyyy", _cultureTHInfo));
+        //    param.Add("itemOptions", itemString);
+        //    param.Add("itemOptionsQty", string.Format("{0} ชิ้น", itemQty));
+        //    param.Add("customerAddress", cust.custInstallAddress);
+        //    param.Add("grandTotal", string.Format("{0:n} บาท ({1})", custOrder.grandTotal, ConvertToThaiBaht(custOrder.grandTotal.ToString())));
+        //    param.Add("firstPeriodTotal", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
+        //    decimal secondTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.5));
+        //    param.Add("secondPeriodTotal", string.Format("{0:n} บาท ({1})", secondTotal, ConvertToThaiBaht(secondTotal.ToString())));
 
-            DateTime deliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
-            param.Add("deliveryDate", deliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
+        //    decimal thirdTotal = Convert.ToDecimal(custOrder.grandTotal * Convert.ToDecimal(0.4));
+        //    param.Add("thirdPeriodTotal", string.Format("{0:n} บาท ({1})", thirdTotal, ConvertToThaiBaht(thirdTotal.ToString())));
+        //    param.Add("disposite", string.Format("{0:n} บาท ({1})", custOrder.disposite, ConvertToThaiBaht(custOrder.disposite.ToString())));
 
-            string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
-            var path = string.Format("{0}\\rpCustomerContract.rdlc", targetPath);
+        //    decimal fouthTotal = 100;/*Convert.ToDecimal((custOrder.grandTotal * Convert.ToDecimal(0.1)) - custOrder.disposite);*/
+        //    param.Add("fouthPeriodTotal", string.Format("{0:n} บาท ({1})", fouthTotal, ConvertToThaiBaht(fouthTotal.ToString())));
+        //    param.Add("bankAccount", account);
+        //    DateTime predictDeliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
+        //    param.Add("predictDeliveryDate", predictDeliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
 
-            LocalReport localReport = new LocalReport(path);
+        //    DateTime deliveryDate = Convert.ToDateTime(custOrder.installDate, _cultureTHInfo);
+        //    param.Add("deliveryDate", deliveryDate.ToString("dd MMMM yyyy", _cultureTHInfo));
 
-            var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+        //    string targetPath = string.Format("{0}", _configuration.GetSection("downloadReportPath").Value);
+        //    var path = string.Format("{0}\\rpCustomerContract.rdlc", targetPath);
 
-            return File(fileResult.MainStream, "application/pdf");
-            //return Json(result);
-        }
+        //    LocalReport localReport = new LocalReport(path);
+
+        //    var fileResult = localReport.Execute(RenderType.Pdf, extension, param, mimetype);
+
+        //    return File(fileResult.MainStream, "application/pdf");
+        //    //return Json(result);
+        //}
 
         [HttpGet]
         public IActionResult GetPaySlipBySalaryId(int salaryId)
@@ -708,6 +710,59 @@ namespace MBDesignWeb.Controllers
             var paySlip = _documentService.GetPaySlipBySalaryId(salaryId);
 
             return Json(paySlip);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public IActionResult GetQuotaionByOrderId(int orderId)
+        {
+            var custOrder = _saleService.GetCustOrderByOrderId(orderId);
+            var items = _saleService.GetCustOrderDetailByOrderId(orderId);
+            var itemsOptions = _saleService.GetItemOptionsByOrderId(orderId);
+            var cust = new tbCust();
+            if (custOrder != null)
+            {
+                cust = _documentService.GetCustomerDataByCustId(custOrder.custId);
+            }
+
+            var result = new
+            {
+                custOrder = custOrder,
+                cust = cust,
+                items = items,
+                itemsOptions = itemsOptions,
+            };
+
+            return Json(result);
+        }
+
+        [Route("api/[controller]/[action]")]
+        [HttpGet]
+        public IActionResult GetContractByContractId(int contractId)
+        {
+            var contract = _documentService.GetContractByContractId(contractId);
+            var cust = new tbCust();
+            var custOrder = new CustOrderView();
+            var items = new List<CustOrderDetailView>();
+            var itemsOptions = new List<CustOrderItemOptionsView>();
+            if (contract != null)
+            {
+                cust = _documentService.GetCustomerDataByCustId(contract.custId);
+                custOrder = _documentService.GetCustOrderByQuotationNumber(contract.quotationNumber);
+                items = _saleService.GetCustOrderDetailByOrderId(custOrder.orderId);
+                itemsOptions = _saleService.GetItemOptionsByOrderId(custOrder.orderId);
+            }
+
+            var result = new
+            {
+                contract = contract,
+                cust = cust,
+                custOrder = custOrder,
+                items = items,
+                itemsOptions = itemsOptions,
+            };
+
+            return Json(result);
         }
     }
 }
