@@ -1181,7 +1181,7 @@ function renderReceiptList(data) {
                     render: function (data, type, row) {
                     //    return `<button type="button" class="btn-add-custom btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
                     //<img src="/images/printing.png" width="25px" /></button>`;
-                        return `<a class="btn btn-print-receipt" href="../Document/GetReceiptByReceiptId?receiptId=${row.receiptId}" target="_blank"><img src="../images/printing.png" width="25px" /></a>`;
+                        return `<a class="btn btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์"><img src="../images/printing.png" width="25px" /></a>`;
                     },
                 },
             ],
@@ -1276,9 +1276,14 @@ async function renderReceiptHtml(data) {
     };
 
     var element = document.getElementById("receiptElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }
 
 function callIdCardComCert() {

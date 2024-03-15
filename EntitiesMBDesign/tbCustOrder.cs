@@ -85,5 +85,7 @@ namespace EntitiesMBDesign
         public string receiptNumber { get; set; } = string.Empty;
         public string createByName { get; set; } = string.Empty;
         public string updateByName { get; set; } = string.Empty;
+
+        public int receiptId { get; set; }
     }
 }
