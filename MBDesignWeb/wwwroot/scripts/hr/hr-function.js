@@ -2255,11 +2255,30 @@ function generatePaySlip(salaryId) {
 }
 
 function renderPaySlipToPdf(data) {
-    $('#spnGenDate').html(convertDateTimeFormat(data.currentDate, 'DD/MM/YYYY HH:mm:ss'));
+    $('#spnGenDate').html(data.paySlipGenDate);
 
     $('#lblEmpCode').html(data.empCode);
     $('#lblEmpName').html(data.employeeName);
     $('#lblEmpDepartment').html(data.departmentName);
+
+    $('#lblIncomeSalaryPayment').html(data.incomeSalaryPayment);
+    $('#lblIncomeSalaryInformation').html(data.incomeSalaryInformation);
+    $('#lblIncomeSalaryPeriod').html(data.incomeSalaryPeriod);
+    $('#lblIncomeOtPayment').html(data.incomeOtPayment);
+    $('#lblIncomeOtherPayment').html(data.incomeOtherPayment);
+    $('#lblIncomeHomePayment').html(data.incomeHomePayment);
+    $('#lblTotalIncome').html(data.totalIncome);
+
+    $('#lblSocialPayment').html(data.socialPayment);
+    $('#lblTaxPayment').html(data.taxPayment);
+    $('#lblAdvancePayment').html(data.advancePayment);
+    $('#lblElectricityPayment').html(data.electricityPayment);
+    $('#lblInstallmentPayment').html(data.installmentPayment);
+    $('#lblHomePayment').html(data.homePayment);
+    $('#lblAttendancePayment').html(data.attendancePayment);
+    $('#lblTotalPayment').html(data.totalPayment);
+
+    $('#lblTotalPaymentThaiInformation').html(data.totalPaymentThaiInformation);
 
     let element = document.getElementById("reportPaySlipElement"); 
     HtmlToPdf(element, "paySlip");

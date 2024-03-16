@@ -705,9 +705,40 @@ namespace MBDesignWeb.Controllers
         }
 
         [Route("api/[controller]/[action]")]
+        [HttpGet]
         public JsonResult GetPaySlipInformation(int salaryId)
         {
             var paySlip = _documentService.GetPaySlipBySalaryId(salaryId);
+
+            System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+            DateTime dateThai = Convert.ToDateTime(DateTime.UtcNow, _cultureTHInfo);
+
+            paySlip.paySlipGenDate = dateThai.ToString("วันที่ dd MMMM yyyy", _cultureTHInfo);
+            paySlip.incomeSalaryPayment = (paySlip.salary == 0) ? "-" : string.Format("{0:n}", paySlip.salary);
+            paySlip.incomeSalaryInformation = "";
+            paySlip.incomeSalaryPeriod = "";
+            paySlip.incomeOtPayment = (paySlip.ot == 0) ? "-" : string.Format("{0:n}", paySlip.ot);
+            paySlip.incomeOtherPayment = "-";
+            paySlip.incomeHomePayment = "-";
+
+            var totalIncome = (paySlip.salary + paySlip.ot);
+            paySlip.totalIncome = string.Format("{0:n}", totalIncome);
+
+            paySlip.socialPayment = (paySlip.social == 0) ? "-" : string.Format("{0:n}", paySlip.social);
+            paySlip.taxPayment = (paySlip.tax == 0) ? "-" : string.Format("{0:n}", paySlip.tax);
+            paySlip.advancePayment = (paySlip.advance == 0) ? "-" : string.Format("{0:n}", paySlip.advance);
+            paySlip.electricityPayment = (paySlip.electricity == 0) ? "-" : string.Format("{0:n}", paySlip.electricity);
+            paySlip.installmentPayment = (paySlip.installment == 0) ? "-" : string.Format("{0:n}", paySlip.installment);
+            paySlip.homePayment = (paySlip.home == 0) ? "-" : string.Format("{0:n}", paySlip.home);
+            paySlip.attendancePayment = (paySlip.attendance == 0) ? "-" : string.Format("{0:n}", paySlip.attendance);
+
+            var totalPayment = 0;
+            paySlip.totalPayment = string.Format("{0:n}", totalPayment);
+
+            var total = totalIncome - totalPayment;
+            var totalThai = ConvertToThaiBaht(total.ToString());
+            var totalCurrency = string.Format("{0:n}", total);
+            paySlip.totalPaymentThaiInformation = string.Format("({0:n}) เงินได้สุทธิ {1}", totalThai, totalCurrency);
 
             return Json(paySlip);
         }
