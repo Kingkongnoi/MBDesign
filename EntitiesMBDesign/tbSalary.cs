@@ -34,5 +34,6 @@ namespace EntitiesMBDesign
         public string employeeName { get; set; } = string.Empty;
         public string departmentName { get; set; } = string.Empty;
         public string salaryType { get; set; } = string.Empty;
+        public DateTime currentDate { get; set; }
     }
 }

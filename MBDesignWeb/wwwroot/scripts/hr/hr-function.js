@@ -2255,6 +2255,12 @@ function generatePaySlip(salaryId) {
 }
 
 function renderPaySlipToPdf(data) {
+    $('#spnGenDate').html(convertDateTimeFormat(data.currentDate, 'DD/MM/YYYY HH:mm:ss'));
+
+    $('#lblEmpCode').html(data.empCode);
+    $('#lblEmpName').html(data.employeeName);
+    $('#lblEmpDepartment').html(data.departmentName);
+
     let element = document.getElementById("reportPaySlipElement"); 
     HtmlToPdf(element, "paySlip");
 }
