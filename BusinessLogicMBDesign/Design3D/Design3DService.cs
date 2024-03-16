@@ -135,7 +135,7 @@ namespace BusinessLogicMBDesign.Design3D
                         }
                         else
                         {
-                            int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.getToForeman, conn, transaction);
+                            int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.getToForeman, DateTime.UtcNow, loginCode, conn, transaction);
                         }
                     }
 

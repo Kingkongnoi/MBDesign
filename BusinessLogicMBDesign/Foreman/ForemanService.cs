@@ -209,7 +209,7 @@ namespace BusinessLogicMBDesign.Foreman
 
                     int updateCustOrderDetail = _custOrderDetailRepository.UpdateForemanValue(items, conn, transaction);
 
-                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processing, conn, transaction);
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processing, DateTime.UtcNow, loginCode, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -350,8 +350,8 @@ namespace BusinessLogicMBDesign.Foreman
                             }
                         }
                     }
-
-                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processed, conn, transaction);
+                    
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processed, DateTime.UtcNow, loginCode, conn, transaction);
 
                     transaction.Commit();
                 }

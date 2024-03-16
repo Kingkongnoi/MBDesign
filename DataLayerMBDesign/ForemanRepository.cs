@@ -15,14 +15,16 @@ namespace DataLayerMBDesign
         {
             return conn.Insert(obj, transaction: trans);
         }
-        public int UpdateForemanStatus(int orderId, string foremanStatus, SqlConnection conn, SqlTransaction? trans = null)
+        public int UpdateForemanStatus(int orderId, string foremanStatus, DateTime updateDate, string updateBy, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbForeman
-            SET [foremanStatus] = @foremanStatus
+            SET [foremanStatus] = @foremanStatus,
+            updateDate = @updateDate,
+            updateBy = @updateBy
             WHERE orderId = @orderId
             select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, foremanStatus }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, foremanStatus, updateDate, updateBy }, transaction: trans);
         }
 
         public List<tbForeman> GetForemanStatus(SqlConnection conn, SqlTransaction? trans = null)
