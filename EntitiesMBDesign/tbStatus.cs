@@ -7,27 +7,26 @@ using System.Threading.Tasks;
 
 namespace EntitiesMBDesign
 {
-    public class tbDesign3D
+    public class tbStatus
     {
         [Key]
-        public int id { get; set; }
-        public int orderId { get; set; }
-        public int ownerEmpId { get; set; }
-        public DateTime? dueDate { get; set; }
+        public int statusId { get; set; }
+        public string name { get; set; } = string.Empty;
+        public int categoryId { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
-        public int checklistStatusId { get; set; }
+        public int parentStatusId { get; set; }
     }
 
-    public class Design3DView : tbDesign3D
+    public class StatusView : tbStatus
     {
-        public string quotationNumber { get; set; } = string.Empty;
-        public DateTime? installDate { get; set; }
-        public bool isCheckFinal3d { get; set; }
-        public string checklistStatus { get; set; } = string.Empty;
+        public string categoryName { get; set; } = string.Empty;
+        public string parentStatusName { get; set; } = string.Empty;
+        public string period { get; set; } = string.Empty;
+        public string fullPeriod { get; set; } = string.Empty;
     }
 }

@@ -24,6 +24,7 @@ namespace BusinessLogicMBDesign.Design3D
         private readonly ContractAgreementRepository _contractAgreementRepository;
         private readonly ForemanRepository _foremanRepository;
         private readonly UploadFileRepository _uploadFileRepository;
+        private readonly StatusRepository _statusRepository;
         public Design3DService(IConfiguration configuration) 
         {
             _configuration = configuration;
@@ -38,6 +39,7 @@ namespace BusinessLogicMBDesign.Design3D
             _contractAgreementRepository = new ContractAgreementRepository();
             _foremanRepository = new ForemanRepository();
             _uploadFileRepository = new UploadFileRepository();
+            _statusRepository = new StatusRepository();
         }
 
         public List<CustOrderView> Get3DQueueList(string quotationNumber, string empName, string checklistStatus, string installDate)
@@ -49,7 +51,7 @@ namespace BusinessLogicMBDesign.Design3D
                 return _custOrderRepository.GetDesign3DList(quotationNumber, empName, checklistStatus, installDate, GlobalOrderStatus.approved, conn);
             }
         }
-        public List<tbDesign3D> GetChecklistStatusSelect2()
+        public List<Design3DView> GetChecklistStatusSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -98,12 +100,17 @@ namespace BusinessLogicMBDesign.Design3D
                     var exists = _design3DRepository.GetEditDesign3DByKeyId(design3dId, conn, transaction);
                     if(exists != null)
                     {
+                        /* Created by Wannaporn.YA 2024-03-19 : Change from create order status to order status id */
+                        string design3DCategory = Global3DStatus.design3DCategory;
+                        var getDesign3DStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(design3DCategory, checklistStatus, conn, transaction);
+                        int checklistStatusId = (getDesign3DStatus != null) ? getDesign3DStatus.statusId : 0;
+
                         var updatedObject = new tbDesign3D
                         { 
                             id = design3dId,
                             ownerEmpId = empId,
                             dueDate = (dueDate == "null") ? null : Convert.ToDateTime(dueDate),
-                            checklistStatus = checklistStatus,
+                            checklistStatusId = checklistStatusId,
                             updateDate = DateTime.UtcNow,
                             updateBy = loginCode
                         };
@@ -115,16 +122,26 @@ namespace BusinessLogicMBDesign.Design3D
                     {
                         string contractStatus = GlobalContractStatus.document3dApproved;
 
-                        int updateContract = _contractAgreementRepository.UpdateContractStatus(orderId, contractStatus, DateTime.UtcNow, loginCode, conn, transaction);
+                        string contractCategory = GlobalContractStatus.contractCategory;
+                        var getContractStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(contractCategory, contractStatus, conn, transaction);
+                        int contractStatusId = (getContractStatus != null) ? getContractStatus.statusId : 0;
+
+                        int updateContract = _contractAgreementRepository.UpdateContractStatus(orderId, contractStatusId, DateTime.UtcNow, loginCode, conn, transaction);
 
                         //Create foreman
                         var foremanExists = _foremanRepository.GetByOrderId(orderId, conn, transaction);
-                        if(foremanExists == null)
+
+                        string foremanCategory = GlobalForemanStatus.foremanCategory;
+                        var getForemanStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(foremanCategory, GlobalForemanStatus.getToForeman, conn, transaction);
+                        int foremanStatusId = (getForemanStatus != null) ? getForemanStatus.statusId : 0;
+
+
+                        if (foremanExists == null)
                         {
                             var addedForeman = new tbForeman
                             {
                                 orderId = orderId,
-                                foremanStatus = GlobalForemanStatus.getToForeman,
+                                foremanStatusId = foremanStatusId,
                                 status = true,
                                 createDate = DateTime.UtcNow,
                                 createBy = loginCode,
@@ -135,7 +152,7 @@ namespace BusinessLogicMBDesign.Design3D
                         }
                         else
                         {
-                            int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.getToForeman, DateTime.UtcNow, loginCode, conn, transaction);
+                            int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, foremanStatusId, DateTime.UtcNow, loginCode, conn, transaction);
                         }
                     }
 

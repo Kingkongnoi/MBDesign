@@ -13,7 +13,6 @@ namespace EntitiesMBDesign
         public int id { get; set; }
         public string contractNumber { get; set; } = string.Empty;
         public string quotationNumber { get; set; } = string.Empty;
-        public string contractStatus { get; set; } = string.Empty;
         public int custId { get; set; }
         public string contractFileName { get; set; } = string.Empty;
         public bool status { get; set; } = true;
@@ -24,6 +23,7 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
         public int contractNumberGen { get; set; }
         public string contractYearMonthGen { get; set; } = string.Empty;
+        public int contractStatusId { get; set; }
     }
 
     public class ContractAgreementView : tbContractAgreement
@@ -31,5 +31,6 @@ namespace EntitiesMBDesign
         public string fullName { get; set; } = string.Empty;
         public string createByName { get; set; } = string.Empty;
         public string updateByName { get; set; } = string.Empty;
+        public string contractStatus { get; set; } = string.Empty;
     }
 }

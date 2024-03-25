@@ -45,7 +45,8 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(contractStatus) && contractStatus != "null")
             {
-                condition += string.Format(" and a.contractStatus = N'{0}'", contractStatus);
+                //condition += string.Format(" and a.contractStatus = N'{0}'", contractStatus);
+                condition += string.Format(" and a.contractStatusId = (select top 1 statusId from tbStatus where isDeleted = 0 and status = 1 and name = N'{0}' and categoryId = (select top 1 categoryId from tbcategory where name = N'{1}' and isdeleted = 0 and status = 1))", contractStatus, GlobalContractStatus.contractCategory);
             }
 
             if (!string.IsNullOrEmpty(contractDate) && contractDate != "null")
@@ -56,7 +57,8 @@ namespace DataLayerMBDesign
             string queryString = string.Format(@"SELECT a.id
             ,a.contractNumber
             ,a.quotationNumber
-            ,a.contractStatus
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.contractStatusId,0)),'') contractStatus
+            ,a.contractStatusId
             ,a.custId
             ,a.contractFileName
             ,a.contractNumberGen
@@ -78,34 +80,35 @@ namespace DataLayerMBDesign
             return conn.Query<ContractAgreementView>(queryString,new { }, transaction: trans).ToList();
         }
 
-        public List<tbContractAgreement> GetContractStatus(SqlConnection conn, SqlTransaction? trans = null)
+        public List<ContractAgreementView> GetContractStatus(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"	select contractStatus 
-			from tbContractAgreement 
-			where isDeleted = 0 
-			group by  contractStatus 
-			order by contractStatus";
+            string queryString = @"	select b.name contractStatus 
+			from tbContractAgreement a inner join tbstatus b on a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbCategory c on b.categoryId = c.categoryId and c.isDeleted = 0
+            where c.name = N'Contract'
+			group by b.name 
+			order by b.name";
 
-            return conn.Query<tbContractAgreement>(queryString, transaction: trans).ToList();
+            return conn.Query<ContractAgreementView>(queryString, transaction: trans).ToList();
         }
 
-        public int UpdateContractStatus(int orderId, string contractStatus, DateTime updateDate, string updateBy, SqlConnection conn, SqlTransaction? trans = null)
+        public int UpdateContractStatus(int orderId, int contractStatusId, DateTime updateDate, string updateBy, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbContractAgreement
-            SET [contractStatus] = @contractStatus,
+            SET [contractStatusId] = @contractStatusId,
             updateDate = @updateDate,
             updateBy = @updateBy
             WHERE quotationNumber = (select top 1 quotationNumber from tbCustOrder where orderId = @orderId and isDeleted = 0 and status = 1) and isDeleted = 0
             select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, contractStatus, updateDate, updateBy }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, contractStatusId, updateDate, updateBy }, transaction: trans);
         }
-        public tbContractAgreement GetFirstByOrderIdAndCustId(int custId, SqlConnection conn, SqlTransaction? trans = null)
+        public ContractAgreementView GetFirstByOrderIdAndCustId(int custId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"SELECT TOP 1 [id]
             ,[contractNumber]
             ,[quotationNumber]
-            ,[contractStatus]
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(contractStatusId,0)),'') contractStatus
             ,[custId]
             ,[contractFileName]
             ,[contractNumberGen]
@@ -116,19 +119,20 @@ namespace DataLayerMBDesign
             ,[updateDate]
             ,[updateBy]
             ,[isDeleted]
+            ,[contractStatusId]
             FROM [tbContractAgreement]
             where [custId] = @custId and [isDeleted] = 0 and [status] = 1
             order by [id] desc";
 
-            return conn.QueryFirstOrDefault<tbContractAgreement>(queryString, new { custId }, transaction: trans);
+            return conn.QueryFirstOrDefault<ContractAgreementView>(queryString, new { custId }, transaction: trans);
         }
 
-        public tbContractAgreement GetFirstByContractId(int id, SqlConnection conn, SqlTransaction? trans = null)
+        public ContractAgreementView GetFirstByContractId(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"SELECT TOP 1 [id]
             ,[contractNumber]
             ,[quotationNumber]
-            ,[contractStatus]
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(contractStatusId,0)),'') contractStatus
             ,[custId]
             ,[contractFileName]
             ,[contractNumberGen]
@@ -139,11 +143,12 @@ namespace DataLayerMBDesign
             ,[updateDate]
             ,[updateBy]
             ,[isDeleted]
+            ,[contractStatusId]
             FROM [tbContractAgreement]
             where [id] = @id and [isDeleted] = 0 and [status] = 1
             order by [id] desc";
 
-            return conn.QueryFirstOrDefault<tbContractAgreement>(queryString, new { id }, transaction: trans);
+            return conn.QueryFirstOrDefault<ContractAgreementView>(queryString, new { id }, transaction: trans);
         }
     }
 }

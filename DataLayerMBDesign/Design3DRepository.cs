@@ -19,7 +19,7 @@ namespace DataLayerMBDesign
         public int UpdateByKeyId(tbDesign3D obj, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbDesign3D
-            SET [checklistStatus] = @checklistStatus,
+            SET [checklistStatusId] = @checklistStatusId,
             [ownerEmpId] = @ownerEmpId,
             [dueDate] = @dueDate,
             [updateDate] = @updateDate,
@@ -27,26 +27,27 @@ namespace DataLayerMBDesign
             WHERE id = @id
             select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.checklistStatus, obj.ownerEmpId, obj.dueDate, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.checklistStatusId, obj.ownerEmpId, obj.dueDate, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
         }
-        public int UpdateChecklistStatus(int orderId, string checklistStatus, SqlConnection conn, SqlTransaction? trans = null)
+        public int UpdateChecklistStatus(int orderId, int checklistStatusId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbDesign3D
-            SET [checklistStatus] = @checklistStatus
+            SET [checklistStatusId] = @checklistStatusId
             WHERE orderId = @orderId
             select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, checklistStatus }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, checklistStatusId }, transaction: trans);
         }
-        public List<tbDesign3D> GetChecklistStatus(SqlConnection conn, SqlTransaction? trans = null)
+        public List<Design3DView> GetChecklistStatus(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select checklistStatus
-            from tbDesign3D
-            where isDeleted = 0 and [status] = 1
-            group by checklistStatus
-            order by checklistStatus";
+            string queryString = @"	select b.name checklistStatus 
+			from tbDesign3D a inner join tbstatus b on a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbCategory c on b.categoryId = c.categoryId and c.isDeleted = 0
+            where c.name = N'3DDesign'
+			group by b.name 
+			order by b.name";
 
-            return conn.Query<tbDesign3D>(queryString, transaction:trans).ToList();
+            return conn.Query<Design3DView>(queryString, transaction:trans).ToList();
         }
 
         public Design3DView GetByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
@@ -55,13 +56,14 @@ namespace DataLayerMBDesign
             ,orderId
             ,ownerEmpId
             ,dueDate
-            ,checklistStatus
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(checklistStatusId,0)),'') checklistStatus
             ,[status]
             ,createDate
             ,createBy
             ,updateDate
             ,updateBy
             ,isDeleted
+            ,checklistStatusId
             FROM tbDesign3D
             where orderId = @orderId and isDeleted = 0 and status = 1";
 
@@ -70,7 +72,8 @@ namespace DataLayerMBDesign
 
         public Design3DView GetEditDesign3DByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, b.quotationNumber, b.installDate, case when a.checklistStatus = N'แบบ 3D Final' then 1 else 0 end isCheckFinal3d
+            string queryString = @" select top 1 a.*, b.quotationNumber, b.installDate
+                            , case when (select top 1 name from tbStatus where isDeleted = 0 and statusId = a.checklistStatusId) = N'แบบ 3D Final' then 1 else 0 end isCheckFinal3d
                             from tbDesign3D a inner join tbCustOrder b on a.orderId = b.orderId
                             where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
                             and a.orderId = @orderId";
@@ -84,7 +87,8 @@ namespace DataLayerMBDesign
                                 ,orderId
                                 ,ownerEmpId
                                 ,dueDate
-                                ,checklistStatus
+                                ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(checklistStatusId,0)),'') checklistStatus
+                                ,checklistStatusId
                                 ,[status]
                                 ,createDate
                                 ,createBy

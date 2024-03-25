@@ -12,13 +12,13 @@ namespace EntitiesMBDesign
         [Key]
         public int id { get; set; }
         public int orderId { get; set; }
-        public string foremanStatus { get; set; } = string.Empty;
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
+        public int foremanStatusId { get; set; }
     }
 
     public class ForemanView : tbForeman
@@ -35,5 +35,6 @@ namespace EntitiesMBDesign
         public string accountNumber { get; set; } = string.Empty;
         public string accountType { get; set; } = string.Empty;
         public string bank { get; set; } = string.Empty;
+        public string foremanStatus { get; set; } = string.Empty;
     }
 }

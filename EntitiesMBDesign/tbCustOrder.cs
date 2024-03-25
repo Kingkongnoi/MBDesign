@@ -31,10 +31,10 @@ namespace EntitiesMBDesign
         public bool isDeleted { get; set; } = false;
         public int quotationNumberGen { get; set; }
         public string quotationNumberType { get; set; } = string.Empty;
-        public string orderStatus { get; set; } = string.Empty;
         public string quotationComment { get; set; } = string.Empty;
         public decimal orderNotePrice { get; set; }
         public string quotationYearMonthGen { get; set; } = string.Empty;
+        public int orderStatusId { get; set; }
     }
 
     public class CustOrderView : tbCustOrder
@@ -87,5 +87,6 @@ namespace EntitiesMBDesign
         public string updateByName { get; set; } = string.Empty;
 
         public int receiptId { get; set; }
+        public string orderStatus { get; set; } = string.Empty;
     }
 }

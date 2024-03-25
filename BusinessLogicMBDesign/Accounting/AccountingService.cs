@@ -29,6 +29,7 @@ namespace BusinessLogicMBDesign.Accounting
         private readonly IdCardComCertRepository _idCardComCertRepository;
 
         private readonly UploadToDatabaseService _uploadToDatabaseService;
+        private readonly StatusRepository _statusRepository;
 
         public AccountingService(IConfiguration configuration)
         {
@@ -45,6 +46,7 @@ namespace BusinessLogicMBDesign.Accounting
             _idCardComCertRepository = new IdCardComCertRepository();
 
             _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
+            _statusRepository = new StatusRepository();
         }
 
         public List<CustOrderView> GetAccountingList(string contractNumber, string quotationNumber, string customerName, string contractStatus, string contractDate)
@@ -57,7 +59,7 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
-        public List<tbContractAgreement> GetContractStatusSelect2()
+        public List<ContractAgreementView> GetContractStatusSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -67,7 +69,7 @@ namespace BusinessLogicMBDesign.Accounting
             }
         }
 
-        public List<tbInvoice> GetInvoiceStatusSelect2()
+        public List<InvoiceView> GetInvoiceStatusSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -236,7 +238,11 @@ namespace BusinessLogicMBDesign.Accounting
 
                 try
                 {
-                    int updatedRow = _contractAgreementRepository.UpdateContractStatus(orderId, GlobalContractStatus.documentSendToSaleAndForeman, DateTime.UtcNow, loginCode, conn, transaction);
+                    string contractCategory = GlobalContractStatus.contractCategory;
+                    var getContractStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(contractCategory, GlobalContractStatus.documentSendToSaleAndForeman, conn, transaction);
+                    int contractStatusId = (getContractStatus != null) ? getContractStatus.statusId : 0;
+
+                    int updatedRow = _contractAgreementRepository.UpdateContractStatus(orderId, contractStatusId, DateTime.UtcNow, loginCode, conn, transaction);
 
                     msg.isResult = true;
                     transaction.Commit();
@@ -276,17 +282,26 @@ namespace BusinessLogicMBDesign.Accounting
                     var custOrder = _custOrderRepository.GetCustOrderByOrderId(model.orderId, conn, transaction);
                     if(custOrder != null)
                     {
+                        string invoiceCategory = GlobalInvoiceStatus.invoiceCategory;
+                        var getInvoiceStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(invoiceCategory, model.invoiceStatus, conn, transaction);
+                        int invoiceStatusId = (getInvoiceStatus != null) ? getInvoiceStatus.statusId : 0;
+                        string invoiceStatus = (getInvoiceStatus != null) ? getInvoiceStatus.name : "";
+
+                        string periodCategory = GlobalInvoicePeriod.invoicePeriodCategory;
+                        var getPeriodStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(periodCategory, model.period, conn, transaction);
+                        int periodStatusId = (getPeriodStatus != null) ? getPeriodStatus.statusId : 0;
+
                         var addedInvoice = new tbInvoice
                         {
                             invoiceNumber = model.invoiceNumber,
                             invoiceNumberGen = model.invoiceNumberGen,
                             invoiceYearMonthGen = model.invoiceYearMonthGen,
                             quotationNumber = custOrder.quotationNumber,
-                            period = model.period,
+                            periodStatusId = periodStatusId,
                             orderId = model.orderId,
                             custId = model.custId,
                             unitPrice = model.unitPrice,
-                            invoiceStatus = model.invoiceStatus,
+                            invoiceStatusId = invoiceStatusId,
                             status = true,
                             isDeleted = false,
                             createDate = DateTime.UtcNow,
@@ -295,7 +310,7 @@ namespace BusinessLogicMBDesign.Accounting
 
                         int? invoiceId = _invoiceRepository.Add(addedInvoice, conn, transaction);
                         
-                        if (model.invoiceStatus == "จ่ายแล้ว")
+                        if (invoiceStatus == "จ่ายแล้ว")
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
 
@@ -345,14 +360,23 @@ namespace BusinessLogicMBDesign.Accounting
                     var custOrder = _custOrderRepository.GetCustOrderByOrderId(model.orderId, conn, transaction);
                     if (custOrder != null)
                     {
+                        string invoiceCategory = GlobalInvoiceStatus.invoiceCategory;
+                        var getInvoiceStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(invoiceCategory, model.invoiceStatus, conn, transaction);
+                        int invoiceStatusId = (getInvoiceStatus != null) ? getInvoiceStatus.statusId : 0;
+                        string invoiceStatus = (getInvoiceStatus != null) ? getInvoiceStatus.name : "";
+
+                        string periodCategory = GlobalInvoicePeriod.invoicePeriodCategory;
+                        var getPeriodStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(periodCategory, model.period, conn, transaction);
+                        int periodStatusId = (getPeriodStatus != null) ? getPeriodStatus.statusId : 0;
+
                         var addedInvoice = new tbInvoice
                         {
                             quotationNumber = custOrder.quotationNumber,
-                            period = model.period,
+                            periodStatusId = periodStatusId,
                             orderId = model.orderId,
                             custId = model.custId,
                             unitPrice = model.unitPrice,
-                            invoiceStatus = model.invoiceStatus,
+                            invoiceStatusId = invoiceStatusId,
                             updateDate = DateTime.UtcNow,
                             updateBy = model.loginCode,
                             id= model.invoiceId
@@ -360,7 +384,7 @@ namespace BusinessLogicMBDesign.Accounting
 
                         int? invoiceId = _invoiceRepository.UpdateInvoiceStatus(addedInvoice, conn, transaction);
 
-                        if (model.invoiceStatus == "จ่ายแล้ว")
+                        if (invoiceStatus == "จ่ายแล้ว")
                         {
                             int? receiptId = this.AddReceipt(model.orderId, model.custId, this.GenerateYearMonth(), invoiceId, model.loginCode);
 
@@ -443,29 +467,53 @@ namespace BusinessLogicMBDesign.Accounting
                 conn.Open();
 
                 var exists = _invoiceRepository.GetFirstByOrderId(orderId, conn);
-                if(exists == null)
+                var allPeriod = _statusRepository.GetAllByCategoryName(GlobalInvoicePeriod.invoicePeriodCategory, conn);
+                if (exists == null)
                 {
+                    if(allPeriod.Count > 0)
+                    {
+                        allPeriod.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
+                    }
+
+                    /*
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.firstDisposite, fullPeriod = GlobalInvoicePeriod.firstFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                    */
                 }
                 else
                 {
+                    var p = new List<StatusView>();
                     if(exists.period == GlobalInvoicePeriod.firstDisposite)
                     {
+                        p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite).ToList();
+
+                        /*
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                        */
                     }
                     else if (exists.period == GlobalInvoicePeriod.secondDisposite)
                     {
+                        p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite && w.period != GlobalInvoicePeriod.secondDisposite).ToList();
+
+                        /*
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                        */
                     }
                     else if (exists.period == GlobalInvoicePeriod.thridDisposite)
                     {
-                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                        p = allPeriod.Where(w => w.period == GlobalInvoicePeriod.fourthDisposite).ToList();
+                        
+                        //result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                    }
+
+                    if (p.Count > 0)
+                    {
+                        p.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
                     }
                 }
             }

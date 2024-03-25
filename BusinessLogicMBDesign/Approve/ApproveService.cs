@@ -19,6 +19,7 @@ namespace BusinessLogicMBDesign.Approve
         private readonly ApproveRepository _approveRepository;
         private readonly ContractAgreementRepository _contractAgreementRepository;
         private readonly Design3DRepository _design3DRepository;
+        private readonly StatusRepository _statusRepository;
 
         public ApproveService(IConfiguration configuration)
         {
@@ -29,6 +30,7 @@ namespace BusinessLogicMBDesign.Approve
             _approveRepository = new ApproveRepository();
             _contractAgreementRepository = new ContractAgreementRepository();
             _design3DRepository = new Design3DRepository();
+            _statusRepository = new StatusRepository();
         }
         public int GetCountCustOrderWaitForApprove()
         {
@@ -37,7 +39,8 @@ namespace BusinessLogicMBDesign.Approve
                 conn.Open();
 
                 string orderStatus = GlobalOrderStatus.waitForApprove;
-                return _custOrderRepository.GetCountCustOrderWaitForApprove(orderStatus, conn);
+                string orderCategory = GlobalOrderStatus.orderCategory;
+                return _custOrderRepository.GetCountCustOrderWaitForApprove(orderStatus, orderCategory, conn);
             }
         }
 
@@ -48,7 +51,8 @@ namespace BusinessLogicMBDesign.Approve
                 conn.Open();
 
                 string orderStatus = GlobalOrderStatus.waitForApprove;
-                return _custOrderRepository.GetAllByorderStatus(orderStatus, conn);
+                string orderCategory = GlobalOrderStatus.orderCategory;
+                return _custOrderRepository.GetAllByorderStatus(orderStatus, orderCategory, conn);
             }
         }
 
@@ -71,12 +75,19 @@ namespace BusinessLogicMBDesign.Approve
 
                 SqlTransaction transaction = conn.BeginTransaction();
 
+                string orderCategory = GlobalOrderStatus.orderCategory;
+                string approveCategory = GlobalApproveStatus.approveCategory;
+                string contractCategory = GlobalContractStatus.contractCategory;
                 try
                 {
+                    /* Created by Wannaporn.YA 2024-03-19 : Change from create approve status to approve status id */
+                    var getApproveStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(approveCategory, model.approveStatus, conn, transaction);
+                    int approveStatusId = (getApproveStatus != null) ? getApproveStatus.statusId : 0;
+
                     var addApprove = new tbApprove
                     {
                         orderId = model.orderId,
-                        approveStatus = model.approveStatus,
+                        approveStatusId = approveStatusId,
                         approveComment = model.approveComment,
                         status = true,
                         createDate = DateTime.UtcNow,
@@ -88,16 +99,30 @@ namespace BusinessLogicMBDesign.Approve
 
                     //Update order status
                     string orderStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalOrderStatus.approved : GlobalOrderStatus.notApprove;
-                    int updatedOrderStatus = _custOrderRepository.UpdateOrderStatus(model.orderId, orderStatus, conn, transaction);
+                    /* Created by Wannaporn.YA 2024-03-19 : Change from create order status to order status id */
+                    var getOrderStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(orderCategory, orderStatus, conn, transaction);
+                    int orderStatusId = (getOrderStatus != null) ? getOrderStatus.statusId : 0;
+
+                    int updatedOrderStatus = _custOrderRepository.UpdateOrderStatus(model.orderId, orderStatusId, conn, transaction);
 
                     //Update contract status
                     string contractStatus = (model.approveStatus == GlobalApproveStatus.approved) ? GlobalContractStatus.documentApproved : GlobalContractStatus.documentNotApproved;
-                    int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatus, DateTime.UtcNow, model.loginCode, conn, transaction);
+
+                    /* Created by Wannaporn.YA 2024-03-19 : Change from create order status to order status id */
+                    var getContractStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(contractCategory, contractStatus, conn, transaction);
+                    int contractStatusId = (getContractStatus != null) ? getContractStatus.statusId : 0;
+
+                    int updatedContractStatus = _contractAgreementRepository.UpdateContractStatus(model.orderId, contractStatusId, DateTime.UtcNow, model.loginCode, conn, transaction);
 
                     //create 3d = บันทึกรับเรื่อง
                     if(model.approveStatus == GlobalApproveStatus.approved)
                     {
                         string design3DStatus = Global3DStatus.saveToDesign3D;
+                        string design3DCategory = Global3DStatus.design3DCategory;
+
+                        var getDesign3DStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(design3DCategory, design3DStatus, conn, transaction);
+                        int checklistStatusId = (getDesign3DStatus != null) ? getDesign3DStatus.statusId : 0;
+
                         var exists = _design3DRepository.GetByOrderId(model.orderId, conn, transaction);
 
                         if (exists == null)
@@ -105,7 +130,7 @@ namespace BusinessLogicMBDesign.Approve
                             var addDesign3D = new tbDesign3D
                             {
                                 orderId = model.orderId,
-                                checklistStatus = design3DStatus,
+                                checklistStatusId = checklistStatusId,
                                 status = true,
                                 createDate = DateTime.UtcNow,
                                 createBy = model.loginCode,
@@ -119,10 +144,10 @@ namespace BusinessLogicMBDesign.Approve
                             var updateDesign3D = new tbDesign3D
                             {
                                 orderId = model.orderId,
-                                checklistStatus = design3DStatus
+                                checklistStatusId = checklistStatusId
                             };
 
-                            int update3d = _design3DRepository.UpdateChecklistStatus(model.orderId, design3DStatus, conn, transaction);
+                            int update3d = _design3DRepository.UpdateChecklistStatus(model.orderId, checklistStatusId, conn, transaction);
                         }
 
                     }

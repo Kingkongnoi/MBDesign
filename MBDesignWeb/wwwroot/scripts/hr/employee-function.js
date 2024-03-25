@@ -1026,7 +1026,7 @@ function renderEmployeeForm(data) {
     } else { $(`${empFormId} #radioEmpNoInputCard`).prop('checked', true); }
 }
 function renderEmployeeSignature(signatureFileName) {
-    let formId = '#form-createEmployee #select-emp-signature';
+    let formId = '#form-createEmployee';
 
     var lstUrl = [];
     var lstPreviewImg = [];
@@ -1034,67 +1034,23 @@ function renderEmployeeSignature(signatureFileName) {
         //data.forEach((a) => {
         lstUrl.push(`${signatureFileName}`);
 
-        var addPreview = {
-            caption: "Employee",
-            width: '120px',
-            key: 1,
-            extra: { id: 1 }
-        };
+            var addPreview = {
+                caption: signatureFileName,
+                //width: '120px',
+                //url: '/localhost/public/delete',
+                key: 1,
+                extra: { id: 1 },
+            };
 
-        lstPreviewImg.push(addPreview);
+            lstPreviewImg.push(addPreview);
         //});
     }
 
-    $(`${formId}`).fileinput('destroy');
+    $(`${formId} #select-emp-signature`).fileinput('destroy');
     if (signatureFileName != "") {
-        $(`${formId}`).fileinput({
-            showBrowse: true,
-            showUpload: true,
-            showCaption: true,
-            initialPreview: lstUrl,
-            initialPreviewAsData: true,
-            initialPreviewConfig: [
-                lstPreviewImg
-            ],
-            overwriteInitial: false,
-            browseOnZoneClick: true,
-            browseLabel: 'เลือกไฟล์'
-        });
-    }
-    else {
-        $(`${formId}`).fileinput({
-            uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            //maxFileCount: 1,
-            showBrowse: true,
-            browseOnZoneClick: true,
-            showCaption: true,
-            showUpload: false,
-        });
-    }
-
-    let viewformId = '#form-createEmployee #display-emp-signature';
-    var lstViewUrl = [];
-    var lstViewPreviewImg = [];
-    if (signatureFileName != "") {
-        //data.forEach((a) => {
-        lstViewUrl.push(`${signatureFileName}`);
-
-        var addPreview = {
-            caption: "Employee",
-            width: '120px',
-            key: 1,
-            extra: { id: 1 }
-        };
-
-        lstViewPreviewImg.push(addPreview);
-        //});
-    }
-
-    $(`${viewformId}`).fileinput('destroy');
-    if (signatureFileName != "") {
-        $(`${viewformId}`).fileinput({
+        $(`${formId} #select-emp-signature`).fileinput({
             //uploadUrl: "Home/UploadFiles", // this is your home controller method url
-            showBrowse: false,
+            showBrowse: true,
             showUpload: false,
             showCaption: true,
             initialPreview: lstUrl,
@@ -1102,20 +1058,65 @@ function renderEmployeeSignature(signatureFileName) {
             initialPreviewConfig: [
                 lstPreviewImg
             ],
-            browseOnZoneClick: false,
+            browseOnZoneClick: true,
             browseLabel: 'เลือกไฟล์'
         });
     }
     else {
-        $(`${viewformId}`).fileinput({
+        $(`${formId} #select-emp-signature`).fileinput({
             uploadUrl: "Home/UploadFiles", // this is your home controller method url
             //maxFileCount: 1,
-            showBrowse: false,
-            browseOnZoneClick: false,
-            showCaption: false,
+            showBrowse: true,
+            browseOnZoneClick: true,
+            showCaption: true,
             showUpload: false,
         });
     }
+
+    //let viewformId = '#form-viewEmployee #display-emp-signature';
+    //var lstViewUrl = [];
+    //var lstViewPreviewImg = [];
+    //if (signatureFileName != "") {
+    //    //data.forEach((a) => {
+    //    lstViewUrl.push(`${signatureFileName}`);
+
+    //    var addPreview = {
+    //        caption: "Employee",
+    //        width: '120px',
+    //        key: 1,
+    //        extra: { id: 1 }
+    //    };
+
+    //    lstViewPreviewImg.push(addPreview);
+    //    //});
+    //}
+
+    //$(`${viewformId}`).fileinput('destroy');
+    //if (signatureFileName != "") {
+    //    $(`${viewformId}`).fileinput({
+    //        //uploadUrl: "Home/UploadFiles", // this is your home controller method url
+    //        showBrowse: true,
+    //        showUpload: false,
+    //        showCaption: true,
+    //        initialPreview: lstViewUrl,
+    //        initialPreviewAsData: true,
+    //        initialPreviewConfig: [
+    //            lstViewPreviewImg
+    //        ],
+    //        browseOnZoneClick: false,
+    //        browseLabel: 'เลือกไฟล์'
+    //    });
+    //}
+    //else {
+    //    $(`${viewformId}`).fileinput({
+    //        uploadUrl: "Home/UploadFiles", // this is your home controller method url
+    //        //maxFileCount: 1,
+    //        showBrowse: false,
+    //        browseOnZoneClick: false,
+    //        showCaption: false,
+    //        showUpload: false,
+    //    });
+    //}
 }
 
 
