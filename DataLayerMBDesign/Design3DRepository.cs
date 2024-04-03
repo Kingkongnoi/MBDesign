@@ -72,7 +72,18 @@ namespace DataLayerMBDesign
 
         public Design3DView GetEditDesign3DByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, b.quotationNumber, b.installDate
+            string queryString = @" select top 1 a.id
+                                ,a.orderId
+                                ,a.ownerEmpId
+                                ,a.dueDate
+                                ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.checklistStatusId,0)),'') checklistStatus
+                                ,a.checklistStatusId
+                                ,a.[status]
+                                ,a.createDate
+                                ,a.createBy
+                                ,a.updateDate
+                                ,a.updateBy
+                                ,a.isDeleted, b.quotationNumber, b.installDate
                             , case when (select top 1 name from tbStatus where isDeleted = 0 and statusId = a.checklistStatusId) = N'แบบ 3D Final' then 1 else 0 end isCheckFinal3d
                             from tbDesign3D a inner join tbCustOrder b on a.orderId = b.orderId
                             where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
