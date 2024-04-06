@@ -25,6 +25,8 @@ namespace BusinessLogicMBDesign.Foreman
         private readonly BankAccountRepository _bankAccountRepository;
         private readonly InvoiceRepository _invoiceRepository;
         private readonly UploadFileRepository _uploadFileRepository;
+        private readonly StatusRepository _statusRepository;
+
         public ForemanService(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -40,6 +42,7 @@ namespace BusinessLogicMBDesign.Foreman
             _bankAccountRepository = new BankAccountRepository();
             _invoiceRepository = new InvoiceRepository();
             _uploadFileRepository = new UploadFileRepository();
+            _statusRepository = new StatusRepository();
         }
 
         public List<CustOrderView> GetForemanQueueList(string quotationNumber, string cusName, string foremanStatus, string installDate)
@@ -51,16 +54,7 @@ namespace BusinessLogicMBDesign.Foreman
                 return _custOrderRepository.GetForemanList(quotationNumber, cusName, foremanStatus, installDate, conn);
             }
         }
-        public List<tbForeman> GetForemanStatusSelect2()
-        {
-            using (SqlConnection conn = new SqlConnection(_connectionString))
-            {
-                conn.Open();
-
-                return _foremanRepository.GetForemanStatus(conn);
-            }
-        }
-        public List<tbForeman> GetForemanProductItemList(int id)
+        public List<ForemanView> GetForemanStatusSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -209,7 +203,11 @@ namespace BusinessLogicMBDesign.Foreman
 
                     int updateCustOrderDetail = _custOrderDetailRepository.UpdateForemanValue(items, conn, transaction);
 
-                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processing, conn, transaction);
+                    string foremanCategory = GlobalForemanStatus.foremanCategory;
+                    var getForemanStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(foremanCategory, GlobalForemanStatus.processing, conn, transaction);
+                    int foremanStatusId = (getForemanStatus != null) ? getForemanStatus.statusId : 0;
+
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, foremanStatusId, DateTime.UtcNow, loginCode, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -334,12 +332,20 @@ namespace BusinessLogicMBDesign.Foreman
                             var exists = _invoiceRepository.GetFirstByOrderIdAndCustId(custOrder.orderId, custOrder.custId, conn, transaction);
                             if (exists != null)
                             {
+                                string invoiceCategory = GlobalInvoiceStatus.invoiceCategory;
+                                var getInvoiceStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(invoiceCategory, GlobalInvoiceStatus.paid, conn, transaction);
+                                int invoiceStatusId = (getInvoiceStatus != null) ? getInvoiceStatus.statusId : 0;
+
+                                string periodCategory = GlobalInvoicePeriod.invoicePeriodCategory;
+                                var getPeriodStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(periodCategory, GlobalInvoicePeriod.secondDisposite, conn, transaction);
+                                int periodStatusId = (getPeriodStatus != null) ? getPeriodStatus.statusId : 0;
+
                                 var invoice = new tbInvoice
                                 {
                                     orderId = orderId,
                                     custId = custOrder.custId,
-                                    period = GlobalInvoicePeriod.secondDisposite,
-                                    invoiceStatus = GlobalInvoiceStatus.paid,
+                                    periodStatusId = periodStatusId,
+                                    invoiceStatusId = invoiceStatusId,
                                     unitPrice = disposite,
                                     updateDate = DateTime.UtcNow,
                                     updateBy = loginCode,
@@ -351,7 +357,11 @@ namespace BusinessLogicMBDesign.Foreman
                         }
                     }
 
-                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, GlobalForemanStatus.processed, conn, transaction);
+                    string foremanCategory = GlobalForemanStatus.foremanCategory;
+                    var getForemanStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(foremanCategory, GlobalForemanStatus.processed, conn, transaction);
+                    int foremanStatusId = (getForemanStatus != null) ? getForemanStatus.statusId : 0;
+
+                    int updateForeman = _foremanRepository.UpdateForemanStatus(orderId, foremanStatusId, DateTime.UtcNow, loginCode, conn, transaction);
 
                     transaction.Commit();
                 }

@@ -20,7 +20,7 @@ namespace DataLayerMBDesign
         {
             string queryString = @"SELECT a.approveId
             ,a.orderId
-            ,isnull(a.approveStatus,'') approveStatus
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.approveStatusId,0)),'') approveStatus
             ,isnull(a.approveComment,'') approveComment
             ,a.[status]
             ,a.createDate
@@ -30,7 +30,8 @@ namespace DataLayerMBDesign
             ,a.isDeleted
             ,b.quotationNumber
             ,c.custFirstName + ' ' + c.custSurName cusName
-            , isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName      
+            ,isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') createByName     
+            ,a.approveStatusId
             FROM tbApprove a inner join tbCustOrder b  on a.orderId = b.orderId
             inner join tbCust c on b.custId = c.custId
             where a.isDeleted = 0 and a.[status] = 1 and b.isDeleted = 0 and b.[status] = 1 and c.isDeleted = 0 and c.[status] = 1

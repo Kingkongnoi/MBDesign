@@ -1665,7 +1665,7 @@ function renderGetContractList(data) {
                     render: function (data, type, row) {
                         //return `<button type="button" class="btn-add-custom btn-view-cus-contract" data-id="${row.id}"  title="ดูเอกสาร">
                         //<img src="/images/analysis.png" width="25px" /></button>`;
-                        return `<a class="btn btn-view-cus-contract" href="../Document/GetContractByContractId?contractId=${row.id}" target="_blank"><img src="../images/analysis.png" width="25px" /></a>`;
+                        return `<a class="btn btn-view-cus-contract" data-id="${row.id}"><img src="../images/analysis.png" width="25px" /></a>`;
                     },
                 },
             ],
@@ -1694,19 +1694,17 @@ function renderContractStatusSelect2(data) {
 
 
 function printQuotation() {
-    //$.ajax({
-    //    type: 'GET',
-    //    url: `${app_settings.api_url}/api/Document/GetQuotaionByOrderId?orderId=${_order_id}`,
-    //    success: function (data) {
-    //        if (data.custOrder != null) {
-    //            generateQuotationDocument(data);
-    //        }
-    //    },
-    //    error: function (err) {
-    //    }
-    //});
-    $(this).attr('href', `../Document/GetQuotaionByOrderId?orderId=${_order_id}`);
-    $(this).attr("target", "_blank");
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetQuotaionByOrderId?orderId=${_order_id}`,
+        success: function (data) {
+            if (data.custOrder != null) {
+                generateQuotationDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
 }
 
 async function generateQuotationDocument(data) {
@@ -1800,9 +1798,14 @@ async function renderQuotationHtml(data) {
     };
 
     var element = document.getElementById("quotationElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }
 
 function clearSearchCommission() {
@@ -1980,7 +1983,12 @@ async function renderContractHtml(data) {
     };
 
     var element = document.getElementById("contractElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }

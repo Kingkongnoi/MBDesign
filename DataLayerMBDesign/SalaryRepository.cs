@@ -86,6 +86,13 @@ namespace DataLayerMBDesign
             ,b.empFirstName + ' ' + b.empLastName employeeName
             ,b.salaryType
             ,c.departmentName
+            ,a.social
+            ,a.tax
+            ,a.advance
+            ,a.electricity
+            ,a.installment
+            ,a.home
+            ,a.attendance
             FROM tbSalary a inner join tbEmpData b on a.empId = b.id
             inner join tbDepartment c on b.departmentId = c.departmentId
             where a.isDeleted = 0 and b.isDeleted = 0 and c.isDeleted = 0

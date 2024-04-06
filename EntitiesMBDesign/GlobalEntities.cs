@@ -8,6 +8,7 @@ namespace EntitiesMBDesign
 {
     public class GlobalOrderStatus
     {
+        public static string orderCategory = "Order";
         public static string waitForApprove = "รออนุมัติ";
         public static string approved = "อนุมัติ";
         public static string notApprove = "ไม่อนุมัติ";
@@ -15,12 +16,14 @@ namespace EntitiesMBDesign
 
     public class GlobalApproveStatus
     {
+        public static string approveCategory = "Approve";
         public static string notApprove = "ไม่อนุมัติ";
         public static string approved = "อนุมัติ";
     }
 
     public class GlobalContractStatus
     {
+        public static string contractCategory = "Contract";
         public static string waitDocumentForApprove = "เอกสารใบเสนอราคาอยู่ระหว่างการอนุมัติ";
         public static string documentApproved = "เอกสารใบเสนอราคาอนุมัติ";
         public static string documentNotApproved = "เอกสารใบเสนอราคาไม่ได้รับอนุมัติ";
@@ -30,6 +33,7 @@ namespace EntitiesMBDesign
 
     public class Global3DStatus
     {
+        public static string design3DCategory = "3DDesign";
         public static string saveToDesign3D = "บันทึกรับเรื่อง";
         public static string whileDesign3dDraf1 = "ระหว่างดำเนินการออกแบบดราฟต์ 1";
         public static string design3dApproved = "แบบ 3D อนุมัติ";
@@ -38,6 +42,7 @@ namespace EntitiesMBDesign
 
     public class GlobalForemanStatus
     {
+        public static string foremanCategory = "Foreman";
         public static string getToForeman = "รอรับเรื่อง";
         public static string processing = "ระหว่างดำเนินการ";
         public static string processed = "ดำเนินการเรียบร้อย";
@@ -54,16 +59,20 @@ namespace EntitiesMBDesign
         public static string secondDisposite = "CustOrderSecondDisposite";
     }
 
+    /*
     public class GlobalDispositePeriod
     {
+        public static string dispositeCategory = "Disposite";
         public static string firstDisposite = "จ่ายเงินมัดจำ";
         public static string secondDisposite = "จ่ายเงินงวด 2";
         public static string thridDisposite = "จ่ายเงินงวด 3";
         public static string fourthDisposite = "จ่ายเงินงวด 4";
     }
+    */
 
     public class GlobalInvoicePeriod
     {
+        public static string invoicePeriodCategory = "InvoicePeriod";
         public static string firstDisposite = "จ่ายเงินมัดจำ";
         public static string secondDisposite = "งวดที่ 2";
         public static string thridDisposite = "งวดที่ 3";
@@ -76,6 +85,7 @@ namespace EntitiesMBDesign
     }
     public class GlobalInvoiceStatus
     {
+        public static string invoiceCategory = "Invoice";
         public static string waitPaid = "รอจ่าย";
         public static string paid = "จ่ายแล้ว";
     }

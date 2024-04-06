@@ -11,6 +11,7 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _contract_id = 0;
 function clearSearchForm() {
     let formId = '#form-search-accounting';
 
@@ -991,7 +992,7 @@ function DoSaveCreateOrUpdateInvoice() {
 
 
 function printInvoice() {
-    /*$.ajax({
+    $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`,
         success: function (data) {
@@ -1001,9 +1002,9 @@ function printInvoice() {
         },
         error: function (err) {
         }
-    });*/
-    $(this).attr('href', `../Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`);
-    $(this).attr("target", "_blank");
+    });
+    //$(this).attr('href', `../Document/GetInvoiceByInvoiceId?invoiceId=${_invoice_id}`);
+    //$(this).attr("target", "_blank");
 }
 async function generateInvoiceDocument(data) {
     await renderInvoiceHtml(data);
@@ -1079,9 +1080,14 @@ async function renderInvoiceHtml(data) {
     };
 
     var element = document.getElementById("invoiceElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }
 
 function clearSearchReceiptForm() {
@@ -1175,7 +1181,7 @@ function renderReceiptList(data) {
                     render: function (data, type, row) {
                     //    return `<button type="button" class="btn-add-custom btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์">
                     //<img src="/images/printing.png" width="25px" /></button>`;
-                        return `<a class="btn btn-print-receipt" href="../Document/GetReceiptByReceiptId?receiptId=${row.receiptId}" target="_blank"><img src="../images/printing.png" width="25px" /></a>`;
+                        return `<a class="btn btn-print-receipt" data-orderid="${row.orderId}" data-custid="${row.custId}" data-invoiceid="${row.invoiceId}" data-receiptid="${row.receiptId}"  title="พิพม์"><img src="../images/printing.png" width="25px" /></a>`;
                     },
                 },
             ],
@@ -1270,9 +1276,14 @@ async function renderReceiptHtml(data) {
     };
 
     var element = document.getElementById("receiptElement");
-    //html2pdf().from(element).set(options).save();
-    //html2pdf(element);
-    html2pdf().from(element).set(options).save();
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }
 
 function callIdCardComCert() {
@@ -1442,4 +1453,41 @@ function saveComCert() {
 
         }
     });
+}
+
+function printContract(contractId) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Document/GetContractByContractId?contractId=${contractId}`,
+        success: function (data) {
+            if (data.contract != null) {
+                generateContractDocument(data);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+async function generateContractDocument(data) {
+    await renderContractHtml(data);
+}
+async function renderContractHtml(data) {
+    let options = {
+        margin: 0.25,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "png", quality: 0.98 },
+        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Contract_${data.contract.contractNumber}`,
+    };
+
+    var element = document.getElementById("contractElement");
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
 }

@@ -27,6 +27,7 @@
     $(document).on('click', '.btn-edit-accounting', function () {
         _order_id = $(this).data('orderid');
         _cust_id = $(this).data('custid');
+        _contract_id = $(this).data('contractid');
         clearInputForm();
         renderEditAccounting($(this).data('orderid'));
         $('#modal-editAccounting').modal('show');
@@ -141,4 +142,7 @@
         });
     });
 
+    $('.btn-print-contract').on('click', function () {
+        printContract(_contract_id);
+    });
 });

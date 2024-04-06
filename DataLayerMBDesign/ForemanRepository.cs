@@ -15,32 +15,36 @@ namespace DataLayerMBDesign
         {
             return conn.Insert(obj, transaction: trans);
         }
-        public int UpdateForemanStatus(int orderId, string foremanStatus, SqlConnection conn, SqlTransaction? trans = null)
+        public int UpdateForemanStatus(int orderId, int foremanStatusId, DateTime updateDate, string updateBy, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"UPDATE tbForeman
-            SET [foremanStatus] = @foremanStatus
+            SET [foremanStatusId] = @foremanStatusId,
+            updateDate = @updateDate,
+            updateBy = @updateBy
             WHERE orderId = @orderId
             select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, foremanStatus }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderId, foremanStatusId, updateDate, updateBy }, transaction: trans);
         }
 
-        public List<tbForeman> GetForemanStatus(SqlConnection conn, SqlTransaction? trans = null)
+        public List<ForemanView> GetForemanStatus(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select foremanStatus
-            from tbForeman
-            where isDeleted = 0 and [status] = 1
-            group by foremanStatus
-            order by foremanStatus";
+            string queryString = @"select b.name foremanStatus 
+			from tbContractAgreement a inner join tbstatus b on a.isDeleted = 0 and b.isDeleted = 0
+            inner join tbCategory c on b.categoryId = c.categoryId and c.isDeleted = 0
+            where c.name = N'Foreman'
+			group by b.name 
+			order by b.name";
 
-            return conn.Query<tbForeman>(queryString, transaction: trans).ToList();
+            return conn.Query<ForemanView>(queryString, transaction: trans).ToList();
         }
 
-        public tbForeman GetByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
+        public ForemanView GetByOrderId(int orderId, SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"SELECT TOP 1 id
             ,orderId
-            ,foremanStatus
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(foremanStatusId,0)),'') foremanStatus
+            ,foremanStatusId
             ,[status]
             ,createDate
             ,createBy
@@ -50,12 +54,21 @@ namespace DataLayerMBDesign
             FROM tbForeman
             where orderId = @orderId and isDeleted = 0 and status = 1";
 
-            return conn.QueryFirstOrDefault<tbForeman>(queryString, new { orderId }, transaction: trans);
+            return conn.QueryFirstOrDefault<ForemanView>(queryString, new { orderId }, transaction: trans);
         }
 
         public ForemanView GetEditForemanByForemanId(int foremanId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber, 
+            string queryString = @" select top 1 a.id
+            ,a.orderId
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.foremanStatusId,0)),'') foremanStatus
+            ,a.foremanStatusId
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber, 
             b.orderNote, b.orderNotePrice, b.discount, b.vat, b.grandTotal, b.accountId, d.accountName, d.accountNumber, d.accountType, d.bank
             from tbForeman a inner join tbCustOrder b on a.orderId = b.orderId
             inner join tbContractAgreement c on b.quotationNumber = c.quotationNumber

@@ -34,6 +34,7 @@ namespace BusinessLogicMBDesign.Sale
         private readonly ReceiptRepository _receiptRepository;
         private readonly CommissionRepository _commissionRepository;
         private readonly UploadFileRepository _uploadFileRepository;
+        private readonly StatusRepository _statusRepository;
 
         private readonly IConfiguration _configuration;
         private readonly string _connectionString;
@@ -57,6 +58,7 @@ namespace BusinessLogicMBDesign.Sale
             _receiptRepository = new ReceiptRepository();
             _commissionRepository = new CommissionRepository();
             _uploadFileRepository = new UploadFileRepository();
+            _statusRepository = new StatusRepository();
 
             _configuration = configuration;
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
@@ -258,6 +260,11 @@ namespace BusinessLogicMBDesign.Sale
 
                     string quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
 
+                    /* Created by Wannaporn.YA 2024-03-19 : Change from create order status to order status id */
+                    string orderCategory = GlobalOrderStatus.orderCategory;
+                    var getOrderStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(orderCategory, orderStatus, conn, transaction);
+                    int orderStatusId = (getOrderStatus != null) ? getOrderStatus.statusId : 0;
+
                     var addedObject = new tbCustOrder
                     {
                         quotationType = model.quotationType,
@@ -276,7 +283,7 @@ namespace BusinessLogicMBDesign.Sale
                         status = true,
                         createDate = DateTime.UtcNow,
                         createBy = model.loginCode,
-                        orderStatus = orderStatus,
+                        orderStatusId = orderStatusId,
                         quotationYearMonthGen = quotationYearMonthGen
                     };
 
@@ -346,6 +353,11 @@ namespace BusinessLogicMBDesign.Sale
                         quotation = this.GenerateQuotaion(generateNumber, type, quotationYearMonthGen);
                     }
 
+                    /* Created by Wannaporn.YA 2024-03-19 : Change from create order status to order status id */
+                    string orderCategory = GlobalOrderStatus.orderCategory;
+                    var getOrderStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(orderCategory, orderStatus, conn, transaction);
+                    int orderStatusId = (getOrderStatus != null) ? getOrderStatus.statusId : 0;
+
                     var addedObject = new tbCustOrder
                     {
                         quotationType = model.quotationType,
@@ -359,7 +371,7 @@ namespace BusinessLogicMBDesign.Sale
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode,
                         status = true,
-                        orderStatus = orderStatus,
+                        orderStatusId = orderStatusId,
                         quotationComment = model.quotationComment,
                         orderNotePrice = model.orderNotePrice,
                         orderId = orderId
@@ -847,16 +859,24 @@ namespace BusinessLogicMBDesign.Sale
                             if (exists == null)
                             {
                                 string yearMonth = this.GenerateYearMonth();
-                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoiceStatus.paid, custOrder.quotationNumber, GlobalDispositePeriod.firstDisposite, custOrder.disposite, loginCode);
+                                int? invoiceId = this.AddInvoice(custOrder.orderId, custOrder.custId, yearMonth, GlobalInvoiceStatus.paid, custOrder.quotationNumber, GlobalInvoicePeriod.firstDisposite, custOrder.disposite, loginCode);
 
                                 int? receiptId = this.AddReceipt(custOrder.orderId, custOrder.custId, yearMonth, invoiceId, loginCode);
                             }
                             else
                             {
+                                string invoiceCategory = GlobalInvoiceStatus.invoiceCategory;
+                                var getInvoiceStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(invoiceCategory, GlobalInvoiceStatus.paid, conn, transaction);
+                                int invoiceStatusId = (getInvoiceStatus != null) ? getInvoiceStatus.statusId : 0;
+
+                                string periodCategory = GlobalInvoicePeriod.invoicePeriodCategory;
+                                var getPeriodStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(periodCategory, GlobalInvoicePeriod.firstDisposite, conn, transaction);
+                                int periodStatusId = (getPeriodStatus != null) ? getPeriodStatus.statusId : 0;
+
                                 var invoice = new tbInvoice
                                 {
-                                    period = GlobalDispositePeriod.firstDisposite,
-                                    invoiceStatus = GlobalInvoiceStatus.paid,
+                                    periodStatusId = periodStatusId,
+                                    invoiceStatusId = invoiceStatusId,
                                     updateDate = DateTime.UtcNow,
                                     updateBy = loginCode,
                                     id = exists.id
@@ -937,11 +957,15 @@ namespace BusinessLogicMBDesign.Sale
                     var exists = _contractAgreementRepository.GetFirstByOrderIdAndCustId(model.custId, conn, transaction);
                     if(exists == null)
                     {
+                        string contractCategory = GlobalContractStatus.contractCategory;
+                        var getContractStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(contractCategory, contractStatus, conn, transaction);
+                        int contractStatusId = (getContractStatus != null) ? getContractStatus.statusId : 0;
+
                         var addedObject = new tbContractAgreement
                         {
                             contractNumber = contractNumber,
                             quotationNumber = quotation,
-                            contractStatus = contractStatus,
+                            contractStatusId = contractStatusId,
                             custId = model.custId,
                             contractFileName = model.contractFileName,
                             contractNumberGen = generateNumber,
@@ -973,7 +997,7 @@ namespace BusinessLogicMBDesign.Sale
                 return _contractAgreementRepository.GetContractList(contractNumber, quotationNumber, cusName, contractStatus, contractDate, conn);
             }
         }
-        public List<tbContractAgreement> GetContractStatusSelect2()
+        public List<ContractAgreementView> GetContractStatusSelect2()
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -1001,16 +1025,24 @@ namespace BusinessLogicMBDesign.Sale
 
                     string invoiceNumber = this.GenerateContractNumber(generateNumber, yearMonth);
 
+                    string invoiceCategory = GlobalInvoiceStatus.invoiceCategory;
+                    var getInvoiceStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(invoiceCategory, invoiceStatus, conn, transaction);
+                    int invoiceStatusId = (getInvoiceStatus != null) ? getInvoiceStatus.statusId : 0;
+
+                    string periodCategory = GlobalInvoicePeriod.invoicePeriodCategory;
+                    var getPeriodStatus = _statusRepository.GetFirstByCategoryNameAndStatusName(periodCategory, period, conn, transaction);
+                    int periodStatusId = (getPeriodStatus != null) ? getPeriodStatus.statusId : 0;
+
                     var addedObject = new tbInvoice
                     {
                         invoiceNumber = invoiceNumber,
                         invoiceNumberGen = generateNumber,
                         invoiceYearMonthGen = yearMonth,
                         quotationNumber = quotation,
-                        period = period,
+                        periodStatusId = periodStatusId,
                         orderId = orderId,
                         custId = custId,
-                        invoiceStatus = invoiceStatus,
+                        invoiceStatusId = invoiceStatusId,
                         status = true,
                         createDate = DateTime.UtcNow,
                         createBy = loginCode,

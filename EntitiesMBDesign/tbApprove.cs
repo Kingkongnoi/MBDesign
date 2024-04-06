@@ -12,7 +12,6 @@ namespace EntitiesMBDesign
         [Key]
         public int approveId { get; set; }
         public int orderId { get; set; }
-        public string approveStatus { get; set; } = string.Empty;
         public string approveComment { get; set; } = string.Empty;
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
@@ -20,6 +19,7 @@ namespace EntitiesMBDesign
         public DateTime? updateDate { get; set; }
         public string? updateBy { get; set; }
         public bool isDeleted { get; set; } = false;
+        public int approveStatusId { get; set; }
     }
 
     public class ApproveView : tbApprove
@@ -27,6 +27,7 @@ namespace EntitiesMBDesign
         public string quotationNumber { get; set; } = string.Empty;
         public string cusName { get; set; } = string.Empty;
         public string createByName { get; set; } = string.Empty;
+        public string approveStatus { get; set; } = string.Empty;
     }
 
     public class ApproveModel
