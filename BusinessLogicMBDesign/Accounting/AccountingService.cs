@@ -470,51 +470,51 @@ namespace BusinessLogicMBDesign.Accounting
                 var allPeriod = _statusRepository.GetAllByCategoryName(GlobalInvoicePeriod.invoicePeriodCategory, conn);
                 if (exists == null)
                 {
-                    if(allPeriod.Count > 0)
-                    {
-                        allPeriod.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
-                    }
+                    //if(allPeriod.Count > 0)
+                    //{
+                    //    allPeriod.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
+                    //}
 
-                    /*
+                    
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.firstDisposite, fullPeriod = GlobalInvoicePeriod.firstFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                     result.Add(new InvoiceView {  period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
-                    */
+                    
                 }
                 else
                 {
                     var p = new List<StatusView>();
                     if(exists.period == GlobalInvoicePeriod.firstDisposite)
                     {
-                        p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite).ToList();
+                        //p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite).ToList();
 
-                        /*
+                        
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.secondDisposite, fullPeriod = GlobalInvoicePeriod.secondFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
-                        */
+                        
                     }
                     else if (exists.period == GlobalInvoicePeriod.secondDisposite)
                     {
-                        p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite && w.period != GlobalInvoicePeriod.secondDisposite).ToList();
+                        //p = allPeriod.Where(w => w.period != GlobalInvoicePeriod.firstDisposite && w.period != GlobalInvoicePeriod.secondDisposite).ToList();
 
-                        /*
+                        
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.thridDisposite, fullPeriod = GlobalInvoicePeriod.thridFullDisposite });
                         result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
-                        */
+                        
                     }
                     else if (exists.period == GlobalInvoicePeriod.thridDisposite)
                     {
-                        p = allPeriod.Where(w => w.period == GlobalInvoicePeriod.fourthDisposite).ToList();
+                        //p = allPeriod.Where(w => w.period == GlobalInvoicePeriod.fourthDisposite).ToList();
                         
-                        //result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
+                        result.Add(new InvoiceView { period = GlobalInvoicePeriod.fourthDisposite, fullPeriod = GlobalInvoicePeriod.fourthFullDisposite });
                     }
 
-                    if (p.Count > 0)
-                    {
-                        p.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
-                    }
+                    //if (p.Count > 0)
+                    //{
+                    //    p.ForEach(v => result.Add(new InvoiceView { period = v.period, fullPeriod = v.fullPeriod }));
+                    //}
                 }
             }
 

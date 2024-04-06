@@ -29,7 +29,7 @@ namespace DataLayerMBDesign
 
         public List<ForemanView> GetForemanStatus(SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @"select b.name ForemanView 
+            string queryString = @"select b.name foremanStatus 
 			from tbContractAgreement a inner join tbstatus b on a.isDeleted = 0 and b.isDeleted = 0
             inner join tbCategory c on b.categoryId = c.categoryId and c.isDeleted = 0
             where c.name = N'Foreman'
@@ -59,7 +59,16 @@ namespace DataLayerMBDesign
 
         public ForemanView GetEditForemanByForemanId(int foremanId, SqlConnection conn, SqlTransaction? trans = null)
         {
-            string queryString = @" select top 1 a.*, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber, 
+            string queryString = @" select top 1 a.id
+            ,a.orderId
+            ,isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.foremanStatusId,0)),'') foremanStatus
+            ,a.foremanStatusId
+            ,a.[status]
+            ,a.createDate
+            ,a.createBy
+            ,a.updateDate
+            ,a.updateBy
+            ,a.isDeleted, isnull(b.quotationNumber,'') quotationNumber, isnull(c.contractNumber, '') contractNumber, 
             b.orderNote, b.orderNotePrice, b.discount, b.vat, b.grandTotal, b.accountId, d.accountName, d.accountNumber, d.accountType, d.bank
             from tbForeman a inner join tbCustOrder b on a.orderId = b.orderId
             inner join tbContractAgreement c on b.quotationNumber = c.quotationNumber
