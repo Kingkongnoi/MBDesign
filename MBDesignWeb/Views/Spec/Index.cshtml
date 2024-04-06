@@ -5,8 +5,8 @@
 
 
 <script src="~/scripts/config.js"></script>
-@* <script src="~/scripts/master/master-function.js"></script>
-<script src="~/scripts/master/master-control.js"></script> *@
+<script src="~/scripts/spec/specs-function.js"></script>
+<script src="~/scripts/spec/specs-control.js"></script>
 
 <style>
     .nav-tabs .nav-link {
@@ -65,13 +65,18 @@
         <!-- Nav pills -->
         <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#nav-spec-queue-tab">คิวงานตามใบเสนอราคา</a>
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-spec-queue-tab">การออกแบบ Spec</a>
+            </li>
+            <li class="nav-item" id="nav-planks">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-planks-tab">รับเข้า</a>
             </li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-spec-queue-tab">@Html.Partial("_Spec.cshtml")</div>
+            <div class="tab-pane active" id="nav-spec-queue-tab">@Html.Partial("_SpecList.cshtml")</div>
+
+            <div class="tab-pane fade" id="nav-spec-planks-tab">@Html.Partial("_Planks.cshtml")</div>
         </div>
 
     </div>

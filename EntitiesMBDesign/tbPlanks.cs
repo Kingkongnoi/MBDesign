@@ -1,33 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace EntitiesMBDesign
 {
-    public class tbDesign3D
+    public class tbPlanks
     {
-        [Key]
         public int id { get; set; }
-        public int orderId { get; set; }
-        public int ownerEmpId { get; set; }
-        public DateTime? dueDate { get; set; }
-        public string checklistStatus { get; set; } = string.Empty;
+        public int orderid { get; set; }
+        public string colorCode { get; set; } = string.Empty;
+        public int thickness18MM { get; set; }
+        public int thickness9MM { get; set; }
         public bool status { get; set; } = true;
         public DateTime createDate { get; set; }
         public string createBy { get; set; } = string.Empty;
         public DateTime? updateDate { get; set; }
-        public string? updateBy { get; set; }
+        public string updateBy { get; set; } = string.Empty;
         public bool isDeleted { get; set; } = false;
     }
 
-    public class Design3DView : tbDesign3D
+    public class PlanksItemModel :tbPlanks
     {
-        public string orderNote { get; set; }= string.Empty;
         public string quotationNumber { get; set; } = string.Empty;
-        public DateTime? installDate { get; set; }
-        public bool isCheckFinal3d { get; set; }
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+
+        public string loginCode { get; set; } = string.Empty;
     }
 }
