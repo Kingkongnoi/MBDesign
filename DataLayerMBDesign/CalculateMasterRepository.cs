@@ -71,29 +71,30 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<tbCalculateMaster>(queryString.ToString(), new { calculatecode }, transaction: trans);
         }
 
-        //public tbStock GetFirstById(int id, SqlConnection conn, SqlTransaction? trans = null)
-        //{
-        //    string queryString = @"select top 1 *
-        //                        FROM [tbStock]
-        //                        where isDeleted = 0 and id = @id
-        //                        order by id";
+        public List<listQuotationNumber> GetListQuotationNumbersCal(string type ,SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString =string.Format (@"select co.orderId,co.quotationNumber from tbCustOrder co
+                                    inner join tbDesign3D d on co.orderId = d.orderId
+                                    inner join tbSpec s on s.orderid = co.orderId
+									inner join tbSpecListDetail sd on s.id = sd.specid
+                                   where co.status = 1 and d.checklistStatusId =14  and d.orderId not in (select isnull(orderid,'') from tbCalculateMaster  where ISNULL(isDeleted,0) = 0 and calculatetype ='{0}')
+                                   and sd.checkliststatus = 5
+								   AND sd.transactionActive='A' and sd.transactionStatus = 'A'
+                                  ",type);
 
-        //    return conn.QueryFirstOrDefault<tbStock>(queryString, new { id }, transaction: trans);
-        //}
+            return conn.Query<listQuotationNumber>(queryString, transaction: trans).ToList();
+        }
 
-        //public tbStock GetLastestId(SqlConnection conn, SqlTransaction? trans = null)
-        //{
-        //    string queryString = @"
-        //                        if not exists(select top 1 1 from tbStock)
-        //                        begin
-        //                         SELECT IDENT_CURRENT('tbStock') AS id;  
-        //                        end
-        //                        else
-        //                        begin
-        //                         SELECT IDENT_CURRENT('tbStock') + 1 AS id;  
-        //                        end";
+      
 
-        //    return conn.QueryFirstOrDefault<tbStock>(queryString, transaction: trans);
-        //}
+        public int getSpecID(int orderID, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = string.Format(@"
+                                select s.id from tbSpec s
+                                inner join tbCustOrder co on s.orderid = co.orderid
+                                where s.status =1 and co.orderid = {0}", orderID);
+
+            return conn.QueryFirstOrDefault<int>(queryString, new { orderID }, transaction: trans);
+        }
     }
 }

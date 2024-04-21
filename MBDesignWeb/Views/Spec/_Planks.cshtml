@@ -41,8 +41,8 @@
                             <input type="text" class="form-control" id="input-search-quotation-code" placeholder="">
                         </div>
                         @* <div class="col-sm-2">
-                            <label>ชื่อแบรนด์สินค้า</label>
-                            <input type="text" class="form-control" id="input-search-brand-name" placeholder="">
+                        <label>ชื่อแบรนด์สินค้า</label>
+                        <input type="text" class="form-control" id="input-search-brand-name" placeholder="">
                         </div> *@
                         <div class="col-sm-2">
                             <label>สถานะ</label>
@@ -60,7 +60,7 @@
             </div>
 
             <div class="col-sm-2 mt-2">
-                <button type="button" class="btn-add-custom btn-add-planks"><img src="~/images/sale.png" width="25px" /> เพิ่มแบรนด์สินค้า</button>
+                <button type="button" class="btn-add-custom btn-add-planks"><img src="~/images/sale.png" width="25px" /> เพิ่มรายการสั่งไม้</button>
             </div>
 
             <div class="row col-sm-12 mt-2">
@@ -101,18 +101,20 @@
                                     <label class="control-label">เลขที่ใบเสนอราคา<span class="text-danger">*</span></label>
                                     <input type="hidden" id="input-viewstock-id" name="input-viewstock-id" />
                                     <select class="form-select" id="select-quotation-no" data-selected="" name="select-quotation-no"></select>
+                                    <input id="input-quotation-no" name="input-quotation-no" class="form-control" type="text" disabled />
+                                    <input type="hidden" id="hd-quotation-no" name="hd-quotation-no" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">รหัสสี<span class="text-danger">*</span></label>
-                                    <input id="input-color-code" name="input-color-code" class="form-select" />
+                                    <input id="input-color-code" name="input-color-code" class="form-control" type="text" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">จำนวนความหนา 18 mm</label>
-                                    <input id="input-18mm-amount" name="input-18mm-amount" type="number" class="form-select" onkeypress="return isNumberKey(event)" />
+                                    <input id="input-18mm-amount" name="input-18mm-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">จำนวนความหนา 9 mm</label>
-                                    <input id="input-9mm-amount" name="input-9mm-amount" type="number" class="form-select" onkeypress="return isNumberKey(event)" />
+                                    <input id="input-9mm-amount" name="input-9mm-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
@@ -152,7 +154,7 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">รหัสสี<span class="text-danger">*</span></label>
-                                    <input id="input-color-code" name="input-color-code" class="form-select" />
+                                    <input id="input-color-code" name="input-color-code" class="form-select" type="text" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">จำนวนความหนา 18 mm</label>

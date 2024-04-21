@@ -61,5 +61,67 @@ namespace BusinessLogicMBDesign.Spec
 
             return added;
         }
+
+        public int? UpdateSpecList(specListDetailUpdateItemModel model)
+        {
+            int? updated = 0;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                SqlTransaction transaction = conn.BeginTransaction();
+                string[] liststatus = model.listStatus.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string status in liststatus)
+                {
+                    var exists = _SpecListDetailRepository.GetSpecBySpecIDStatus(model.id, Convert.ToInt32(status), conn, transaction);
+                    if (exists == null)
+                    {
+                        try
+                        {
+                            var addedObject = new tbSpecListDetail
+                            {
+                                specid = model.id,
+                                empid = model.empid,
+                                commitDate = DateTime.Now,
+                                checkliststatus = Convert.ToInt32(status),
+                                transactionActive = "A",
+                                transactionStatus = "A",
+                                isApprove = true,
+                                createDate = DateTime.UtcNow,
+                                createBy = model.loginCode
+                            };
+                            updated = _SpecListDetailRepository.Add(addedObject, conn, transaction);
+                            if (Convert.ToInt32(status) == 2)
+                            {
+                                int specdetailid = updated.HasValue ? updated.Value : 0;
+                                if (specdetailid !=0)
+                                {
+                                    var addUrl = new tbSpecVideoURL
+                                    {
+                                        specdetailid = specdetailid,
+                                        videourl = model.vieoUrl
+                                    };
+                                    updated = _SpecListDetailRepository.AddVideo(addUrl, conn, transaction);
+                                }
+                                else
+                                {
+                                    updated = 0;
+                                }
+                            }
+
+
+                            transaction.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                        }
+                    }
+
+                }
+
+            }
+            return updated;
+        }
     }
 }

@@ -2,6 +2,7 @@
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Reporting.Map.WebForms.BingMaps;
 
 namespace MBDesignWeb.Controllers
 {
@@ -10,12 +11,14 @@ namespace MBDesignWeb.Controllers
     public class PlanksController : Controller
     {
         private readonly PlanksService _planksService;
+        private readonly SpecListDetailService _specListDetailService;
         private readonly IConfiguration _configuration;
 
         public PlanksController(IConfiguration configuration)
         {
             _configuration = configuration;
             _planksService = new PlanksService(_configuration);
+            _specListDetailService = new SpecListDetailService(_configuration);
         }
 
         #region GET
@@ -81,6 +84,41 @@ namespace MBDesignWeb.Controllers
             {
                 result = false;
                 resultStatus = "error";
+            }
+
+            if (result != false)
+            {
+                if (obj.orderid > 0)
+                {
+                   int specid = _planksService.GetSpecIDByOrderID(obj.orderid);
+                    if (specid>0)
+                    {
+                        specListDetailItemModel _dataDetail = new specListDetailItemModel()
+                        {
+                            specid = specid,
+                            empid = obj.loginCode,
+                            commitDate = DateTime.Now,
+                            checkliststatus = 6,
+                            loginCode = obj.loginCode,
+                            transactionStatus = "A",
+                            transactionActive = "A",
+                            isApprove = true
+
+
+                        };
+                        data = _specListDetailService.AddSpecListDetailItem(_dataDetail);
+                        if (data == -1)
+                        {
+                            result = false;
+                            resultStatus = "duplicate";
+                        }
+                        else if (data == 0)
+                        {
+                            result = false;
+                            resultStatus = "error";
+                        }
+                    }
+                }
             }
 
             var returnData = new

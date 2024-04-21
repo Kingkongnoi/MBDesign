@@ -52,6 +52,7 @@ namespace BusinessLogicMBDesign.Calculate
                 {
                     var addedObject = new tbCalculateMaster
                     {
+                        orderid = model.orderid,
                         calculatecode = model.calculatecode,
                         calculatetype = model.calculatetype,
                         createDate = DateTime.UtcNow,
@@ -76,6 +77,27 @@ namespace BusinessLogicMBDesign.Calculate
                 conn.Open();
 
                 return _calculateMasterRepository.GetAll(id, calculatecode, conn);
+            }
+        }
+
+        public List<listQuotationNumber> GetListQuotationNumbersCal(string type)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _calculateMasterRepository.GetListQuotationNumbersCal(type,conn);
+            }
+        }
+
+        public int GetSpecIDByOrderID(int orderID)
+        {
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _calculateMasterRepository.getSpecID(orderID, conn);
             }
         }
     }

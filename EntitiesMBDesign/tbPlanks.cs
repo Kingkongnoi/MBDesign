@@ -19,6 +19,7 @@ namespace EntitiesMBDesign
         public DateTime? updateDate { get; set; }
         public string updateBy { get; set; } = string.Empty;
         public bool isDeleted { get; set; } = false;
+        public string quotationNumber { get; set; } = string.Empty;
     }
 
     public class PlanksItemModel :tbPlanks

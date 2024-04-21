@@ -57,7 +57,7 @@ namespace BusinessLogicMBDesign.Spec
             return added;
         }
 
-        public int UpdateSpecItem(specItemModel model)
+        public int UpdateSpecItem(specItemModel model,int stautsid)
         {
             int updated = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -71,12 +71,29 @@ namespace BusinessLogicMBDesign.Spec
 
                 try
                 {
-                    var updatedObject = new tbSpec
+                    var updatedObject = new tbSpec();
+                    if (stautsid == 4)
                     {
-                        updateDate = DateTime.UtcNow,
-                        updateBy = model.loginCode
-                    };
-                    updated = _specRepository.Update(updatedObject, conn, transaction);
+                        updatedObject = new tbSpec
+                        {
+                            id = model.id,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = model.updateBy,
+                            approveBy = model.approveBy,
+                            approveDate = model.approveDate
+                        };
+                    }
+                    else
+                    {
+                        updatedObject = new tbSpec
+                        {
+                            id = model.id,
+                            updateDate = DateTime.UtcNow,
+                            updateBy = model.updateBy
+                        };
+                    }
+                  
+                    updated = _specRepository.Update(updatedObject,stautsid, conn, transaction);
 
                     transaction.Commit();
                 }
@@ -136,6 +153,16 @@ namespace BusinessLogicMBDesign.Spec
                 conn.Open();
 
                 return _specRepository.GetListQuotationNumbers(conn);
+            }
+        }
+
+        public List<listQuotationNumber> GetListQuotationNumbersPlanks()
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _specRepository.GetListQuotationNumbersPlanks(conn);
             }
         }
 

@@ -13,18 +13,23 @@ namespace DataLayerMBDesign
             return conn.Insert(obj, transaction: trans);
         }
 
-        public int Update(tbSpec obj, SqlConnection conn, SqlTransaction? trans = null)
+        public int Update(tbSpec obj,int status, SqlConnection conn, SqlTransaction? trans = null)
         {
             StringBuilder queryString = new StringBuilder();
-            queryString.Append(" update tbPlanks");
-            queryString.Append(" set orderid= @orderid,");
+            queryString.Append(" update tbSpec");
+            queryString.Append(" SET");
             queryString.Append(" updateDate = @updateDate,");
             queryString.Append(" updateBy = @updateBy");
+            if (status == 4)
+            {
+                queryString.Append(" ,approveDate = @approveDate,");
+                queryString.Append(" approveBy = @approveBy");
+            }
             //queryString.Append(" status = @status");
             queryString.Append(" where isDeleted = 0 and id = @id");
             queryString.Append(" select @@ROWCOUNT;");
 
-            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.orderid, obj.updateDate, obj.updateBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.updateDate, obj.updateBy,obj.approveDate,obj.approveBy, obj.id }, transaction: trans);
         }
 
         public List<specListModel> GetAll(string quatationcode, string empName, int checkListstatus, string installDate, SqlConnection conn, SqlTransaction? trans = null)
@@ -48,19 +53,20 @@ namespace DataLayerMBDesign
             {
                 condition += string.Format(" and  FORMAT(co.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
-            string queryString = string.Format(@"select top 1 s.id,s.orderid,co.quotationNumber
+            string queryString = string.Format(@"select s.id,s.orderid,co.quotationNumber
                                                ,co.installDate
                                                ,(select empFirstName +' '+empLastName from tbEmpData where id = d.ownerEmpId) as FullName
                                                ,sd.commitDate
                                                ,sd.checkliststatus as statusid
                                                ,(select checklistname from tbMasterCheckListSpec where id = sd.checkliststatus) as checklistStatus
                                                ,case when s.updateDate is not null then s.updateDate else s.createDate end lastUpdateDate
-                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateDate and isDeleted = 0) end lastUpdateBy
+                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateBy and isDeleted = 0) end lastUpdateBy
                                    from tbSpec s
                                    inner join tbSpecListDetail sd on s.id = sd.specid
                                    inner join tbCustOrder co on s.orderid = co.orderid
-                                   inner join tbDesign3D d on co.orderId = d.orderId
-                                   where d.checklistStatus = N'แบบ 3D Final' {0}
+                        inner join tbDesign3D d on co.orderId = d.orderId
+                    
+                                   where d.checklistStatusId =14 and sd.checkliststatus = (select max(checkliststatus) from tbSpecListDetail where specid = s.id and transactionActive = 'A' and transactionStatus = 'A') {0}
                                    order by sd.createDate desc", condition);
 
             return conn.Query<specListModel>(queryString.ToString(), new { }, transaction: trans).ToList();
@@ -79,8 +85,22 @@ namespace DataLayerMBDesign
         public List<listQuotationNumber> GetListQuotationNumbers(SqlConnection conn, SqlTransaction? trans = null)
         {
             string queryString = @"select co.orderId,co.quotationNumber from tbCustOrder co
-                                   inner join tbDesign3D d on co.orderId = d.orderId
-                                   where co.status = 1 and d.checklistStatus = N'แบบ 3D Final' and d.orderId not in (select orderId from tbSpec where status = 1)
+                                    inner join tbDesign3D d on co.orderId = d.orderId
+                                   where co.status = 1 and d.checklistStatusId =14  and d.orderId not in (select orderId from tbSpec where status = 1)
+                                  ";
+
+            return conn.Query<listQuotationNumber>(queryString, transaction: trans).ToList();
+        }
+
+        public List<listQuotationNumber> GetListQuotationNumbersPlanks(SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select co.orderId,co.quotationNumber from tbCustOrder co
+                                    inner join tbDesign3D d on co.orderId = d.orderId
+                                    inner join tbSpec s on s.orderid = co.orderId
+									inner join tbSpecListDetail sd on s.id = sd.specid
+                                   where co.status = 1 and d.checklistStatusId =14  and d.orderId not in (select orderid from tbPlanks where status = 1)
+                                   and sd.checkliststatus = 5
+								   AND sd.transactionActive='A' and sd.transactionStatus = 'A'
                                   ";
 
             return conn.Query<listQuotationNumber>(queryString, transaction: trans).ToList();
@@ -102,12 +122,13 @@ namespace DataLayerMBDesign
                                                ,sd.checkliststatus as statusid
                                                ,(select checklistname from tbMasterCheckListSpec where id = sd.checkliststatus) as checklistStatus
                                                ,case when s.updateDate is not null then s.updateDate else s.createDate end lastUpdateDate
-                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateDate and isDeleted = 0) end lastUpdateBy
+                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateBy and isDeleted = 0) end lastUpdateBy
                                    from tbSpec s
                                    inner join tbSpecListDetail sd on s.id = sd.specid
                                    inner join tbCustOrder co on s.orderid = co.orderid
                                    inner join tbDesign3D d on co.orderId = d.orderId
-                                   where d.checklistStatus = N'แบบ 3D Final' {0}
+            
+                                   where d.checklistStatusId =14
                                    order by sd.createDate desc", condition);
 
             return conn.QueryFirstOrDefault<specListModel>(queryString.ToString(), new { id }, transaction: trans);
@@ -129,12 +150,15 @@ namespace DataLayerMBDesign
                                                ,sd.checkliststatus as statusid
                                                ,(select checklistname from tbMasterCheckListSpec where id = sd.checkliststatus) as checklistStatus
                                                ,case when s.updateDate is not null then s.updateDate else s.createDate end lastUpdateDate
-                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateDate and isDeleted = 0) end lastUpdateBy
+                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateBy and isDeleted = 0) end lastUpdateBy
+                                               ,v.videourl
+,s.approveDate
                                    from tbSpec s
                                    inner join tbSpecListDetail sd on s.id = sd.specid
                                    inner join tbCustOrder co on s.orderid = co.orderid
                                    inner join tbDesign3D d on co.orderId = d.orderId
-                                   where d.checklistStatus = N'แบบ 3D Final' {0}
+                                   left join tbSpecVideoURL v on sd.id = v.specdetailid
+                                   where d.checklistStatusId =14 {0}
                                    order by sd.createDate desc", condition);
 
             return conn.Query<specListModel>(queryString.ToString(), new { id }, transaction: trans).ToList();
@@ -156,9 +180,8 @@ namespace DataLayerMBDesign
                                                ,case when co.updateDate is not null then co.updateDate else co.createDate end lastUpdateDate
                                                ,case when co.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = co.updateBy and isDeleted = 0),'') end lastUpdateBy
                                    from tbCustOrder co
-                                   inner join tbDesign3D d on co.orderId = d.orderId
-                                   
-                                   where d.checklistStatus = N'แบบ 3D Final' {0}
+                                  inner join tbDesign3D d on co.orderId = d.orderId
+                                   where d.checklistStatusId =14 {0}
                                    order by co.createDate desc", condition);
 
             return conn.QueryFirstOrDefault<specNewListModel>(queryString.ToString(), new { id }, transaction: trans);
@@ -169,7 +192,7 @@ namespace DataLayerMBDesign
             string queryString = @"SELECT * FROM
                                             tbMasterCheckListSpec
                                    WHERE status = 1 order by id asc";
-           
+
             return conn.Query<tbMasterCheckListSpec>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
 

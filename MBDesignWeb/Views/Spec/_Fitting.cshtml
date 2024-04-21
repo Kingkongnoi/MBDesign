@@ -1,0 +1,580 @@
+﻿<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .style-details, .type-details, .item-details {
+        cursor: pointer !important;
+    }
+
+    .hidecol {
+        display: none;
+    }
+
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr, #tb-group-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
+
+
+    .no-display {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+
+    u.dotted {
+        border-bottom: 2px dashed #999;
+        text-decoration: none;
+    }
+</style>
+<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-fitting">
+                    <div class="row col-sm-12">
+                        <div class="col-sm-2">
+                            <label>เลขที่ใบจัดฟิตติ้ง</label>
+                            <input type="text" class="form-control" id="input-search-fitting-code" placeholder="">
+                        </div>
+                        <div class="col-sm-2">
+                            <label>เลขใบเสนอราคา</label>
+                            <input type="text" class="form-control" id="input-search-quotation-code" placeholder="">
+                        </div>
+                        @* <div class="col-sm-2">
+                        <label>ชื่อแบรนด์สินค้า</label>
+                        <input type="text" class="form-control" id="input-search-brand-name" placeholder="">
+                        </div> *@
+                       @*  <div class="col-sm-2">
+                            <label>สถานะ</label>
+                            <select class="form-select" id="select-search-fitting-status">
+                                <option></option>
+                            </select>
+                        </div> *@
+
+                        <div class="col-sm-2 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-fitting">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-fitting">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-sm-2 mt-2">
+                <button type="button" class="btn-add-custom btn-add-fitting"><img src="~/images/sale.png" width="25px" /> เพิ่มรายการจัดฟิตติ้ง</button>
+            </div>
+
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-fitting-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th><span>id</span></th>
+                            <th><span>เลขที่ใบจัดฟิตติ้ง</span></th>
+                            <th><span>เลขที่ใบเสนอราคา</span></th>
+                            <th><span>ชื่อ - นามสกุล</span></th>
+                            <th><span>เบอร์โทรศัพท์</span></th>
+                           @*  <th><span>สถานะ</span></th> *@
+                            <th><span>ผู้สร้าง</span></th>
+                            <th id="edit-action"><span>แก้ไข</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@*modal for create Brand*@
+<div id="modal-createFitting" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createFitting">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เลขที่ใบจัดฟิตติ้ง<span class="text-danger">*</span></label>
+                                    <input id="input-fitting-no" name="input-fitting-no" class="form-control" type="text" disabled />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เลขที่ใบเสนอราคา<span class="text-danger">*</span></label>
+                                    <select class="form-select" id="select-fitting-quotation-no" data-selected="" name="select-fitting-quotation-no"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2" style="text-align:center;padding-top: 3%;padding-bottom:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;">อุปกรณ์ติดตั้ง บ้านคุณ</label><u class="dotted"><label id="lblfullname" class="control-label"></label></u></h5>
+                                    @* <input id="input-color-code" name="input-color-code" class="form-control" type="text" /> *@
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เกือกม้าพร้อมแกน จำนวน(ชุด)</label>
+                                    <input id="input-minifixset-amount" name="input-minifixset-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                             <!------------------------- บานพับ ------------------------------->
+                                <div class="col-sm-6 mb-2" style="padding-top:1%;">
+                                    <label class="control-label">เดือยไม้ จำนวน(ตัว)</label>
+                                    <input id="input-woodendowel-amount" name="input-woodendowel-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                              
+                                <div class="col-sm-12 mb-2">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>บานพับ</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บานพับถ้วย หันขอบ(คู่)</label>
+                                    <input id="input-hinge1-amount" name="input-hinge1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บานพับถ้วย กลาง(คู่)</label>
+                                    <input id="input-hinge2-amount" name="input-hinge2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บานพับถ้วย ในขอบ(คู่)</label>
+                                    <input id="input-hinge3-amount" name="input-hinge3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">บานพับอื่น ระบุ</label>
+                                    <input id="input-hinge4-desc" name="input-hinge4-desc" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(คู่)</label>
+                                    <input id="input-hinge4-amount" name="input-hinge4-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- บานพับ ------------------------------->
+
+                                <!------------------------- รางลิ้นชัก ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>รางลิ้นชัก</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รางลิ้นชัก ขนาด 300 mm. Softclose จำนวน(คู่)</label>
+                                    <input id="input-drawerrail1-amount" name="input-drawerrail1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">กดกระเด้ง(อัน)</label>
+                                    <input id="input-bouncepress-amount" name="input-bouncepress-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รางลิ้นชัก ขนาด 450 mm. Softclose จำนวน(คู่)</label>
+                                    <input id="input-drawerrail2-amount" name="input-drawerrail2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">รางลิ้นชัก ขนาดอื่น ระบุ</label>
+                                    <input id="input-drawerrailsize-desc" name="input-drawerrailsize-desc" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(คู่)</label>
+                                    <input id="input-drawerrail3-amount" name="input-drawerrail3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- รางลิ้นชัก ------------------------------->
+
+                                <!------------------------- อุปกรณ์บานเลื่อน ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>อุปกรณ์บานเลื่อน</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชุดล้อบานเลื่อน (ตู้เสื้อผ้า) จำนวน(คู่)</label>
+                                    <input id="input-slidedoor1-amount" name="input-slidedoor1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">รางบานเลื่อน (ตู้เสื้อผ้า) ยาว(เมตร)</label>
+                                    <input id="input-slidedoor1-size" name="input-slidedoor1-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-slidedoorrail1-amount" name="input-slidedoorrail1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชุดล้อบานเลื่อนแบบแขวน จำนวน(กล่อง)</label>
+                                    <input id="input-slidedoor2-amount" name="input-slidedoor2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">ชุดล้อบานเลื่อนแบบแขวน ยาว(เมตร)</label>
+                                    <input id="input-slidedoor2-size" name="input-slidedoor2-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-slidedoorrail2-amount" name="input-slidedoorrail2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชุดล้อบานเลื่อน Softclose จำนวน(กล่อง)</label>
+                                    <input id="input-slidedoor3-amount" name="input-slidedoor3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">ชุดล้อบานเลื่อน Softclose ยาว(เมตร)</label>
+                                    <input id="input-slidedoor3-size" name="input-slidedoor3-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-slidedoorrail3-amount" name="input-slidedoorrail3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- อุปกรณ์บานเลื่อน ------------------------------->
+
+                                <!------------------------- อุปกรณ์ไฟฟ้า ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>อุปกรณ์ไฟฟ้า</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ไฟริบบิ้น Led (สีส้ม) Warmwhite จำนวน(เส้น)</label>
+                                    <input id="input-elec1-amount" name="input-elec1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ไฟริบบิ้น Led (สีขาว) Daylight จำนวน(เส้น)</label>
+                                    <input id="input-elec2-amount" name="input-elec2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">ไฟตาแมวสี ระบุ</label>
+                                    <input id="input-elec3-color" name="input-elec1-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(ดวง)</label>
+                                    <input id="input-elec3-amount" name="input-elec3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">หม้อแปลงไฟ 5 แอมป์ จำนวน(กล่อง)</label>
+                                    <input id="input-elec4-amount" name="input-elec4-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รางไฟเข้ามุม 45 องศายาว 2 เมตร จำนวน(เส้น)</label>
+                                    <input id="input-elec5-amount" name="input-elec5-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รางไฟตรงแบบฝัง ยาว 2 เมตร จำนวน(เส้น)</label>
+                                    <input id="input-elec6-amount" name="input-elec6-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สวิตช์แมนนวล(สีดำ) จำนวน(ตัว)</label>
+                                    <input id="input-elec7-amount" name="input-elec7-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สวิตช์แมนนวล(สีขาว) จำนวน(ตัว)</label>
+                                    <input id="input-elec8-amount" name="input-elec8-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สวิตช์ออโต้(กันขโมย) จำนวน(ตัว)</label>
+                                    <input id="input-elec9-amount" name="input-elec9-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สายลำโพงดำแดง จำนวน(ตัว)</label>
+                                    <input id="input-elec10-amount" name="input-elec10-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สายไฟ เบอร์ 2.5 จำนวน(เมตร)</label>
+                                    <input id="input-elec11-amount" name="input-elec11-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สายไฟ เบอร์ 4(ห้องครัว) จำนวน(เมตร)</label>
+                                    <input id="input-elec12-amount" name="input-elec12-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชุดปลั๊กไฟพร้อมฝา ตราช้าง จำนวน(ชุด)</label>
+                                    <input id="input-elec13-amount" name="input-elec13-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ชุดสวิตช์ไฟพร้อมฝา ตราช้าง จำนวน(ชุด)</label>
+                                    <input id="input-elec14-amount" name="input-elec14-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- อุปกรณ์ไฟฟ้า ------------------------------->
+
+                                <!------------------------- เอจและลามิเนต ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>เอจและลามิเนต</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เอจปิดขอบ สี 1</label>
+                                    <input id="input-edge1-color" name="input-edge1-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เอจปิดขอบ สี 2</label>
+                                    <input id="input-edge2-color" name="input-edge2-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เอจปิดขอบ สี 3</label>
+                                    <input id="input-edge3-color" name="input-edge3-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บุ๋มๆ ปิดเกือกม้า สี 1</label>
+                                    <input id="input-edge4-color" name="input-edge4-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บุ๋มๆ ปิดเกือกม้า สี 2</label>
+                                    <input id="input-edge5-color" name="input-edge5-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">บุ๋มๆ ปิดเกือกม้า สี 3</label>
+                                    <input id="input-edge6-color" name="input-edge6-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ลามิเนต สี 1</label>
+                                    <input id="input-edge7-color" name="input-edge7-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ลามิเนต สี 2</label>
+                                    <input id="input-edge8-color" name="input-edge8-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ลามิเนต สี 3</label>
+                                    <input id="input-edge9-color" name="input-edge9-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">กาวยาง จำนวน(กระป๋อง)</label>
+                                    <input id="input-edge10-amount" name="input-edge10-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- เอจและลามิเนต ------------------------------->
+
+                                <!------------------------- อื่นๆ ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>เอจและลามิเนต</u></label></h5>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">มือจับ แบบปุ่ม สี</label>
+                                    <input id="input-other1-color" name="input-other1-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(อัน)</label>
+                                    <input id="input-other1-amount" name="input-other1-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">มือจับ แบบก้าน สี</label>
+                                    <input id="input-other2-color" name="input-other2-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(อัน)</label>
+                                    <input id="input-other2-amount" name="input-other2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">ราวรูปไข่ ขนาด(เมตร)</label>
+                                    <input id="input-other3-size" name="input-other3-size" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-other3-amount" name="input-other3-amount" class="form-control" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">หูรับราว จำนวน(อัน)</label>
+                                    <input id="input-other4-amount" name="input-other4-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ปุ่มรับชั้น จำนวน(อัน)</label>
+                                    <input id="input-other5-amount" name="input-other5-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ขาตู้ จำนวน(อัน)</label>
+                                    <input id="input-other6-amount" name="input-other6-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ตัวแขวนตู้ลอย จำนวน(อัน)</label>
+                                    <input id="input-other7-amount" name="input-other7-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ตัวกดกระเด้ง จำนวน(อัน)</label>
+                                    <input id="input-other8-amount" name="input-other8-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ทินเนอร์ จำนวน(ปิ๊ป)</label>
+                                    <input id="input-other9-amount" name="input-other9-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เศษผ้า จำนวน(ถุง)</label>
+                                    <input id="input-other10-amount" name="input-other10-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- อื่นๆ ------------------------------->
+
+                                <!------------------------- เฟรมและคิ้ว ------------------------------->
+                                <div class="col-sm-12 mb-2" style="padding-top:1%;">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>เฟรมและคิ้ว</u></label></h5>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">เฟรม สี</label>
+                                    <input id="input-fandc1-color" name="input-fandc1-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(อัน)</label>
+                                    <input id="input-fandc1-amount" name="input-fandc1-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ยางรองกระจก จำนวน(เส้น)</label>
+                                    <input id="input-fandc2-amount" name="input-fandc2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">คิ้วตัวที สี</label>
+                                    <input id="input-fandc3-color" name="input-fandc3-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">ขนาด</label>
+                                    <input id="input-fandc3-size" name="input-fandc3-size" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc3-amount" name="input-fandc3-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">คิ้วตัวยู สี</label>
+                                    <input id="input-fandc4-color" name="input-fandc4-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">ขนาด</label>
+                                    <input id="input-fandc4-size" name="input-fandc4-size" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc4-amount" name="input-fandc4-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ไม้รองคิ้ว ขนาด</label>
+                                    <input id="input-fandc5-size" name="input-fandc5-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc5-amount" name="input-fandc5-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">คิ้วตัวยูสแตนเลส สี</label>
+                                    <input id="input-fandc6-color" name="input-fandc6-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">ขนาด</label>
+                                    <input id="input-fandc6-size" name="input-fandc6-size" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc6-color" name="input-fandc6-color" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">คิ้วไม้ อกไก่ เบอร์</label>
+                                    <input id="input-fandc7-number" name="input-fandc7-number" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">ขนาด</label>
+                                    <input id="input-fandc7-size" name="input-fandc7-size" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc7-amount" name="input-fandc7-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">คิ้วไม้ อกไก่ เบอร์</label>
+                                    <input id="input-fandc8-number" name="input-fandc8-number" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">ขนาด</label>
+                                    <input id="input-fandc8-size" name="input-fandc8-size" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-4 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc8-amount" name="input-fandc8-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">คิ้วไม้ ครึ่งวงกลม เบอร์</label>
+                                    <input id="input-fandc9-number" name="input-fandc9-number" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(เส้น)</label>
+                                    <input id="input-fandc9-amount" name="input-fandc9-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">สีพ่น สี</label>
+                                    <input id="input-fandc10-color" name="input-fandc10-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(ถัง)</label>
+                                    <input id="input-fandc10-amount" name="input-fandc10-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">สีพ่น สี</label>
+                                    <input id="input-fandc11-color" name="input-fandc11-color" class="form-control" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">จำนวน(ถัง)</label>
+                                    <input id="input-fandc11-amount" name="input-fandc11-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">สีรองพื้น จำนวน(ถัง)</label>
+                                    <input id="input-fandc12-amount" name="input-fandc12-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <!------------------------- เฟรมและคิ้ว ------------------------------->
+                     @*            <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-planks-status" data-selected="" name="select-planks-status"></select>
+                                </div> *@
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-fitting"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for view Brand*@
+<div id="modal-viewFitting" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center">ดูข้อมูลหมวดหมู่หลัก</h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-createPlanks">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เลขที่ใบเสนอราคา<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-planks-id" name="input-planks-id" />
+                                    <select class="form-select" id="select-quotation-no" data-selected="" name="select-quotation-no"></select>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">รหัสสี<span class="text-danger">*</span></label>
+                                    <input id="input-color-code" name="input-color-code" class="form-select" type="text" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">จำนวนความหนา 18 mm</label>
+                                    <input id="input-18mm-amount" name="input-18mm-amount" type="number" class="form-select" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">จำนวนความหนา 9 mm</label>
+                                    <input id="input-9mm-amount" name="input-9mm-amount" type="number" class="form-select" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">สถานะ</label>
+                                    <select class="form-select" id="select-planks-status" data-selected="" name="select-planks-status"></select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ปิดหน้าจอ</button>
+            </div>
+        </div>
+    </div>
+</div>

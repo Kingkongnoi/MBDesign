@@ -34,4 +34,14 @@ namespace EntitiesMBDesign
 
         public string loginCode { get; set; } = string.Empty;
     }
+
+    public class specListDetailUpdateItemModel : tbSpecListDetail
+    {
+        public string vieoUrl { get; set; } = string.Empty;
+        public string listStatus { get; set; } = string.Empty;
+        public string createByName { get; set; } = string.Empty;
+        public string updateByName { get; set; } = string.Empty;
+       public string approveDate { get; set; }= string.Empty;
+        public string loginCode { get; set; } = string.Empty;
+    }
 }

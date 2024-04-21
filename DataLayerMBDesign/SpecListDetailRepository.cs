@@ -15,6 +15,10 @@ namespace DataLayerMBDesign
         {
             return conn.Insert(obj, transaction: trans);
         }
+        public int? AddVideo(tbSpecVideoURL obj, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            return conn.Insert(obj, transaction: trans);
+        }
         public tbSpecListDetail GetFirstByID(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             StringBuilder queryString = new StringBuilder();
@@ -24,6 +28,16 @@ namespace DataLayerMBDesign
 
 
             return conn.QueryFirstOrDefault<tbSpecListDetail>(queryString.ToString(), new { id }, transaction: trans);
+        }
+
+        public tbSpecListDetail GetSpecBySpecIDStatus(int id, int statusid, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = string.Format(@" SELECT TOP 1 *
+                                          FROM tbSpecListDetail
+                                          WHERE transactionActive = 'A' AND transactionStatus = 'A'
+                                          AND specid = {0} AND checkliststatus = {1}
+                                        ",id,statusid);
+            return conn.QueryFirstOrDefault<tbSpecListDetail>(queryString.ToString(), new { id, statusid }, transaction: trans);
         }
         //public int Update(tbSpecListDetail obj, SqlConnection conn, SqlTransaction? trans = null)
         //{

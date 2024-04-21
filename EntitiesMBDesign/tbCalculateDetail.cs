@@ -50,6 +50,7 @@ namespace EntitiesMBDesign
     {
         public string calculatecode { get; set; } = string.Empty;
         public string userlogin { get; set; } = string.Empty;
+        public int orderid { get; set; }
         public List<SaveCalculateDetail> listdetail { get; set; } = new List<SaveCalculateDetail>();
     }
     public class SaveCalculateDetail

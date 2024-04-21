@@ -49,6 +49,17 @@ namespace BusinessLogicMBDesign.Spec
             }
         }
 
+        public int GetSpecIDByOrderID(int orderID)
+        {
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _planksRepository.getSpecID(orderID,conn);
+            }
+        }
+
         public int? AddPlanksItem(PlanksItemModel model)
         {
             int? added = 0;

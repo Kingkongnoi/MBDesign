@@ -59,7 +59,7 @@ namespace DataLayerMBDesign
             queryString.Append(" ,a.createBy");
             queryString.Append(" ,a.updateBy");
             queryString.Append(" FROM tbPlanks a");
-            queryString.Append(" INNER JOIN tbCustOrder b on a.orderid = b.id");
+            queryString.Append(" INNER JOIN tbCustOrder b on a.orderid = b.orderId");
             queryString.Append(" where a.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
             queryString.Append(" order by a.id desc");
@@ -84,9 +84,11 @@ namespace DataLayerMBDesign
         public tbPlanks GetFirstByID(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             StringBuilder queryString = new StringBuilder();
-            queryString.Append(" SELECT TOP 1 *");
-            queryString.Append(" FROM tbPlanks");
-            queryString.AppendFormat(" where isDeleted = 0 and id = {0}", id);
+            queryString.Append(" SELECT TOP 1 a.*,b.quotationNumber");
+            queryString.Append(" FROM tbPlanks a");
+            queryString.Append(" INNER JOIN tbCustOrder b on a.orderid = b.orderid");
+       
+            queryString.AppendFormat(" where a.isDeleted = 0 and a.id = {0}", id);
 
 
             return conn.QueryFirstOrDefault<tbPlanks>(queryString.ToString(), new { id }, transaction: trans);
@@ -115,6 +117,16 @@ namespace DataLayerMBDesign
             //queryString.AppendFormat(" where isDeleted = 0 and id = {0}");
 
             return conn.QueryFirstOrDefault<List<tbCustOrder>>(queryString.ToString(), transaction: trans);
+        }
+
+        public int getSpecID(int orderID, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = string.Format(@"
+                                select s.id from tbSpec s
+                                inner join tbCustOrder co on s.orderid = co.orderid
+                                where s.status =1 and co.orderid = {0}",orderID);
+
+            return conn.QueryFirstOrDefault<int>(queryString,new { orderID}, transaction: trans);
         }
     }
 }

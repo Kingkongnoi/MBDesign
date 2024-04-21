@@ -81,7 +81,7 @@
                             <th><span>orderid</span></th>
                             <th><span>เลขที่ใบเสนอราคา</span></th>
                             <th><span>วันที่พร้อมติดตั้ง</span></th>
-                            <th><span>ผู้รับผิดชอบออกแบบ 3D</span></th>
+                            <th><span>ผู้รับผิดชอบ</span></th>
                             <th><span>วันกำหนดส่งงาน</span></th>
                             <th><span>สถานะ Checklist</span></th>
                             <th><span>วันที่แก้ไขล่าสุด</span></th>
@@ -122,7 +122,7 @@
                             </div>
 
                             <div class="row col-sm-12">
-                                <label class="col-sm-4 col-form-label text-end">ผู้รับผิดชอบออกแบบ Spec<span class="text-danger">*</span></label>
+                                <label class="col-sm-4 col-form-label text-end" id="lbldesignname">ผู้รับผิดชอบ<span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
                                     <select class="form-select" id="select-edit-spec-designName"></select>
                                 </div>
@@ -139,7 +139,7 @@
                             </div>
 
                             <div class="row col-sm-12">
-                                <label class="col-sm-4 col-form-label text-end">วันที่กำหนดส่งงาน</label>
+                                <label class="col-sm-4 col-form-label text-end" id="lblcommitdate">วันที่กำหนดส่งงาน</label>
                                 <div class="col-sm-8">
                                     <input class="form-control" type="date" id="input-edit-spec-due-date" name="input-edit-spec-due-date" />
                                 </div>
@@ -147,7 +147,7 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <div class="row col-sm-12 mb-3">
+                            <div class="row col-sm-12 mb-3" style="margin-top:2%!important;">
                                 <section>
                                     <div class="container">
                                         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -273,7 +273,7 @@
                 </form>
             </div>
             <div class="modal-footer justify-content-center">
-                <button type="button" class="btn btn-primary btn-modal-save-spec"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-primary btn-modal-save-spec" id="btnsavespec"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
                 <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
             </div>
         </div>
@@ -328,7 +328,7 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <div class="row col-sm-12 mb-3">
+                            <div class="row col-sm-12 mb-3" style="margin-top:2%!important;">
                                 <section>
                                     <div class="container">
                                         <div class="row d-flex justify-content-center align-items-center h-100">

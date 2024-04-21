@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,6 +42,10 @@ namespace EntitiesMBDesign
         public string checklistStatus { get; set; } = string.Empty;
         public string lastUpdateBy { get; set; } = string.Empty;
         public DateTime lastUpdateDate { get; set; }
+        public string videourl { get; set; } = string.Empty;
+
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime approveDate { get; set; }
 
     }
 

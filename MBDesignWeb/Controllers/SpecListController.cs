@@ -110,6 +110,13 @@ namespace MBDesignWeb.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetQuatationListPlanks()
+        {
+            var data = _specService.GetListQuotationNumbersPlanks();
+            return new JsonResult(data);
+        }
+
+        [HttpGet]
         public JsonResult GetMasterSpecList()
         {
             var data = _specService.getMasterCheckList();
@@ -248,33 +255,77 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(returnData);
         }
 
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public JsonResult UpdateItem([FromBody] PlanksItemModel obj)
-        //{
-        //    var result = true;
-        //    var resultStatus = "success";
-        //    var data = _planksService.UpdatePlanksItem(obj);
+        [AllowAnonymous]
+        [HttpPost]
+        public JsonResult UpdateItem([FromBody] specListDetailUpdateItemModel obj)
+        {
+            var result = true;
+            var resultStatus = "success";
+            var data = _specListDetailService.UpdateSpecList(obj);
 
-        //    if (data == -1)
-        //    {
-        //        result = false;
-        //        resultStatus = "duplicate";
-        //    }
-        //    else if (data == 0)
-        //    {
-        //        result = false;
-        //        resultStatus = "error";
-        //    }
+            if (data == -1)
+            {
+                result = false;
+                resultStatus = "duplicate";
+            }
+            else if (data == 0)
+            {
+                result = false;
+                resultStatus = "error";
+            }
+            if (result != false)
+            {
+                int dataID = data.HasValue ? data.Value : 0;
+                if (dataID > 0)
+                {
+                    specItemModel _saveSpec = new specItemModel();
+                    int[] liststatus = Array.ConvertAll(obj.listStatus.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries),s=> int.Parse(s));
+                    int maxStatus = liststatus.Max();
+                    if (maxStatus == 4)
+                    {
+                        _saveSpec = new specItemModel
+                        {
+                            id = obj.id,
+                            updateDate = DateTime.Now,
+                            updateBy = obj.loginCode,
+                            approveDate = Convert.ToDateTime(obj.approveDate),
+                            approveBy = obj.empid
+                        };
+                    }
+                    else
+                    {
+                        _saveSpec = new specItemModel
+                        {
+                            id = obj.id,
+                            updateDate = DateTime.Now,
+                            updateBy = obj.loginCode,
+                        };
+                    }
+                  
 
-        //    var returnData = new
-        //    {
-        //        result,
-        //        resultStatus
-        //    };
+                    data = _specService.UpdateSpecItem(_saveSpec, maxStatus);
+                    if (data == -1)
+                    {
+                        result = false;
+                        resultStatus = "duplicate";
+                    }
+                    else if (data == 0)
+                    {
+                        result = false;
+                        resultStatus = "error";
+                    }
+                }
 
-        //    return new JsonResult(returnData);
-        //}
+            }
+
+            var returnData = new
+            {
+                result,
+                resultStatus
+            };
+
+            return new JsonResult(returnData);
+        }
 
         #endregion Post
     }

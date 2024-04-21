@@ -1,11 +1,13 @@
 ﻿using AspNetCore.Reporting;
 using BusinessLogicMBDesign.Calculate;
 using BusinessLogicMBDesign.Master;
+using BusinessLogicMBDesign.Spec;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
+using NPOI.POIFS.Crypt.Dsig;
 using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
@@ -27,6 +29,7 @@ namespace MBDesignWeb.Controllers
 
         private readonly CalculateMasterService _calculateMasterService;
         private readonly CalculateDetailService _calculateDetailService;
+        private readonly SpecListDetailService _specListDetailService;
         private readonly IConfiguration _configuration;
 
         public CalculateController(IConfiguration configuration)
@@ -34,6 +37,7 @@ namespace MBDesignWeb.Controllers
             _configuration = configuration;
             _calculateMasterService = new CalculateMasterService(_configuration);
             _calculateDetailService = new CalculateDetailService(_configuration);
+            _specListDetailService = new SpecListDetailService(_configuration);
         }
 
         #region GET
@@ -109,6 +113,13 @@ namespace MBDesignWeb.Controllers
             });
             return new JsonResult(data);
         }
+
+        [HttpGet]
+        public JsonResult GetQuatationListCal(string type)
+        {
+            var data = _calculateMasterService.GetListQuotationNumbersCal(type);
+            return new JsonResult(data);
+        }
         #endregion
 
         #region Post
@@ -120,6 +131,7 @@ namespace MBDesignWeb.Controllers
             var resultStatus = "success";
             CalculateMasterAddModel _master = new CalculateMasterAddModel
             {
+                orderid = obj.orderid,
                 calculatecode = obj.calculatecode,
                 calculatetype = "F",
                 loginCode = obj.userlogin
@@ -179,6 +191,41 @@ namespace MBDesignWeb.Controllers
 
             }
 
+            if (result != false)
+            {
+                if (obj.orderid > 0)
+                {
+                    int specid = _calculateMasterService.GetSpecIDByOrderID(obj.orderid);
+                    if (specid > 0)
+                    {
+                        specListDetailItemModel _dataDetail = new specListDetailItemModel()
+                        {
+                            specid = specid,
+                            empid = obj.userlogin,
+                            commitDate = DateTime.Now,
+                            checkliststatus = 9,
+                            loginCode = obj.userlogin,
+                            transactionStatus = "A",
+                            transactionActive = "A",
+                            isApprove = true
+
+
+                        };
+                        var data = _specListDetailService.AddSpecListDetailItem(_dataDetail);
+                        if (data == -1)
+                        {
+                            result = false;
+                            resultStatus = "duplicate";
+                        }
+                        else if (data == 0)
+                        {
+                            result = false;
+                            resultStatus = "error";
+                        }
+                    }
+                }
+            }
+
             var returnData = new
             {
                 result,
@@ -196,6 +243,7 @@ namespace MBDesignWeb.Controllers
             var resultStatus = "success";
             CalculateMasterAddModel _master = new CalculateMasterAddModel
             {
+                orderid = obj.orderid,
                 calculatecode = obj.calculatecode,
                 calculatetype = "C",
                 loginCode = obj.userlogin
@@ -252,6 +300,41 @@ namespace MBDesignWeb.Controllers
                     }
                 }
 
+            }
+
+            if (result != false)
+            {
+                if (obj.orderid > 0)
+                {
+                    int specid = _calculateMasterService.GetSpecIDByOrderID(obj.orderid);
+                    if (specid > 0)
+                    {
+                        specListDetailItemModel _dataDetail = new specListDetailItemModel()
+                        {
+                            specid = specid,
+                            empid = obj.userlogin,
+                            commitDate = DateTime.Now,
+                            checkliststatus = 8,
+                            loginCode = obj.userlogin,
+                            transactionStatus = "A",
+                            transactionActive = "A",
+                            isApprove = true
+
+
+                        };
+                        var data = _specListDetailService.AddSpecListDetailItem(_dataDetail);
+                        if (data == -1)
+                        {
+                            result = false;
+                            resultStatus = "duplicate";
+                        }
+                        else if (data == 0)
+                        {
+                            result = false;
+                            resultStatus = "error";
+                        }
+                    }
+                }
             }
 
             var returnData = new

@@ -30,30 +30,30 @@
 </style>
 
 <script>
-    $(function() {
+    $(function () {
         let imageUrl = localStorage.getItem('imageUrl');
         let path = (imageUrl == "") ? ".." : imageUrl;
 
-        $('#spnMaster').addClass('mnu-active');
-        $('#imgMaster').attr('src', `${path}/images/data-processing_2.png`);
+        $('#spnSpec').addClass('mnu-active');
 
+
+        $('#spnStore').removeClass('mnu-active');
         $('#spnSale').removeClass('mnu-active');
-        $('#spn3D').removeClass('mnu-active');
+        $('#spnMaster').removeClass('mnu-active');
         $('#spnForeman').removeClass('mnu-active');
         $('#spnAccounting').removeClass('mnu-active');
         $('#spnHR').removeClass('mnu-active');
-        $('#spnStore').removeClass('mnu-active');
+
+        $('#spn3D').removeClass('mnu-active');
 
         $('#imgSale').attr('src', `${path}/images/sales.png`);
-        $('#img3D').attr('src', `${path}/images/graphic-design.png`);
+        $('#imgMaster').attr('src', `${path}/images/data-processing.png`);
         $('#imgForeman').attr('src', `${path}/images/foreman.png`);
         $('#imgAccounting').attr('src', `${path}/images/accounting.png`);
         $('#imgHR').attr('src', `${path}/images/hr-manager.png`);
+        $('#imgSpec').attr('src', `${path}/images/spec_2.png`);
+        $('#img3D').attr('src', `${path}/images/graphic-design.png`);
         $('#imgStore').attr('src', `${path}/images/stores.png`);
-
-        $("#nav-master").hover(function() {
-            console.log('master');
-        });
     });
 </script>
 
@@ -68,15 +68,23 @@
                 <a class="nav-link active" data-bs-toggle="pill" href="#nav-spec-queue-tab">การออกแบบ Spec</a>
             </li>
             <li class="nav-item" id="nav-planks">
-                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-planks-tab">รับเข้า</a>
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-planks-tab">ใบสั่งไม้</a>
             </li>
+            <li class="nav-item" id="nav-fitting">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-fitting-tab">ใบจัดฟิตติ้ง</a>
+            </li>
+            <li class="nav-item" id="nav-calculate">
+                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-calculate-tab">ตั้งค่าสูตรคำนวณ</a>
+            </li>
+          
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane active" id="nav-spec-queue-tab">@Html.Partial("_SpecList.cshtml")</div>
-
             <div class="tab-pane fade" id="nav-spec-planks-tab">@Html.Partial("_Planks.cshtml")</div>
+            <div class="tab-pane fade" id="nav-spec-fitting-tab">@Html.Partial("_Fitting.cshtml")</div>
+            <div class="tab-pane fade" id="nav-spec-calculate-tab">@Html.Partial("_Calculate.cshtml")</div>
         </div>
 
     </div>
