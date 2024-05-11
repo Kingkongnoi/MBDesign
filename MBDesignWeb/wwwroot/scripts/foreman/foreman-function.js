@@ -426,11 +426,11 @@ function renderForemanItemList(data) {
                      <div class="row col-sm-12 mb-2">
                         <div class="col-sm-4 text-end">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanVat" onchange="calculateForemanVat('vat');" value="vat" ${vatChecked}>
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanVat" onchange="calculateForemanVat('vat');" value="vat" ${vatChecked} disabled>
                                 <label class="form-check-label">VAT 7%</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanNonVat" onchange="calculateForemanVat('nonvat');" value="nonvat" ${nonvatChecked}>
+                                <input class="form-check-input" type="radio" name="radioVatType" id="radioForemanNonVat" onchange="calculateForemanVat('nonvat');" value="nonvat" ${nonvatChecked} disabled>
                                 <label class="form-check-label">Non VAT</label>
                             </div>
                         </div>
@@ -500,8 +500,12 @@ function renderForemanItemList(data) {
     $(divId).append(calculateDiv);
 
     $('#div-allItems').append(allItems);
-
+   
     renderDispositeSecondUpload(`#form-foreman-cal #select-upload-foreman-disposite`, data.imageSecondDisposite);
+
+    if (data.imageSecondDisposite != null || data.imageSecondDisposite != undefined) {
+        calculateForemanDisposite();
+    }
 }
 
 let _vatPercentage = 0;
@@ -534,7 +538,6 @@ function calculateSubAndGrandTotal() {
     let calGrandTotal = (parseFloat(subTotal) - parseFloat(discount)) + parseFloat(calVat);
     _cal_grand_total = calGrandTotal.toFixed(2);
     $('#form-foreman-cal input[name="input-foreman-cal-grandTotal"]').val(calGrandTotal.toFixed(2));
-
     $('#form-foreman-cal input[name="input-foreman-cal-disposite"]').val('');
 }
 function render3dApprovedImages(formId, data) {
