@@ -241,6 +241,7 @@ function renderImageUpload(formId, data) {
             browseOnZoneClick: false,
             showCaption: false,
             showUpload: false,
+            dropZoneTitle: "รอรูปแปลน"
         });
     }
 
@@ -286,6 +287,7 @@ function renderImageUpload(formId, data) {
             browseOnZoneClick: false,
             showCaption: false,
             showUpload: false,
+            dropZoneTitle: "รอรูป Reference"
         });
     }
 
@@ -331,7 +333,7 @@ function renderImageUpload(formId, data) {
             //maxFileCount: 1,
             showBrowse: true,
             browseOnZoneClick: true,
-            browseLabel: 'เลือกไฟล์'
+            browseLabel: 'เลือกไฟล์',
         });
     }
 
@@ -377,6 +379,7 @@ function renderImageUpload(formId, data) {
             browseOnZoneClick: false,
             showCaption: false,
             showUpload: false,
+            dropZoneTitle: "รอรูปภาพหน้างานจากโฟร์แมน"
         });
     }
 }

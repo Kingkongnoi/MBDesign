@@ -412,7 +412,7 @@ function renderForemanItemList(data) {
                         <div class="row col-sm-8">
                             <div class="row">
                                 <div class="col-sm-4">
-                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-discount" name="input-foreman-cal-discount" onblur="calculateSubAndGrandTotal();" onkeydown="calculateSubAndGrandTotal();" value="${discount}" />
+                                    <input class="form-control mb-2" type="number" id="input-foreman-cal-discount" name="input-foreman-cal-discount" onblur="calculateSubAndGrandTotal();" onkeydown="calculateSubAndGrandTotal();" value="${discount}" disabled/>
                                 </div>
                                 <label class="col-sm-2 col-form-label">บาท</label>
                             </div>
