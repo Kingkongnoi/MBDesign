@@ -485,7 +485,7 @@ function callGetProductItemSelect2ByType(obj) {
 function renderProductItemSelect2ByType(formName, data) {
     $(`#${formName} #select-cus-product-items`).empty();
     $(`#${formName} #select-cus-product-items`).append(`<option value="">กรุณาเลือก</option>`);
-    debugger;
+
     if (data.length > 0) {
         data.forEach((v) => {
             $(`#${formName} #select-cus-product-items`).append(`<option value="${v.itemId}" price="${v.itemPrice}" name="${v.itemName}">${v.fullItemPrice}</option>`);
