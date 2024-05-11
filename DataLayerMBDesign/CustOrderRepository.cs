@@ -99,9 +99,11 @@ namespace DataLayerMBDesign
 
             if (!string.IsNullOrEmpty(status) && status != "null")
             {
-                condition += string.Format(" and a.orderStatus = N'{0}'", status);
+                //condition += string.Format(" and a.orderStatus = N'{0}'", status);
+                condition += string.Format(" and a.orderStatusId = (select top 1 statusId from tbStatus where isDeleted = 0 and status = 1 and name = N'{0}' and categoryId = (select top 1 categoryId from tbcategory where name = N'{1}' and isdeleted = 0 and status = 1))", status, GlobalOrderStatus.orderCategory);
             }
-            string queryString = string.Format(@"select a.orderId, a.quotationNumber, b.custFirstName + ' ' + b.custSurName fullName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.orderStatus
+            string queryString = string.Format(@"select a.orderId, a.quotationNumber, b.custFirstName + ' ' + b.custSurName fullName, a.createDate, a.createBy, a.updateDate, a.updateBy, 
+                                isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(a.orderStatusId,0)),'') orderStatus
                                 from tbCustOrder a inner join tbCust b on a.custId = b.custId 
                                 where a.isDeleted = 0 and b.isDeleted = 0
                                 {0}
