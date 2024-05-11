@@ -88,5 +88,6 @@ namespace EntitiesMBDesign
 
         public int receiptId { get; set; }
         public string orderStatus { get; set; } = string.Empty;
+        public string grandTotalThaiBath { get; set; } = string.Empty;
     }
 }

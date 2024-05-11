@@ -754,6 +754,9 @@ namespace MBDesignWeb.Controllers
             if (custOrder != null)
             {
                 cust = _documentService.GetCustomerDataByCustId(custOrder.custId);
+
+                System.Globalization.CultureInfo _cultureTHInfo = new System.Globalization.CultureInfo("th-TH");
+                custOrder.grandTotalThaiBath = ConvertToThaiBaht(custOrder.grandTotal.ToString());
             }
 
             var result = new

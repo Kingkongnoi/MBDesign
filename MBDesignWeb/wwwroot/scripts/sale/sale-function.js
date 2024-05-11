@@ -1708,7 +1708,13 @@ function printQuotation() {
 }
 
 async function generateQuotationDocument(data) {
-    await renderQuotationHtml(data);
+    debugger;
+    if (data.custOrder.vat == 0) {
+        await renderQuotationNonVatHtml(data);
+    }
+    else {
+        await renderQuotationHtml(data);
+    }
 }
 async function renderQuotationHtml(data) {
     var currDate = new Date();
@@ -1720,6 +1726,8 @@ async function renderQuotationHtml(data) {
     $('#quotationElement #spnCreateQuotationDocDate').html(createInvoiceDate);
 
     $('#quotationElement #lblCusName').html(custFullName);
+    $('#quotationElement #lblCusAddress').html(data.cust.custAddress);
+    $('#quotationElement #lblCusTel').html(data.cust.custTel);
 
     var accname = `ชื่อบัญชี ${data.custOrder.accountName} ${data.custOrder.accountNumber}`
     var accbank = `${data.custOrder.bank}`;
@@ -1750,39 +1758,49 @@ async function renderQuotationHtml(data) {
        
         data.itemsOptions.forEach((b) => {
             var unitPrice = parseFloat(a.itemPrice) + parseFloat(b.optionsPrice);
+            var unitPriceFormat = new Intl.NumberFormat().format(unitPrice);
 
-            var size = `ยาว ${a.orderLength} x ${a.orderHeight} x ${a.orderDepth}`
+            var size = `ยาว ${a.orderLength} x ${a.orderHeight} x ${a.orderDepth} m.`
             item += `<tr>
                     <td>${indx}</td>
                     <td>${b.options}</td>
                     <td>${size}</td>
-                    <td>${unitPrice}</td>
+                    <td>${unitPriceFormat}</td>
                     <td>${1}</td>
-                    <td>${unitPrice}</td>
+                    <td>${unitPriceFormat}</td>
                 </tr>`;
             indx++;
         });
     });
 
-    item += `<tr>
-                        <td><td colspan="3"></td></td>
+    var subTotalFormat = new Intl.NumberFormat().format(data.custOrder.subTotal);
+    item += `<tr>                       
+                        <td rowspan="4" colspan="4" class="text-center" style="vertical-align : middle;font-size:18px;font-weight:bold;">${data.custOrder.grandTotalThaiBath}</td>
 
                         <td>Sub.Total</td>
-                        <td>${data.custOrder.subTotal}</td>
+                        <td>${subTotalFormat}</td>
                     </tr>`;
 
-    item += `<tr>
-                        <td><td colspan="3"></td></td>
+    var vatFormat = (data.custOrder.vat == 0) ? "" : new Intl.NumberFormat().format(data.custOrder.vat);
+    item += `<tr>                       
 
                         <td>Vat 7%</td>
-                        <td>${data.custOrder.vat}</td>
+                        <td>${vatFormat}</td>
                     </tr>`;
 
+    var discountFormat = new Intl.NumberFormat().format(data.custOrder.discount);
+    item += `<tr>                       
+
+                        <td>ส่วนลด</td>
+                        <td>${discountFormat}</td>
+                    </tr>`;
+
+    var grandTotalFormat = new Intl.NumberFormat().format(data.custOrder.grandTotal);
     item += `<tr>
-                        <td><td colspan="3"></td></td>
+                        
 
                         <td>Grand Total%</td>
-                        <td>${data.custOrder.grandTotal}</td>
+                        <td>${grandTotalFormat}</td>
                     </tr>`;
 
     $('#quotation-item-list').empty();
@@ -1791,13 +1809,165 @@ async function renderQuotationHtml(data) {
     let options = {
         margin: 0.25,
         // pagebreak: { mode: "avoid-all", before: "#page2el" },
-        image: { type: "png", quality: 0.98 },
-        html2canvas: { scale: 1, logging: true, dpi: 192, letterRendering: true },
+        image: { type: "png", quality: 1 },
+        html2canvas: { scale: 1, logging: true, dpi: 300, letterRendering: true },
         jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
         filename: `Quotation_${data.custOrder.quotationNumber}`,
     };
 
     var element = document.getElementById("quotationElement");
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
+}
+async function renderQuotationNonVatHtml(data) {
+    var currDate = new Date();
+    var createInvoiceDate = convertDateTimeFormat(currDate, 'DD/MM/YYYY');
+
+    var custFullName = data.cust.custFirstName + ' ' + data.cust.custSurName;
+
+    $('#quotationNonVatElement #spnQuotationNumber').html(data.custOrder.quotationNumber);
+    $('#quotationNonVatElement #spnCreateQuotationDocDate').html(createInvoiceDate);
+
+    $('#quotationNonVatElement #lblCusName').html(custFullName);
+    $('#quotationNonVatElement #lblCusAddress').html(data.cust.custAddress);
+    $('#quotationNonVatElement #lblCusTel').html(data.cust.custTel);
+
+    var accname = `ชื่อบัญชี ${data.custOrder.accountName} ${data.custOrder.accountNumber}`
+    var accbank = `${data.custOrder.bank}`;
+    $('#quotationNonVatElement #spnAccName').html(accname);
+    $('#quotationNonVatElement #spnAccBank').html(accbank);
+
+    var item = ''
+    var indx = 0;
+    data.items.forEach((a) => {
+        item += `<tr>
+                    <td></td>
+                    <td>${a.itemName}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+        var style = `Style : ${a.styleName}`
+        item += `<tr>
+                    <td></td>
+                    <td>${style}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+        indx = 1;
+
+        data.itemsOptions.forEach((b) => {
+            var unitPrice = parseFloat(a.itemPrice) + parseFloat(b.optionsPrice);
+            var unitPriceFormat = new Intl.NumberFormat().format(unitPrice);
+
+            var size = `ยาว ${a.orderLength} x ${a.orderHeight} x ${a.orderDepth} m.`
+            item += `<tr>
+                    <td>${indx}</td>
+                    <td>${b.options}</td>
+                    <td>${size}</td>
+                    <td>${unitPriceFormat}</td>
+                    <td>${1}</td>
+                    <td>${unitPriceFormat}</td>
+                </tr>`;
+            indx++;
+        });
+    });
+
+    //if (data.custOrder.orderNotePrice != 0) {
+    //    var orderNotePriceFormat = new Intl.NumberFormat().format(data.custOrder.orderNotePrice);
+    //    item += `<tr>                       
+    //                    <td colspan="4">โน๊ตเพิ่มเติม : ${data.custOrder.orderNote}</td>
+
+    //                    <td></td>
+    //                    <td>${orderNotePriceFormat}</td>
+    //                </tr>`;
+    //}
+
+    var subTotalFormat = new Intl.NumberFormat().format(data.custOrder.subTotal);
+    item += `<tr>                       
+                        <td rowspan="4" colspan="4" class="text-center" style="vertical-align : middle;font-size:18px;font-weight:bold;">${data.custOrder.grandTotalThaiBath}</td>
+
+                        <td>Sub.Total</td>
+                        <td>${subTotalFormat}</td>
+                    </tr>`;
+
+    var vatFormat = (data.custOrder.vat == 0) ? "" : new Intl.NumberFormat().format(data.custOrder.vat);
+    item += `<tr>                       
+
+                        <td>Vat 7%</td>
+                        <td>${vatFormat}</td>
+                    </tr>`;
+
+    var discountFormat = new Intl.NumberFormat().format(data.custOrder.discount);
+    item += `<tr>                       
+
+                        <td>ส่วนลด</td>
+                        <td>${discountFormat}</td>
+                    </tr>`;
+
+    var grandTotalFormat = new Intl.NumberFormat().format(data.custOrder.grandTotal);
+    item += `<tr>
+                        
+
+                        <td>Grand Total%</td>
+                        <td>${grandTotalFormat}</td>
+                    </tr>`;
+
+    $('#quotationNonVatElement #quotation-item-list').empty();
+    $('#quotationNonVatElement #quotation-item-list').append(item);
+
+    let showDisposite = 0;
+    if (data.custOrder.grandTotal <= 200000) {
+        showDisposite = 5000;
+    }
+    else if (data.custOrder.grandTotal > 200000 && data.custOrder.grandTotal <= 600000) {
+        showDisposite = 10000;
+    }
+    else if (data.custOrder.grandTotal > 600000 && data.custOrder.grandTotal <= 900000) {
+        showDisposite = 20000;
+    }
+    else if (data.custOrder.grandTotal > 900000) {
+        showDisposite = 30000;
+    }
+
+    var showDispositeFormat = new Intl.NumberFormat().format(showDisposite);
+    $('#quotationNonVatElement #spnFirstPeriod').append("");
+    $('#quotationNonVatElement #spnFirstPeriod').append(showDispositeFormat);
+
+    var second = (data.custOrder.grandTotal - parseFloat(showDisposite)) * 0.5;
+    var secondFormat = new Intl.NumberFormat().format(second);
+    $('#quotationNonVatElement #spnSecondPeriod').append("");
+    $('#quotationNonVatElement #spnSecondPeriod').append(secondFormat);
+
+    var third = (data.custOrder.grandTotal - parseFloat(showDisposite) - parseFloat(second)) * 0.4;
+    var thirdFormat = new Intl.NumberFormat().format(third);
+    $('#quotationNonVatElement #spnThirdPeriod').append("");
+    $('#quotationNonVatElement #spnThirdPeriod').append(thirdFormat);
+
+    var four = (data.custOrder.grandTotal - parseFloat(showDisposite) - parseFloat(second) - parseFloat(third));
+    var fourFormat = new Intl.NumberFormat().format(four);
+    $('#quotationNonVatElement #spnFourPeriod').append("");
+    $('#quotationNonVatElement #spnFourPeriod').append(fourFormat);
+
+    let options = {
+        margin: 0.25,
+        // pagebreak: { mode: "avoid-all", before: "#page2el" },
+        image: { type: "png", quality: 1 },
+        html2canvas: { scale: 1, logging: true, dpi: 300, letterRendering: true },
+        jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        filename: `Quotation_${data.custOrder.quotationNumber}`,
+    };
+
+    var element = document.getElementById("quotationNonVatElement");
     html2pdf()
         .set(options)
         .from(element)
