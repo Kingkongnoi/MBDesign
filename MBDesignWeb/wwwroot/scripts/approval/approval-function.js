@@ -362,6 +362,7 @@ function renderCustOptions() {
         seq++;
     });
 }
+var _vat = 0;
 function renderCustCalPrice(data) {
     let formId = '#form-approveCustomerCalculate';
     let custOrder = data.custOrder;
@@ -377,6 +378,7 @@ function renderCustCalPrice(data) {
 
     if (custOrder.vat != 0) {
         $(`${formId} #radioVat`).prop('checked', true);
+        _vat = custOrder.vat.toFixed(2);
         $(`${formId} input[name="input-cal-vat"]`).val(custOrder.vat.toFixed(2));
     } else {
         $(`${formId} #radioNonVat`).prop('checked', true);
@@ -636,6 +638,8 @@ function clearInputForm() {
     $(`#${calculateForm} #input-cal-grandTotal`).val('');
     $(`#${calculateForm} #input-cal-disposite`).val('');
     $(`#${calculateForm} #radioBankPersonal`).prop('checked', true);
+
+    _vat = 0;
 }
 
 function callGetStyleSelect2(formName) {
@@ -1411,13 +1415,17 @@ function calculateSubAndGrandTotal(vatPercentage = 0) {
 
     let discount = $('#form-approveCustomerCalculate input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-approveCustomerCalculate input[name="input-cal-discount"]').val());
 
-    if (vatPercentage == 0) {
-        vatPercentage = ($('#form-approveCustomerCalculate #radioVat').prop('checked') == true) ? 0.7 : 0;
+    let calVat = 0;
+    if (_vat == 0) {
+        vatPercentage = ($('#form-approveCustomerCalculate #radioVat').prop('checked') == true) ? 0.07 : 0;
+        calVat = parseFloat(calSubTotal) * vatPercentage;
+        let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
+        $('#form-approveCustomerCalculate input[name="input-cal-vat"]').val(showVat);
     }
-
-    let calVat = parseFloat(calSubTotal) * vatPercentage;
-    let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
-    $('#form-approveCustomerCalculate input[name="input-cal-vat"]').val(showVat);
+    else {
+        calVat = _vat;
+        $('#form-approveCustomerCalculate input[name="input-cal-vat"]').val(_vat);
+    }
 
     let calGrandTotal = (parseFloat(calSubTotal) - parseFloat(discount)) + parseFloat(calVat);
     _cal_grand_total = calGrandTotal.toFixed(2);

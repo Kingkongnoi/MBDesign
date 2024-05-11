@@ -950,14 +950,17 @@ function calculateSubAndGrandTotal(vatPercentage = 0) {
 
     let discount = $('#form-createCalculatePrice input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-createCalculatePrice input[name="input-cal-discount"]').val());
 
-    if (vatPercentage == 0)
-    {
-        vatPercentage = ($('#form-createCalculatePrice #radioVat').prop('checked') == true) ? 0.7 : 0;
+    let calVat = 0;
+    if (_vat == 0) {
+        vatPercentage = ($('#form-createCalculatePrice #radioVat').prop('checked') == true) ? 0.07 : 0;
+        calVat = parseFloat(calSubTotal) * vatPercentage;
+        let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
+        $('#form-createCalculatePrice input[name="input-cal-vat"]').val(showVat);
     }
-
-    let calVat = parseFloat(calSubTotal) * vatPercentage;
-    let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
-    $('#form-createCalculatePrice input[name="input-cal-vat"]').val(showVat);
+    else {
+        calVat = _vat;
+        $('#form-createCalculatePrice input[name="input-cal-vat"]').val(_vat);
+    }
 
     let calGrandTotal = (parseFloat(calSubTotal) - parseFloat(discount)) + parseFloat(calVat);
     _cal_grand_total = calGrandTotal.toFixed(2);
@@ -1590,6 +1593,7 @@ function clearCalPriceForm() {
     $(`${formId} #input-cal-disposite`).val('');
     $(`${formId} #radioBankPersonal`).prop('checked', true);
     $(`${formId} #input-cal-approve`).val('');
+    _vat = 0;
 }
 function setCheckedSpecialHeight(seq) {
     if (parseFloat($(`#formCreateStyle-${seq} #input-cus-product-height`).val()) >= 2.7) {
