@@ -19,6 +19,8 @@ let _userId = localStorage.getItem('loginId');
 let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
+let _role_action = "add";
+
 function callSelect2HolidayDay(isSearch = true) {
     let formName = (!isSearch) ? '#form-createHoliday' : '#form-search-holiday';
     let select2Name = (!isSearch) ? '#select-holiday-day' : '#select-search-holiday-day';

@@ -183,10 +183,10 @@ function render3DToForm(data) {
     $(`${formId} #input-edit-3d-install-date`).val(installDate);
 
     if (data.custOrder.ownerEmpId == 0) {
-        $(`${formId} #select-edit-3d-designName`).val('');
+        $(`${formId} #select-edit-3d-designName`).val('').trigger('change');
     }
     else {
-        $(`${formId} #select-edit-3d-designName`).val(data.custOrder.ownerEmpId);
+        $(`${formId} #select-edit-3d-designName`).val(data.custOrder.ownerEmpId).trigger('change');
     }
 
     var dueDate = data.custOrder.dueDate ? convertDateTimeFormat(data.custOrder.dueDate, 'YYYY-MM-DD') : "";
