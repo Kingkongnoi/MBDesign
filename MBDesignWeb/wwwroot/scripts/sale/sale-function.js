@@ -652,6 +652,30 @@ let validateInputCalPrice = function () {
         });
         return false;
     }
+    else if ($('#form-createCalculatePrice input[name="input-cal-discount"]').val() <0) {
+        Swal.fire({
+            text: "กรุณากรอกส่วนลดมากกว่า 0",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createCalculatePrice input[name="input-cal-discount"]').focus();
+        });
+        return false;
+    }
+    else if ($('#form-createCalculatePrice input[name="input-cal-discount"]').val() > 0 && $('#form-createCalculatePrice input[name="input-cal-discount"]').val() > 1000) {
+        Swal.fire({
+            text: "กรุณากรอกส่วนลดไม่เกิน 1000",
+            icon: 'warning',
+            showCancelButton: false,
+            confirmButtonColor: _modal_primary_color_code,
+            confirmButtonText: 'ตกลง'
+        }).then((result) => {
+            $('#form-createCalculatePrice input[name="input-cal-discount"]').focus();
+        });
+        return false;
+    }
     else if ($('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val() == "" || $('#form-createCalculatePrice input[name="input-cal-grandTotal"]').val() == "0") {
         Swal.fire({
             text: "กรุณากรอก ราคารวมทั้งหมด (Grand Total)",
@@ -1352,6 +1376,8 @@ function renderCustCalPrice(data) {
         $(`${formId} #radioNonVat`).prop('checked', true);
     }
     $(`${formId} input[name="radioVatType"]`).attr('disabled', true);
+    var vat = (custOrder.vat == 0) ? "" : custOrder.vat.toFixed(2);
+    $(`${formId} input[name="input-cal-vat"]`).val(vat);
 
     if (custOrder.accountType == "บัญชีส่วนบุคคล") {
         $(`${formId} #radioBankPersonal`).prop('checked', true);

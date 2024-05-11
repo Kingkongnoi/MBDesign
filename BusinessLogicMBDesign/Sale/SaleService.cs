@@ -271,6 +271,7 @@ namespace BusinessLogicMBDesign.Sale
                         custId = custId,
                         installDate = model.installDate,
                         orderNote = model.orderNote,
+                        orderNotePrice = model.orderNotePrice,
                         discount = model.discount,
                         vat = model.vat,
                         subTotal = model.subTotal,
