@@ -950,6 +950,11 @@ function calculateSubAndGrandTotal(vatPercentage = 0) {
 
     let discount = $('#form-createCalculatePrice input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-createCalculatePrice input[name="input-cal-discount"]').val());
 
+    if (vatPercentage == 0)
+    {
+        vatPercentage = ($('#form-createCalculatePrice #radioVat').prop('checked') == true) ? 0.7 : 0;
+    }
+
     let calVat = parseFloat(calSubTotal) * vatPercentage;
     let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
     $('#form-createCalculatePrice input[name="input-cal-vat"]').val(showVat);
@@ -1360,6 +1365,7 @@ function renderCustOptions() {
         seq++;
     });
 }
+var _vat = 0;
 function renderCustCalPrice(data) {
     let formId = '#form-createCalculatePrice';
     let custOrder = data.custOrder;
@@ -1378,6 +1384,7 @@ function renderCustCalPrice(data) {
     $(`${formId} input[name="radioVatType"]`).attr('disabled', true);
     var vat = (custOrder.vat == 0) ? "" : custOrder.vat.toFixed(2);
     $(`${formId} input[name="input-cal-vat"]`).val(vat);
+    _vat = vat;
 
     if (custOrder.accountType == "บัญชีส่วนบุคคล") {
         $(`${formId} #radioBankPersonal`).prop('checked', true);

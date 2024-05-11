@@ -1411,6 +1411,10 @@ function calculateSubAndGrandTotal(vatPercentage = 0) {
 
     let discount = $('#form-approveCustomerCalculate input[name="input-cal-discount"]').val() == "" ? 0 : parseFloat($('#form-approveCustomerCalculate input[name="input-cal-discount"]').val());
 
+    if (vatPercentage == 0) {
+        vatPercentage = ($('#form-approveCustomerCalculate #radioVat').prop('checked') == true) ? 0.7 : 0;
+    }
+
     let calVat = parseFloat(calSubTotal) * vatPercentage;
     let showVat = (calVat == 0) ? "" : calVat.toFixed(2);
     $('#form-approveCustomerCalculate input[name="input-cal-vat"]').val(showVat);
