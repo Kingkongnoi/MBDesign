@@ -212,7 +212,7 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกสไตล์</label>
                             <div class="col-sm-9">
-                                <select class="form-select" id="select-cus-product-style" data-seq="${newSeq}" disabled>
+                                <select class="form-select" id="select-cus-product-style" data-seq="${newSeq}">
                                     <option></option>
                                 </select>
                             </div>
@@ -222,7 +222,7 @@ function renderCustStyleDiv(data) {
                             <label class="col-sm-3 col-form-label text-end">เลือกโซน</label>
                             <div class="col-sm-9">
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" disabled />
+                                    <input class="form-control" type="text" id="input-cus-product-zone" name="input-cus-product-zone" data-seq="${newSeq}" />
                                 </div>
                             </div>
                         </div>
@@ -230,7 +230,7 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือก Items</label>
                             <div class="col-sm-9">
-                                <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}" disabled>
+                                <select class="form-select" id="select-cus-product-items" onchange="callGetProductItemOptions(this);" data-seq="${newSeq}" >
                                     <option></option>
                                 </select>
                             </div>
@@ -242,14 +242,14 @@ function renderCustStyleDiv(data) {
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกชั้น</label>
                             <div class="col-sm-9">
-                                <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-floor" data-seq="${newSeq}" disabled />
+                                <input class="form-control" type="text" id="input-cus-product-floor" name="input-cus-product-floor" data-seq="${newSeq}" />
                             </div>
                         </div>
 
                         <div class="row col-sm-12 mb-2">
                             <label class="col-sm-3 col-form-label text-end">เลือกหมวดหมู่</label>
                             <div class="col-sm-9">
-                                <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}" disabled>
+                                <select class="form-select" id="select-cus-product-type" data-seq="${newSeq}" >
                                     <option></option>
                                 </select>
                             </div>
@@ -274,19 +274,19 @@ function renderCustStyleDiv(data) {
                         <div class="col-sm-4">
                             <label class="col-sm-12 col-form-label">ความยาว</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" disabled />
+                                    <input class="form-control" type="number" id="input-cus-product-length" name="input-cus-product-length" data-seq="${newSeq}" />
                                 </div>
                         </div>
                         <div class="col-sm-4">
                                 <label class="col-sm-12 col-form-label">ความลึก</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}" disabled />
+                                    <input class="form-control" type="number" id="input-cus-product-depth" name="input-cus-product-depth" data-seq="${newSeq}"/>
                                 </div>
                         </div>
                         <div class="col-sm-4">
                           <label class="col-sm-12 col-form-label">ความสูง</label>
                                 <div class="col-sm-9">
-                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" disabled />
+                                    <input class="form-control" type="number" id="input-cus-product-height" name="input-cus-product-height" data-seq="${newSeq}" />
                                 </div>
                         </div>
                     </div>

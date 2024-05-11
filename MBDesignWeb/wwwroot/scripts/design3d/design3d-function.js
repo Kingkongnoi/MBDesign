@@ -194,11 +194,11 @@ function render3DToForm(data) {
     $(`${formId} #input-edit-3d-due-date`).val(dueDate);
     $(`${formId} #input-edit-3d-checklist-status`).val(data.custOrder.checklistStatus);
 
-    renderImageUpload(formId, data.uploadRef);
+    renderImageUpload(formId, data.uploadRef, data.imagesForeman);
 
     $(`${formId} #chkFinal3D`).prop('checked', data.custOrder.isCheckFinal3d);
 }
-function renderImageUpload(formId, data) {
+function renderImageUpload(formId, data, foreman) {
     var planImg = data.filter(v => { return v.categoryName == "CustOrderPlan" });
 
     var lstPlanUrl = [];
@@ -337,7 +337,7 @@ function renderImageUpload(formId, data) {
         });
     }
 
-    var foremanImg = data.filter(v => { return v.categoryName == "foremanUpload" });
+    var foremanImg = foreman.filter(v => { return v.categoryName == "foremanUpload" });
 
     var lstIdUrl = [];
     var lstPreviewIdImg = [];

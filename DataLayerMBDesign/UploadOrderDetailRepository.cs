@@ -84,7 +84,8 @@ namespace DataLayerMBDesign
             ,c.fileSize
             FROM tbUploadOrderDetail a inner join tbUploadCategory b  on a.uploadCategoryId = b.id
             inner join tbUploadUrl c on a.urlId = c.urlId
-            where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1
+            inner join tbCustOrderDetail d on a.orderId = d.orderId and a.orderDetailId = d.custOrderDetailId
+            where a.isDeleted = 0 and b.isDeleted = 0 and a.status = 1 and b.status = 1 and c.isDeleted = 0 and c.status = 1 and d.isDeleted = 0 and d.status = 1
             and a.orderId = @orderId and b.name = @categoryName
             order by a.uploadOrderDetailId";
 

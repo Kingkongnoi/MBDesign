@@ -4,6 +4,7 @@ using BusinessLogicMBDesign;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
+using BusinessLogicMBDesign.Foreman;
 
 namespace MBDesignWeb.Controllers
 {
@@ -16,6 +17,7 @@ namespace MBDesignWeb.Controllers
         private readonly UploadToAwsService _uploadToAwsService;
         private readonly UploadToDatabaseService _uploadToDatabaseService;
         private readonly ftpProcessService _ftpProcessService;
+        private readonly ForemanService _foremanService;
         public Design3DController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -25,6 +27,7 @@ namespace MBDesignWeb.Controllers
             _uploadToAwsService = new UploadToAwsService(_configuration);
             _uploadToDatabaseService = new UploadToDatabaseService(_configuration);
             _ftpProcessService = new ftpProcessService(_configuration);
+            _foremanService = new ForemanService(_configuration);
         }
 
         public IActionResult Index()
@@ -66,11 +69,13 @@ namespace MBDesignWeb.Controllers
         {
             var custOrder = _design3DService.Get3DQueueCustOrderByOrderId(orderId);
             var uploadRef = _saleService.GetUploadRefByOrderId(orderId);
+            var imagesForeman = _foremanService.GetForemanUpload(orderId, GlobalUploadCategory.foremanUpload);
 
             var result = new
             {
                 custOrder = custOrder,
-                uploadRef = uploadRef
+                uploadRef = uploadRef,
+                imagesForeman = imagesForeman
                 //items = items,
                 //itemsOptions = itemsOptions,
                 //cust = cust,
