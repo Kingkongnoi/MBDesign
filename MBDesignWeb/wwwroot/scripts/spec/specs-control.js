@@ -9,7 +9,7 @@
     callGetDesign3DNameSelectSpec();
     callGetSpecList();
     callPlanksList();
-
+    callFittingList();
     callSelectDoorType('#form-add-calculate #select-insert-glassdoor-type', true);
     callSelectDoorType('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass', true);
 
@@ -32,12 +32,21 @@
         callGetSpecList();
     });
 
+    $('#form-search-fitting .btn-search-fitting').on('click', function () {
+        callFittingList();
+    });
+    $('#form-search-fitting .btn-clear-search-fitting').on('click', function () {
+        clearSearchForm("fitting");
+        callFittingList();
+    });
+
     $('#form-search-spec-queue .btn-clear-search-spec').on('click', function () {
         clearSearchForm("spec");
         callGetSpecList();
     });
     $('.btn-add-planks').on('click', function () {
         _product_item_action = 'add';
+        clearInputPlankForm();
         $(`#modal-createPlanks #itemHeader`).text('เพิ่มรายการสั่งไม้');
         $('#modal-createPlanks').modal('show');
     });
@@ -65,8 +74,27 @@
         callGetPlanksById($(this).data('id'), 'modal-createPlanks');
     });
 
+    $(document).on('click', '.btn-edit-fitting', function () {
+        $(`#modal-createFitting #itemHeader`).text('แก้ไขรายการสั่งไม้');
+        $(`#modal-createFitting`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-createFitting');
+        if (_product_item_action == "edit") {
+            $('#form-createFitting #select-fitting-quotation-no').attr("disabled");
+
+        }
+        else {
+            $('#form-createFitting #select-fitting-quotation-no').removeAttr("disabled");
+        }
+        //$('#modal-createProduct #divOptions').empty();
+        callGetFittingById($(this).data('id'), 'modal-createFitting');
+    });
+
     $('.btn-modal-save-planks').on('click', function () {
         DoAddOrUpdatePlanks("modal-createPlanks");
+    });
+    $('.btn-modal-save-fitting').on('click', function () {
+        DoAddOrUpdateFitting("modal-createFitting");
     });
 
     $(document).on('click', '.btn-edit-spec', function () {

@@ -62,6 +62,30 @@ function callPlanksList() {
         }
     });
 }
+
+function callFittingList() {
+    let quotaioncode = ($('#form-search-fitting #input-search-quotation-code').val() == '' || $('#form-search-fitting #input-search-quotation-code').val() == undefined) ? null : $('#form-search-fitting #input-search-quotation-code').val();
+    let fittingcode = ($('#form-search-fitting #input-search-fitting-code').val() == '' || $('#form-search-fitting #input-search-fitting-code').val() == undefined) ? null : $('#form-search-fitting #input-search-fitting-code').val();
+    let loaded = $('#tb-fitting-list');
+
+    loaded.prepend(_loader);
+
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Fitting/GetFittingList?fittingcode=${fittingcode}&quotationNumber=${quotaioncode}`,
+        success: function (data) {
+            if (data.length > 0) {
+                renderGetFittingList(data);
+                //callGroupNameBySubGroup('#form-createSubGroup #select-group-name', 'กรุณาเลือก');
+            }
+
+            loaded.find(_loader).remove();
+        },
+        error: function (err) {
+            loaded.find(_loader).remove();
+        }
+    });
+}
 function callGetFrameList() {
 
     let calcode = ($('#form-search-calculate #input-search-calulate-code').val() == '' || $('#form-search-calculate #input-search-calulate-code').val() == undefined) ? null : $('#form-search-calculate #input-search-calulate-code').val();
@@ -266,12 +290,89 @@ function renderGetPlanksList(data) {
     );
 }
 
+function renderGetFittingList(data) {
+    $('#tb-fitting-list').DataTable(
+        {
+            destroy: true,
+            responsive: true,
+            searching: false,
+            data: data,
+            dom: 'Bflrtip',
+            oLanguage: {
+                oPaginate: {
+                    sPrevious: "«",
+                    sNext: "»",
+                }
+            },
+            createdRow: function (row, data) {
+                $(row).attr('data-id', data.id);
+                /*   $(row).attr('data-typeid', data.typeId);*/
+            },
+            columnDefs: [
+                {
+                    targets: 0,
+                    data: 'id',
+                    className: "hidecol",
+                },
+                {
+                    targets: 1,
+                    data: 'fittingcode',
+                    className: "item-details"
+                },
+                {
+                    targets: 2,
+                    data: 'quotationNumber',
+                    className: "item-details"
+                },
+                {
+                    targets: 3,
+                    data: 'fullname',
+                    className: "dt-center",
+                },
+                {
+                    targets: 4,
+                    data: 'custTel',
+                    className: "dt-center",
+                },
+                {
+                    targets: 5,
+                    data: 'createby',
+                    className: "dt-center",
+                },
+                {
+                    targets: 6,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-fitting" data-id="${row.id}" title="แก้ไข">
+                    <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+            ],
+        }
+    );
+}
+
 function callGetPlanksById(id, modal, isView = false) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Planks/GetItemByItemId?id=${id}`,
         success: function (data) {
             renderPlanksForm(data.item);
+        },
+        error: function (err) {
+        }
+    });
+}
+
+function callGetFittingById(id, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Fitting/GetItemByItemId?id=${id}`,
+        success: function (data) {
+            renderFitting(data.item);
         },
         error: function (err) {
         }
@@ -296,6 +397,262 @@ function renderPlanksForm(data, typeId) {
     $('#form-createPlanks #select-brand-status').val(status).trigger('change');
 }
 
+function renderFitting(data) {
+    $('#form-createFitting #input-minifixset-amount').val(data.minifixset);
+    $('#form-createFitting #input-woodendowel-amount').val(data.woodendowel);
+    $('#form-createFitting #input-other-desc').val(data.otherdescription);
+
+    data.Hinge.forEach((item) => {
+        switch (item.hingetype) {
+            case 1:
+                $('#form-createFitting #input-hinge1-amount').val(item.amount);
+                break;
+            case 2:
+                $('#form-createFitting #input-hinge2-amount').val(item.amount);
+
+                break;
+            case 3:
+                $('#form-createFitting #input-hinge3-amount').val(item.amount);
+                break;
+            case 4:
+                $('#form-createFitting #input-hinge4-amount').val(item.amount);
+                $('#form-createFitting #input-hinge4-desc').val(item.othertext);
+                break;
+        };
+    });
+
+    data.DrawerRail.forEach((item) => {
+        switch (item.drawerrailtype) {
+            case 1:
+                $('#form-createFitting #input-drawerrail1-amount').val(item.amount);
+                $('#form-createFitting #input-bouncepress-amount').val(item.pressbounceamount);
+                break;
+            case 2:
+                $('#form-createFitting #input-drawerrail2-amount').val(item.amount);
+
+                break;
+            case 3:
+                $('#form-createFitting #input-drawerrail3-amount').val(item.amount);
+                $('#form-createFitting #input-drawerrailsize-desc').val(item.othersize);
+                break;
+        };
+    });
+
+    data.SlideDoor.forEach((item) => {
+        switch (item.slidingdoortype) {
+            case 1:
+                $('#form-createFitting #input-slidedoor1-amount').val(item.amount);
+                break;
+            case 2:
+                $('#form-createFitting #input-slidedoorrail1-amount').val(item.amount);
+                $('#form-createFitting #input-slidedoor1-size').val(item.length);
+                break;
+            case 3:
+                $('#form-createFitting #input-slidedoor2-amount').val(item.amount);
+                break;
+            case 4:
+                $('#form-createFitting #input-slidedoorrail2-amount').val(item.amount);
+                $('#form-createFitting #input-slidedoor2-size').val(item.length);
+                break;
+            case 5:
+                $('#form-createFitting #input-slidedoor3-amount').val(item.amount);
+                break;
+            case 6:
+                $('#form-createFitting #input-slidedoorrail3-amount').val(item.amount);
+                $('#form-createFitting #input-slidedoor3-size').val(item.length);
+                break;
+        };
+    });
+
+    data.Electrical.forEach((item) => {
+        switch (item.electricaltype) {
+            case 1:
+                $('#form-createFitting #input-elec1-amount').val(item.amount);
+                break;
+            case 2:
+                $('#form-createFitting #input-elec2-amount').val(item.amount);
+                break;
+            case 3:
+                $('#form-createFitting #input-elec3-amount').val(item.amount);
+                $('#form-createFitting #input-elec3-color').val(item.color);
+                break;
+            case 4:
+                $('#form-createFitting #input-elec4-amount').val(item.amount);
+                break;
+            case 5:
+                $('#form-createFitting #input-elec5-amount').val(item.amount);
+                break;
+            case 6:
+                $('#form-createFitting #input-elec6-amount').val(item.amount);
+                break;
+            case 7:
+                $('#form-createFitting #input-elec7-amount').val(item.amount);
+                break;
+            case 8:
+                $('#form-createFitting #input-elec8-amount').val(item.amount);
+                break;
+            case 9:
+                $('#form-createFitting #input-elec9-amount').val(item.amount);
+                break;
+            case 10:
+                $('#form-createFitting #input-elec10-amount').val(item.amount);
+                break;
+            case 11:
+                $('#form-createFitting #input-elec11-amount').val(item.amount);
+                break;
+            case 12:
+                $('#form-createFitting #input-elec12-amount').val(item.amount);
+                break;
+            case 13:
+                $('#form-createFitting #input-elec13-amount').val(item.amount);
+                break;
+            case 14:
+                $('#form-createFitting #input-elec14-amount').val(item.amount);
+                break;
+        };
+    });
+
+    data.EdgeLaminate.forEach((item) => {
+        switch (item.edgelaminatetype) {
+            case 1:
+                if (item.seqno == 1) {
+                    $('#form-createFitting #input-edge1-color').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#form-createFitting #input-edge2-color').val(item.color);
+                }
+                else {
+                    $('#form-createFitting #input-edge3-color').val(item.color);
+                }
+                break;
+            case 2:
+                if (item.seqno == 1) {
+                    $('#form-createFitting #input-edge4-color').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#form-createFitting #input-edge5-color').val(item.color);
+                }
+                else {
+                    $('#form-createFitting #input-edge6-color').val(item.color);
+                }
+                break;
+            case 3:
+                if (item.seqno == 1) {
+                    $('#form-createFitting #input-edge7-color').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#form-createFitting #input-edge8-color').val(item.color);
+                }
+                else {
+                    $('#form-createFitting #input-edge9-color').val(item.color);
+                }
+                break;
+            case 4:
+                $('#form-createFitting #input-edge10-amount').val(item.amount);
+                break;
+        };
+    });
+
+    data.OtherFitting.forEach((item) => {
+        switch (item.otherfittingtype) {
+            case 1:
+                $('#form-createFitting #input-other1-amount').val(item.amount);
+                $('#form-createFitting #input-other1-color').val(item.color);
+                break;
+            case 2:
+                $('#form-createFitting #input-other2-amount').val(item.amount);
+                $('#form-createFitting #input-other2-color').val(item.color);
+                break;
+            case 3:
+                $('#form-createFitting #input-other3-amount').val(item.amount);
+                $('#form-createFitting #input-other3-size').val(item.size);
+                break;
+            case 4:
+                $('#form-createFitting #input-other4-amount').val(item.amount);
+                break;
+            case 5:
+                $('#form-createFitting #input-other5-amount').val(item.amount);
+                break;
+            case 6:
+                $('#form-createFitting #input-other6-amount').val(item.amount);
+                break;
+            case 7:
+                $('#form-createFitting #input-other7-amount').val(item.amount);
+                break;
+            case 8:
+                $('#form-createFitting #input-other8-amount').val(item.amount);
+                break;
+            case 9:
+                $('#form-createFitting #input-other9-amount').val(item.amount);
+                break;
+            case 10:
+                $('#form-createFitting #input-other10-amount').val(item.amount);
+                break;
+        };
+    });
+
+    data.FrameTrim.forEach((item) => {
+        switch (item.frametrimtype) {
+            case 1:
+                $('#form-createFitting #input-fandc1-amount').val(item.amount);
+                $('#form-createFitting #input-fandc1-color').val(item.color);
+                break;
+            case 2:
+                $('#form-createFitting #input-fandc2-amount').val(item.amount);
+                break;
+            case 3:
+                $('#form-createFitting #input-fandc3-amount').val(item.amount);
+                $('#form-createFitting #input-fandc3-color').val(item.color);
+                $('#form-createFitting #input-fandc3-size').val(item.size);
+                break;
+            case 4:
+                $('#form-createFitting #input-fandc4-amount').val(item.amount);
+                $('#form-createFitting #input-fandc4-color').val(item.color);
+                $('#form-createFitting #input-fandc4-size').val(item.size);
+                break;
+            case 5:
+                $('#form-createFitting #input-fandc5-amount').val(item.amount);
+                $('#form-createFitting #input-fandc5-size').val(item.size);
+                break;
+            case 6:
+                $('#form-createFitting #input-fandc6-amount').val(item.amount);
+                $('#form-createFitting #input-fandc6-color').val(item.color);
+                $('#form-createFitting #input-fandc6-size').val(item.size);
+                break;
+            case 7:
+                if (item.seqno == 1) {
+                    $('#form-createFitting #input-fandc7-amount').val(item.amount);
+                    $('#form-createFitting #input-fandc7-number').val(item.number);
+                    $('#form-createFitting #input-fandc7-size').val(item.size);
+                }
+                else {
+                    $('#form-createFitting #input-fandc8-amount').val(item.amount);
+                    $('#form-createFitting #input-fandc8-number').val(item.number);
+                    $('#form-createFitting #input-fandc8-size').val(item.size);
+                }
+                break;
+            case 8:
+                $('#form-createFitting #input-fandc9-amount').val(item.amount);
+                $('#form-createFitting #input-fandc9-number').val(item.number);
+                break;
+            case 9:
+                if (item.seqno == 1) {
+                    $('#form-createFitting #input-fandc10-amount').val(item.amount);
+                    $('#form-createFitting #input-fandc10-color').val(item.color);
+                   
+                }
+                else {
+                    $('#form-createFitting #input-fandc11-amount').val(item.amount);
+                    $('#form-createFitting #input-fandc11-color').val(item.color);
+                }
+                break;
+            case 10:
+                $('#form-createFitting #input-fandc12-amount').val(item.amount);
+                break;
+        };
+    });
+}
+
 function clearSearchForm(area) {
     switch (area) {
         case "planks":
@@ -307,6 +664,10 @@ function clearSearchForm(area) {
             $('#form-search-spec-queue #input-search-spec-design-name').val('');
             $('#form-search-spec-queue #select-search-spec-checklist-status').val('').trigger('change');
             $('#form-search-spec-queue #input-search-spec-install-date').val('');
+            break;
+        case "fitting":
+            $('#form-search-fitting #input-search-fitting-code').val('');
+            $('#form-search-fitting #input-search-quotation-code').val('');
             break;
     }
 }
@@ -337,6 +698,24 @@ function DoAddOrUpdatePlanks(modal) {
     }).then((result) => {
         if (result.isConfirmed) {
             callAddOrUpdatePlanks(_product_item_action);
+        }
+    });
+}
+
+function DoAddOrUpdateFitting(modal) {
+    if (!validateInputSpec(modal)) return;
+
+    Swal.fire({
+        title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
+        showDenyButton: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึก',
+        cancelButtonText: `ยกเลิก`,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+    }).then((result) => {
+        if (result.isConfirmed) {
+            callAddOrUpdateFitting(_product_item_action);
         }
     });
 }
@@ -642,6 +1021,35 @@ let validateInputSpec = function (modal) {
 
             else { return true; }
             break;
+        case "modal-createFitting":
+            if ($('#form-createFitting #select-fitting-quotation-no').val() == "") {
+                Swal.fire({
+                    text: "กรุณาเลือกเลขใบเสนอราคา",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createFitting #select-fitting-quotation-no').focus();
+                });
+                return false;
+            }
+            else if ($('#form-createFitting #input-fitting-no').val() == "") {
+                Swal.fire({
+                    text: "ไม่สามารถทำรายการได้ กรุณาลองใหม่อีกครั้ง",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+                    $('#form-createFitting #input-fitting-no').focus();
+                });
+                return false;
+            }
+            else { return true; }
+            break;
     }
 };
 
@@ -700,6 +1108,431 @@ function callAddOrUpdatePlanks() {
 
 }
 
+function callAddOrUpdateFitting() {
+    let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Fitting/AddItem` : `${app_settings.api_url}/api/Fitting/UpdateItem`;
+
+    var Hinge = [];
+    Hinge.push({
+        hingetype: 1,
+        amount: $('#input-hinge1-amount').val(),
+    });
+    Hinge.push({
+        hingetype: 2,
+        amount: $('#input-hinge2-amount').val(),
+    });
+    Hinge.push({
+        hingetype: 3,
+        amount: $('#input-hinge3-amount').val(),
+    });
+    Hinge.push({
+        hingetype: 4,
+        amount: $('#input-hinge4-amount').val(),
+        othertext: $('#input-hinge4-desc').val()
+
+    });
+
+    var DrawerRail = [];
+    DrawerRail.push({
+        drawerrailtype: 1,
+        amount: $('#input-drawerrail1-amount').val(),
+        pressbounceamount: $('#input-bouncepress-amount').val(),
+        /*     othersize: $('#input-hinge4-amount').val(),*/
+    });
+    DrawerRail.push({
+        drawerrailtype: 2,
+        amount: $('#input-drawerrail2-amount').val(),
+        /*     pressbounceamount: $('#input-bouncepress-amount').val(),*/
+        /*     othersize: $('#input-hinge4-amount').val(),*/
+    });
+    DrawerRail.push({
+        drawerrailtype: 3,
+        amount: $('#input-drawerrail3-amount').val(),
+        /*     pressbounceamount: $('#input-bouncepress-amount').val(),*/
+        othersize: $('input-drawerrailsize-desc').val(),
+    });
+
+    var SlideDoor = [];
+    SlideDoor.push({
+        slidingdoortype: 1,
+        amount: $('#input-slidedoor1-amount').val(),
+        /*        length: $('#input-drawerrail3-amount').val(),*/
+    });
+    SlideDoor.push({
+        slidingdoortype: 2,
+        amount: $('#input-slidedoorrail1-amount').val(),
+        length: $('#input-slidedoor1-size').val()
+    });
+    SlideDoor.push({
+        slidingdoortype: 3,
+        amount: $('#input-slidedoor2-amount').val(),
+        /*     length: $('#input-slidedoor1-size').val()*/
+    });
+    SlideDoor.push({
+        slidingdoortype: 4,
+        amount: $('#input-slidedoorrail2-amount').val(),
+        length: $('#input-slidedoor2-size').val()
+    });
+    SlideDoor.push({
+        slidingdoortype: 5,
+        amount: $('#input-slidedoor3-amount').val(),
+        /* length: $('#input-slidedoor2-size').val()*/
+    });
+    SlideDoor.push({
+        slidingdoortype: 6,
+        amount: $('#input-slidedoorrail3-amount').val(),
+        length: $('#input-slidedoor3-size').val()
+    });
+
+    var Electrical = [];
+    Electrical.push({
+        electricaltype: 1,
+        amount: $('#input-elec1-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 2,
+        amount: $('#input-elec2-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 3,
+        amount: $('#input-elec3-amount').val(),
+        color: $('#input-elec1-color').val()
+    });
+    Electrical.push({
+        electricaltype: 4,
+        amount: $('#input-elec4-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 5,
+        amount: $('#input-elec5-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 6,
+        amount: $('#input-elec6-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 7,
+        amount: $('#input-elec7-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 8,
+        amount: $('#input-elec8-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 9,
+        amount: $('#input-elec9-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 10,
+        amount: $('#input-elec10-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 11,
+        amount: $('#input-elec11-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 12,
+        amount: $('#input-elec12-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 13,
+        amount: $('#input-elec13-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+    Electrical.push({
+        electricaltype: 14,
+        amount: $('#input-elec14-amount').val(),
+        /* color: $('#input-slidedoorrail3-amount').val()*/
+    });
+
+    var EdgeLaminate = [];
+    EdgeLaminate.push({
+        edgelaminatetype: 1,
+        color: $('#input-edge1-color').val(),
+        seqno: 1,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 1,
+        color: $('#input-edge2-color').val(),
+        seqno: 2,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 1,
+        color: $('#input-edge3-color').val(),
+        seqno: 3,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 2,
+        color: $('#input-edge4-color').val(),
+        seqno: 1,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 2,
+        color: $('#input-edge5-color').val(),
+        seqno: 2,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 2,
+        color: $('#input-edge6-color').val(),
+        seqno: 3,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 3,
+        color: $('#input-edge7-color').val(),
+        seqno: 1,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 3,
+        color: $('#input-edge8-color').val(),
+        seqno: 2,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 3,
+        color: $('#input-edge9-color').val(),
+        seqno: 3,
+        /*        amount: $('#input-elec14-amount').val()*/
+    });
+    EdgeLaminate.push({
+        edgelaminatetype: 4,
+        //color: $('#input-edge9-color').val(),
+        //seqno: 3,
+        amount: $('#input-edge10-amount').val()
+    });
+
+    var OtherFitting = [];
+    OtherFitting.push({
+        otherfittingtype: 1,
+        color: $('#input-other1-color').val(),
+        amount: $('#input-other1-amount').val(),
+        /*size: $('#input-edge10-amount').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 2,
+        color: $('#input-other2-color').val(),
+        amount: $('#input-other2-amount').val(),
+        /*size: $('#input-edge10-amount').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 3,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other3-amount').val(),
+        size: $('#input-other3-size').val()
+    });
+    OtherFitting.push({
+        otherfittingtype: 4,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other4-amount').val(),
+        /*        size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 5,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other5-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 6,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other6-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 7,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other7-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 8,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other8-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 9,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other9-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+    OtherFitting.push({
+        otherfittingtype: 10,
+        //color: $('#input-other1-color').val(),
+        amount: $('#input-other10-amount').val(),
+        /* size: $('#input-other3-size').val()*/
+    });
+
+    var FrameTrim = [];
+    FrameTrim.push({
+        frametrimtype: 1,
+        color: $('#input-fandc1-color').val(),
+        amount: $('#input-fandc1-amount').val()
+        //size: $('#input-other10-amount').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 2,
+        /* color: $('#input-fandc1-color').val(),*/
+        amount: $('#input-fandc2-amount').val()
+        //size: $('#input-other10-amount').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 3,
+        color: $('#input-fandc3-color').val(),
+        amount: $('#input-fandc3-amount').val(),
+        size: $('#input-fandc3-size').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 4,
+        color: $('#input-fandc4-color').val(),
+        amount: $('#input-fandc4-amount').val(),
+        size: $('#input-fandc4-size').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 5,
+        /*        color: $('#input-fandc4-color').val(),*/
+        amount: $('#input-fandc5-amount').val(),
+        size: $('#input-fandc5-size').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 6,
+        color: $('#input-fandc6-color').val(),
+        amount: $('#input-fandc6-amount').val(),
+        size: $('#input-fandc6-size').val(),
+        //number: $('#input-other10-amount').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 7,
+        /*   color: $('#input-fandc6-color').val(),*/
+        amount: $('#input-fandc7-amount').val(),
+        size: $('#input-fandc7-size').val(),
+        number: $('#input-fandc7-number').val(),
+        seqno: 1
+    });
+    FrameTrim.push({
+        frametrimtype: 7,
+        /*   color: $('#input-fandc6-color').val(),*/
+        amount: $('#input-fandc8-amount').val(),
+        size: $('#input-fandc8-size').val(),
+        number: $('#input-fandc8-number').val(),
+        seqno: 2
+    });
+    FrameTrim.push({
+        frametrimtype: 8,
+        /*        color: $('#input-fandc4-color').val(),*/
+        amount: $('#input-fandc9-amount').val(),
+        /*        size: $('#input-fandc5-size').val(),*/
+        number: $('#input-fandc9-number').val(),
+        //seqno: $('#input-other10-amount').val()
+    });
+    FrameTrim.push({
+        frametrimtype: 9,
+        color: $('#input-fandc10-color').val(),
+        amount: $('#input-fandc10-amount').val(),
+        /*        size: $('#input-fandc5-size').val(),*/
+        /*      number: $('#input-fandc9-number').val(),*/
+        seqno: 1
+    });
+    FrameTrim.push({
+        frametrimtype: 9,
+        color: $('#input-fandc11-color').val(),
+        amount: $('#input-fandc11-amount').val(),
+        /*        size: $('#input-fandc5-size').val(),*/
+        /*      number: $('#input-fandc9-number').val(),*/
+        seqno: 2
+    });
+    FrameTrim.push({
+        frametrimtype: 10,
+        /*        color: $('#input-fandc11-color').val(),*/
+        amount: $('#input-fandc12-amount').val(),
+        /*        size: $('#input-fandc5-size').val(),*/
+        /*      number: $('#input-fandc9-number').val(),*/
+        /* seqno: 2*/
+    });
+
+    var obj = {
+        id: ($('#input-fitting-id').val() == "") ? 0 : $('#input-fitting-id').val(),
+        fittingcode: $('#input-fitting-id').val(),
+        orderid: $('#select-fitting-quotation-no').val(),
+        minifixset: $('#input-minifixset-amount').val(),
+        woodendowel: $('#input-woodendowel-amount').val(),
+        otherdescription: $('#input-other-desc').val(),
+        loginCode: _userCode,
+        Hinge: Hinge,
+        SlideDoor: SlideDoor,
+        Electrical: Electrical,
+        DrawerRail: DrawerRail,
+        OtherFitting: OtherFitting,
+        EdgeLaminate: EdgeLaminate,
+        FrameTrim: FrameTrim
+    };
+    console.log(obj);
+    $('.btn-modal-save-fitting').addLoading();
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        contentType: 'application/json; charset=utf-8',
+        dataType: "json",
+        data: JSON.stringify(obj),
+        success: (res) => {
+            if (res.result) {
+                callSuccessAlert();
+                $('.btn-modal-save-fitting').removeLoading();
+                $(`#modal-createFitting`).modal('hide');
+                callSpecListQuatationNoFitting('#form-createFitting #select-fitting-quotation-no','กรุณาเลือก');
+                callFittingList();
+            }
+            else {
+                if (res.resultStatus == 'duplicate') {
+                    Swal.fire({
+                        text: "รายการนี้มีอยู่แล้ว กรุณาออกแล้วทำอีกครั้ง",
+                        icon: 'warning',
+                        showCancelButton: false,
+                        confirmButtonColor: _modal_primary_color_code,
+                        //cancelButtonColor: _modal_default_color_code,
+                        confirmButtonText: 'ตกลง'
+                    }).then((result) => {
+                        $('#modal-createFitting #input-fitting-id').focus();
+                    });
+                }
+                $('.btn-modal-save-fitting').removeLoading();
+            }
+        },
+        error: () => {
+            $('.btn-modal-save-fitting').removeLoading();
+        }
+    });
+
+}
+
 function callQuatationNo(select2Id, select2FirstText) {
     $.ajax({
         type: 'GET',
@@ -749,7 +1582,7 @@ function callSpecListQuatationNoFitting(select2Id, select2FirstText) {
     });
 }
 
-function callSpecListQuatationNoCal(select2Id, select2FirstText,type) {
+function callSpecListQuatationNoCal(select2Id, select2FirstText, type) {
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Calculate/GetQuatationListCal?type=${type}`,
@@ -894,6 +1727,19 @@ function clearInputForm() {
     $(`${formId} #input-edit-spec-due-date`).val('');
     $(`${formId} #input-edit-spec-checklist-status`).trigger('change');
     /*    $(`${formId} #chkFinal3D`).prop('checked', false);*/
+}
+
+function clearInputPlankForm() {
+    let formId = '#form-createPlanks';
+
+    $(`${formId} #select-edit-spec-quotation`).val('').trigger('change');
+    $(`${formId} #select-quotation-no`).val('').trigger('change');
+    $(`${formId} #select-quotation-no`).css('display', '');
+    $(`${formId} #input-quotation-no`).css('display', 'none');
+    $(`${formId} #input-color-code`).val('');
+    $(`${formId} #input-18mm-amount`).val('');
+    $(`${formId} #input-9mm-amount`).val('');
+
 }
 
 function renderEditSpec(orderid, specid, statusid) {
@@ -1293,6 +2139,25 @@ function onQuotatiChange() {
             url: `${app_settings.api_url}/api/SpecList/GetNewSpecListByID?id=${val}`,
             success: function (data) {
                 renderNewSpecToForm(data);
+            },
+            error: function (err) {
+                //loaded.find(loader).remove();
+            }
+        });
+    }
+    //else {
+    //    $('#form-createSubGroup input[name="input-subgroup-code"]').val('');
+    //}
+}
+
+function onFittingQuotatiChange() {
+    var val = $('#form-createFitting #select-fitting-quotation-no').val();
+    if (val != '') {
+        $.ajax({
+            type: 'GET',
+            url: `${app_settings.api_url}/api/Fitting/GetNameByOrderID?id=${val}`,
+            success: function (data) {
+                $("#lblfullname").text(data);
             },
             error: function (err) {
                 //loaded.find(loader).remove();

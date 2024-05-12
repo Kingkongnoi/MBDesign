@@ -107,11 +107,12 @@
                             <div class="row">
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">เลขที่ใบจัดฟิตติ้ง<span class="text-danger">*</span></label>
+                                    <input type="hidden" id="input-fitting-id" name="input-fitting-id" />
                                     <input id="input-fitting-no" name="input-fitting-no" class="form-control" type="text" disabled />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">เลขที่ใบเสนอราคา<span class="text-danger">*</span></label>
-                                    <select class="form-select" id="select-fitting-quotation-no" data-selected="" name="select-fitting-quotation-no"></select>
+                                    <select class="form-select" id="select-fitting-quotation-no" data-selected="" name="select-fitting-quotation-no" onchange="onFittingQuotatiChange();"></select>
                                 </div>
                                 <div class="col-sm-12 mb-2" style="text-align:center;padding-top: 3%;padding-bottom:1%;">
                                     <h5><label class="control-label" style="padding-right:1%;">อุปกรณ์ติดตั้ง บ้านคุณ</label><u class="dotted"><label id="lblfullname" class="control-label"></label></u></h5>
@@ -121,12 +122,11 @@
                                     <label class="control-label">เกือกม้าพร้อมแกน จำนวน(ชุด)</label>
                                     <input id="input-minifixset-amount" name="input-minifixset-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
-                             <!------------------------- บานพับ ------------------------------->
-                                <div class="col-sm-6 mb-2" style="padding-top:1%;">
+                                <div class="col-sm-6 mb-2">
                                     <label class="control-label">เดือยไม้ จำนวน(ตัว)</label>
                                     <input id="input-woodendowel-amount" name="input-woodendowel-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
-                              
+                             <!------------------------- บานพับ ------------------------------->
                                 <div class="col-sm-12 mb-2">
                                     <h5><label class="control-label" style="padding-right:1%;"><u>บานพับ</u></label></h5>
                                 </div>
@@ -199,7 +199,7 @@
                                     <input id="input-slidedoor2-amount" name="input-slidedoor2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-3 mb-2">
-                                    <label class="control-label">ชุดล้อบานเลื่อนแบบแขวน ยาว(เมตร)</label>
+                                    <label class="control-label">รางบานเลื่อนแบบแขวน ยาว(เมตร)</label>
                                     <input id="input-slidedoor2-size" name="input-slidedoor2-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-3 mb-2">
@@ -211,7 +211,7 @@
                                     <input id="input-slidedoor3-amount" name="input-slidedoor3-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-3 mb-2">
-                                    <label class="control-label">ชุดล้อบานเลื่อน Softclose ยาว(เมตร)</label>
+                                    <label class="control-label">รางบานเลื่อน Softclose ยาว(เมตร)</label>
                                     <input id="input-slidedoor3-size" name="input-slidedoor3-size" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-3 mb-2">
@@ -340,7 +340,7 @@
 
                                 <!------------------------- อื่นๆ ------------------------------->
                                 <div class="col-sm-12 mb-2" style="padding-top:1%;">
-                                    <h5><label class="control-label" style="padding-right:1%;"><u>เอจและลามิเนต</u></label></h5>
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>อื่นๆ</u></label></h5>
                                 </div>
                                 <div class="col-sm-3 mb-2">
                                     <label class="control-label">มือจับ แบบปุ่ม สี</label>
@@ -400,15 +400,15 @@
                                 <div class="col-sm-12 mb-2" style="padding-top:1%;">
                                     <h5><label class="control-label" style="padding-right:1%;"><u>เฟรมและคิ้ว</u></label></h5>
                                 </div>
-                                <div class="col-sm-3 mb-2">
+                                <div class="col-sm-4 mb-2">
                                     <label class="control-label">เฟรม สี</label>
                                     <input id="input-fandc1-color" name="input-fandc1-color" class="form-control" />
                                 </div>
-                                <div class="col-sm-3 mb-2">
+                                <div class="col-sm-4 mb-2">
                                     <label class="control-label">จำนวน(อัน)</label>
                                     <input id="input-fandc1-amount" name="input-fandc1-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
                                 </div>
-                                <div class="col-sm-6 mb-2">
+                                <div class="col-sm-4 mb-2">
                                     <label class="control-label">ยางรองกระจก จำนวน(เส้น)</label>
                                     <input id="input-fandc2-amount" name="input-fandc2-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
@@ -454,7 +454,7 @@
                                 </div>
                                 <div class="col-sm-4 mb-2">
                                     <label class="control-label">จำนวน(เส้น)</label>
-                                    <input id="input-fandc6-color" name="input-fandc6-color" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
+                                    <input id="input-fandc6-amount" name="input-fandc6-amount" class="form-control" type="number" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-4 mb-2">
                                     <label class="control-label">คิ้วไม้ อกไก่ เบอร์</label>
@@ -509,6 +509,11 @@
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">สีรองพื้น จำนวน(ถัง)</label>
                                     <input id="input-fandc12-amount" name="input-fandc12-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">อื่นๆ</label>
+                                    <textarea class="form-control" rows="5" id="input-other-desc" name="input-other-desc"></textarea>
+
                                 </div>
                                 <!------------------------- เฟรมและคิ้ว ------------------------------->
                      @*            <div class="col-sm-12 mb-2">
