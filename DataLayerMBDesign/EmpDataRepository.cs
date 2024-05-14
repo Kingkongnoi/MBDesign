@@ -95,7 +95,7 @@ namespace DataLayerMBDesign
                                 inner join tbPosition c on a.positionId = c.positionId
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.id desc", condition);
+                                order by a.updateDate desc, a.createDate desc", condition);
 
             return conn.Query<EmpDataView>(queryString, new { }, transaction: trans).ToList();
         }

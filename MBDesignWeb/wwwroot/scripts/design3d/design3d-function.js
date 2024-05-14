@@ -49,6 +49,7 @@ function renderGet3DQueueList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

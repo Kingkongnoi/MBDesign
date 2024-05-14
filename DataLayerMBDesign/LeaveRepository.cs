@@ -47,7 +47,7 @@ namespace DataLayerMBDesign
                                 inner join tbLeaveType c on a.leaveTypeId  = c.leaveTypeId
                                 where a.isDeleted = 0 and b.isDeleted = 0 and c.isDeleted = 0
                                 {0}
-                                order by a.leaveId desc
+                                order by a.updateDate desc, a.createDate desc
                                 ", condition);
 
             return conn.Query<LeaveView>(queryString, new { }, transaction: trans).ToList();

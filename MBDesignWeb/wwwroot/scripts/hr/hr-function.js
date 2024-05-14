@@ -83,6 +83,7 @@ function renderGetLeaveTypeList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -298,6 +299,7 @@ function renderGetLeaveInformationList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -856,6 +858,7 @@ function renderGetOtherPaymentList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1584,6 +1587,7 @@ function renderGetAttendanceList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

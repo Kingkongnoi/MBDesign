@@ -75,7 +75,7 @@ namespace DataLayerMBDesign
             FROM tbContractAgreement a inner join tbcust b on a.custId = b.custId 
             where a.isDeleted = 0 and a.status = 1 and b.isDeleted = 0 and b.status = 1
             {0}
-            order by contractNumber", condition);
+            order by a.updateDate desc, a.createDate desc", condition);
 
             return conn.Query<ContractAgreementView>(queryString,new { }, transaction: trans).ToList();
         }

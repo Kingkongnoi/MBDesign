@@ -50,7 +50,7 @@ namespace DataLayerMBDesign
             queryString.Append(" FROM tbStock a");
             queryString.Append(" where isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by id desc");
+            queryString.Append(" order by a.updateDate desc, a.createDate desc");
 
             return conn.Query<StockItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }

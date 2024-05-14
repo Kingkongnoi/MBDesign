@@ -715,6 +715,7 @@ function renderGetEmployeeList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1290,6 +1291,7 @@ function renderGetRoleList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1603,6 +1605,7 @@ function renderGetHolidayList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1810,6 +1813,7 @@ function renderGetDepartmentList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -2002,6 +2006,7 @@ function renderGetPositionList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

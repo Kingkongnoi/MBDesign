@@ -893,43 +893,6 @@ function callGetItemList() {
     });
 }
 
-
-
-//function callGetClearGlassList() {
-
-//    let calcode = ($('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == '' || $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == undefined) ? null : $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val();
-
-//    let loaded = $('#tb-search-clearglass-list');
-
-//    loaded.prepend(_loader);
-
-//    $.ajax({
-//        type: 'GET',
-//        url: `${app_settings.api_url}/api/Calculate/GetCalByCode?calcode=${calcode}&caltype=C`,
-//        success: function (data) {
-
-//            if (data.length > 0) {
-//                renderCalClearGlassList(data);
-//                $('.btn-print-search-calculate-clearglass').css('display', '');
-//            }
-//            else {
-//                $('.btn-print-search-calculate-clearglass').css('display', 'none');
-//            }
-//            loaded.find(_loader).remove();
-//        },
-//        error: function (err) {
-//            loaded.find(_loader).remove();
-//        }
-//    });
-//}
-
-
-
-
-
-
-
-
 function renderGetItemList(data) {
 
     $('#tb-product-list').DataTable(
@@ -939,6 +902,7 @@ function renderGetItemList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1014,6 +978,63 @@ function renderGetItemList(data) {
         }
     );
 }
+
+//function callGetClearGlassList() {
+
+//    let calcode = ($('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == '' || $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val() == undefined) ? null : $('#form-search-calculate-clearglass #input-search-calulate-code-clearglass').val();
+
+//    let loaded = $('#tb-search-clearglass-list');
+
+//    loaded.prepend(_loader);
+
+//    $.ajax({
+//        type: 'GET',
+//        url: `${app_settings.api_url}/api/Calculate/GetCalByCode?calcode=${calcode}&caltype=C`,
+//        success: function (data) {
+
+//            if (data.length > 0) {
+//                renderCalClearGlassList(data);
+//                $('.btn-print-search-calculate-clearglass').css('display', '');
+//            }
+//            else {
+//                $('.btn-print-search-calculate-clearglass').css('display', 'none');
+//            }
+//            loaded.find(_loader).remove();
+//        },
+//        error: function (err) {
+//            loaded.find(_loader).remove();
+//        }
+//    });
+//}
+
+
+
+
+
+
+function callGetItemById(id, typeId, modal, isView = false) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Product/GetItemByItemId?itemId=${id}`,
+        success: function (data) {
+            renderItemForm(data.item, typeId);
+            renderItemOptions(data.itemOptions, modal, isView);
+        },
+        error: function (err) {
+
+        }
+    });
+}
+function renderItemForm(data, typeId) {
+    let status = (data.status) ? 1 : 0;
+    $('#form-createProduct #select-product-type').val(typeId).trigger('change');
+    $('#form-createProduct input[name="input-product-code"]').val(data.itemId);
+    $('#form-createProduct input[name="input-product-name"]').val(data.itemName);
+    $('#form-createProduct input[name="input-product-price"]').val(data.itemPrice);
+    $('#form-createProduct #select-product-status').val(status).trigger('change');
+}
+
+
 
 
 function renderItemOptions(data, modal, isView = false) {
@@ -1185,6 +1206,7 @@ function renderGetTypeList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1385,6 +1407,7 @@ function renderGetStyleList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1606,6 +1629,7 @@ function renderGetAccountList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1741,6 +1765,7 @@ function renderGetProductItemQuickQTList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order : [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

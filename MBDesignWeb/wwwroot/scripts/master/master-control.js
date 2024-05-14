@@ -317,4 +317,12 @@
         }
     });
 
+    $(document).on('click', '.btn-edit-product', function () {
+        $(`#modal-createProduct #itemHeader`).text('แก้ไขข้อมูลสินค้า (Items)');
+        $(`#modal-createProduct`).modal('show');
+        _product_item_action = 'edit';
+        clearForm('modal-createProduct');
+        $('#modal-createProduct #divOptions').empty();
+        callGetItemById($(this).data('id'), $(this).data('typeid'), 'modal-createProduct');
+    });
 });

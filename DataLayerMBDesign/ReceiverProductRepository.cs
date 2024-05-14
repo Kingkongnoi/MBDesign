@@ -58,7 +58,7 @@ namespace DataLayerMBDesign
             queryString.Append(" ON rp.empid = emp.id");
             queryString.Append(" where rp.isDeleted = 0 and emp.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by rp.id desc");
+            queryString.Append(" order by rp.updateDate desc, rp.createDate desc");
 
             return conn.Query<ReceiverProductItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
