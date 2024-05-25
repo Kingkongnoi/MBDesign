@@ -107,7 +107,7 @@ namespace DataLayerMBDesign
                                 from tbCustOrder a inner join tbCust b on a.custId = b.custId 
                                 where a.isDeleted = 0 and b.isDeleted = 0
                                 {0}
-                                order by a.updateDate desc, a.createDate desc", condition);
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction:trans ).ToList();
 

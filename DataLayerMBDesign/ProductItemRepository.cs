@@ -57,7 +57,7 @@ namespace DataLayerMBDesign
             where a.isDeleted = 0 and b.isDeleted = 0
             {0}
             group by a.itemId, a.itemName, a.typeId, b.typeName, a.createDate, a.createBy, a.updateDate, a.updateBy, a.status
-            order by a.updateDate desc, a.createDate desc
+            order by case when a.updateDate is not null then a.updateDate else a.createDate end desc
             ", condition);
 
             return conn.Query<ProductItemView>(queryString, new { }, transaction: trans).ToList();

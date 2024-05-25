@@ -56,7 +56,7 @@ namespace DataLayerMBDesign
             queryString.Append(" FROM tbBrand a");
             queryString.Append(" where a.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by a.updateDate desc, a.createDate desc");
+            queryString.Append(" order by case when a.updateDate is not null then a.updateDate else a.createDate end desc");
 
             return conn.Query<BrandItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }

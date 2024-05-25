@@ -46,7 +46,7 @@ namespace DataLayerMBDesign
                                 from tbOtherPayment a inner join tbEmpData b on a.empId = b.id
                                 where a.isDeleted = 0 and b.isDeleted = 0
                                 {0}
-                                order by a.updateDate desc, a.createDate desc
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc
                                 ", condition);
 
             return conn.Query<OtherPaymentView>(queryString, new { }, transaction: trans).ToList();
