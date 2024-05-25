@@ -658,6 +658,21 @@ namespace BusinessLogicMBDesign.Master
                     };
                     added = _departmentRepository.Add(addedObject, conn, transaction);
 
+                    /* Create into tbRole */
+                    var existsRole = _roleRepository.GetFirstByName(model.departmentName, conn, transaction);
+                    if (existsRole == null)
+                    {
+                        var addedRole = new tbRole
+                        {
+                            name = model.departmentName,
+                            status = model.status,
+                            createDate = DateTime.UtcNow,
+                            createBy = model.loginCode
+                        };
+
+                        int? newRoleId = _roleRepository.Add(addedRole, conn, transaction);
+                    }
+
                     transaction.Commit();
                 }
                 catch(Exception ex)
@@ -692,6 +707,21 @@ namespace BusinessLogicMBDesign.Master
                         updateBy = model.loginCode
                     };
                     updated = _departmentRepository.Update(updatedObject, conn, transaction);
+
+                    /* Create into tbRole */
+                    var existsRole = _roleRepository.GetFirstByName(model.departmentName, conn, transaction);
+                    if (existsRole == null)
+                    {
+                        var addedRole = new tbRole
+                        {
+                            name = model.departmentName,
+                            status = model.status,
+                            createDate = DateTime.UtcNow,
+                            createBy = model.loginCode
+                        };
+
+                        int? newRoleId = _roleRepository.Add(addedRole, conn, transaction);
+                    }
 
                     transaction.Commit();
                 }
