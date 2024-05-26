@@ -1,8 +1,10 @@
 ﻿using BusinessLogicMBDesign.Spec;
+using DataLayerMBDesign;
 using EntitiesMBDesign;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Reporting.Map.WebForms.BingMaps;
+using System.Transactions;
 
 namespace MBDesignWeb.Controllers
 {
@@ -11,6 +13,7 @@ namespace MBDesignWeb.Controllers
     public class PlanksController : Controller
     {
         private readonly PlanksService _planksService;
+        private readonly PlanksDetailsService _planksDetailsService;
         private readonly SpecListDetailService _specListDetailService;
         private readonly IConfiguration _configuration;
 
@@ -18,6 +21,7 @@ namespace MBDesignWeb.Controllers
         {
             _configuration = configuration;
             _planksService = new PlanksService(_configuration);
+            _planksDetailsService = new PlanksDetailsService(_configuration);   
             _specListDetailService = new SpecListDetailService(_configuration);
         }
 
@@ -35,8 +39,8 @@ namespace MBDesignWeb.Controllers
         public JsonResult GetItemByItemId(int id)
         {
             var item = _planksService.GetPlanksItemById(id);
-
-            return new JsonResult(new { item = item });
+            var list = _planksService.GetPlanksDetailItemByID(id);
+            return new JsonResult(new { item = item , list = list });
         }
 
         [HttpGet]
@@ -69,12 +73,12 @@ namespace MBDesignWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult AddItem([FromBody] PlanksItemModel obj)
+        public JsonResult AddItem([FromBody] PlanksAddModel obj)
         {
             var result = true;
             var resultStatus = "success";
             var data = _planksService.AddPlanksItem(obj);
-
+          
             if (data == -1)
             {
                 result = false;
@@ -85,6 +89,25 @@ namespace MBDesignWeb.Controllers
                 result = false;
                 resultStatus = "error";
             }
+            if (result != false)
+            {
+                int? chkData = 0;
+                foreach (var item in obj.planksDetailsModels)
+                {
+                    chkData =  _planksDetailsService.AddPlanksDetailsItem(item,data);
+                }
+                if (chkData == -1)
+                {
+                    result = false;
+                    resultStatus = "duplicate";
+                }
+                else if (chkData == 0)
+                {
+                    result = false;
+                    resultStatus = "error";
+                }
+            }
+
 
             if (result != false)
             {
@@ -132,12 +155,35 @@ namespace MBDesignWeb.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult UpdateItem([FromBody] PlanksItemModel obj)
+        public JsonResult UpdateItem([FromBody] PlanksAddModel obj)
         {
             var result = true;
             var resultStatus = "success";
-            var data = _planksService.UpdatePlanksItem(obj);
 
+            string delid = obj.DeleteID;
+            if (!string.IsNullOrWhiteSpace(delid))
+            {
+                string[] lsitdel = delid.Split(new char[','], StringSplitOptions.RemoveEmptyEntries);
+                for (int i = 0; i < lsitdel.Length; i++)
+                {
+                    if (Convert.ToInt32(lsitdel[i].ToString()) !=0)
+                    {
+                        _planksDetailsService.DelItem(Convert.ToInt32(lsitdel[i].ToString()), obj.id);
+                    }
+                }
+            }
+            int? data = _planksService.UpdatePlanksItem(obj);
+            if (data !=0)
+            {
+                foreach (var item in obj.planksDetailsModels)
+                {
+                    if (item.id == 0)
+                    {
+                        data = _planksDetailsService.AddPlanksDetailsItem(item, obj.id);
+                    }
+                }
+             
+            }
             if (data == -1)
             {
                 result = false;

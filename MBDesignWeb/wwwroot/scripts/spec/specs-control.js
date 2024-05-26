@@ -1,10 +1,11 @@
 ﻿$(function () {
     callSelect2Status('#form-createPlanks #select-planks-status');
+    callSelectSizePlank('#form-createPlanks #select-planks-size');
     callSelect2Status('#form-search-planks #select-search-planks-status', true);
-    callSpecListQuatationNoCal('#form-add-calculate #select-cal-quotation-no', 'กรุณาเลือก','F');
+    callSpecListQuatationNoCal('#form-add-calculate #select-cal-quotation-no', 'กรุณาเลือก', 'F');
     callSpecListQuatationNoCal('#form-add-calculate-clearglass #select-clearglass-quotation-no', 'กรุณาเลือก', 'C');
     callSpecListQuatationNoPlanks('#form-createPlanks #select-quotation-no', 'กรุณาเลือก');
-    callSpecListQuatationNoFitting('#form-createFitting #select-fitting-quotation-no','กรุณาเลือก');
+    callSpecListQuatationNoFitting('#form-createFitting #select-fitting-quotation-no', 'กรุณาเลือก');
     callSpecListQuatationNo('#form-editSpec #select-edit-spec-quotation', 'กรุณาเลือก');
     callGetDesign3DNameSelectSpec();
     callGetSpecList();
@@ -12,7 +13,8 @@
     callFittingList();
     callSelectDoorType('#form-add-calculate #select-insert-glassdoor-type', true);
     callSelectDoorType('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass', true);
-
+    callStockProductData('#form-add-calculate #select-insert-product-item', 'กรุณาเลือก');
+    callStockProductData('#form-add-calculate-clearglass #select-insert-product-item-clearglass', 'กรุณาเลือก');
     callGetCalculateCode();
     callGetFittingCode();
     callGetFrameList();
@@ -62,7 +64,7 @@
         $(`#modal-createPlanks`).modal('show');
         _product_item_action = 'edit';
         clearForm('modal-createPlanks');
-        if (_product_item_action =="edit") {
+        if (_product_item_action == "edit") {
             $(`#select-quotation-no`).css('display', 'none');
             $("#input-quotation-no").css("display", "");
         }
@@ -71,6 +73,8 @@
             $("#input-quotation-no").css('display', 'none');
         }
         //$('#modal-createProduct #divOptions').empty();
+        $("#tb-planks-detail tbody tr").remove();
+
         callGetPlanksById($(this).data('id'), 'modal-createPlanks');
     });
 
@@ -101,10 +105,17 @@
         var _order_id = $(this).data('orderid');
         var _spec_id = $(this).data('specid');
         var _checkstatus_id = $(this).data('step');
-        console.log(_order_id);
-        console.log(_spec_id);
-        console.log(_checkstatus_id);
-        _product_item_action = 'edit';
+        //console.log(_order_id);
+        //console.log(_spec_id);
+        //console.log(_checkstatus_id);
+        if (_spec_id == 0) {
+            _product_item_action = 'add';
+        }
+        else {
+            _product_item_action = 'edit';
+        }
+        $("#input-order-id").val(_order_id);
+
         clearInputForm();
         CreateNewCheckList();
         $(`#select-edit-spec-quotation`).css('display', 'none');
@@ -148,6 +159,12 @@
     });
 
     $('#form-search-calculate .btn-search-calculate').on('click', function () {
+        callGetFrameList();
+    });
+
+    $('#nav-tab-master-calculate #nav-search-frameglass-tab').on('click', function () {
+
+        clearcalinsert();
         callGetFrameList();
     });
 
@@ -252,7 +269,13 @@
             row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCal('#${"row"}${rowid}')" title="ลบ">
                     <i class="fa fa-trash"></i></button>`));
             $('#tb-frameglass-list').append(row);
-            clearcalinsert();
+            clearcalinsert2();
+            var table = document.getElementById("tb-frameglass-list");
+            var tbodyRowCount = table.tBodies[0].rows.length;
+
+            if (tbodyRowCount > 0) {
+                $('#form-add-calculate #select-cal-quotation-no').attr('disabled', 'disabled');
+            }
         }
         else {
             var table = document.getElementById("tb-frameglass-list");
@@ -267,6 +290,7 @@
             if (rowCount == 0) {
                 $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
             }
+
             Swal.fire({
                 text: "กรุณากรอกข้อมูลให้ครบถ้วน",
                 icon: 'warning',
@@ -277,7 +301,7 @@
             }).then((result) => {
 
             });
-           
+
         }
     });
 
@@ -314,7 +338,13 @@
             row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCal('#${"row"}${rowid}')" title="ลบ">
                     <i class="fa fa-trash"></i></button>`));
             $('#tb-clearglass-list').append(row);
-            clearcalglassinsert();
+            clearcalglassinsert2();
+            var table = document.getElementById("tb-clearglass-list");
+            var tbodyRowCount = table.tBodies[0].rows.length;
+
+            if (tbodyRowCount > 0) {
+                $('#form-add-calculate-clearglass #select-clearglass-quotation-no').attr('disabled', 'disabled');
+            }
         }
         else {
             var table = document.getElementById("tb-clearglass-list");
@@ -329,6 +359,7 @@
             if (rowCount == 0) {
                 $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
             }
+
             Swal.fire({
                 text: "กรุณากรอกข้อมูลให้ครบถ้วน",
                 icon: 'warning',
@@ -343,12 +374,12 @@
     });
 
     $(document).on('click', '.btn-print-calf', function () {
-        RePrintFrameList($(this).data('id'));
+        RePrintFrameList($(this).data('id'), $(this).data('calid'));
 
     });
 
     $(document).on('click', '.btn-print-calc', function () {
-        RePrintGlassList($(this).data('id'));
+        RePrintGlassList($(this).data('id'), $(this).data('calid'));
 
     });
 
@@ -360,5 +391,240 @@
     $(document).on('click', '.btn-view-calc', function () {
         getPrintDetailClear($(this).data('id'));
 
+    });
+
+    $(document).on('click', '.btn-print-planks', function () {
+
+        //$('#modal-createProduct #divOptions').empty();
+        printPlanks($(this).data('id'));
+    });
+
+    $('#form-createPlanks .btn-modal-add-planks').on('click', function () {
+
+        if (_product_item_action != 'edit') {
+            var obj = {
+                id: ($('#input-planks-id').val() == "") ? 0 : $('#input-planks-id').val(),
+                orderid: $('#form-createPlanks #select-quotation-no').val(),
+                colorcode: $('#input-color-code').val(),
+                planksizeid: $('#form-createPlanks #select-planks-size').val(),
+                planksamount: $('#input-planks-amount').val(),
+                remark: $('#input-planks-remark').val(),
+                loginCode: _userCode
+            };
+
+            if (obj.colorcode != '' && obj.planksizeid != '' && obj.planksamount != '') {
+                var rowid = $('#tb-planks-detail tr').length;
+               /* var codelist = $("#hdplankslist").val();*/
+                //var checkdup = false;
+
+
+                //if (codelist != "") {
+                //    var lst = codelist.split(',');
+                //    for (var i = 0; i < lst.length; i++) {
+                //        if (lst[i] == obj.stockproductcode) {
+                //            checkdup = true;
+                //        }
+                //    }
+                //    if (!checkdup) {
+                //        $("#hdplankslist").val($("#hdplankslist").val() + ',' + obj.stockproductcode)
+                //    }
+                //}
+                //else {
+                //    $("#hdproductcodelist").val(obj.stockproductcode);
+                //}
+
+                //var lstcode = $("#hdproductcodelist").val().split(',');
+                //for (var i = 0; i < lstcode; i++) {
+                //    var lstdel = $("#hddelproductcodelist").val().split(',');
+                //    if (lstdel.length > 0) {
+                //        lstdel = jQuery.grep(lstdel, function (value) {
+                //            return value != lstcode[i];
+                //        });
+
+                //        if (lstdel.length == 0) {
+                //            $("#hddelproductcodelist").val('');
+                //        }
+                //        else {
+                //            for (var i = 0; i < lstdel.length; i++) {
+                //                if (i == 0) {
+                //                    $("#hddelproductcodelist").val(lstdel[i]);
+                //                }
+                //                else {
+                //                    $("#hddelproductcodelist").val($("#hddelproductcodelist").val() + ',' + lstdel[i]);
+                //                }
+                //            }
+                //        }
+                //    }
+                //}
+
+                /*               if (!checkdup) {*/
+
+                //var productfull = $('#form-getInStock #select-getInStock-Product option:selected').text();
+                //var productname;;
+                //if (productfull != '') {
+                //    productname = productfull.split('-');
+                //}
+                var row;
+                row = $('<tr id="row' + rowid + '">');
+
+                /*  row.append($('<td style="display:none;">').html(length));*/
+
+                row.append($('<td style="display:none;">').html(0));
+                row.append($('<td style="display:none;">').html(obj.id));
+                row.append($('<td style="display:none;">').html(obj.planksizeid));
+                row.append($('<td>').html(obj.colorcode));
+                row.append($('<td>').html($('#form-createPlanks #select-planks-size option:selected').text()));
+                row.append($('<td>').html(obj.planksamount));
+                row.append($('<td>').html(obj.remark));
+
+                row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-planks-detail" onclick="delRowCalPlanks('#${"row"}${rowid}','${obj.id}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                $('#tb-planks-detail').append(row);
+
+                var table = document.getElementById("tb-planks-detail");
+                var tbodyRowCount = table.tBodies[0].rows.length;
+
+                if (tbodyRowCount > 0) {
+
+                    $('#form-createPlanks #select-quotation-no').attr('disabled', 'disabled');
+                }
+                clearPlanksAdd();
+            }
+            else {
+                var rowc = 0;
+                var table = document.getElementById("tb-planks-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowc++;
+                    }
+                }
+
+                if (rowc == 0) {
+                    $('#form-createPlanks #select-quotation-no').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
+        }
+        else {
+            var obj = {
+                id: ($('#input-planks-id').val() == "") ? 0 : $('#input-planks-id').val(),
+                orderid: $('#form-createPlanks #select-quotation-no').val(),
+                colorcode: $('#input-color-code').val(),
+                planksizeid: $('#form-createPlanks #select-planks-size').val(),
+                planksamount: $('#input-planks-amount').val(),
+                remark: $('#input-planks-remark').val(),
+                loginCode: _userCode
+            };
+
+            if (obj.colorcode != '' && obj.planksizeid != '' && obj.planksamount != '') {
+                var rowid = $('#tb-stockin-detail tr').length;
+                //var codelist = $("#hdproductcodelist").val();
+                //var checkdup = false;
+
+
+                //if (codelist != "") {
+                //    var lst = codelist.split(',');
+                //    for (var i = 0; i < lst.length; i++) {
+                //        if (lst[i] == obj.stockproductcode) {
+                //            checkdup = true;
+                //        }
+                //    }
+                //    if (!checkdup) {
+                //        $("#hdproductcodelist").val($("#hdproductcodelist").val() + ',' + obj.stockproductcode)
+                //    }
+                //}
+                //else {
+                //    $("#hdproductcodelist").val(obj.stockproductcode);
+                //}
+
+
+                /*   var lstcode = $("#hdproductcodelist").val().split(',');*/
+                /*   for (var i = 0; i < lstcode.length; i++) {*/
+                //var lstdel = $("#hddelplankslist").val().split(',');
+                //if (lstdel.length > 0) {
+                //    for (var i = 0; i < lstdel.length; i++) {
+                //        if (i == 0) {
+                //            $("#hddelplankslist").val(lstdel[i]);
+                //        }
+                //        else {
+                //            $("#hddelplankslist").val($("#hddelplankslist").val() + ',' + lstdel[i]);
+                //        }
+                //    }
+                //}
+                //else {
+                //    $("#hddelproductcodelist").val('');
+                //}
+
+                //var productfull = $('#form-getInStock #select-getInStock-Product option:selected').text();
+                //var productname;;
+                //if (productfull != '') {
+                //    productname = productfull.split('-');
+                //}
+                var row;
+                row = $('<tr id="row' + rowid + '">');
+                /*  row.append($('<td style="display:none;">').html(length));*/
+
+                row.append($('<td style="display:none;">').html(0));
+                row.append($('<td style="display:none;">').html(obj.id));
+                row.append($('<td style="display:none;">').html(obj.planksizeid));
+                row.append($('<td>').html(obj.colorcode));
+                row.append($('<td>').html($('#form-createPlanks #select-planks-size option:selected').text()));
+                row.append($('<td>').html(obj.planksamount));
+                row.append($('<td>').html(obj.remark));
+
+                row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-planks-detail"  onclick="delRowCalPlanks('#${"row"}${rowid}','${obj.id}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                $('#tb-planks-detail').append(row);
+
+                var table = document.getElementById("tb-planks-detail");
+                var tbodyRowCount = table.tBodies[0].rows.length;
+
+                if (tbodyRowCount > 0) {
+
+                    $('form-createPlanks #select-quotation-no').attr('disabled', 'disabled');
+                }
+
+
+                clearPlanksAdd();
+            }
+            else {
+                var rowc = 0;
+                var table = document.getElementById("tb-planks-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowc++;
+                    }
+                }
+
+                if (rowc == 0) {
+                    $('#form-createPlanks #select-quotation-no').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
+        }
     });
 })

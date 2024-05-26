@@ -87,6 +87,14 @@ namespace MBDesignWeb.Controllers
 
             return new JsonResult(data);
         }
+
+        [HttpGet]
+        public JsonResult GetProductDetailByCode(string productcode)
+        {
+            var data = _stockproductService.GetStockunitprice(productcode);
+
+            return new JsonResult(data);
+        }
         #endregion
 
         #region Post

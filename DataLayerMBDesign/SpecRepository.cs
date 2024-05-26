@@ -13,7 +13,7 @@ namespace DataLayerMBDesign
             return conn.Insert(obj, transaction: trans);
         }
 
-        public int Update(tbSpec obj,int status, SqlConnection conn, SqlTransaction? trans = null)
+        public int Update(tbSpec obj, int status, SqlConnection conn, SqlTransaction? trans = null)
         {
             StringBuilder queryString = new StringBuilder();
             queryString.Append(" update tbSpec");
@@ -29,12 +29,13 @@ namespace DataLayerMBDesign
             queryString.Append(" where isDeleted = 0 and id = @id");
             queryString.Append(" select @@ROWCOUNT;");
 
-            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.updateDate, obj.updateBy,obj.approveDate,obj.approveBy, obj.id }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString.ToString(), new { obj.updateDate, obj.updateBy, obj.approveDate, obj.approveBy, obj.id }, transaction: trans);
         }
 
         public List<specListModel> GetAll(string quatationcode, string empName, int checkListstatus, string installDate, SqlConnection conn, SqlTransaction? trans = null)
         {
             string condition = @"";
+            string queryString = string.Empty;
 
             if (!string.IsNullOrEmpty(quatationcode) && quatationcode != "null")
             {
@@ -53,7 +54,40 @@ namespace DataLayerMBDesign
             {
                 condition += string.Format(" and  FORMAT(co.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
-            string queryString = string.Format(@"select s.id,s.orderid,co.quotationNumber
+            if (string.IsNullOrWhiteSpace(condition))
+            {
+                queryString = string.Format(@"select s.id,s.orderid,co.quotationNumber
+                                               ,co.installDate
+                                               ,(select empFirstName +' '+empLastName from tbEmpData where id = d.ownerEmpId) as FullName
+                                               ,sd.commitDate
+                                               ,sd.checkliststatus as statusid
+                                               ,(select checklistname from tbMasterCheckListSpec where id = sd.checkliststatus) as checklistStatus
+                                               ,case when s.updateDate is not null then s.updateDate else s.createDate end lastUpdateDate
+                                               ,case when Isnull(s.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = s.updateBy and isDeleted = 0) end lastUpdateBy
+                                   from tbSpec s
+                                   inner join tbSpecListDetail sd on s.id = sd.specid
+                                   inner join tbCustOrder co on s.orderid = co.orderid
+                        inner join tbDesign3D d on co.orderId = d.orderId
+                    
+                                   where d.checklistStatusId =14 and sd.checkliststatus = (select max(checkliststatus) from tbSpecListDetail where specid = s.id and transactionActive = 'A' and transactionStatus = 'A')
+								   union
+								   select 0 as id,co.orderid,co.quotationNumber
+                                               ,co.installDate
+                                               ,(select empFirstName +' '+empLastName from tbEmpData where id = d.ownerEmpId) as FullName
+                                               ,null as commitDate
+                                               ,d.checklistStatusId as statusid
+                                               ,(select name from tbStatus where statusId = d.checklistStatusId) as checklistStatus
+                                               ,case when co.updateDate is not null then co.updateDate else co.createDate end lastUpdateDate
+                                               ,case when Isnull(co.updateDate,'') ='' then (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = co.createBy and isDeleted = 0) else (select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = co.updateBy and isDeleted = 0) end lastUpdateBy
+                                   from tbCustOrder co
+                                   inner join tbDesign3D d on co.orderId = d.orderId
+								  
+                                   where d.checklistStatusId =14 and co.orderId not in (select orderid from tbSpec where  isDeleted =0)
+								   order by lastUpdateDate desc");
+            }
+            else
+            {
+                queryString = string.Format(@"select s.id,s.orderid,co.quotationNumber
                                                ,co.installDate
                                                ,(select empFirstName +' '+empLastName from tbEmpData where id = d.ownerEmpId) as FullName
                                                ,sd.commitDate
@@ -68,6 +102,8 @@ namespace DataLayerMBDesign
                     
                                    where d.checklistStatusId =14 and sd.checkliststatus = (select max(checkliststatus) from tbSpecListDetail where specid = s.id and transactionActive = 'A' and transactionStatus = 'A') {0}
                                    order by sd.createDate desc", condition);
+            }
+
 
             return conn.Query<specListModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
@@ -138,10 +174,9 @@ namespace DataLayerMBDesign
         {
             string condition = @"";
 
-            if (id > 0)
-            {
-                condition += string.Format(" and s.id = {0}", id);
-            }
+
+            condition += string.Format(" and s.id = {0}", id);
+
 
             string queryString = string.Format(@"select s.id,s.orderid,co.quotationNumber
                                                ,co.installDate

@@ -82,7 +82,7 @@ namespace BusinessLogicMBDesign.Spec
                             {
                                 specid = model.id,
                                 empid = model.empid,
-                                commitDate = DateTime.Now,
+                                commitDate = model.commitDate,
                                 checkliststatus = Convert.ToInt32(status),
                                 transactionActive = "A",
                                 transactionStatus = "A",

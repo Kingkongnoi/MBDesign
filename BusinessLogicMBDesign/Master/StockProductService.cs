@@ -43,7 +43,15 @@ namespace BusinessLogicMBDesign.Master
                 return _stockproductRepository.GetAll(0, 0, 0, stockid, string.Empty, string.Empty, "1", conn);
             }
         }
+        public stockunitprice GetStockunitprice(string productcode) 
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
 
+                return _stockproductRepository.GetStockunitprice(productcode, conn);
+            }
+        }
         public tbStockProduct GetStockProductItemById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

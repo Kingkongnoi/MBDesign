@@ -3,6 +3,7 @@ using EntitiesMBDesign;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -73,7 +74,7 @@ namespace DataLayerMBDesign
 
             StringBuilder queryString = new StringBuilder();
             queryString.Append("SELECT a.id,a.productcode,a.productname" +
-                ",ISNULL((SELECT Sum(isnull(amount,0)) from tbStockProductManage where stockproductcode = a.productcode and isDeleted =0 and status =1 and actiontype= 'I'),0) - ISNULL((SELECT Sum(isnull(amount,0)) from tbStockProductManage where stockproductcode = a.productcode and isDeleted =0 and status =1 and actiontype='W'),0) as stockamount" +
+                ",ISNULL((SELECT Sum(isnull(pm.amount,0)) from tbStockProductManageMaster pmm inner join tbStockProductManage pm on pmm.id = pm.stockmanagemasterid where pm.stockproductcode = a.productcode and pm.isDeleted =0 and pm.status =1 and pmm.actiontype= 'I'),0) - ISNULL((SELECT Sum(isnull(pm.amount,0)) from tbStockProductManageMaster pmm inner join tbStockProductManage pm on pmm.id = pm.stockmanagemasterid where pm.stockproductcode = a.productcode and pm.isDeleted =0 and pm.status =1 and pmm.actiontype='W'),0) as stockamount" +
                 ",a.productprice,a.groupid,a.subgroupid,a.brandid,a.stockid,a.unitmasterid,g.groupname,gs.subgroupname,b.brandname,s.stockname,u.unitname");
             queryString.Append(" FROM tbStockProduct a");
             queryString.Append(" inner join tbGroup g on g.id = a.groupid");
@@ -169,6 +170,18 @@ namespace DataLayerMBDesign
                                 order by id";
 
             return conn.Query<tbUnitMaster>(queryString, new { }, transaction: trans).ToList();
+        }
+
+        public stockunitprice GetStockunitprice(string productdcode, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            string queryString = @"select um.unitname,sp.productprice
+                                from tbStockProduct sp inner join tbUnitMaster um on sp.unitmasterid = um.id
+                                where sp.isDeleted = 0 and sp.status = 1
+                                and sp.productcode = @productdcode
+                                order by sp.id"
+            ;
+
+            return conn.QueryFirstOrDefault<stockunitprice>(queryString, new { productdcode}, transaction: trans);
         }
     }
 }

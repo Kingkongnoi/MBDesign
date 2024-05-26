@@ -4,8 +4,8 @@
     const result = document.getElementById('select-group-name');
 
     const inputHandler = function (e) {
-        console.log(e.target.value.trim());
-        if (e.target.value.length > 0 && e.target.value.trim() !="") {
+        /*     console.log(e.target.value.trim());*/
+        if (e.target.value.length > 0 && e.target.value.trim() != "") {
             $('#form-createSubGroup #select-group-name').removeAttr("disabled");
         }
         else {
@@ -57,8 +57,7 @@
     callStockData('#form-search-stockout #select-search-stockout-stock', '-- เลือกทั้งหมด --');
     callStockData('#form-getOutStock #select-getOutStock-Stock', 'กรุณาเลือก');
     callStockData('#form-getInStock #select-getInStock-Stock', 'กรุณาเลือก');
-    callStockProductData('#form-add-calculate #select-insert-product-item', '-- กรุณาเลือก --');
-    callStockProductData('#form-add-calculate-clearglass #select-insert-product-item-clearglass', '-- กรุณาเลือก --');
+
     callUnitData('#form-createStockProduct #select-viewstock-unit', 'กรุณาเลือก');
     callRecieverList('#form-getInStock #select-getInStock-by', 'กรุณาเลือก');
     callRecieverList('#form-search-stockin #select-search-stockin-by', '-- เลือกทั้งหมด --')
@@ -113,7 +112,7 @@
 
     $('.btn-add-viewstock').on('click', function () {
         _product_item_action = 'add';
-        $(`#modal-createStockProduct #itemHeader`).text('เพิ่มหมวดหมู่หลัก');
+        $(`#modal-createStockProduct #itemHeader`).text('เพิ่มสินค้า');
         $('#modal-createStockProduct').modal('show');
     });
 
@@ -159,7 +158,19 @@
         _product_item_action = 'edit';
         clearForm('modal-getInStock');
         //$('#modal-createProduct #divOptions').empty();
-        callGetManangeListByID($(this).data('id'), 'modal-getInStock','getin');
+        callGetManangeListByID($(this).data('id'), 'modal-getInStock', 'getin');
+    });
+
+    $(document).on('click', '.btn-print-stockin', function () {
+
+        //$('#modal-createProduct #divOptions').empty();
+        printGetIn($(this).data('id'));
+    });
+
+    $(document).on('click', '.btn-print-stockout', function () {
+
+        //$('#modal-createProduct #divOptions').empty();
+        printGetOut($(this).data('id'));
     });
 
     $(document).on('click', '.btn-edit-stockout', function () {
@@ -168,7 +179,7 @@
         _product_item_action = 'edit';
         clearForm('modal-getOutStock');
         //$('#modal-createProduct #divOptions').empty();
-        callGetManangeListByID($(this).data('id'), 'modal-getOutStock','getout');
+        callGetManangeListByID($(this).data('id'), 'modal-getOutStock', 'getout');
     });
 
     $(document).on('click', '.btn-edit-subgroup', function () {
@@ -373,6 +384,12 @@
     $('.btn-modal-save-getin').on('click', function () {
         DoAddOrUpdateGetin("modal-getInStock");
     });
+    $('.btn-modal-cancel-getin').on('click', function () {
+        clearGetinSave();
+    });
+    $('.btn-modal-cancel-getout').on('click', function () {
+        clearGetoutSave();
+    });
     $('.btn-modal-save-getout').on('click', function () {
         DoAddOrUpdateGetout("modal-getOutStock");
     });
@@ -525,6 +542,654 @@
             /*      callProductTypeSelect2('#form-search-Group #select-search-product-type', 'ทั้งหมด');*/
             callGetOutList();
 
+        }
+    });
+
+    $('#form-getInStock .btn-modal-add-getin').on('click', function () {
+
+        if (_product_item_action != 'edit') {
+            var obj = {
+                id: ($('#input-getin-id').val() == "") ? 0 : $('#input-getin-id').val(),
+                documentcode: $('#input-getInStock-code').val(),
+                stockid: $('#form-getInStock #select-getInStock-Stock').val(),
+                stockproductcode: $('#form-getInStock #select-getInStock-Product').val(),
+                dealername: $('#input-getInStock-dealer').val(),
+                receiverid: $('#form-getInStock #select-getInStock-by').val(),
+                actiondate: $('#input-getInStock-date').val(),
+                actiontype: 'I',
+                amount: $('#input-getInStock-amount').val(),
+                remark: $('#input-getInStock-remark').val(),
+                status: ($('#form-getInStock #select-getInStock-status').val() == "1") ? true : false,
+                loginCode: _userCode
+            };
+
+            if (obj.stockid != '' && obj.stockproductcode != '' && obj.dealername != '' && obj.receiverid != '' && obj.actiondate != '') {
+                var rowid = $('#tb-stockin-detail tr').length;
+                var codelist = $("#hdproductcodelist").val();
+                var checkdup = false;
+
+
+                if (codelist != "") {
+                    var lst = codelist.split(',');
+                    for (var i = 0; i < lst.length; i++) {
+                        if (lst[i] == obj.stockproductcode) {
+                            checkdup = true;
+                        }
+                    }
+                    if (!checkdup) {
+                        $("#hdproductcodelist").val($("#hdproductcodelist").val() + ',' + obj.stockproductcode)
+                    }
+                }
+                else {
+                    $("#hdproductcodelist").val(obj.stockproductcode);
+                }
+
+                var lstcode = $("#hdproductcodelist").val().split(',');
+                for (var i = 0; i < lstcode; i++) {
+                    var lstdel = $("#hddelproductcodelist").val().split(',');
+                    if (lstdel.length > 0) {
+                        lstdel = jQuery.grep(lstdel, function (value) {
+                            return value != lstcode[i];
+                        });
+
+                        console.log(lstdel);
+
+                        if (lstdel.length == 0) {
+                            $("#hddelproductcodelist").val('');
+                        }
+                        else {
+                            for (var i = 0; i < lstdel.length; i++) {
+                                if (i == 0) {
+                                    $("#hddelproductcodelist").val(lstdel[i]);
+                                }
+                                else {
+                                    $("#hddelproductcodelist").val($("#hddelproductcodelist").val() + ',' + lstdel[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                //for (var i = 0; i < lstcode.length; i++) {
+                //    var lstdel = $("#hddelproductcodelist").val().split(',');
+                //    if (lstdel.length > 0) {
+                //        lstdel = jQuery.grep(lstdel, function (value) {
+                //            return value != lstcode[i];
+                //        });
+                //        if (lstdel.length == 0) {
+                //            $("#hddelproductcodelist").val('');
+                //        }
+                //        else {
+                //            for (var i = 0; i < lstdel.length; i++) {
+                //                if (i == 0) {
+                //                    $("#hddelproductcodelist").val(lstdel[i]);
+                //                }
+                //                else {
+                //                    $("#hddelproductcodelist").val($("#hddelproductcodelist").val() + ',' + lstdel[i]);
+                //                }
+                //            }
+                //        }
+
+                //    }
+                //    else {
+                //        $("#hddelproductcodelist").val('');
+                //    }
+                //}
+
+
+                if (!checkdup) {
+
+                    var productfull = $('#form-getInStock #select-getInStock-Product option:selected').text();
+                    var productname;;
+                    if (productfull != '') {
+                        productname = productfull.split('-');
+                    }
+                    var row;
+                    row = $('<tr id="row' + rowid + '">');
+
+                    /*  row.append($('<td style="display:none;">').html(length));*/
+
+                    row.append($('<td style="display:none;">').html(rowid));
+                    row.append($('<td style="display:none;">').html(obj.stockid));
+                    row.append($('<td>').html(obj.stockproductcode));
+                    row.append($('<td>').html(productname[1]));
+                    row.append($('<td>').html($('#form-getInStock #select-getInStock-Stock option:selected').text()));
+                    row.append($('<td class="' + obj.stockproductcode + '_dealername">').html(obj.dealername));
+                    row.append($('<td>').html($('#form-getInStock #hdunitname').val()));
+                    row.append($('<td>').html($('#form-getInStock #unitprice').val()));
+                    row.append($('<td class="' + obj.stockproductcode + '_amount">').html(obj.amount));
+                    row.append($('<td class="' + obj.stockproductcode + '_remark">').html(obj.remark));
+
+                    row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCalManageStock('#${"row"}${rowid}','${obj.stockproductcode}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                    $('#tb-stockin-detail').append(row);
+
+                    var table = document.getElementById("tb-stockin-detail");
+                    var tbodyRowCount = table.tBodies[0].rows.length;
+
+                    if (tbodyRowCount > 0) {
+
+                        $('#form-getInStock #select-getInStock-by').attr('disabled', 'disabled');
+                        $('#form-getInStock #input-getInStock-date').attr('disabled', 'disabled');
+                    }
+
+                }
+                else {
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_amount`).each(
+                        function () {
+                            if ($(this).text() != obj.amount) {
+                                $(this).text(obj.amount);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_remark`).each(
+                        function () {
+                            if ($(this).text() != obj.remark) {
+                                $(this).text(obj.remark);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_dealername`).each(
+                        function () {
+                            if ($(this).text() != obj.dealername) {
+                                $(this).text(obj.dealername);
+                            }
+                        }
+                    );
+                }
+                clearGetinAdd();
+            }
+            else {
+                var table = document.getElementById("tb-stockin-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowCount++;
+                    }
+                }
+
+                if (rowCount == 0) {
+                    $('#form-getInStock #select-getInStock-by').removeAttr("disabled");
+                    $('#form-getInStock #input-getInStock-date').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
+        }
+        else {
+            var obj = {
+                id: ($('#input-getin-id').val() == "") ? 0 : $('#input-getin-id').val(),
+                documentcode: $('#input-getInStock-code').val(),
+                stockid: $('#form-getInStock #select-getInStock-Stock').val(),
+                stockproductcode: $('#form-getInStock #select-getInStock-Product').val(),
+                dealername: $('#input-getInStock-dealer').val(),
+                receiverid: $('#form-getInStock #select-getInStock-by').val(),
+                actiondate: $('#input-getInStock-date').val(),
+                actiontype: 'I',
+                amount: $('#input-getInStock-amount').val(),
+                remark: $('#input-getInStock-remark').val(),
+                status: ($('#form-getInStock #select-getInStock-status').val() == "1") ? true : false,
+                loginCode: _userCode
+            };
+
+            if (obj.stockid != '' && obj.stockproductcode != '' && obj.dealername != '' && obj.receiverid != '' && obj.actiondate != '') {
+                var rowid = $('#tb-stockin-detail tr').length;
+                var codelist = $("#hdproductcodelist").val();
+                var checkdup = false;
+
+
+                if (codelist != "") {
+                    var lst = codelist.split(',');
+                    for (var i = 0; i < lst.length; i++) {
+                        if (lst[i] == obj.stockproductcode) {
+                            checkdup = true;
+                        }
+                    }
+                    if (!checkdup) {
+                        $("#hdproductcodelist").val($("#hdproductcodelist").val() + ',' + obj.stockproductcode)
+                    }
+                }
+                else {
+                    $("#hdproductcodelist").val(obj.stockproductcode);
+                }
+
+
+                var lstcode = $("#hdproductcodelist").val().split(',');
+                for (var i = 0; i < lstcode.length; i++) {
+                    var lstdel = $("#hddelproductcodelist").val().split(',');
+                    if (lstdel.length > 0) {
+                        lstdel = jQuery.grep(lstdel, function (value) {
+                            return value != lstcode[i];
+                        });
+                        if (lstdel.length == 0) {
+                            $("#hddelproductcodelist").val('');
+                        }
+                        else {
+                            for (var i = 0; i < lstdel.length; i++) {
+                                if (i == 0) {
+                                    $("#hddelproductcodelist").val(lstdel[i]);
+                                }
+                                else {
+                                    $("#hddelproductcodelist").val($("#hddelproductcodelist").val() + ',' + lstdel[i]);
+                                }
+                            }
+                        }
+
+                    }
+                    else {
+                        $("#hddelproductcodelist").val('');
+                    }
+                }
+
+                if (!checkdup) {
+                    var productfull = $('#form-getInStock #select-getInStock-Product option:selected').text();
+                    var productname;;
+                    if (productfull != '') {
+                        productname = productfull.split('-');
+                    }
+                    var row;
+                    row = $('<tr id="row' + rowid + '">');
+                    /*  row.append($('<td style="display:none;">').html(length));*/
+
+                    row.append($('<td style="display:none;">').html(rowid));
+                    row.append($('<td style="display:none;">').html(obj.stockid));
+                    row.append($('<td>').html(obj.stockproductcode));
+                    row.append($('<td>').html(productname[1]));
+                    row.append($('<td>').html($('#form-getInStock #select-getInStock-Stock option:selected').text()));
+                    row.append($('<td class="' + obj.stockproductcode + '_dealername">').html(obj.dealername));
+                    row.append($('<td>').html($('#form-getInStock #hdunitname').val()));
+                    row.append($('<td>').html($('#form-getInStock #unitprice').val()));
+                    row.append($('<td class="' + obj.stockproductcode + '_amount">').html(obj.amount));
+                    row.append($('<td class="' + obj.stockproductcode + '_remark">').html(obj.remark));
+
+                    row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCalManageStock('#${"row"}${rowid}','${obj.stockproductcode}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                    $('#tb-stockin-detail').append(row);
+
+                    var table = document.getElementById("tb-stockin-detail");
+                    var tbodyRowCount = table.tBodies[0].rows.length;
+
+                    if (tbodyRowCount > 0) {
+
+                        $('#form-getInStock #select-getInStock-by').attr('disabled', 'disabled');
+                        $('#form-getInStock #input-getInStock-date').attr('disabled', 'disabled');
+                    }
+
+                }
+                else {
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_amount`).each(
+                        function () {
+                            if ($(this).text() != obj.amount) {
+                                $(this).text(obj.amount);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_remark`).each(
+                        function () {
+                            if ($(this).text() != obj.remark) {
+                                $(this).text(obj.remark);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockin-detail tr td.${obj.stockproductcode}_dealername`).each(
+                        function () {
+                            if ($(this).text() != obj.dealername) {
+                                $(this).text(obj.dealername);
+                            }
+                        }
+                    );
+                }
+                clearGetinAdd();
+            }
+            else {
+                var table = document.getElementById("tb-stockin-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowCount++;
+                    }
+                }
+
+                if (rowCount == 0) {
+                    $('#form-getInStock #select-getInStock-by').removeAttr("disabled");
+                    $('#form-getInStock #input-getInStock-date').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
+        }
+    });
+
+    $('#form-getOutStock .btn-modal-add-getout').on('click', function () {
+
+        if (_product_item_action != 'edit') {
+            var obj = {
+                id: ($('#input-getout-id').val() == "") ? 0 : $('#input-getout-id').val(),
+                documentcode: $('#input-getOutStock-code').val(),
+                stockid: $('#form-getOutStock #select-getOutStock-Stock').val(),
+                stockproductcode: $('#form-getOutStock #select-getOutStock-Product').val(),
+                dealername: $('#input-getOutStock-dealer').val(),
+                receiverid: $('#form-getOutStock #select-getOutStock-by').val(),
+                actiondate: $('#input-getOutStock-date').val(),
+                actiontype: 'O',
+                amount: $('#input-getOutStock-amount').val(),
+                remark: $('#input-getOutStock-remark').val(),
+                status: ($('#form-getOutStock #select-getOutStock-status').val() == "1") ? true : false,
+                loginCode: _userCode
+            };
+
+            if (obj.stockid != '' && obj.stockproductcode != '' && obj.dealername != '' && obj.receiverid != '' && obj.actiondate != '') {
+                var rowid = $('#tb-stockout-detail tr').length;
+                var codelist = $("#hdproductcodelistout").val();
+                var checkdup = false;
+
+                if (codelist != "") {
+                    var lst = codelist.split(',');
+                    for (var i = 0; i < lst.length; i++) {
+                        if (lst[i] == obj.stockproductcode) {
+                            checkdup = true;
+                        }
+                    }
+                    if (!checkdup) {
+                        $("#hdproductcodelistout").val($("#hdproductcodelistout").val() + ',' + obj.stockproductcode)
+                    }
+                }
+                else {
+                    $("#hdproductcodelistout").val(obj.stockproductcode);
+                }
+
+                var lstcode = $("#hdproductcodelistout").val().split(',');
+                for (var i = 0; i < lstcode; i++) {
+                    var lstdel = $("#hddelproductcodelistout").val().split(',');
+                    if (lstdel.length > 0) {
+                        lstdel = jQuery.grep(lstdel, function (value) {
+                            return value != lstcode[i];
+                        });
+
+                        console.log(lstdel);
+
+                        if (lstdel.length == 0) {
+                            $("#hddelproductcodelistout").val('');
+                        }
+                        else {
+                            for (var i = 0; i < lstdel.length; i++) {
+                                if (i == 0) {
+                                    $("#hddelproductcodelistout").val(lstdel[i]);
+                                }
+                                else {
+                                    $("#hddelproductcodelistout").val($("#hddelproductcodelistout").val() + ',' + lstdel[i]);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (!checkdup) {
+
+                    var productfull = $('#form-getOutStock #select-getOutStock-Product option:selected').text();
+                    var productname;;
+                    if (productfull != '') {
+                        productname = productfull.split('-');
+                    }
+                    var row;
+                    row = $('<tr id="row' + rowid + '">');
+
+                    /*  row.append($('<td style="display:none;">').html(length));*/
+
+                    row.append($('<td style="display:none;">').html(rowid));
+                    row.append($('<td style="display:none;">').html(obj.stockid));
+                    row.append($('<td>').html(obj.stockproductcode));
+                    row.append($('<td>').html(productname[1]));
+                    row.append($('<td>').html($('#form-getOutStock #select-getOutStock-Stock option:selected').text()));
+                    row.append($('<td class="' + obj.stockproductcode + '_dealername">').html(obj.dealername));
+                    row.append($('<td>').html($('#form-getOutStock #hdunitname').val()));
+                    row.append($('<td>').html($('#form-getOutStock #unitprice').val()));
+                    row.append($('<td class="' + obj.stockproductcode + '_amount">').html(obj.amount));
+                    row.append($('<td class="' + obj.stockproductcode + '_remark">').html(obj.remark));
+
+                    row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCalManageStock('#${"row"}${rowid}','${obj.stockproductcode}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                    $('#tb-stockout-detail').append(row);
+
+                    var table = document.getElementById("tb-stockout-detail");
+                    var tbodyRowCount = table.tBodies[0].rows.length;
+
+                    if (tbodyRowCount > 0) {
+
+                        $('#form-getOutStock #select-getOutStock-by').attr('disabled', 'disabled');
+                        $('#form-getOutStock #input-getOutStock-date').attr('disabled', 'disabled');
+                    }
+
+                }
+                else {
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_amount`).each(
+                        function () {
+                            if ($(this).text() != obj.amount) {
+                                $(this).text(obj.amount);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_remark`).each(
+                        function () {
+                            if ($(this).text() != obj.remark) {
+                                $(this).text(obj.remark);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_dealername`).each(
+                        function () {
+                            if ($(this).text() != obj.dealername) {
+                                $(this).text(obj.dealername);
+                            }
+                        }
+                    );
+                }
+                clearGetoutAdd();
+            }
+            else {
+                var table = document.getElementById("tb-stockout-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowCount++;
+                    }
+                }
+
+                if (rowCount == 0) {
+                    $('#form-getOutStock #select-getOutStock-by').removeAttr("disabled");
+                    $('#form-getOutStock #input-getOutStock-date').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
+        }
+        else {
+            var obj = {
+                id: ($('#input-getout-id').val() == "") ? 0 : $('#input-getout-id').val(),
+                documentcode: $('#input-getOutStock-code').val(),
+                stockid: $('#form-getOutStock #select-getOutStock-Stock').val(),
+                stockproductcode: $('#form-getInStock #select-getOutStock-Product').val(),
+                dealername: $('#input-getOutStock-dealer').val(),
+                receiverid: $('#form-getOutStock #select-getOutStock-by').val(),
+                actiondate: $('#input-getOutStock-date').val(),
+                actiontype: 'I',
+                amount: $('#input-getOutStock-amount').val(),
+                remark: $('#input-getOutStock-remark').val(),
+                status: ($('#form-getOutStock #select-getOutStock-status').val() == "1") ? true : false,
+                loginCode: _userCode
+            };
+
+            if (obj.stockid != '' && obj.stockproductcode != '' && obj.dealername != '' && obj.receiverid != '' && obj.actiondate != '') {
+                var rowid = $('#tb-stockout-detail tr').length;
+                var codelist = $("#hdproductcodelistout").val();
+                var checkdup = false;
+
+
+                if (codelist != "") {
+                    var lst = codelist.split(',');
+                    for (var i = 0; i < lst.length; i++) {
+                        if (lst[i] == obj.stockproductcode) {
+                            checkdup = true;
+                        }
+                    }
+                    if (!checkdup) {
+                        $("#hdproductcodelistout").val($("#hdproductcodelistout").val() + ',' + obj.stockproductcode)
+                    }
+                }
+                else {
+                    $("#hdproductcodelistout").val(obj.stockproductcode);
+                }
+
+
+                var lstcode = $("#hdproductcodelistout").val().split(',');
+                for (var i = 0; i < lstcode.length; i++) {
+                    var lstdel = $("#hddelproductcodelistout").val().split(',');
+                    if (lstdel.length > 0) {
+                        lstdel = jQuery.grep(lstdel, function (value) {
+                            return value != lstcode[i];
+                        });
+                        if (lstdel.length == 0) {
+                            $("#hddelproductcodelistout").val('');
+                        }
+                        else {
+                            for (var i = 0; i < lstdel.length; i++) {
+                                if (i == 0) {
+                                    $("#hddelproductcodelistout").val(lstdel[i]);
+                                }
+                                else {
+                                    $("#hddelproductcodelistout").val($("#hddelproductcodelistout").val() + ',' + lstdel[i]);
+                                }
+                            }
+                        }
+
+                    }
+                    //else {
+                    //    $("#hddelproductcodelistout").val('');
+                    //}
+                }
+
+                if (!checkdup) {
+                    var productfull = $('#form-getOutStock #select-getOutStock-Product option:selected').text();
+                    var productname;;
+                    if (productfull != '') {
+                        productname = productfull.split('-');
+                    }
+                    var row;
+                    row = $('<tr id="row' + rowid + '">');
+                    /*  row.append($('<td style="display:none;">').html(length));*/
+
+                    row.append($('<td style="display:none;">').html(rowid));
+                    row.append($('<td style="display:none;">').html(obj.stockid));
+                    row.append($('<td>').html(obj.stockproductcode));
+                    row.append($('<td>').html(productname[1]));
+                    row.append($('<td>').html($('#form-getOutStock #select-getOutStock-Stock option:selected').text()));
+                    row.append($('<td class="' + obj.stockproductcode + '_dealername">').html(obj.dealername));
+                    row.append($('<td>').html($('#form-getOutStock #hdunitname').val()));
+                    row.append($('<td>').html($('#form-getOutStock #unitprice').val()));
+                    row.append($('<td class="' + obj.stockproductcode + '_amount">').html(obj.amount));
+                    row.append($('<td class="' + obj.stockproductcode + '_remark">').html(obj.remark));
+
+                    row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-group"  onclick="delRowCalManageStock('#${"row"}${rowid}','${obj.stockproductcode}')" title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+                    $('#tb-stockout-detail').append(row);
+
+                    var table = document.getElementById("tb-stockout-detail");
+                    var tbodyRowCount = table.tBodies[0].rows.length;
+
+                    if (tbodyRowCount > 0) {
+
+                        $('#form-getOutStock #select-getOutStock-by').attr('disabled', 'disabled');
+                        $('#form-getOutStock #input-getOutStock-date').attr('disabled', 'disabled');
+                    }
+
+                }
+                else {
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_amount`).each(
+                        function () {
+                            if ($(this).text() != obj.amount) {
+                                $(this).text(obj.amount);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_remark`).each(
+                        function () {
+                            if ($(this).text() != obj.remark) {
+                                $(this).text(obj.remark);
+                            }
+                        }
+                    );
+
+                    $(`#tb-stockout-detail tr td.${obj.stockproductcode}_dealername`).each(
+                        function () {
+                            if ($(this).text() != obj.dealername) {
+                                $(this).text(obj.dealername);
+                            }
+                        }
+                    );
+                }
+                clearGetoutAdd();
+            }
+            else {
+                var table = document.getElementById("tb-stockout-detail");
+                var rows = table.getElementsByTagName("tr")
+                for (var i = 0; i < rows.length; i++) {
+
+                    if (rows[i].getElementsByTagName("td").length > 0) {
+                        rowCount++;
+                    }
+                }
+
+                if (rowCount == 0) {
+                    $('#form-getOutStock #select-getOutStock-by').removeAttr("disabled");
+                    $('#form-getOutStock #input-getOutStock-date').removeAttr("disabled");
+                }
+
+                Swal.fire({
+                    text: "กรุณากรอกข้อมูลให้ครบถ้วน",
+                    icon: 'warning',
+                    showCancelButton: false,
+                    confirmButtonColor: _modal_primary_color_code,
+                    //cancelButtonColor: _modal_default_color_code,
+                    confirmButtonText: 'ตกลง'
+                }).then((result) => {
+
+                });
+            }
         }
     });
 })

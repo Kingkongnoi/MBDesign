@@ -68,13 +68,15 @@
                     <thead>
                         <tr>
                             <th><span>id</span></th>
+                            <th><span>orderid</span></th>
                             <th><span>เลขที่ใบเสนอราคา</span></th>
-                            <th><span>รหัสสี</span></th>
+          @*                   <th><span>รหัสสี</span></th> *@
                             <th><span>จำนวนความหนา 18 mm</span></th>
                             <th><span>จำนวนความหนา 9 mm</span></th>
                             <th><span>สถานะ</span></th>
                             <th><span>ผู้สร้าง</span></th>
                             <th id="edit-action"><span>แก้ไข</span></th>
+                            <th id="print-action"><span>พิมพ์</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -103,22 +105,58 @@
                                     <select class="form-select" id="select-quotation-no" data-selected="" name="select-quotation-no"></select>
                                     <input id="input-quotation-no" name="input-quotation-no" class="form-control" type="text" disabled />
                                     <input type="hidden" id="hd-quotation-no" name="hd-quotation-no" />
+                                    <input type="hidden" id="input-planks-id" name="input-planks-id" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">รหัสสี<span class="text-danger">*</span></label>
                                     <input id="input-color-code" name="input-color-code" class="form-control" type="text" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
+                                    <label class="control-label">ความหนา</label>
+                                    <select class="form-select" id="select-planks-size" data-selected="" name="select-planks-size"></select>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">จำนวน</label>
+                                    <input id="input-planks-amount" name="input-planks-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                              @*   <div class="col-sm-6 mb-2">
                                     <label class="control-label">จำนวนความหนา 18 mm</label>
                                     <input id="input-18mm-amount" name="input-18mm-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">จำนวนความหนา 9 mm</label>
                                     <input id="input-9mm-amount" name="input-9mm-amount" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
-                                </div>
+                                </div> *@
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">สถานะ</label>
                                     <select class="form-select" id="select-planks-status" data-selected="" name="select-planks-status"></select>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">หมายเหตุ</label>
+                                    <textarea class="form-control" rows="3" id="input-planks-remark" name="input-planks-remark"></textarea>
+                                    <input id="hdplankslist" type="hidden" />
+                                    <input id="hddelplankslist" type="hidden" />
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-add-planks"><i class="fas fa-add" aria-hidden="true"></i> เพิ่มรายการ</button>
+
+                                </div>
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-planks-detail" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="hidecol"><span>id</span></th>
+                                                <th class="hidecol"><span>planksid</span></th>
+                                                <th class="hidecol"><span>thicknesstype</span></th>
+                                                <th><span>รหัสสี</span></th>
+                                                <th><span>ความหนา</span></th>
+                                                <th><span>จำนวน</span></th>
+                                                <th><span>หมายเหตุ</span></th>
+                                                <th id="delete-action"><span>ลบ</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

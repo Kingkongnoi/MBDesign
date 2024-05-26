@@ -37,7 +37,7 @@ namespace EntitiesMBDesign
         public string quotationNumber { get; set; } = string.Empty;
         public DateTime installDate { get; set; }
         public string FullName { get; set; } = string.Empty;
-        public DateTime commitDate { get; set; }
+        public DateTime? commitDate { get; set; }
         public int statusid { get; set; }
         public string checklistStatus { get; set; } = string.Empty;
         public string lastUpdateBy { get; set; } = string.Empty;

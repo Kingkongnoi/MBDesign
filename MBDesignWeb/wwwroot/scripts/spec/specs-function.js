@@ -23,6 +23,8 @@ let _issavecal = false;
 let _issaveglasscal = false;
 let _calCode = "";
 let _calCodeClearGlass = "";
+let totalRowCount = 0;
+let rowCount = 0;
 function callSelect2Status(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
@@ -30,6 +32,15 @@ function callSelect2Status(id, isSearch = false) {
     }
     $(id).append(`<option value="1">ใช้งาน</option>`);
     $(id).append(`<option value="0">ไม่ใช้งาน</option>`);
+}
+
+function callSelectSizePlank(id, isSearch = false) {
+    $(id).empty();
+
+    $(id).append(`<option value="">กรุณาเลือก</option>`);
+
+    $(id).append(`<option value="1">18MM</option>`);
+    $(id).append(`<option value="2">9MM</option>`);
 }
 
 function isNumberKey(evt) {
@@ -247,22 +258,22 @@ function renderGetPlanksList(data) {
                 },
                 {
                     targets: 1,
+                    data: 'orderid',
+                    className: "hidecol",
+                },
+                {
+                    targets: 2,
                     data: 'quotationNumber',
                     className: "item-details"
                 },
                 {
-                    targets: 2,
-                    data: 'colorCode',
-                    className: "item-details"
-                },
-                {
                     targets: 3,
-                    data: 'thickness18MM',
+                    data: 'amount18mm',
                     className: "dt-center",
                 },
                 {
                     targets: 4,
-                    data: 'thickness9MM',
+                    data: 'amount9mm',
                     className: "dt-center",
                 },
                 {
@@ -283,6 +294,17 @@ function renderGetPlanksList(data) {
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-planks" data-id="${row.id}" title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+                {
+                    targets: 8,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-planks" data-id="${row.id}" title="พิมพ์">
+                    <i class="fa fa-print"></i></button>`;
                     },
                 },
             ],
@@ -360,7 +382,7 @@ function callGetPlanksById(id, modal, isView = false) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Planks/GetItemByItemId?id=${id}`,
         success: function (data) {
-            renderPlanksForm(data.item);
+            renderPlanksForm(data);
         },
         error: function (err) {
         }
@@ -379,22 +401,40 @@ function callGetFittingById(id, modal, isView = false) {
     });
 }
 
-function renderPlanksForm(data, typeId) {
-    let status = (data.status) ? 1 : 0;
-    $('#form-createPlanks input[name="input-planks-id"]').val(data.id);
+function renderPlanksForm(data) {
+    let status = (data.item.status) ? 1 : 0;
+    $('#form-createPlanks #input-planks-id').val(data.item.id);
+    console.log($('#form-createPlanks #input-planks-id').val());
     if (_product_item_action == "edit") {
-        $('#form-createPlanks input[name="input-quotation-no"]').val(data.quotationNumber);
-        $('#form-createPlanks input[name="hd-quotation-no"]').val(data.orderid);
+        $('#form-createPlanks input[name="input-quotation-no"]').val(data.item.quotationNumber);
+        $('#form-createPlanks input[name="hd-quotation-no"]').val(data.item.orderid);
 
     }
     else {
-        $('#form-createPlanks #select-quotation-no').val(data.orderid).trigger('change');
+        $('#form-createPlanks #select-quotation-no').val(data.item.orderid).trigger('change');
     }
 
-    $('#form-createPlanks input[name="input-color-code"]').val(data.colorCode);
-    $('#form-createPlanks input[name="input-18mm-amount"]').val(data.thickness18MM);
-    $('#form-createPlanks input[name="input-9mm-amount"]').val(data.thickness9MM);
-    $('#form-createPlanks #select-brand-status').val(status).trigger('change');
+    for (var i = 0; i < data.list.length; i++) {
+        var row;
+        row = $('<tr id="row' + data.list[i].id + '">');
+        /*  row.append($('<td style="display:none;">').html(length));*/
+
+        row.append($('<td style="display:none;">').html(data.list[i].id));
+        row.append($('<td style="display:none;">').html(data.list[i].plankid));
+        row.append($('<td style="display:none;">').html(data.list[i].thicknesstype));
+        row.append($('<td>').html(data.list[i].colorcode));
+        row.append($('<td>').html(data.list[i].thicknesstype == 1 ? '18MM' : '9MM'));
+        row.append($('<td>').html(data.list[i].amount));
+        row.append($('<td>').html(data.list[i].remark));
+
+        row.append($('<td>').html(`<button type="button" class="btn btn-primary btn-circle-xs btn-del-planks-detail"  onclick="delRowCalPlanks('#${"row"}${data.list[i].id}','${data.list[i].id}')"  title="ลบ">
+                    <i class="fa fa-trash"></i></button>`));
+        $('#tb-planks-detail').append(row);
+    }
+    //$('#form-createPlanks input[name="input-color-code"]').val(data.colorCode);
+    //$('#form-createPlanks input[name="input-18mm-amount"]').val(data.thickness18MM);
+    //$('#form-createPlanks input[name="input-9mm-amount"]').val(data.thickness9MM);
+    //$('#form-createPlanks #select-brand-status').val(status).trigger('change');
 }
 
 function renderFitting(data) {
@@ -639,7 +679,7 @@ function renderFitting(data) {
                 if (item.seqno == 1) {
                     $('#form-createFitting #input-fandc10-amount').val(item.amount);
                     $('#form-createFitting #input-fandc10-color').val(item.color);
-                   
+
                 }
                 else {
                     $('#form-createFitting #input-fandc11-amount').val(item.amount);
@@ -677,8 +717,8 @@ function clearForm(modal) {
         case "modal-createPlanks" || "modal-viewPlanks":
             $('#form-createPlanks #select-quotation-no').val(0).trigger('change');
             $('#form-createPlanks input[name="input-color-code"]').val('');
-            $('#form-createPlanks input[name="input-18mm-amount]').val('');
-            $('#form-createPlanks input[name="input-9mm-amount]').val('');
+            //$('#form-createPlanks input[name="input-18mm-amount]').val('');
+            //$('#form-createPlanks input[name="input-9mm-amount]').val('');
             $('#form-createPlanks #select-planks-status').val(1).trigger('change');
             break;
     }
@@ -724,9 +764,11 @@ let validateInputSpec = function (modal) {
 
     switch (modal) {
         case "modal-createPlanks":
-            if ($('#form-createPlanks #select-quotation-no').val() == "") {
+            var table = document.getElementById("tb-planks-detail");
+            var tbodyRowCount = table.tBodies[0].rows.length;
+            if (tbodyRowCount == 0) {
                 Swal.fire({
-                    text: "กรุณาเลือกเลขใบเสนอราคา",
+                    text: "กรุณาเพิ่มข้อมูล",
                     icon: 'warning',
                     showCancelButton: false,
                     confirmButtonColor: _modal_primary_color_code,
@@ -737,45 +779,45 @@ let validateInputSpec = function (modal) {
                 });
                 return false;
             }
-            else if ($('#form-createPlanks #input-color-code').val() == "") {
-                Swal.fire({
-                    text: "กรุณากรอกรหัสสี",
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: _modal_primary_color_code,
-                    //cancelButtonColor: _modal_default_color_code,
-                    confirmButtonText: 'ตกลง'
-                }).then((result) => {
-                    $('#form-createPlanks #input-color-code').focus();
-                });
-                return false;
-            }
-            else if ($('#form-createPlanks #input-18mm-amount').val() == "") {
-                Swal.fire({
-                    text: "กรุณากรอกจำนวนของ 18mm",
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: _modal_primary_color_code,
-                    //cancelButtonColor: _modal_default_color_code,
-                    confirmButtonText: 'ตกลง'
-                }).then((result) => {
-                    $('#form-createPlanks #input-18mm-amount').focus();
-                });
-                return false;
-            }
-            else if ($('#form-createPlanks #input-9mm-amount').val() == "") {
-                Swal.fire({
-                    text: "กรุณากรอกจำนวนของ 9mm",
-                    icon: 'warning',
-                    showCancelButton: false,
-                    confirmButtonColor: _modal_primary_color_code,
-                    //cancelButtonColor: _modal_default_color_code,
-                    confirmButtonText: 'ตกลง'
-                }).then((result) => {
-                    $('#form-createPlanks #input-9mm-amount').focus();
-                });
-                return false;
-            }
+            //else if ($('#form-createPlanks #input-color-code').val() == "") {
+            //    Swal.fire({
+            //        text: "กรุณากรอกรหัสสี",
+            //        icon: 'warning',
+            //        showCancelButton: false,
+            //        confirmButtonColor: _modal_primary_color_code,
+            //        //cancelButtonColor: _modal_default_color_code,
+            //        confirmButtonText: 'ตกลง'
+            //    }).then((result) => {
+            //        $('#form-createPlanks #input-color-code').focus();
+            //    });
+            //    return false;
+            //}
+            //else if ($('#form-createPlanks #input-18mm-amount').val() == "") {
+            //    Swal.fire({
+            //        text: "กรุณากรอกจำนวนของ 18mm",
+            //        icon: 'warning',
+            //        showCancelButton: false,
+            //        confirmButtonColor: _modal_primary_color_code,
+            //        //cancelButtonColor: _modal_default_color_code,
+            //        confirmButtonText: 'ตกลง'
+            //    }).then((result) => {
+            //        $('#form-createPlanks #input-18mm-amount').focus();
+            //    });
+            //    return false;
+            //}
+            //else if ($('#form-createPlanks #input-9mm-amount').val() == "") {
+            //    Swal.fire({
+            //        text: "กรุณากรอกจำนวนของ 9mm",
+            //        icon: 'warning',
+            //        showCancelButton: false,
+            //        confirmButtonColor: _modal_primary_color_code,
+            //        //cancelButtonColor: _modal_default_color_code,
+            //        confirmButtonText: 'ตกลง'
+            //    }).then((result) => {
+            //        $('#form-createPlanks #input-9mm-amount').focus();
+            //    });
+            //    return false;
+            //}
 
             else { return true; }
             break;
@@ -808,20 +850,7 @@ let validateInputSpec = function (modal) {
                 return false;
             }
             else if (_product_item_action == "add") {
-                if ($('#form-editSpec #select-edit-spec-quotation').val() == "") {
-                    Swal.fire({
-                        text: "กรุณาเลือกใบเสนอราคา",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: _modal_primary_color_code,
-                        //cancelButtonColor: _modal_default_color_code,
-                        confirmButtonText: 'ตกลง'
-                    }).then((result) => {
-                        $('#form-editSpec #select-edit-spec-quotation').focus();
-                    });
-                    return false;
-                }
-                else if (!$('#liMaster1 #chkMaster1').is(":checked")) {
+                if (!$('#liMaster1 #chkMaster1').is(":checked")) {
                     Swal.fire({
                         text: "กรุณาเลือกยืนยันสถานะปัจจุบัน",
                         icon: 'warning',
@@ -854,19 +883,19 @@ let validateInputSpec = function (modal) {
                         });
                         return false;
                     }
-                    else if (_maxIDcheck == "#chkMaster2" && $('#form-editSpec #txtvideourl').val() == "") {
-                        Swal.fire({
-                            text: "กรุณากรอก url สำหรับ video",
-                            icon: 'warning',
-                            showCancelButton: false,
-                            confirmButtonColor: _modal_primary_color_code,
-                            //cancelButtonColor: _modal_default_color_code,
-                            confirmButtonText: 'ตกลง'
-                        }).then((result) => {
-                            $('#form-editSpec #txtvideourl').focus();
-                        });
-                        return false;
-                    }
+                    //else if (_maxIDcheck == "#chkMaster2" && $('#form-editSpec #txtvideourl').val() == "") {
+                    //    Swal.fire({
+                    //        text: "กรุณากรอก url สำหรับ video",
+                    //        icon: 'warning',
+                    //        showCancelButton: false,
+                    //        confirmButtonColor: _modal_primary_color_code,
+                    //        //cancelButtonColor: _modal_default_color_code,
+                    //        confirmButtonText: 'ตกลง'
+                    //    }).then((result) => {
+                    //        $('#form-editSpec #txtvideourl').focus();
+                    //    });
+                    //    return false;
+                    //}
                     else if (_maxIDcheck == "#chkMaster4" && $('#form-editSpec #txtApproveDate').val() == "") {
                         Swal.fire({
                             text: "กรุณากรอก เลือกวันที่ยืนยัน",
@@ -1056,16 +1085,42 @@ let validateInputSpec = function (modal) {
 function callAddOrUpdatePlanks() {
     let url = (_product_item_action == 'add') ? `${app_settings.api_url}/api/Planks/AddItem` : `${app_settings.api_url}/api/Planks/UpdateItem`;
 
-
+    var table = document.getElementById("tb-planks-detail");
+    var tbodyRowCount = table.tBodies[0].rows.length;
+    var PlanksData = new Array();
+    if (tbodyRowCount > 0) {
+        $("#tb-planks-detail tbody tr").each(function () {
+            var row = $(this);
+            var PlanksDetail = {};
+            PlanksDetail.id = row.find("td").eq(0).html();
+            PlanksDetail.plankid = row.find("td").eq(1).html();
+            PlanksDetail.thicknesstype = row.find("td").eq(2).html();
+            PlanksDetail.colorcode = row.find("td").eq(3).html();
+            PlanksDetail.amount = row.find("td").eq(5).html();
+            PlanksDetail.remark = row.find("td").eq(6).html();
+            PlanksData.push(PlanksDetail);
+        });
+    }
     var obj = {
         id: ($('#input-planks-id').val() == "") ? 0 : $('#input-planks-id').val(),
-        orderid: _product_item_action == 'add' ? $('#select-quotation-no').val() : $('#form-createPlanks input[name="hd-quotation-no"]').val(),
-        colorCode: $('#input-color-code').val(),
-        thickness18MM: $('#input-18mm-amount').val(),
-        thickness9MM: $('#input-9mm-amount').val(),
+        orderid: _product_item_action == 'add' ? $('#form-createPlanks #select-quotation-no').val() : $('#form-createPlanks #hd-quotation-no').val(),
         status: ($('#form-createPlanks #select-planks-status').val() == "1") ? true : false,
-        loginCode: _userCode
+        loginCode: _userCode,
+        /* listdelid: $('#hddelproductcodelist').val(),*/
+        planksDetailsModels: PlanksData,
+        DeleteID: $('#form-createPlanks #hddelplankslist').val()
     };
+
+    console.log($('#form-createPlanks #input-planks-id').val());
+    //var obj = {
+    //    id: ($('#input-planks-id').val() == "") ? 0 : $('#input-planks-id').val(),
+    //    orderid: _product_item_action == 'add' ? $('#select-quotation-no').val() : $('#form-createPlanks input[name="hd-quotation-no"]').val(),
+    //    colorCode: $('#input-color-code').val(),
+    //    thickness18MM: $('#input-18mm-amount').val(),
+    //    thickness9MM: $('#input-9mm-amount').val(),
+    //    status: ($('#form-createPlanks #select-planks-status').val() == "1") ? true : false,
+    //    loginCode: _userCode
+    //};
 
 
     $('.btn-modal-save-planks').addLoading();
@@ -1493,7 +1548,7 @@ function callAddOrUpdateFitting() {
         EdgeLaminate: EdgeLaminate,
         FrameTrim: FrameTrim
     };
-    console.log(obj);
+    /*   console.log(obj);*/
     $('.btn-modal-save-fitting').addLoading();
 
     $.ajax({
@@ -1507,7 +1562,7 @@ function callAddOrUpdateFitting() {
                 callSuccessAlert();
                 $('.btn-modal-save-fitting').removeLoading();
                 $(`#modal-createFitting`).modal('hide');
-                callSpecListQuatationNoFitting('#form-createFitting #select-fitting-quotation-no','กรุณาเลือก');
+                callSpecListQuatationNoFitting('#form-createFitting #select-fitting-quotation-no', 'กรุณาเลือก');
                 callFittingList();
             }
             else {
@@ -1538,7 +1593,7 @@ function callQuatationNo(select2Id, select2FirstText) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Planks/GetQuatationList`,
         success: function (data) {
-            console.log(data);
+            /*            console.log(data);*/
             renderQuatationNoSelect(select2Id, select2FirstText, data);
         },
         error: function (err) {
@@ -1587,7 +1642,7 @@ function callSpecListQuatationNoCal(select2Id, select2FirstText, type) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Calculate/GetQuatationListCal?type=${type}`,
         success: function (data) {
-            console.log(data);
+            /*          console.log(data);*/
             renderQuatationNoSelect(select2Id, select2FirstText, data);
         },
         error: function (err) {
@@ -1633,7 +1688,6 @@ function callGetSpecList() {
 }
 
 function renderGetSpecQueueList(data) {
-    console.log(data);
     $('#tb-spec-queue-list').DataTable(
         {
             destroy: true,
@@ -1683,7 +1737,7 @@ function renderGetSpecQueueList(data) {
                     data: 'commitDate',
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return type === 'sort' ? data : row.commitDate ? convertDateTimeFormat(row.commitDate, 'DD/MM/YYYY') : "";
+                        return type === 'sort' ? data : row.commitDate ? convertDateTimeFormat(row.commitDate, 'DD/MM/YYYY') : "-";
                     },
                 },
                 {
@@ -1709,7 +1763,7 @@ function renderGetSpecQueueList(data) {
                     orderable: false,
                     className: `dt-center ${_role_3d_class_display}`,
                     render: function (data, type, row) {
-                        console.log(row);
+                        /*       console.log(row);*/
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-spec" data-orderid="${row.orderid}" data-specid="${row.id}" data-step="${row.statusid}"  title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
                     },
@@ -1745,7 +1799,7 @@ function clearInputPlankForm() {
 function renderEditSpec(orderid, specid, statusid) {
     $.ajax({
         type: 'GET',
-        url: `${app_settings.api_url}/api/SpecList/GetSpecListByID?id=${specid}`,
+        url: `${app_settings.api_url}/api/SpecList/GetSpecListByID?id=${specid}&orderid=${orderid}`,
         success: function (data) {
             renderSpecToForm(data, specid);
         },
@@ -1760,31 +1814,35 @@ function renderEditChecklistStatus(checklistID) {
 }
 
 function renderSpecToForm(data, specid) {
-
+    console.log(specid);
     let maxValue = Math.max.apply(null,
         data.dataspec.map(function (o) { return o.statusid; }));
 
     data.dataspec.forEach((d) => {
         $(`#chkMaster${d.statusid}`).prop('checked', true);
-        if (d.statusid == 2) {
-            $(`#txtvideourl`).val(d.videourl);
-        }
+        //if (d.statusid == 2) {
+        //    $(`#txtvideourl`).val(d.videourl);
+        //}
         if (d.statusid == 4) {
-            console.log(d);
             $(`#txtApproveDate`).val(d.approveDate);
         }
     });
+    if (data.dataspec.length == 0) {
+        maxValue = 0;
+    }
+
     _maxIDcheck = `#chkMaster${maxValue + 1}`;
     _liMaxID = `#liMaster${maxValue + 1}`;
-    if (_liMaxID < 6) {
+    console.log(_maxIDcheck);
+    if (maxValue < 6) {
         $(`#chkMaster${maxValue + 1}`).removeAttr("onclick");
     }
 
-    $('#chkMaster1').attr("onclick", "return false;");
-    if (_maxIDcheck == "#chkMaster2") {
-        $('#chkMaster2').attr("onclick", "handleClick(this);");
+    /* $('#chkMaster1').attr("onclick", "return false;");*/
+    //if (_maxIDcheck == "#chkMaster2") {
+    //    $('#chkMaster2').attr("onclick", "handleClick(this);");
 
-    }
+    //}
     if (_maxIDcheck == "#chkMaster4") {
         $('#chkMaster4').attr("onclick", "handleClickApproveDate(this);");
     }
@@ -1797,17 +1855,21 @@ function renderSpecToForm(data, specid) {
     var installDate = data.custOrder.installDate ? convertDateTimeFormat(data.custOrder.installDate, 'DD/MM/YYYY') : ""
     $(`${formId} #input-edit-spec-install-date`).val(installDate);
     /* let d = new Date(data.dataspec[0].approveDate);*/
-    if (data.dataspec[0].approveDate != null) {
-        var now = new Date(data.dataspec[0].approveDate);
 
-        var day = ("0" + now.getDate()).slice(-2);
-        var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    if (data.dataspec != null && data.dataspec.length > 0) {
+        if (data.dataspec[0].approveDate != null) {
+            var now = new Date(data.dataspec[0].approveDate);
 
-        var today = now.getFullYear() + "-" + (month) + "-" + (day);
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
 
-        /* var approveDate = data.dataspec[0].approveDate ? convertDateTimeFormat('2024-04-30', 'DD/MM/YYYY') : ""*/
-        $(`${formId} #txtApproveDate`).val(today);
+            var today = now.getFullYear() + "-" + (month) + "-" + (day);
+
+            /* var approveDate = data.dataspec[0].approveDate ? convertDateTimeFormat('2024-04-30', 'DD/MM/YYYY') : ""*/
+            $(`${formId} #txtApproveDate`).val(today);
+        }
     }
+
 
 
     //if (data.custOrder.ownerEmpId == 0) {
@@ -1821,6 +1883,7 @@ function renderSpecToForm(data, specid) {
     $(`${formId} #input-cus-product-depth`).val(data.custOrderDetail[0].orderDepth);
     $(`${formId} #input-cus-product-height`).val(data.custOrderDetail[0].orderHeight);
     $(`${formId} #input-foreman-note`).val(data.custOrder.orderNote);
+    $(`${formId} #txtproductcustomer`).val(data.listproductname);
 
     /*  var dueDate = data.custOrder.dueDate ? convertDateTimeFormat(data.custOrder.dueDate, 'YYYY-MM-DD') : "";*/
 
@@ -2218,17 +2281,17 @@ function CreateNewCheckList() {
 function renderMasterCheckList(data) {
     $("#listChecklist").empty();
     data.forEach((v) => {
-        console.log(v.id);
+        /*       console.log(v.id);*/
         /*$("#listChecklist").append(`<option value="${v.orderId}">${v.quotationNumber}</option>`);*/
         if (v.id != 1) {
             switch (v.id) {
-                case 2:
-                    $("#listChecklist").append(`<li id="liMaster${v.id}" class="list-group-item border-0 d-flex align-items-center ps-0">
-                                   <input id="chkMaster${v.id}" name="chkMaster" class="form-check-input me-3 col-xl-2" type="checkbox" value="${v.id}" aria-label="..." onclick="return false;"/>
-                                   <label class="col-xl-3"> ${v.checklistname}</label>
-                                     <label class="col-xl-3 text-end" style="margin-right: 3%;">Video URL : </label><input class="form-control" type="text" id="txtvideourl" name="txtvideourl" disabled />
-                                    </li>`);
-                    break;
+                //case 2:
+                //    $("#listChecklist").append(`<li id="liMaster${v.id}" class="list-group-item border-0 d-flex align-items-center ps-0">
+                //                   <input id="chkMaster${v.id}" name="chkMaster" class="form-check-input me-3 col-xl-2" type="checkbox" value="${v.id}" aria-label="..." onclick="return false;"/>
+                //                   <label class="col-xl-3"> ${v.checklistname}</label>
+                //                     <label class="col-xl-3 text-end" style="margin-right: 3%;">Video URL : </label><input class="form-control" type="text" id="txtvideourl" name="txtvideourl" disabled />
+                //                    </li>`);
+                //    break;
                 case 4:
                     $("#listChecklist").append(`<li id="liMaster${v.id}" class="list-group-item border-0 d-flex align-items-center ps-0">
                                    <input id="chkMaster${v.id}" name="chkMaster" class="form-check-input me-3 col-xl-2" type="checkbox" value="${v.id}" aria-label="..." onclick="return false;"/>
@@ -2244,7 +2307,7 @@ function renderMasterCheckList(data) {
         }
         else {
             $("#listChecklist").append(`<li id="liMaster${v.id}" class="list-group-item border-0 d-flex align-items-center ps-0">
-                                   <input id="chkMaster${v.id}" name="chkMaster" class="form-check-input me-3" type="checkbox" value="${v.id}" aria-label="..."/>
+                                   <input id="chkMaster${v.id}" name="chkMaster" class="form-check-input me-3" type="checkbox" value="${v.id}" aria-label="..." onclick="return false;"/>
                                     ${v.checklistname}</li>`);
         }
 
@@ -2252,17 +2315,17 @@ function renderMasterCheckList(data) {
     });
 }
 
-function handleClick(cb) {
-    if (cb.checked) {
-        $("#txtvideourl").removeAttr("disabled");
-    }
-    else {
-        $("#txtvideourl").attr('disabled', 'disabled');
-    }
-}
+//function handleClick(cb) {
+//    if (cb.checked) {
+//        $("#txtvideourl").removeAttr("disabled");
+//    }
+//    else {
+//        $("#txtvideourl").attr('disabled', 'disabled');
+//    }
+//}
 
 function handleClickApproveDate(cb) {
-    console.log(cb);
+    /*    console.log(cb);*/
     if (cb.checked) {
         $("#txtApproveDate").removeAttr("disabled");
     }
@@ -2306,14 +2369,14 @@ function DoSaveSpec() {
                 }
             }
         }
-        console.log($('#input-spec-id').val());
+        /*   console.log($('#input-spec-id').val());*/
         var obj = {
             id: ($('#input-spec-id').val() == "") ? 0 : $('#input-spec-id').val(),
             quotationnumber: $('#txtquotationedit').val(),
             commitdate: $('#input-edit-spec-due-date').val(),
             empid: $('#select-edit-spec-designName').val(),
             listStatus: listurl,
-            vieoUrl: $('#txtvideourl').val(),
+            /*    vieoUrl: $('#txtvideourl').val(),*/
             approveDate: $('#txtApproveDate').val(),
             loginCode: _userCode
         };
@@ -2329,10 +2392,10 @@ function DoSaveSpec() {
                 if (res.result) {
 
                     callSuccessAlert();
-                    console.log(res);
+                    /*         console.log(res);*/
                     $('.btn-modal-save-spec').removeLoading();
                     $(`#modal-editSpec`).modal('hide');
-                    console.log(res);
+                    /*               console.log(res);*/
                     callGetSpecList();
                 }
                 else {
@@ -2346,15 +2409,35 @@ function DoSaveSpec() {
         });
     }
     else {
+        //var obj = {
+        //    id: ($('#input-spec-id').val() == "") ? 0 : $('#input-spec-id').val(),
+        //    orderid: $('#select-edit-spec-quotation').val(),
+        //    commitdate: $('#input-edit-spec-due-date').val(),
+        //    empid: $('#select-edit-spec-designName').val(),
+        //    checkliststatus: $('#chkMaster1').val(),
+        //    loginCode: _userCode
+        //};
+        let checkboxes =
+            document.getElementsByName('chkMaster');
+        for (var i = 0; i < checkboxes.length; i++) {
+            if (checkboxes[i].checked) {
+                if (listurl == '') {
+                    listurl = checkboxes[i].value;
+                }
+                else {
+                    listurl += ',' + checkboxes[i].value;
+                }
+            }
+        }
+
         var obj = {
-            id: ($('#input-spec-id').val() == "") ? 0 : $('#input-spec-id').val(),
-            orderid: $('#select-edit-spec-quotation').val(),
+            id: 0,
+            orderid: $("#input-order-id").val(),
             commitdate: $('#input-edit-spec-due-date').val(),
             empid: $('#select-edit-spec-designName').val(),
-            checkliststatus: $('#chkMaster1').val(),
+            checkliststatus: listurl,
             loginCode: _userCode
         };
-
         $('.btn-modal-save-spec').addLoading();
 
         $.ajax({
@@ -2398,7 +2481,7 @@ function DoSaveSpec() {
 function callSelectDoorType(id, isSearch = false) {
     $(id).empty();
     if (isSearch) {
-        $(id).append(`<option value="">-- กรุณาเลือก --</option>`);
+        $(id).append(`<option value="">กรุณาเลือก</option>`);
     }
     $(id).append(`<option value="S">บานเดี่ยว</option>`);
     $(id).append(`<option value="M">บานคู่</option>`);
@@ -2495,7 +2578,7 @@ function renderCalFrameList(data) {
                     className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-calf" data-id="${row.calculatecode}" title="พิมพ์">
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-calf" data-id="${row.calculatecode}" data-calid="${row.id}" title="พิมพ์">
                     <i class="fa fa-print"></i></button>`;
                     },
                 },
@@ -2566,7 +2649,7 @@ function renderCalClearList(data) {
                     className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
-                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-calc" data-id="${row.calculatecode}" title="พิมพ์">
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-calc" data-id="${row.calculatecode}" data-calid="${row.id}" title="พิมพ์">
                     <i class="fa fa-print"></i></button>`;
                     },
                 },
@@ -2747,11 +2830,17 @@ function renderCalClearGlassList(data) {
     );
 }
 
-function callPrintCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress) {
-    window.location = `/api/Calculate/ExportFrameCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}`;
+function callPrintCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid) {
+    window.location = `/api/Calculate/ExportFrameCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}&hdcalculateMasterID=${hdcalculateMasterID}&CustID=${CustID}&userid=${userid}`;
 }
-function callPrintClearGlassCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress) {
-    window.location = `/api/Calculate/ExportClearGlassCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}`;
+function callRePrintCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid) {
+    window.location = `/api/Calculate/ExportRePrintFrameCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}&hdcalculateMasterID=${hdcalculateMasterID}&CustID=${CustID}&userid=${userid}`;
+}
+function callPrintClearGlassCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid) {
+    window.location = `/api/Calculate/ExportClearGlassCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}&hdcalculateMasterID=${hdcalculateMasterID}&CustID=${CustID}&userid=${userid}`;
+}
+function callRePrintClearGlassCal(CalCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid) {
+    window.location = `/api/Calculate/ExportReprintClearGlassCal?calcode=${CalCode}&glassdoorType=${DoorType}&CreateDate=${CreateDate}&InstallDate=${InstallDate}&CustName=${CustName}&InstallAddress=${InstallAddress}&hdcalculateMasterID=${hdcalculateMasterID}&CustID=${CustID}&userid=${userid}`;
 }
 
 
@@ -2763,62 +2852,82 @@ function saveCalculate() {
     var calListDetailData = new Array();
     var calcode = $('#form-add-calculate input[name="input-insert-calulate-code"]').val();
     if (calcode != '') {
-        $("#tb-frameglass-list tbody tr").each(function () {
-            var row = $(this);
-            var calListDetail = {};
-            calListDetail.product = row.find("td").eq(0).html();
-            calListDetail.glassdoortype = row.find("td").eq(1).html();
-            calListDetail.producttext = row.find("td").eq(2).html();
-            calListDetail.calhm = row.find("td").eq(3).html();
-            calListDetail.calwm = row.find("td").eq(4).html();
-            calListDetail.calh = row.find("td").eq(5).html();
-            calListDetail.calw = row.find("td").eq(6).html();
-            calListDetail.calhdel = row.find("td").eq(7).html();
-            calListDetail.calwdel = row.find("td").eq(8).html();
-            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
-            calListDetailData.push(calListDetail);
-        });
+        var table = document.getElementById("tb-frameglass-list");
+        var tbodyRowCount = table.tBodies[0].rows.length;
+        if (tbodyRowCount > 0) {
+            $("#tb-frameglass-list tbody tr").each(function () {
+                var row = $(this);
+                var calListDetail = {};
+                calListDetail.product = row.find("td").eq(0).html();
+                calListDetail.glassdoortype = row.find("td").eq(1).html();
+                calListDetail.producttext = row.find("td").eq(2).html();
+                calListDetail.calhm = row.find("td").eq(3).html();
+                calListDetail.calwm = row.find("td").eq(4).html();
+                calListDetail.calh = row.find("td").eq(5).html();
+                calListDetail.calw = row.find("td").eq(6).html();
+                calListDetail.calhdel = row.find("td").eq(7).html();
+                calListDetail.calwdel = row.find("td").eq(8).html();
+                calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+                calListDetailData.push(calListDetail);
+            });
 
-        SaveCalculate.calculatecode = calcode;
-        SaveCalculate.userlogin = _userCode;
-        SaveCalculate.orderid = $('#form-add-calculate #select-cal-quotation-no').val();
-        SaveCalculate.listdetail = calListDetailData;
-        _calCode = calcode;
-        $.ajax({
-            type: 'POST',
-            url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            data: JSON.stringify(SaveCalculate),
-            success: function (data) {
+            SaveCalculate.calculatecode = calcode;
+            SaveCalculate.userlogin = _userCode;
+            SaveCalculate.orderid = $('#form-add-calculate #select-cal-quotation-no').val();
+            SaveCalculate.listdetail = calListDetailData;
 
-                if (data.result && data.resultStatus == "success") {
-                    callSuccessAlert();
-                    callGetCalculateCode();
-                    clearcalinsert();
-                    _issavecal = true;
-                    $("#tb-frameglass-list tbody tr").remove();
-                    $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
-                    $('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
+            _calCode = calcode;
+            $.ajax({
+                type: 'POST',
+                url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                data: JSON.stringify(SaveCalculate),
+                success: function (data) {
+
+                    if (data.result && data.resultStatus == "success") {
+                        callSuccessAlert();
+                        callGetCalculateCode();
+                        clearcalinsert();
+                        callGetFrameList();
+                        _issavecal = true;
+                        $("#tb-frameglass-list tbody tr").remove();
+                        $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
+                        $('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
+                        callStockProductData('#form-add-calculate #select-insert-product-item', 'กรุณาเลือก');
+                    }
+                    else {
+                        Swal.fire({
+                            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: _modal_primary_color_code,
+                            //cancelButtonColor: _modal_default_color_code,
+                            confirmButtonText: 'ตกลง'
+                        }).then((result) => {
+
+                        });
+                    }
+                    loaded.find(_loader).remove();
+                },
+                error: function (err) {
+                    loaded.find(_loader).remove();
                 }
-                else {
-                    Swal.fire({
-                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: _modal_primary_color_code,
-                        //cancelButtonColor: _modal_default_color_code,
-                        confirmButtonText: 'ตกลง'
-                    }).then((result) => {
+            });
+        }
+        else {
+            loaded.find(_loader).remove();
+            Swal.fire({
+                text: "กรุณาเพิ่มรายการก่อนบันทึก",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
 
-                    });
-                }
-                loaded.find(_loader).remove();
-            },
-            error: function (err) {
-                loaded.find(_loader).remove();
-            }
-        });
+            });
+        }
     }
     else {
         Swal.fire({
@@ -2841,60 +2950,77 @@ function saveCalculateClearglass() {
     var calListDetailData = new Array();
     var calcode = $('#form-add-calculate-clearglass input[name="input-insert-calulate-code-clearglass"]').val();
     if (calcode != '') {
-        $("#tb-clearglass-list tbody tr").each(function () {
-            var row = $(this);
-            var calListDetail = {};
-            calListDetail.product = row.find("td").eq(0).html();
-            calListDetail.glassdoortype = row.find("td").eq(1).html();
-            calListDetail.producttext = row.find("td").eq(2).html();
-            calListDetail.calhm = row.find("td").eq(3).html();
-            calListDetail.calwm = row.find("td").eq(4).html();
-            calListDetail.calh = row.find("td").eq(5).html();
-            calListDetail.calw = row.find("td").eq(6).html();
-            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
-            calListDetailData.push(calListDetail);
-        });
+        var table = document.getElementById("tb-clearglass-list");
+        var tbodyRowCount = table.tBodies[0].rows.length;
+        if (tbodyRowCount > 0) {
+            $("#tb-clearglass-list tbody tr").each(function () {
+                var row = $(this);
+                var calListDetail = {};
+                calListDetail.product = row.find("td").eq(0).html();
+                calListDetail.glassdoortype = row.find("td").eq(1).html();
+                calListDetail.producttext = row.find("td").eq(2).html();
+                calListDetail.calhm = row.find("td").eq(3).html();
+                calListDetail.calwm = row.find("td").eq(4).html();
+                calListDetail.calh = row.find("td").eq(5).html();
+                calListDetail.calw = row.find("td").eq(6).html();
+                calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+                calListDetailData.push(calListDetail);
+            });
 
-        SaveCalculate.calculatecode = calcode;
-        SaveCalculate.userlogin = _userCode;
-        SaveCalculate.orderid = $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val();
-        SaveCalculate.listdetail = calListDetailData;
-        _calCodeClearGlass = calcode;
-        $.ajax({
-            type: 'POST',
-            url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            data: JSON.stringify(SaveCalculate),
-            success: function (data) {
-                if (data.result && data.resultStatus == "success") {
-                    callSuccessAlert();
-                    callGetCalculateCode();
-                    clearcalglassinsert();
-                    _issaveglasscal = true;
-                    $("#tb-clearglass-list tbody tr").remove();
+            SaveCalculate.calculatecode = calcode;
+            SaveCalculate.userlogin = _userCode;
+            SaveCalculate.orderid = $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val();
+            SaveCalculate.listdetail = calListDetailData;
+            _calCodeClearGlass = calcode;
+            $.ajax({
+                type: 'POST',
+                url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                data: JSON.stringify(SaveCalculate),
+                success: function (data) {
+                    if (data.result && data.resultStatus == "success") {
+                        callSuccessAlert();
+                        callGetCalculateCode();
+                        clearcalglassinsert();
+                        _issaveglasscal = true;
+                        $("#tb-clearglass-list tbody tr").remove();
 
-                    $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
-                    $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
+                        $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
+                        $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
+                    }
+                    else {
+                        Swal.fire({
+                            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: _modal_primary_color_code,
+                            //cancelButtonColor: _modal_default_color_code,
+                            confirmButtonText: 'ตกลง'
+                        }).then((result) => {
+
+                        });
+                    }
+                    loaded.find(_loader).remove();
+                },
+                error: function (err) {
+                    loaded.find(_loader).remove();
                 }
-                else {
-                    Swal.fire({
-                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: _modal_primary_color_code,
-                        //cancelButtonColor: _modal_default_color_code,
-                        confirmButtonText: 'ตกลง'
-                    }).then((result) => {
+            });
+        }
+        else {
+            loaded.find(_loader).remove();
+            Swal.fire({
+                text: "กรุณาเพิ่มรายการก่อนบันทึก",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
 
-                    });
-                }
-                loaded.find(_loader).remove();
-            },
-            error: function (err) {
-                loaded.find(_loader).remove();
-            }
-        });
+            });
+        }
     }
     else {
         Swal.fire({
@@ -2917,71 +3043,88 @@ function saveCalculatePrint() {
     var calListDetailData = new Array();
     var calcode = $('#form-add-calculate input[name="input-insert-calulate-code"]').val();
     if (calcode != '') {
-        $("#tb-frameglass-list tbody tr").each(function () {
-            var row = $(this);
-            var calListDetail = {};
-            calListDetail.product = row.find("td").eq(0).html();
-            calListDetail.glassdoortype = row.find("td").eq(1).html();
-            calListDetail.producttext = row.find("td").eq(2).html();
-            calListDetail.calhm = row.find("td").eq(3).html();
-            calListDetail.calwm = row.find("td").eq(4).html();
-            calListDetail.calh = row.find("td").eq(5).html();
-            calListDetail.calw = row.find("td").eq(6).html();
-            calListDetail.calhdel = row.find("td").eq(7).html();
-            calListDetail.calwdel = row.find("td").eq(8).html();
-            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
-            calListDetailData.push(calListDetail);
-        });
+        var table = document.getElementById("tb-frameglass-list");
+        var tbodyRowCount = table.tBodies[0].rows.length;
+        if (tbodyRowCount > 0) {
+            $("#tb-frameglass-list tbody tr").each(function () {
+                var row = $(this);
+                var calListDetail = {};
+                calListDetail.product = row.find("td").eq(0).html();
+                calListDetail.glassdoortype = row.find("td").eq(1).html();
+                calListDetail.producttext = row.find("td").eq(2).html();
+                calListDetail.calhm = row.find("td").eq(3).html();
+                calListDetail.calwm = row.find("td").eq(4).html();
+                calListDetail.calh = row.find("td").eq(5).html();
+                calListDetail.calw = row.find("td").eq(6).html();
+                calListDetail.calhdel = row.find("td").eq(7).html();
+                calListDetail.calwdel = row.find("td").eq(8).html();
+                calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+                calListDetailData.push(calListDetail);
+            });
 
-        SaveCalculate.calculatecode = calcode;
-        SaveCalculate.userlogin = _userCode;
-        SaveCalculate.orderid = $('#form-add-calculate #select-cal-quotation-no').val();
-        SaveCalculate.listdetail = calListDetailData;
-        _calCode = calcode;
-        $.ajax({
-            type: 'POST',
-            url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            data: JSON.stringify(SaveCalculate),
-            success: function (data) {
+            SaveCalculate.calculatecode = calcode;
+            SaveCalculate.userlogin = _userCode;
+            SaveCalculate.orderid = $('#form-add-calculate #select-cal-quotation-no').val();
+            SaveCalculate.listdetail = calListDetailData;
+            _calCode = calcode;
+            $.ajax({
+                type: 'POST',
+                url: `${app_settings.api_url}/api/Calculate/AddGlassFrameItem`,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                data: JSON.stringify(SaveCalculate),
+                success: function (data) {
 
-                if (data.result && data.resultStatus == "success") {
+                    if (data.result && data.resultStatus == "success") {
 
-                    callGetCalculateCode();
-                    clearcalinsert();
-                    _issavecal = true;
-                    $("#tb-frameglass-list tbody tr").remove();
+                        callGetCalculateCode();
+                        clearcalinsert();
+                        _issavecal = true;
+                        $("#tb-frameglass-list tbody tr").remove();
 
-                    if (_issavecal) {
-                        $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
-                        $('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
-                        callCustItemCal('#form-printFrameCalculate #select-calprint-cust', '-- กรุณาเลือก --');
-                        callPrintDoorType('#form-printFrameCalculate #select-calprint-glassdoortype', true);
-                        callCalMaster(_calCode, "F");
-                        $('#form-printFrameCalculate input[name="input-print-calno"]').val(_calCode);
-                        $(`#modal-printFrameCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
-                        $('#modal-printFrameCalculate').modal('show');
+                        if (_issavecal) {
+                            $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
+                            $('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
+                            callCustItemCal('#form-printFrameCalculate #select-calprint-cust', 'กรุณาเลือก');
+                            callPrintDoorType('#form-printFrameCalculate #select-calprint-glassdoortype', true);
+                            callCalMaster(_calCode, "F");
+                            $('#form-printFrameCalculate input[name="hdcalculateMasterID"]').val(data.calculateMasterID);
+                            $('#form-printFrameCalculate input[name="input-print-calno"]').val(_calCode);
+                            $(`#modal-printFrameCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+                            $('#modal-printFrameCalculate').modal('show');
+                        }
                     }
-                }
-                else {
-                    Swal.fire({
-                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: _modal_primary_color_code,
-                        //cancelButtonColor: _modal_default_color_code,
-                        confirmButtonText: 'ตกลง'
-                    }).then((result) => {
+                    else {
+                        Swal.fire({
+                            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: _modal_primary_color_code,
+                            //cancelButtonColor: _modal_default_color_code,
+                            confirmButtonText: 'ตกลง'
+                        }).then((result) => {
 
-                    });
+                        });
+                    }
+                    loaded.find(_loader).remove();
+                },
+                error: function (err) {
+                    loaded.find(_loader).remove();
                 }
-                loaded.find(_loader).remove();
-            },
-            error: function (err) {
-                loaded.find(_loader).remove();
-            }
-        });
+            });
+        }
+        else {
+            Swal.fire({
+                text: "กรุณาเพิ่มข้อมูล ก่อนพิมพ์รายการ",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+
+            });
+        }
     }
     else {
         Swal.fire({
@@ -3004,68 +3147,87 @@ function saveCalculateClearglassPrint() {
     var calListDetailData = new Array();
     var calcode = $('#form-add-calculate-clearglass input[name="input-insert-calulate-code-clearglass"]').val();
     if (calcode != '') {
-        $("#tb-clearglass-list tbody tr").each(function () {
-            var row = $(this);
-            var calListDetail = {};
-            calListDetail.product = row.find("td").eq(0).html();
-            calListDetail.glassdoortype = row.find("td").eq(1).html();
-            calListDetail.producttext = row.find("td").eq(2).html();
-            calListDetail.calhm = row.find("td").eq(3).html();
-            calListDetail.calwm = row.find("td").eq(4).html();
-            calListDetail.calh = row.find("td").eq(5).html();
-            calListDetail.calw = row.find("td").eq(6).html();
-            calListDetail.glassdoortypetext = row.find("td").eq(9).html();
-            calListDetailData.push(calListDetail);
-        });
+        var table = document.getElementById("tb-clearglass-list");
+        var tbodyRowCount = table.tBodies[0].rows.length;
+        if (tbodyRowCount > 0) {
+            $("#tb-clearglass-list tbody tr").each(function () {
+                var row = $(this);
+                var calListDetail = {};
+                calListDetail.product = row.find("td").eq(0).html();
+                calListDetail.glassdoortype = row.find("td").eq(1).html();
+                calListDetail.producttext = row.find("td").eq(2).html();
+                calListDetail.calhm = row.find("td").eq(3).html();
+                calListDetail.calwm = row.find("td").eq(4).html();
+                calListDetail.calh = row.find("td").eq(5).html();
+                calListDetail.calw = row.find("td").eq(6).html();
+                calListDetail.glassdoortypetext = row.find("td").eq(9).html();
+                calListDetailData.push(calListDetail);
+            });
 
-        SaveCalculate.calculatecode = calcode;
-        SaveCalculate.userlogin = _userCode;
-        SaveCalculate.orderid = $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val();
-        SaveCalculate.listdetail = calListDetailData;
-        _calCodeClearGlass = calcode;
-        $.ajax({
-            type: 'POST',
-            url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
-            contentType: 'application/json; charset=utf-8',
-            dataType: "json",
-            data: JSON.stringify(SaveCalculate),
-            success: function (data) {
-                if (data.result && data.resultStatus == "success") {
-                    callGetCalculateCode();
-                    clearcalglassinsert();
-                    _issaveglasscal = true;
-                    $("#tb-clearglass-list tbody tr").remove();
+            SaveCalculate.calculatecode = calcode;
+            SaveCalculate.userlogin = _userCode;
+            SaveCalculate.orderid = $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val();
+            SaveCalculate.listdetail = calListDetailData;
+            _calCodeClearGlass = calcode;
+            $.ajax({
+                type: 'POST',
+                url: `${app_settings.api_url}/api/Calculate/AddClearGlassItem`,
+                contentType: 'application/json; charset=utf-8',
+                dataType: "json",
+                data: JSON.stringify(SaveCalculate),
+                success: function (data) {
+                    if (data.result && data.resultStatus == "success") {
+                        callGetCalculateCode();
+                        clearcalglassinsert();
+                        _issaveglasscal = true;
+                        $("#tb-clearglass-list tbody tr").remove();
 
-                    if (_issaveglasscal) {
+                        if (_issaveglasscal) {
 
-                        $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
-                        $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
-                        callCustItemCal('#form-printClearglassCalculate #select-calprint-cust-clearglass', '-- กรุณาเลือก --');
-                        callPrintDoorType('#form-printClearglassCalculate #select-calprint-glassdoortype-clearglass', true);
-                        callCalMaster(_calCodeClearGlass, "C");
-                        $('#form-printClearglassCalculate input[name="input-print-calno-clearglass"]').val(_calCodeClearGlass);
-                        $(`#modal-printClearglassCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
-                        $('#modal-printClearglassCalculate').modal('show');
+                            $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
+                            $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
+                            callCustItemCal('#form-printClearglassCalculate #select-calprint-cust-clearglass', 'กรุณาเลือก');
+                            callPrintDoorType('#form-printClearglassCalculate #select-calprint-glassdoortype-clearglass', true);
+                            callCalMaster(_calCodeClearGlass, "C");
+
+                            $('#form-printClearglassCalculate input[name="input-print-calno-clearglass"]').val(_calCodeClearGlass);
+                            $('#form-printClearglassCalculate input[name="hdcalculateClearglassMasterID"]').val(data.calculateMasterID);
+                            $(`#modal-printClearglassCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
+                            $('#modal-printClearglassCalculate').modal('show');
+                        }
                     }
-                }
-                else {
-                    Swal.fire({
-                        text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
-                        icon: 'warning',
-                        showCancelButton: false,
-                        confirmButtonColor: _modal_primary_color_code,
-                        //cancelButtonColor: _modal_default_color_code,
-                        confirmButtonText: 'ตกลง'
-                    }).then((result) => {
+                    else {
+                        Swal.fire({
+                            text: "ทำรายการไม่สำเร็จ กรุณาทำรายการอีกครั้ง",
+                            icon: 'warning',
+                            showCancelButton: false,
+                            confirmButtonColor: _modal_primary_color_code,
+                            //cancelButtonColor: _modal_default_color_code,
+                            confirmButtonText: 'ตกลง'
+                        }).then((result) => {
 
-                    });
+                        });
+                    }
+                    loaded.find(_loader).remove();
+                },
+                error: function (err) {
+                    loaded.find(_loader).remove();
                 }
-                loaded.find(_loader).remove();
-            },
-            error: function (err) {
-                loaded.find(_loader).remove();
-            }
-        });
+            });
+        }
+        else {
+            loaded.find(_loader).remove();
+            Swal.fire({
+                text: "กรุณาเพิ่มข้อมูล ก่อนพิมพ์รายการ",
+                icon: 'warning',
+                showCancelButton: false,
+                confirmButtonColor: _modal_primary_color_code,
+                //cancelButtonColor: _modal_default_color_code,
+                confirmButtonText: 'ตกลง'
+            }).then((result) => {
+
+            });
+        }
     }
     else {
         Swal.fire({
@@ -3086,7 +3248,7 @@ function RePrintFrame() {
     var calcode = $('#form-search-calculate input[name="input-search-calulate-code"]').val();
     if (calcode != '') {
 
-        callCustItemCal('#form-ReprintFrameCalculate #select-calreprint-cust', '-- กรุณาเลือก --');
+        callCustItemCal('#form-ReprintFrameCalculate #select-calreprint-cust', 'กรุณาเลือก');
         callPrintDoorType('#form-ReprintFrameCalculate #select-calreprint-glassdoortype', true);
         callReCalMaster(calcode, "F");
         $('#form-ReprintFrameCalculate input[name="input-reprint-calno"]').val(calcode);
@@ -3155,17 +3317,20 @@ function getPrintDetailClear(calcode) {
         });
     }
 }
-function RePrintFrameList(calcode) {
+function RePrintFrameList(calcode, calid) {
 
     /*  var calcode = $('#form-search-calculate input[name="input-search-calulate-code"]').val();*/
     if (calcode != '') {
 
-        callCustItemCal('#form-ReprintFrameCalculate #select-calreprint-cust', '-- กรุณาเลือก --');
+        callCustItemCal('#form-ReprintFrameCalculate #select-calreprint-cust', 'กรุณาเลือก');
         callPrintDoorType('#form-ReprintFrameCalculate #select-calreprint-glassdoortype', true);
         callReCalMaster(calcode, "F");
+        getSelectCustPrint(calid);
+        $('#form-ReprintFrameCalculate input[name="hdcalculateMasterID"]').val(calid);
         $('#form-ReprintFrameCalculate input[name="input-reprint-calno"]').val(calcode);
         $(`#modal-ReprintFrameCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
         $('#modal-ReprintFrameCalculate').modal('show');
+
     }
     else {
         Swal.fire({
@@ -3181,14 +3346,16 @@ function RePrintFrameList(calcode) {
     }
 }
 
-function RePrintGlassList(calcode) {
+function RePrintGlassList(calcode, calid) {
 
     /*  var calcode = $('#form-search-calculate input[name="input-search-calulate-code"]').val();*/
     if (calcode != '') {
-        callCustItemCal('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass', '-- กรุณาเลือก --');
+        callCustItemCal('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass', 'กรุณาเลือก');
         callPrintDoorType('#form-ReprintClearglassCalculate #select-calreprint-glassdoortype-clearglass', true);
         callReCalMaster(calcode, "C");
         $('#form-ReprintClearglassCalculate input[name="input-reprint-calno-clearglass"]').val(calcode);
+        $('#form-ReprintClearglassCalculate input[name="hdcalculateClearglass"]').val(calid);
+
         $(`#modal-ReprintClearglassCalculate #itemHeader`).text('พิมพ์สูตรคำนวน');
         $('#modal-ReprintClearglassCalculate').modal('show');
     }
@@ -3205,12 +3372,19 @@ function RePrintGlassList(calcode) {
         });
     }
 }
-
+function callPrintDoorType(id, isSearch = false) {
+    $(id).empty();
+    if (isSearch) {
+        $(id).append(`<option value="A">-- ทั้งหมด --</option>`);
+    }
+    $(id).append(`<option value="S">บานเดี่ยว</option>`);
+    $(id).append(`<option value="M">บานคู่</option>`);
+}
 function ReprintClearGlass() {
 
     var calcode = $('#form-search-calculate-clearglass input[name="input-search-calulate-code-clearglass"]').val();
     if (calcode != '') {
-        callCustItemCal('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass', '-- กรุณาเลือก --');
+        callCustItemCal('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass', 'กรุณาเลือก');
         callPrintDoorType('#form-ReprintClearglassCalculate #select-calreprint-glassdoortype-clearglass', true);
         callReCalMaster(calcode, "C");
         $('#form-ReprintClearglassCalculate input[name="input-reprint-calno-clearglass"]').val(calcode);
@@ -3251,7 +3425,10 @@ function DoPrintCal(modal) {
             var InstallDate = $('#form-printFrameCalculate #input-print-installdate').val();
             var CustName = $('#form-printFrameCalculate #select-calprint-cust option:selected').text();
             var InstallAddress = document.getElementById('input-print-address').value;
-            callPrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            var hdcalculateMasterID = $('#form-printFrameCalculate input[name="hdcalculateMasterIDPrint"]').val();
+            var userid = _userCode;
+            var CustID = $('#form-printFrameCalculate #select-calprint-cust option:selected').val();
+            callPrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid);
             $('#modal-printFrameCalculate').modal('hide');
         }
     });
@@ -3275,8 +3452,11 @@ function DoRePrintCal(modal) {
             var DoorType = $('#form-ReprintFrameCalculate #select-calreprint-glassdoortype').val();
             var InstallDate = $('#form-ReprintFrameCalculate #input-reprint-installdate').val();
             var CustName = $('#form-ReprintFrameCalculate #select-calreprint-cust option:selected').text();
+            var CustID = $('#form-ReprintFrameCalculate #select-calreprint-cust option:selected').val();
             var InstallAddress = document.getElementById('input-reprint-address').value;
-            callPrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            var hdcalculateMasterID = $('#form-ReprintFrameCalculate input[name="hdcalculateMasterID"]').val();
+            var userid = _userCode;
+            callRePrintCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid);
             $('#modal-ReprintFrameCalculate').modal('hide');
             $('#form-search-calculate input[name="input-search-calulate-code"]').val('');
             $('.btn-print-search-calculate').css('display', 'none');
@@ -3306,7 +3486,11 @@ function DoPrintClearGlassCal(modal) {
             var InstallDate = $('#form-printClearglassCalculate #input-print-installdate-clearglass').val();
             var CustName = $('#form-printClearglassCalculate #select-calprint-cust-clearglass option:selected').text();
             var InstallAddress = document.getElementById('input-print-address-clearglass').value;
-            callPrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            var hdcalculateMasterID = $('#form-printClearglassCalculate input[name="hdcalculateClearglassMasterID"]').val();
+            var userid = _userCode;
+            var CustID = $('#form-printClearglassCalculate #select-calprint-cust-clearglass option:selected').val();
+
+            callPrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid);
             $('#modal-printClearglassCalculate').modal('hide');
         }
     });
@@ -3331,7 +3515,10 @@ function DoRePrintClearGlassCal(modal) {
             var InstallDate = $('#form-ReprintClearglassCalculate #input-reprint-installdate-clearglass').val();
             var CustName = $('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass option:selected').text();
             var InstallAddress = document.getElementById('input-reprint-address-clearglass').value;
-            callPrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            var hdcalculateMasterID = $('#form-ReprintClearglassCalculate input[name="hdcalculateClearglass"]').val();
+            var userid = _userCode;
+            var CustID = $('#form-ReprintClearglassCalculate #select-calreprint-cust-clearglass option:selected').val();
+            callRePrintClearGlassCal(calCode, DoorType, CreateDate, InstallDate, CustName, InstallAddress, hdcalculateMasterID, CustID, userid);
             $('#modal-ReprintClearglassCalculate').modal('hide');
 
             $('#form-search-calculate-clearglass input[name="input-search-calulate-code-clearglass"]').val('');
@@ -3352,6 +3539,16 @@ function callCustItemCal(select2Id, select2FirstText) {
     });
 }
 
+function renderCustItemDataSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.custId}">${v.custFirstName}  ${v.custSurName}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change');
+}
+
 function callCalMaster(CalCode, Type) {
     $.ajax({
         type: 'GET',
@@ -3366,6 +3563,21 @@ function callCalMaster(CalCode, Type) {
             }
             else {
                 $('#form-printClearglassCalculate input[name="input-print-createdate-clearglass"]').val(fulldate);
+            }
+        },
+        error: function (err) {
+        }
+    });
+}
+
+function getSelectCustPrint(calid) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetCalPrintByID?calculateMasterID=${calid}`,
+        success: function (data) {
+
+            if (data != null) {
+                $('#form-ReprintFrameCalculate #select-calreprint-cust').val(data.custid).trigger('change');
             }
         },
         error: function (err) {
@@ -3403,6 +3615,17 @@ function clearcalinsert() {
     $('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
     $('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
 }
+
+function clearcalinsert2() {
+    $('#form-add-calculate #input-insert-heigh-cupboard').val('');
+    $('#form-add-calculate #input-insert-width-cupboard').val('');
+    $('#form-add-calculate #select-insert-glassdoor-type').val('').trigger('change');
+    $('#form-add-calculate #select-insert-product-item').val('').trigger('change');
+
+    //$('#form-add-calculate #select-cal-quotation-no').removeAttr("disabled");
+    //$('#form-add-calculate #select-cal-quotation-no').val('').trigger('change');
+}
+
 function clearcalglassinsert() {
     $('#form-add-calculate-clearglass #input-insert-heigh-cupboard-clearglass').val('');
     $('#form-add-calculate-clearglass #input-insert-width-cupboard-clearglass').val('');
@@ -3411,6 +3634,39 @@ function clearcalglassinsert() {
 
     $('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
     $('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
+}
+
+function clearcalglassinsert2() {
+    $('#form-add-calculate-clearglass #input-insert-heigh-cupboard-clearglass').val('');
+    $('#form-add-calculate-clearglass #input-insert-width-cupboard-clearglass').val('');
+    $('#form-add-calculate-clearglass #select-insert-glassdoor-type-clearglass').val('').trigger('change');
+    $('#form-add-calculate-clearglass #select-insert-product-item-clearglass').val('').trigger('change');
+
+    //$('#form-add-calculate-clearglass #select-clearglass-quotation-no').removeAttr("disabled");
+    //$('#form-add-calculate-clearglass #select-clearglass-quotation-no').val('').trigger('change');
+}
+
+
+function callStockProductData(select2Id, select2FirstText) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Calculate/GetStockProductSelect`,
+        success: function (data) {
+            renderStockProductDataSelect(select2Id, select2FirstText, data);
+        },
+        error: function (err) {
+        }
+    });
+}
+
+function renderStockProductDataSelect(select2Id, select2FirstText, data) {
+    $(`${select2Id}`).empty();
+    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
+
+    data.forEach((v) => {
+        $(`${select2Id}`).append(`<option value="${v.productcode}">${v.productcode} - ${v.productname}</option>`);
+    });
+    $(`${select2Id}`).val('').trigger('change')
 }
 
 function onCustCalChange() {
@@ -3542,6 +3798,157 @@ function callGetCustReCalClearDetail(id, isView = false) {
 
         }
     });
+}
+
+function delRowCal(id) {
+    Swal.fire({
+        text: "ยืนยันการลบรายการ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+        confirmButtonText: 'ยืนยัน'
+    }).then((result) => {
+        $(id).remove();
+    });
+
+}
+
+function delRowCalPlanks(id, objid) {
+    Swal.fire({
+        text: "ยืนยันการลบรายการ",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: _modal_primary_color_code,
+        //cancelButtonColor: _modal_default_color_code,
+        confirmButtonText: 'ยืนยัน'
+    }).then((result) => {
+        if (_product_item_action == "edit") {
+            if ($("#hddelplankslist").val() == "") {
+                $("#hddelplankslist").val(objid);
+            }
+            else {
+                $("#hddelplankslist").val($("#hddelplankslist").val() + ',' + objid);
+            }
+        }
+        $(id).remove();
+    });
+
+}
+function printPlanks(id) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Planks/GetItemByItemId?id=${id}`,
+        success: function (data) {
+
+            generatePrintDocument(data);
+
+        },
+        error: function (err) {
+        }
+    });
+
+}
+
+async function generatePrintDocument(data) {
+    await renderPrinttHtml(data);
+}
+async function renderPrinttHtml(data) {
+    //$('#form-getInStock input[name="input-getin-id"]').val(data.master.id);
+    //$('#getoutdoccode').html(data.master.documentcode);
+    //console.log(data.master);
+    //$('#spnreciverout').html(data.master.recName);
+
+    var now = new Date();
+
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+    var today = now.getFullYear() + "-" + (month) + "-" + (day);
+    $('#DateAction').html(today);
+    //$('#spnreciverPositionout').html(data.master.positionName);
+
+    //var itemNo = 1;
+    //var size = "";
+    //var qty = 0;
+    //var item = ''
+    for (var i = 0; i < data.list.length; i++) {
+        var row;
+        row = $('<tr id="row' + data.list[i].id + '">');
+
+        //<td class="column0 style6 s" style="padding-left:1%;">Test01</td>
+        //        <td class="column1 style6 s" style="padding-left:1%;">FFFFFFFFF</td>
+        //        <td class="column2 style6 n" style="padding-right:1%;">0.05</td>
+        //        <td class="column3 style6 n" style="padding-right:1%;">6</td>
+        //        <td class="column4 style6 s" style="padding-left:1%;">FFFFFFFFFFFF</td>
+        row.append($('<td class="column0 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.item.quotationNumber));
+        row.append($('<td class="column1 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].colorcode));
+        row.append($('<td class="column2 style6 n" style="padding-right:1%;">0.05</td><span style="font-family:KaLaTeXaTEXT; ">').html(data.list[i].thicknesstype == 1 ? '18MM':'9MM'));
+        row.append($('<td class="column3 style6 n" style="padding-right:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].amount));
+        row.append($('<td class="column4 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].remark));
+        $('#tbl-planks-print').append(row);
+        //    itemNo++;
+        //    qty += data.item[i].amount;
+    }
+    //var itemNo = 1;
+    //var size = "";
+    //var qty = 0;
+    //var item = ''
+    //$('#tb-getout-itemlist').empty();
+    //for (var i = 0; i < data.item.length; i++) {
+    //    var row;
+    //    row = $('<tr id="row' + data.item[i].id + '">');
+
+
+    //    row.append($('<td style="width: 25.65pt; border-width: 0.75pt 0pt; border-style:none; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: center;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;">').html(itemNo));
+    //    row.append($('<td style="width: 136.25pt; border-width: 0.75pt 0pt; border-style: solid; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: left;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;">').html(data.item[i].stockproductcode + ' - ' + data.item[i].productname));
+    //    row.append($('<td style="width: 90.8pt; border-width: 0.75pt 0pt; border-style: solid; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: center;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;">').html(data.item[i].stockname));
+    //    row.append($('<td style="width: 30.8pt; border-width: 0.75pt 0pt; border-style: solid; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: center;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;text-align: center;">').html(data.item[i].amount));
+    //    row.append($('<td style="width: 42.55pt; border-width: 0.75pt 0pt; border-style: solid; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: center;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;">').html(data.item[i].unitname));
+    //    row.append($('<td style="width: 148.45pt; border-width: 0.75pt 0pt; border-style: solid; border-color: rgb(166, 166, 166) black; vertical-align: middle;"><p style="text-align: center;"><span style="font-family:KaLaTeXaTEXT; min-height: 16pt; font-size: 16pt;">').html(data.item[i].remark));
+    //    $('#tb-getout-itemlist').append(row);
+    //    itemNo++;
+    //    qty += data.item[i].amount;
+    //}
+
+    //$('#spnTotalAmountout').html(qty);
+    //$('#spnTotalQtyout').html(itemNo);
+
+    const options = {
+        margin: 0.3,
+        filename: 'OUT.pdf',
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    }
+
+
+    var element = document.getElementById("printPlanks");
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
+}
+
+function clearPlanksAdd() {
+    /*    $('#input-planks-id').val('');*/
+    $('#input-color-code').val('');
+    $('#input-planks-amount').val('');
+    $('#input-planks-remark').val('');
+    $('#form-createPlanks #select-planks-size').val('').trigger('change');
 }
 //function DoSaveSpec() {
 //    let formId = '#form-editSpec';

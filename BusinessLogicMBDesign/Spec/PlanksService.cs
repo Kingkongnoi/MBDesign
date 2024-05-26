@@ -19,7 +19,7 @@ namespace BusinessLogicMBDesign.Spec
             _connectionString = _configuration.GetConnectionString("defaultConnectionString").ToString();
         }
 
-        public List<PlanksItemModel> GetPlanksList(string quotationcod, string status)
+        public List<PlanksListItem> GetPlanksList(string quotationcod, string status)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -29,7 +29,7 @@ namespace BusinessLogicMBDesign.Spec
             }
         }
 
-        public tbPlanks GetPlanksItemById(int id)
+        public PlankWithCode GetPlanksItemById(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -37,6 +37,17 @@ namespace BusinessLogicMBDesign.Spec
 
                 return _planksRepository.GetFirstByID(id, conn);
             }
+        }
+
+        public List<tbPlanksDetails> GetPlanksDetailItemByID(int id) 
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _planksRepository.GetDetailsByID(id, conn);
+            }
+            
         }
 
         public List<tbCustOrder> GetQuatationNoList()
@@ -60,7 +71,7 @@ namespace BusinessLogicMBDesign.Spec
             }
         }
 
-        public int? AddPlanksItem(PlanksItemModel model)
+        public int? AddPlanksItem(PlanksAddModel model)
         {
             int? added = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -77,9 +88,9 @@ namespace BusinessLogicMBDesign.Spec
                     var addedObject = new tbPlanks
                     {
                         orderid = model.orderid,
-                        colorCode = model.colorCode,
-                        thickness18MM = model.thickness18MM,
-                        thickness9MM = model.thickness9MM,
+                        //colorCode = model.colorCode,
+                        //thickness18MM = model.thickness18MM,
+                        //thickness9MM = model.thickness9MM,
                         status = model.status,
                         createDate = DateTime.UtcNow,
                         createBy = model.loginCode
@@ -96,7 +107,7 @@ namespace BusinessLogicMBDesign.Spec
             return added;
         }
 
-        public int UpdatePlanksItem(PlanksItemModel model)
+        public int UpdatePlanksItem(PlanksAddModel model)
         {
             int updated = 0;
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -113,10 +124,9 @@ namespace BusinessLogicMBDesign.Spec
                     var updatedObject = new tbPlanks
                     {
                         id = model.id,
-                        orderid = model.orderid,
-                        colorCode = model.colorCode,
-                        thickness18MM = model.thickness18MM,
-                        thickness9MM = model.thickness9MM,
+                        //colorCode = model.colorCode,
+                        //thickness18MM = model.thickness18MM,
+                        //thickness9MM = model.thickness9MM,
                         status = model.status,
                         updateDate = DateTime.UtcNow,
                         updateBy = model.loginCode

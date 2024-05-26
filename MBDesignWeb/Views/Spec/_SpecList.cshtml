@@ -70,12 +70,12 @@
                     </div>
                 </form>
             </div>
-            <div class="col-sm-2 mt-2">
+          @*   <div class="col-sm-2 mt-2">
                 <button type="button" class="btn-add-custom btn-add-spec"><img src="~/images/plus.png" width="25px" />เพิ่มรายการบันทึกรับเรื่อง</button>
-            </div>
+            </div> *@
             <div class="row col-sm-12 mt-2">
                 <table class="table no-footer" id="tb-spec-queue-list" width="100%">
-                    <thead>orderid
+                    <thead>
                         <tr>
                             <th><span>id</span></th>
                             <th><span>orderid</span></th>
@@ -113,6 +113,7 @@
                                 <label class="col-sm-4 col-form-label text-end">เลขที่ใบเสนอราคา</label>
                                 <div class="col-sm-8">
                                     <input type="hidden" id="input-spec-id" name="input-spec-id" />
+                                    <input type="hidden" id="input-order-id" name="input-order-id" />
                                     <select class="form-select" id="select-edit-spec-quotation" onchange="onQuotatiChange();" disabled>
                                         <option></option>
                                     </select>
@@ -122,7 +123,7 @@
                             </div>
 
                             <div class="row col-sm-12">
-                                <label class="col-sm-4 col-form-label text-end" id="lbldesignname">ผู้รับผิดชอบ<span class="text-danger">*</span></label>
+                                <label class="col-sm-4 col-form-label text-end" id="lbldesignname">ผู้รับผิดชอบออกแบบ Spec<span class="text-danger">*</span></label>
                                 <div class="col-sm-8">
                                     <select class="form-select" id="select-edit-spec-designName"></select>
                                 </div>
@@ -192,7 +193,7 @@
                             </div>
                            
 
-                            <div class="row col-sm-12 mb-3">
+                           @*  <div class="row col-sm-12 mb-3">
                                 <label for="formFile" class="col-sm-2 col-form-label text-end">รูปแปลน</label>
                                 <div class="col-sm-10">
                                     <input id="display-picture-plan" name="display-picture-plan[]" type="file" class="file" accept="image/*" multiple>
@@ -204,7 +205,7 @@
                                 <div class="col-sm-10">
                                     <input id="display-picture-reference" name="display-picture-reference[]" type="file" class="file" accept="image/*" multiple>
                                 </div>
-                            </div>
+                            </div> *@
 
                             <div class="row col-sm-12 mb-3">
                                 <label for="formFile" class="col-sm-2 col-form-label text-end">อัปโหลดรูป 3D อนุมัติ</label>
@@ -258,11 +259,23 @@
 
                         </div>
                         <div class="row col-sm-12 mt-4 mb-2">
+                            <label class="col-sm-2 col-form-label text-end">รายการวัสดุที่ลูกค้าเลือก</label>
+                            <div class="row col-sm-10">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <textarea class="form-control" rows="3" id="txtproductcustomer" name="txtproductcustomer" disabled></textarea>
+                                 
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row col-sm-12 mt-4 mb-2">
                             <label class="col-sm-2 col-form-label text-end">โน๊ตเพิ่มเติม</label>
                             <div class="row col-sm-10">
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <input class="form-control mb-2" type="text" id="input-foreman-note" name="input-foreman-note"/>
+                                        <input class="form-control mb-2" type="text" id="input-foreman-note" name="input-foreman-note" disabled/>
                                     </div>
                                    
                                 </div>

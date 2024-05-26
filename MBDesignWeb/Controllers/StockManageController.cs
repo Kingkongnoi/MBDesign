@@ -9,13 +9,15 @@ namespace MBDesignWeb.Controllers
     [ApiController]
     public class StockManageController : Controller
     {
-       
+
         private readonly StockManageService _stockmanageService;
+        private readonly StockManageMasterService _stockmanageMasterService;
         private readonly IConfiguration _configuration;
 
         public StockManageController(IConfiguration configuration)
         {
             _configuration = configuration;
+            _stockmanageMasterService = new StockManageMasterService(configuration);
             _stockmanageService = new StockManageService(_configuration);
         }
 
@@ -37,7 +39,7 @@ namespace MBDesignWeb.Controllers
         [HttpGet]
         public JsonResult GetLastestGetinItemId()
         {
-            var data = _stockmanageService.GetFirstLastestGetinItemId();
+            var data = _stockmanageMasterService.GetFirstLastestGetinItemId();
 
             return new JsonResult(data);
         }
@@ -45,7 +47,7 @@ namespace MBDesignWeb.Controllers
         [HttpGet]
         public JsonResult GetLastestGetOutItemId()
         {
-            var data = _stockmanageService.GetLastestWithDrawItemId();
+            var data = _stockmanageMasterService.GetLastestWithDrawItemId();
 
             return new JsonResult(data);
         }
@@ -53,8 +55,9 @@ namespace MBDesignWeb.Controllers
         [HttpGet]
         public JsonResult GetItemByItemId(int id)
         {
+            var masterdata = _stockmanageMasterService.GetFirstByIDGetin(id);
             var item = _stockmanageService.GetStockProductManageItemById(id);
-            return new JsonResult(new { item = item });
+            return new JsonResult(new { master = masterdata, item = item });
         }
         #endregion
 
@@ -65,7 +68,7 @@ namespace MBDesignWeb.Controllers
         {
             var result = true;
             var resultStatus = "success";
-            var data = _stockmanageService.AddGetInItem(obj);
+            var data = _stockmanageService.AddStockManageItem(obj);
 
             if (data == -1)
             {

@@ -111,7 +111,7 @@ namespace DataLayerMBDesign
             //queryString.Append(" INNER JOIN tbStockProduct c on b.productcode = c.productcode");
             queryString.Append(" where a.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by a.id asc");
+            queryString.Append(" order by a.id desc");
 
             return conn.Query<tbCalculateMaster>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
@@ -169,6 +169,8 @@ namespace DataLayerMBDesign
 
             return conn.Query<CustDetailModel>(sql.ToString(), new { }, transaction: trans).ToList();
         }
+
+       
 
         //public tbStock GetLastestId(SqlConnection conn, SqlTransaction? trans = null)
         //{

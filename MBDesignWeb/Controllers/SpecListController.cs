@@ -50,18 +50,33 @@ namespace MBDesignWeb.Controllers
             return new JsonResult(data);
         }
         [HttpGet]
-        public JsonResult GetSpecListByID(int id)
+        public JsonResult GetSpecListByID(int id,int orderid)
         {
             List<specListModel> data = _specService.GetListSpecListByID(id);
-            var custOrder = _specService.Get3DQueueCustOrderByOrderId(data[0].orderid);
-            var uploadRef = _specService.GetUploadRefByOrderId(data[0].orderid);
-            var items = _saleService.GetCustOrderDetailByOrderId(data[0].orderid);
-            var custOrderDetail = _foremanService.GetForemanCustOrderDetailByKeyId(data[0].orderid);
+            var custOrder = _specService.Get3DQueueCustOrderByOrderId(data.Count > 0 ? data[0].orderid : orderid);
+            var uploadRef = _specService.GetUploadRefByOrderId(data.Count > 0 ? data[0].orderid : orderid);
+            var items = _saleService.GetCustOrderDetailByOrderId(data.Count > 0 ? data[0].orderid : orderid);
+            var custOrderDetail = _foremanService.GetForemanCustOrderDetailByKeyId(data.Count > 0 ? data[0].orderid : orderid);
+            string productcustomer = string.Empty;
+            int count = 0;
             var imagesForeman = new List<UploadOrderDetailView>();
             if (items.Count > 0)
             {
-                imagesForeman = _foremanService.GetForemanUpload(data[0].orderid, GlobalUploadCategory.foremanUpload);
+                imagesForeman = _foremanService.GetForemanUpload(data.Count > 0 ? data[0].orderid : orderid, GlobalUploadCategory.foremanUpload);
             }
+            foreach (var item in custOrderDetail)
+            {
+                if (count == 0)
+                {
+                    productcustomer = item.typeName;
+                }
+                else
+                {
+                    productcustomer += "," + item.typeName;
+                }
+                count++;
+            }
+  
             var result = new
             {
                 dataspec = data,
@@ -69,7 +84,8 @@ namespace MBDesignWeb.Controllers
                 uploadRef = uploadRef,
                 items = items,
                 imagesForeman = imagesForeman,
-                custOrderDetail = custOrderDetail
+                custOrderDetail = custOrderDetail,
+                listproductname = productcustomer
                 //items = items,
                 //itemsOptions = itemsOptions,
                 //cust = cust,
@@ -279,7 +295,7 @@ namespace MBDesignWeb.Controllers
                 if (dataID > 0)
                 {
                     specItemModel _saveSpec = new specItemModel();
-                    int[] liststatus = Array.ConvertAll(obj.listStatus.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries),s=> int.Parse(s));
+                    int[] liststatus = Array.ConvertAll(obj.listStatus.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries), s => int.Parse(s));
                     int maxStatus = liststatus.Max();
                     if (maxStatus == 4)
                     {
@@ -301,7 +317,7 @@ namespace MBDesignWeb.Controllers
                             updateBy = obj.loginCode,
                         };
                     }
-                  
+
 
                     data = _specService.UpdateSpecItem(_saveSpec, maxStatus);
                     if (data == -1)

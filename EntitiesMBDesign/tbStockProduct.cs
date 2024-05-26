@@ -53,4 +53,10 @@ namespace EntitiesMBDesign
         public string loginCode { get; set; } = string.Empty;
     }
 
+    public class stockunitprice
+    {
+        public string unitname { get; set; } = string.Empty;
+        public decimal productprice { get; set; }
+    }
+
 }

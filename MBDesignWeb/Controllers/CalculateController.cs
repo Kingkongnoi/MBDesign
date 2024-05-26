@@ -29,6 +29,7 @@ namespace MBDesignWeb.Controllers
 
         private readonly CalculateMasterService _calculateMasterService;
         private readonly CalculateDetailService _calculateDetailService;
+        private readonly CalculatePrintService _calculatePrintService;
         private readonly SpecListDetailService _specListDetailService;
         private readonly IConfiguration _configuration;
 
@@ -38,6 +39,7 @@ namespace MBDesignWeb.Controllers
             _calculateMasterService = new CalculateMasterService(_configuration);
             _calculateDetailService = new CalculateDetailService(_configuration);
             _specListDetailService = new SpecListDetailService(_configuration);
+            _calculatePrintService = new CalculatePrintService(_configuration);
         }
 
         #region GET
@@ -92,6 +94,15 @@ namespace MBDesignWeb.Controllers
         public JsonResult GetListMasterF(string calcode, string caltype)
         {
             var data = _calculateDetailService.GetCalculateList(calcode, caltype);
+
+            return new JsonResult(data);
+        }
+
+
+        [HttpGet]
+        public JsonResult GetCalPrintByID(int calculateMasterID)
+        {
+            var data = _calculatePrintService.getCalPrintByID(calculateMasterID);
 
             return new JsonResult(data);
         }
@@ -229,7 +240,8 @@ namespace MBDesignWeb.Controllers
             var returnData = new
             {
                 result,
-                resultStatus
+                resultStatus,
+                calculateMasterID = dataMaster.HasValue ? dataMaster.Value : 0
             };
 
             return new JsonResult(returnData);
@@ -340,7 +352,8 @@ namespace MBDesignWeb.Controllers
             var returnData = new
             {
                 result,
-                resultStatus
+                resultStatus,
+                calculateMasterID = dataMaster.HasValue ? dataMaster.Value : 0
             };
 
             return new JsonResult(returnData);
@@ -348,8 +361,34 @@ namespace MBDesignWeb.Controllers
 
         //[HttpPost]
         #region Frame
-        public FileResult ExportFrameCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress)
+        public FileResult ExportFrameCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress, int hdcalculateMasterID, int CustID, string userid)
         {
+            CalculatePrintAddModel calculatePrintAddModel = new CalculatePrintAddModel()
+            {
+                calculateMasterID = hdcalculateMasterID,
+                custid = CustID,
+                loginCode = userid
+            };
+            int? add = _calculatePrintService.AddCalculatePrintItem(calculatePrintAddModel);
+            IWorkbook wb = SetExportFile(calcode, glassdoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                wb.Write(ms);
+                string saveAsFileName = string.Format("FrameExport{0}-{1}.xlsx", calcode, DateTime.Now.ToString("ddMMyyyyHHmmss"));
+                byte[] bytes = ms.ToArray();
+                return File(bytes, "application/vnd.ms-excel", saveAsFileName);
+            }
+        }
+        public FileResult ExportRePrintFrameCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress,int hdcalculateMasterID,int CustID, string userid)
+        {
+            CalculatePrintAddModel calculatePrintAddModel = new CalculatePrintAddModel()
+            {
+                calculateMasterID = hdcalculateMasterID,
+                custid = CustID,
+                loginCode = userid
+            };
+            int? add = _calculatePrintService.AddCalculatePrintItem(calculatePrintAddModel);
+           
             IWorkbook wb = SetExportFile(calcode, glassdoorType, CreateDate, InstallDate, CustName, InstallAddress);
             using (MemoryStream ms = new MemoryStream())
             {
@@ -591,8 +630,34 @@ namespace MBDesignWeb.Controllers
         #endregion
 
         #region ClearGlass
-        public FileResult ExportClearGlassCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress)
+        public FileResult ExportClearGlassCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress, int hdcalculateMasterID, int CustID, string userid)
         {
+            CalculatePrintAddModel calculatePrintAddModel = new CalculatePrintAddModel()
+            {
+                calculateMasterID = hdcalculateMasterID,
+                custid = CustID,
+                loginCode = userid
+            };
+            int? add = _calculatePrintService.AddCalculatePrintItem(calculatePrintAddModel);
+            IWorkbook wb = SetClearGlassExportFile(calcode, glassdoorType, CreateDate, InstallDate, CustName, InstallAddress);
+            using (MemoryStream ms = new MemoryStream())
+            {
+                wb.Write(ms);
+                string saveAsFileName = string.Format("ClearGlassaExport{0}-{1}.xlsx", calcode, DateTime.Now.ToString("ddMMyyyyHHmmss"));
+                byte[] bytes = ms.ToArray();
+                return File(bytes, "application/vnd.ms-excel", saveAsFileName);
+            }
+        }
+
+        public FileResult ExportReprintClearGlassCal(string calcode, string glassdoorType, string CreateDate, string InstallDate, string CustName, string InstallAddress, int hdcalculateMasterID, int CustID, string userid)
+        {
+            CalculatePrintAddModel calculatePrintAddModel = new CalculatePrintAddModel()
+            {
+                calculateMasterID = hdcalculateMasterID,
+                custid = CustID,
+                loginCode = userid
+            };
+            int? add = _calculatePrintService.AddCalculatePrintItem(calculatePrintAddModel);
             IWorkbook wb = SetClearGlassExportFile(calcode, glassdoorType, CreateDate, InstallDate, CustName, InstallAddress);
             using (MemoryStream ms = new MemoryStream())
             {

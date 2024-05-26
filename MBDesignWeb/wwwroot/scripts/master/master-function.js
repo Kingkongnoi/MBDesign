@@ -41,14 +41,7 @@ function callSelect2Status(id, isSearch = false) {
 
 
 
-function callPrintDoorType(id, isSearch = false) {
-    $(id).empty();
-    if (isSearch) {
-        $(id).append(`<option value="A">-- ทั้งหมด --</option>`);
-    }
-    $(id).append(`<option value="S">บานเดี่ยว</option>`);
-    $(id).append(`<option value="M">บานคู่</option>`);
-}
+
 //function callProductItemCal(select2Id, select2FirstText) {
 //    $.ajax({
 //        type: 'GET',
@@ -760,15 +753,7 @@ function renderProductItemDataSelect(select2Id, select2FirstText, data) {
     $(`${select2Id}`).val('').trigger('change')
 }
 
-function renderCustItemDataSelect(select2Id, select2FirstText, data) {
-    $(`${select2Id}`).empty();
-    $(`${select2Id}`).append(`<option value="">${select2FirstText}</option>`);
 
-    data.forEach((v) => {
-        $(`${select2Id}`).append(`<option value="${v.custId}">${v.custFirstName}  ${v.custSurName}</option>`);
-    });
-    $(`${select2Id}`).val('').trigger('change')
-}
 
 
 
@@ -1963,17 +1948,5 @@ function renderItemQuickQTForm(data, modalId) {
 
 
 
-function delRowCal(id) {
-    Swal.fire({
-        text: "ยืนยันการลบรายการ",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: _modal_primary_color_code,
-        //cancelButtonColor: _modal_default_color_code,
-        confirmButtonText: 'ยืนยัน'
-    }).then((result) => {
-        $(id).remove();
-    });
 
-}
 

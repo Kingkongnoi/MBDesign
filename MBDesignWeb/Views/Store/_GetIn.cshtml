@@ -44,11 +44,11 @@
                             <label>วันที่บันทึก</label>
                             <input type="date" class="form-control" id="input-search-getin-date" name="input-search-getin-date" value="mm/dd/yyyy" />
                         </div>
-                        <div class="col-sm-2">
-                            <label>ผู้ผลิต/ผู้ขาย</label>
-                            <input type="text" class="form-control" id="select-search-saler" placeholder="">
+                        @*          <div class="col-sm-2">
+                        <label>ผู้ผลิต/ผู้ขาย</label>
+                        <input type="text" class="form-control" id="select-search-saler" placeholder="">
 
-                        </div>
+                        </div> *@
                         <div class="col-sm-2">
                             <label>ผู้รับเข้าสินค้า</label>
                             <select class="form-select" id="select-search-stockin-by">
@@ -57,13 +57,13 @@
 
                         </div>
 
-                        <div class="col-sm-2">
-                            <label>คลังสินค้า</label>
-                            <select class="form-select" id="select-search-stockin-stock">
-                                <option></option>
-                            </select>
+                        @*        <div class="col-sm-2">
+                        <label>คลังสินค้า</label>
+                        <select class="form-select" id="select-search-stockin-stock">
+                        <option></option>
+                        </select>
 
-                        </div>
+                        </div> *@
                         <div class="col-sm-2">
                             <label>สถานะ</label>
                             <select class="form-select" id="select-search-stockin-status">
@@ -71,7 +71,7 @@
                             </select>
                         </div>
 
-                        <div class="col-sm-12 mt-4 text-end">
+                        <div class="col-sm-2 mt-4 text-end">
                             <button type="button" class="btn btn-default-custom btn-clear-search-stockin">ล้างข้อมูล</button>
                             <button type="button" class="btn btn-primary btn-search-stockin">ค้นหา</button>
                         </div>
@@ -89,15 +89,10 @@
                         <tr>
                             <th class="hidecol"><span>id</span></th>
                             <th><span>เลขที่เอกสารอ้างอิง</span></th>
-                            <th><span>รหัสสินค้า</span></th>
-                            <th><span>ชื่อสินค้า</span></th>
-                            <th><span>คลังสินค้า</span></th>
                             <th><span>ผู้รับเข้าสินค้า</span></th>
                             <th><span>วันที่รับเข้าสินค้า</span></th>
-                            <th><span>หน่วย</span></th>
-                            <th><span>ราคาต้นทุน/หน่วย</span></th>
-                            <th><span>จำนวนสินค้า</span></th>
                             <th id="edit-action"><span>แก้ไข</span></th>
+                            <th id="edit-print"><span>พิมพ์</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -109,7 +104,7 @@
 
 @*modal for Getin*@
 <div id="modal-getInStock" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header justify-content-center">
@@ -151,7 +146,9 @@
                                 </div>
                                 <div class="col-sm-6 mb-2">
                                     <label>สินค้า</label>
-                                    <select class="form-select" id="select-getInStock-Product" disabled>
+                                    <input type="hidden" id="hdunitname" />
+                                    <input type="hidden" id="unitprice" />
+                                    <select class="form-select" id="select-getInStock-Product" onchange="onProductGetInOutChange('#form-getInStock');" disabled>
                                         <option></option>
                                     </select>
 
@@ -168,24 +165,42 @@
 
                                 <div class="col-sm-12 mb-2">
                                     <label class="control-label">หมายเหตุ</label>
-                                    <textarea class="form-control" rows="5" id="input-getInStock-remark" name="input-getInStock-remark"></textarea>
+                                    <textarea class="form-control" rows="3" id="input-getInStock-remark" name="input-getInStock-remark"></textarea>
+                                    <input id="hdproductcodelist" type="hidden" />
+                                    <input id="hddelproductcodelist" type="hidden" />
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-add-getin"><i class="fas fa-add" aria-hidden="true"></i> เพิ่มรายการ</button>
 
                                 </div>
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-stockin-detail" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="hidecol"><span>id</span></th>
+                                                <th class="hidecol"><span>stockid</span></th>
+                                                <th><span>รหัสสินค้า</span></th>
+                                                <th><span>ชื่อสินค้า</span></th>
+                                                <th><span>คลังสินค้า</span></th>
+                                                <th><span>ผู้ผลิต/ผู้ขาย</span></th>
+                                                <th><span>หน่วย</span></th>
+                                                <th><span>ราคาต้นทุน/หน่วย</span></th>
+                                                <th><span>จำนวนสินค้า</span></th>
+                                                <th><span>หมายเหตุ</span></th>
+                                                <th id="delete-action"><span>ลบ</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
                             </div>
-
                         </div>
-
-
-
                     </div>
                 </form>
-
-
-
             </div>
             <div class="modal-footer justify-content-center">
                 <button type="button" class="btn btn-primary btn-modal-save-getin"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
-                <button type="button" class="btn btn-default-custom" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+                <button type="button" class="btn btn-default-custom btn-modal-cancel-getin" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
             </div>
         </div>
     </div>
