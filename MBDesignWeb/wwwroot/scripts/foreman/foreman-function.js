@@ -59,6 +59,7 @@ function renderGetForemanQueueList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order : [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -158,6 +159,10 @@ function clearEditForm() {
 }
 
 function callGetEditForeman() {
+    var loaded = $('#form-editForeman');
+
+    loaded.prepend(_loader);
+    
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Foreman/GetForemanByOrderId?orderId=${_order_id}&foremanId=${_foreman_id}`,
@@ -165,9 +170,10 @@ function callGetEditForeman() {
             _items = data.items;
             _items_options = data.itemsOptions;
             renderEditForeman(data);
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }

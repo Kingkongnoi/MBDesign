@@ -67,7 +67,7 @@ namespace DataLayerMBDesign
                                 from tbProductType a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.typeId desc", condition);
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc", condition);
 
             return conn.Query<ProductTypeView>(queryString, new { }, transaction: trans).ToList();
         }

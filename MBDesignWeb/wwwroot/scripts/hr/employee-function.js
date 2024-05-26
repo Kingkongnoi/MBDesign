@@ -715,6 +715,7 @@ function renderGetEmployeeList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -778,7 +779,7 @@ function renderGetEmployeeList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_emp_class_display}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-employee" data-id="${row.id}"  title="แก้ไข">
@@ -1290,6 +1291,7 @@ function renderGetRoleList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1345,7 +1347,7 @@ function renderGetRoleList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_emp_class_display}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-role" data-id="${row.roleId}"  title="แก้ไข">
@@ -1405,7 +1407,7 @@ function renderGetMenuList(data) {
             responsive: true,
             searching: false,
             data: data,
-            pageLength: 20,
+            pageLength: 25,
             dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
@@ -1603,6 +1605,7 @@ function renderGetHolidayList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1669,7 +1672,7 @@ function renderGetHolidayList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_emp_class_display}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-holiday" data-id="${row.holidayId}"  title="แก้ไข">
@@ -1810,6 +1813,7 @@ function renderGetDepartmentList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1865,7 +1869,7 @@ function renderGetDepartmentList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_emp_class_display}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-department" data-id="${row.departmentId}"  title="แก้ไข">
@@ -2002,6 +2006,7 @@ function renderGetPositionList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -2057,7 +2062,7 @@ function renderGetPositionList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_emp_class_display}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-position" data-id="${row.positionId}"  title="แก้ไข">

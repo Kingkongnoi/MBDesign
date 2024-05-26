@@ -879,6 +879,7 @@ function renderGetQuotationList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1643,6 +1644,7 @@ function renderGetContractList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

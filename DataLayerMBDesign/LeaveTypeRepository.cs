@@ -40,7 +40,7 @@ namespace DataLayerMBDesign
                                 FROM tbLeaveType a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.leaveTypeId desc
+                                order by a.updateDate desc
                                 ", condition);
 
             return conn.Query<LeaveTypeView>(queryString, new { }, transaction: trans).ToList();

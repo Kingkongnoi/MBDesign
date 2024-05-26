@@ -80,7 +80,7 @@ namespace DataLayerMBDesign
                                 FROM tbBankAccount a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.accountId desc
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc
                                 ", condition);
 
             return conn.Query<BankAccountView>(queryString, new { }, transaction: trans).ToList();

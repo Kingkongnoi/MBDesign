@@ -56,7 +56,7 @@ namespace DataLayerMBDesign
                                 FROM tbRole a
                                 where a.isDeleted = 0
                                 {0}
-                                order by a.roleId desc", condition);
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc", condition);
 
             return conn.Query<RoleView>(queryString, new { }, transaction: trans).ToList();
         }

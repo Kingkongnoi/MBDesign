@@ -12,6 +12,8 @@ let _userCode = localStorage.getItem('loginCode');
 let _userName = localStorage.getItem('loginName');
 
 let _contract_id = 0;
+
+let _loader = $('<div/>').addClass('loader');
 function clearSearchForm() {
     let formId = '#form-search-accounting';
 
@@ -30,19 +32,19 @@ function callGetAccountingList() {
     let contractStatus = ($(`${formId} #select-search-contract-status`).val() == '') ? null : $(`${formId} #select-search-contract-status`).val();
     let contractDate = ($(`${formId} #input-search-contract-date`).val() == '') ? null : $(`${formId} #input-search-contract-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-accounting-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Accounting/GetAccountingList?contractNumber=${contractNumber}&quotationNumber=${quotationNumber}&customerName=${customerName}&contractStatus=${contractStatus}&contractDate=${contractDate}`,
         success: function (data) {
             renderAccountingList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -54,6 +56,7 @@ function renderAccountingList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order : [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -466,19 +469,19 @@ function callGetInvoiceList() {
     let invoiceStatus = ($(`${formId} #select-search-invoice-status`).val() == '') ? null : $(`${formId} #select-search-invoice-status`).val();
     let invoiceDate = ($(`${formId} #input-search-invoice-date`).val() == '') ? null : $(`${formId} #input-search-invoice-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-invoice-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Accounting/GetInvoiceList?quotationNumber=${quotationNumber}&invoiceNumber=${invoiceNumber}&customerName=${customerName}&invoiceStatus=${invoiceStatus}&invoiceDate=${invoiceDate}`,
         success: function (data) {
             renderInvoiceingList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -490,6 +493,7 @@ function renderInvoiceingList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order : [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1106,19 +1110,19 @@ function callGetReceiptList() {
     let customerName = ($(`${formId} #input-search-customer-name`).val() == '') ? null : $(`${formId} #input-search-customer-name`).val();
     let receiptDate = ($(`${formId} #input-search-bill-date`).val() == '') ? null : $(`${formId} #input-search-bill-date`).val();
 
-    //let loaded = $('#tb-quotation-list');
+    let loaded = $('#tb-bill-list');
 
-    //loaded.prepend(loader);
+    loaded.prepend(_loader);
 
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Accounting/GetBillList?invoiceNumber=${invoiceNumber}&receiptNumber=${receiptNumber}&customerName=${customerName}&receiptDate=${receiptDate}`,
         success: function (data) {
             renderReceiptList(data);
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            loaded.find(_loader).remove();
         }
     });
 }
@@ -1130,6 +1134,7 @@ function renderReceiptList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

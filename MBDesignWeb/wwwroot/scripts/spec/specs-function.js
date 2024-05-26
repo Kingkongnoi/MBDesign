@@ -1695,6 +1695,7 @@ function renderGetSpecQueueList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order:[],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",

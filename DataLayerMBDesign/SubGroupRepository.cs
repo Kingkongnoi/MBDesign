@@ -56,9 +56,9 @@ namespace DataLayerMBDesign
             queryString.Append(" INNER JOIN tbGroup b on a.groupid = b.id");
             queryString.Append(" where a.isDeleted = 0");
             queryString.AppendFormat(" {0}", condition);
-            queryString.Append(" order by a.subgroupcode asc");
+            queryString.Append(" order by case when a.updateDate is not null then a.updateDate else a.createDate end desc");
 
-            return conn.Query<SubGroupItemModel>(queryString.ToString(), new { }, transaction: trans).OrderBy(o=>o.subgroupcode).ToList();
+            return conn.Query<SubGroupItemModel>(queryString.ToString(), new { }, transaction: trans).ToList();
         }
 
         public tbSubGroup GetFirstByName(string subgroupname,int groupid, SqlConnection conn, SqlTransaction? trans = null)

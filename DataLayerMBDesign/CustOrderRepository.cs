@@ -107,7 +107,7 @@ namespace DataLayerMBDesign
                                 from tbCustOrder a inner join tbCust b on a.custId = b.custId 
                                 where a.isDeleted = 0 and b.isDeleted = 0
                                 {0}
-                                order by orderId", condition);
+                                order by case when a.updateDate is not null then a.updateDate else a.createDate end desc", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction:trans ).ToList();
 
@@ -199,17 +199,21 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and a.orderStatusId = (select top 1 statusId from tbStatus where isDeleted = 0 and status = 1 and name = N'{0}' and categoryId = (select top 1 categoryId from tbcategory where name = N'{1}' and isdeleted = 0 and status = 1))", orderStatus, GlobalOrderStatus.orderCategory);
             }
 
-            string queryString = string.Format(@"select a.orderId, b.id design3dId, a.quotationNumber, a.installDate, isnull(c.empFirstName + ' ' + c.empLastName,'') ownerEmpName, b.dueDate, 
-            isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(b.checklistStatusId,0)),'') checklistStatus,
-            case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
-            --case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
-            case when b.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') 
-			else isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') end lastUpdateBy
-            from tbCustOrder a left join tbDesign3D b on a.orderId = isnull(b.orderId,0)
-            left join tbEmpData c on isnull(b.ownerEmpId,0) = isnull(c.id,0)
-            where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
-            {0}
-            order by a.orderId
+            string queryString = string.Format(@"
+            select * 
+            from (
+                select a.orderId, b.id design3dId, a.quotationNumber, a.installDate, isnull(c.empFirstName + ' ' + c.empLastName,'') ownerEmpName, b.dueDate, 
+                isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(b.checklistStatusId,0)),'') checklistStatus,
+                case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
+                --case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+                case when b.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') 
+			    else isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') end lastUpdateBy
+                from tbCustOrder a left join tbDesign3D b on a.orderId = isnull(b.orderId,0)
+                left join tbEmpData c on isnull(b.ownerEmpId,0) = isnull(c.id,0)
+                where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
+                {0}
+            ) v
+            order by lastUpdateDate desc
             ", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
@@ -239,18 +243,22 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and  FORMAT(a.installDate, 'yyyy-MM-dd') = N'{0}'", installDate);
             }
 
-            string queryString = string.Format(@"select a.orderId, d.id foremanId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, 
-            isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(b.foremanStatusId,0)),'') foremanStatus,
-            case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
-            --case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
-            case when b.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') 
-			else isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') end lastUpdateBy
-            from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)
-            left join tbCust c on isnull(a.custId,0) = isnull(c.custId,0)
-            inner join tbForeman d on a.orderId = d.orderId and isnull(d.isDeleted,0) = 0
-            where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
-            {0}
-            order by a.orderId
+            string queryString = string.Format(@"
+            select * 
+            from (
+                select a.orderId, d.id foremanId, a.quotationNumber, a.installDate, isnull(c.custFirstName + ' ' + c.custSurName,'') cusName, 
+                isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(b.foremanStatusId,0)),'') foremanStatus,
+                case when b.updateDate is not null then b.updateDate else b.createDate end lastUpdateDate,
+                --case when b.updateBy is not null then isnull(b.updateBy,'') else isnull(b.createBy,'') end lastUpdateBy
+                case when b.updateBy is not null then isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.updateBy and isDeleted = 0),'') 
+			    else isnull((select top 1 empFirstName + ' ' + empLastName from tbEmpData where empCode = a.createBy and isDeleted = 0),'') end lastUpdateBy
+                from tbCustOrder a left join tbForeman b on a.orderId = isnull(b.orderId,0)
+                left join tbCust c on isnull(a.custId,0) = isnull(c.custId,0)
+                inner join tbForeman d on a.orderId = d.orderId and isnull(d.isDeleted,0) = 0
+                where a.isDeleted = 0 and a.[status] = 1 and isnull(b.isDeleted,0) = 0  and isnull(c.isDeleted,0) = 0
+                {0}
+            ) v
+            order by lastUpdateDate desc
             ", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
@@ -356,7 +364,8 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and  FORMAT(c.createDate, 'yyyy-MM-dd') = N'{0}'", contractCreateDate);
             }
 
-            string queryString = string.Format(@"select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, 
+            string queryString = string.Format(@"
+            select a.orderId, b.custFirstName, b.custSurName, b.custFirstName + ' ' + b.custSurName fullName, b.custAddress, isnull(a.quotationNumber,'') quotationNumber, isnull(c.contractNumber,'') contractNumber, 
             isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(c.contractStatusId,0)),'') contractStatus, 
             isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(d.invoiceStatusId,0)),'')  invoiceStatus, 
             isnull((select top 1 name from tbStatus where isDeleted = 0 and status = 1 and statusId = isnull(d.periodStatusId,0)),'') invoicePeriod,
@@ -366,7 +375,7 @@ namespace DataLayerMBDesign
             left join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
             where a.status = 1 and b.status = 1 and isnull(c.status,1) = 1 and isnull(d.status,1) = 1
             {0}
-            order by a.orderId", condition);
+            order by c.updateDate desc, c.createDate desc", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
@@ -408,7 +417,7 @@ namespace DataLayerMBDesign
             inner join tbInvoice d on a.custId = d.custId and isnull(d.isDeleted,0) = 0
             where a.status = 1 and b.status = 1 and isnull(d.status,1) = 1
             {0}
-            order by a.orderId", condition);
+            order by d.updateDate desc, d.createDate desc", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }
@@ -456,7 +465,7 @@ namespace DataLayerMBDesign
             where a.status = 1 and b.status = 1 and isnull(d.status,1) = 1
             and isnull(d.invoiceStatus,'') = N'จ่ายแล้ว'
             {0}
-            order by a.orderId", condition);
+            order by e.createDate desc", condition);
 
             return conn.Query<CustOrderView>(queryString, transaction: trans).ToList();
         }

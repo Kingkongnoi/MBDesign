@@ -49,6 +49,7 @@ function renderGet3DQueueList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -164,14 +165,17 @@ function clearInputForm() {
     $(`${formId} #chkFinal3D`).prop('checked', false);
 }
 function renderEditDesign3D(id) {
+    $('#modal-editDesign3D').prepend(_loader);
+
     $.ajax({
         type: 'GET',
         url: `${app_settings.api_url}/api/Design3D/GetDesign3DByOrderId?orderId=${id}`,
         success: function (data) {
             render3DToForm(data);
+            $('#modal-editDesign3D').find(_loader).remove();
         },
         error: function (err) {
-            //loaded.find(loader).remove();
+            $('#modal-editDesign3D').find(_loader).remove();
         }
     });
 }
