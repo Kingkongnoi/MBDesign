@@ -296,7 +296,7 @@ function renderGetItemGroupList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-group" data-id="${row.id}" title="แก้ไข">
@@ -574,7 +574,7 @@ function renderGetItemSubGroupList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-subgroup" data-id="${row.id}" title="แก้ไข">
@@ -657,7 +657,7 @@ function renderGetItemBrandList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-brand" data-id="${row.id}" title="แก้ไข">
@@ -735,7 +735,7 @@ function renderGetItemUnitList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-unit" data-id="${row.id}" title="แก้ไข">
@@ -819,7 +819,7 @@ function renderGetItemReceiverList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-receiver" data-id="${row.id}" title="แก้ไข">
@@ -897,7 +897,7 @@ function renderGetItemStockList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-stock" data-id="${row.id}" title="แก้ไข">
@@ -955,7 +955,7 @@ function renderWithdrawItemStockinList(data) {
                     targets: 4,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-stockout" data-id="${row.id}" title="แก้ไข">
@@ -966,7 +966,7 @@ function renderWithdrawItemStockinList(data) {
                     targets: 5,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    //className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-stockout" data-id="${row.id}" title="พิมพ์">
@@ -1107,7 +1107,7 @@ function renderGetItemStockinList(data) {
                     targets: 4,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-stockin" data-id="${row.id}" title="แก้ไข">
@@ -1118,7 +1118,7 @@ function renderGetItemStockinList(data) {
                     targets: 5,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    //className: `dt-center ${_role_product_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-stockin" data-id="${row.id}" title="พิมพ์">
@@ -1204,7 +1204,7 @@ function renderGetItemStockProductList(data) {
                     targets: 11,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_stores_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-viewstock" data-id="${row.id}" title="แก้ไข">

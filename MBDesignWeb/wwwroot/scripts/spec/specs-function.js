@@ -289,7 +289,7 @@ function renderGetPlanksList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_spec_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-planks" data-id="${row.id}" title="แก้ไข">
@@ -300,7 +300,7 @@ function renderGetPlanksList(data) {
                     targets: 8,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    /*className: `dt-center ${_role_product_class_display}`,*/
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-planks" data-id="${row.id}" title="พิมพ์">
@@ -365,7 +365,7 @@ function renderGetFittingList(data) {
                     targets: 6,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_product_class_display}`,
+                    className: `dt-center ${_role_spec_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-fitting" data-id="${row.id}" title="แก้ไข">
@@ -1762,7 +1762,7 @@ function renderGetSpecQueueList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_3d_class_display}`,
+                    className: `dt-center ${_role_spec_class_display}`,
                     render: function (data, type, row) {
                         /*       console.log(row);*/
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-spec" data-orderid="${row.orderid}" data-specid="${row.id}" data-step="${row.statusid}"  title="แก้ไข">
