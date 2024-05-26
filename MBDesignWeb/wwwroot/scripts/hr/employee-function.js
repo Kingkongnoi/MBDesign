@@ -1407,7 +1407,7 @@ function renderGetMenuList(data) {
             responsive: true,
             searching: false,
             data: data,
-            pageLength: 20,
+            pageLength: 25,
             dom: 'Bflrtip',
             oLanguage: {
                 oPaginate: {
