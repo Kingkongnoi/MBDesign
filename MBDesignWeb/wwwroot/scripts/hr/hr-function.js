@@ -136,7 +136,7 @@ function renderGetLeaveTypeList(data) {
                     targets: 7,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_leave_type_class_disaply}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-leave-type" data-id="${row.leaveTypeId}"  title="แก้ไข">
@@ -365,7 +365,7 @@ function renderGetLeaveInformationList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_leave_class_disaply}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-leave" data-id="${row.leaveId}"  title="แก้ไข">
@@ -1353,7 +1353,7 @@ function renderGetAttendanceSettingList(data) {
                     targets: 9,
                     data: null,
                     orderable: false,
-                    className: `dt-center ${_role_attendance_class_disaply}`,
+                    className: `dt-center ${_role_hr_class_display}`,
                     //className: cls,
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-attendance-setting" data-id="${row.id}"  title="แก้ไข">
