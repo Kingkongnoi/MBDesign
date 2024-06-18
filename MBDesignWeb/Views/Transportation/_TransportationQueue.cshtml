@@ -1,0 +1,335 @@
+﻿
+<style>
+    .loader {
+        z-index: 10000;
+    }
+
+    .style-details, .type-details, .item-details {
+        cursor: pointer !important;
+    }
+
+    .hidecol {
+        display: none;
+    }
+
+    #tb-product-list tbody tr, #tb-type-list tbody tr, #tb-style-list tbody tr, #tb-product-quickQT-list tbody tr, #tb-group-list tbody tr {
+        cursor: pointer !important;
+    }
+
+
+
+
+    .no-display {
+        display: none;
+    }
+
+    .btn-add-custom {
+        color: #F09723;
+        background-color: transparent /*#0d6efd*/;
+        border-color: transparent /*#0d6efd*/;
+        font-size: 16px;
+    }
+
+    /*  .timepicker {
+                        border: 1px solid rgb(163, 175, 251);
+                        text-align: center;
+                        display: inline;
+                        border-radius: 4px;
+                        padding: 2px;
+                    }
+
+                        .timepicker .hh, .timepicker .mm {
+                            width: 30px;
+                            outline: none;
+                            border: none;
+                            text-align: center;
+                        }
+
+                        .timepicker.valid {
+                            border: solid 1px springgreen;
+                        }
+
+                        .timepicker.invalid {
+                            border: solid 1px red;
+                        } */
+</style>
+<div class="container-fluid">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row mt-2">
+                <form id="form-search-tp-queue-list">
+                    <div class="row col-sm-12">
+
+                        <div class="col-sm-2">
+                            <label>ชื่อพนักงานขับรถ</label>
+                            <input type="text" class="form-control" id="input-search-tp-driver-name" name="input-search-tp-driver-name" />
+                        </div>
+
+                        <div class="col-sm-2">
+                            <label>วันที่ออกเอกสาร</label>
+                            <input type="date" class="form-control" id="input-search-tp-trans-date" name="input-search-tp-trans-date" />
+                        </div>
+                        <div class="col-sm-4 mt-4 text-end">
+                            <button type="button" class="btn btn-default-custom btn-clear-search-tp">ล้างข้อมูล</button>
+                            <button type="button" class="btn btn-primary btn-search-tpq">ค้นหา</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-sm-2 mt-2">
+                <button type="button" class="btn-add-custom btn-add-tpqueue"><img src="~/images/plus.png" width="25px" />เพิ่มการจัดคิวรถ</button>
+            </div>
+            <div class="row col-sm-12 mt-2">
+                <table class="table no-footer" id="tb-transq-list" width="100%">
+                    <thead>
+                        <tr>
+                            <th class="hidecol"><span>id</span></th>
+                            <th><span>วันที่ขนส่ง</span></th>
+                            <th><span>คนขับ</span></th>
+                            <th><span>เด็กรถ1</span></th>
+                            <th><span>เด็กรถ2</span></th>
+                            <th><span>วันที่แก้ไขล่าสุด</span></th>
+                            <th><span>ผู้แก้ไขล่าสุด</span></th>
+                            <th><span>แก้ไข</span></th>
+                            <th><span>พิมพ์</span></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*modal for create 3d*@
+<div id="modal-TPQueue" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header justify-content-center">
+                <h4 class="modal-title text-center"><span id="itemHeader"></span></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form-TPQueue">
+                    <div class="row d-sm-flex">
+                        @*<div class="col-sm-12">*@
+                        <div class="col-sm-12">
+                            <div class="row">
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label" id="lbltpq">ผู้รับผิดชอบการขนส่ง <span class="text-danger">*</span></label>
+
+                                    <select class="form-select" id="select-edit-tpq-name"></select>
+
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <input type="hidden" id="input-tp-id" name="input-tp-id" />
+                                    <input type="hidden" id="hdorderid" name="hdorderid" />
+
+                                    <label class="control-label">คนขับ<span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" id="txtdrivername" name="txtdrivername" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">วันที่<span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="txttpdate" name="txttpdate" value="dd/mm/yyyy" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>เด็กรถ 1</label>
+                                    <input class="form-control" type="text" id="txtsubdrivername1" name="txtsubdrivername1" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label>เด็กรถ 2</label>
+                                    <input class="form-control" type="text" id="txtsubdrivername2" name="txtsubdrivername2" />
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เลขไมล์ออก</label>
+                                    <input id="txtoutboundmileage" name="txtoutboundmileage" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">เวลาออก</label>
+                                    <div class="timepicker timepicker1" dir="ltr">
+                                        <input id="txthh1" type="text" class="hh N form-control" min="0" max="23" placeholder="hh" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label"></label>
+                                    <div class="timepicker timepicker1" dir="ltr">
+                                        <input type="text" id="txtmm1" class="mm N form-control" min="0" max="59" placeholder="mm" maxlength="2" />
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-6 mb-2">
+                                    <label class="control-label">เลขไมล์เข้า</label>
+                                    <input id="txtinboundmileage" name="txtinboundmileage" type="number" class="form-control" onkeypress="return isNumberKey(event)" />
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">เวลาเข้า</label>
+                                    <div class="timepicker timepicker2" dir="ltr">
+                                        <input id="txthh2" type="text" class="hh N form-control" min="0" max="23" placeholder="hh" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label"></label>
+                                    <div class="timepicker timepicker2" dir="ltr">
+                                        <input id="txtmm2" type="text" class="mm N form-control" min="0" max="59" placeholder="mm" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <label class="control-label">หมายเหตุ</label>
+                                    <textarea class="form-control" rows="5" id="txttpremark" name="txttpremark"></textarea>
+                                </div>
+                                <div class="col-sm-12 mb-2">
+                                    <h5><label class="control-label" style="padding-right:1%;"><u>เลือกรายชื่อ/ใบเสนอราคา ในการขนส่ง</u></label></h5>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <input id="chkName" name="tptype" class="form-check-input me-3" type="checkbox" value="1" onchange='onTypeChange(this)' /> รายชื่อ
+                                    <select class="form-select" id="select-edit-tp-custname" disabled>
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-6 mb-2">
+                                    <input id="chkNumber" name="tptype" class="form-check-input me-3" type="checkbox" value="2" onchange='onTypeChange(this)' /> ใบเสนอราคา
+                                    <select class="form-select" id="select-edit-tp-number" disabled>
+                                        <option></option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">เวลา To</label>
+                                    <div class="timepicker timepicker3" dir="ltr">
+                                        <input type="text" id="txttoh1" class="hh N form-control" min="0" max="23" placeholder="hh" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label"></label>
+                                    <div class="timepicker timepicker3" dir="ltr">
+                                        <input id="txttoh2" type="text" class="mm N form-control" min="0" max="59" placeholder="mm" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label">เวลา Out</label>
+                                    <div class="timepicker timepicker4" dir="ltr">
+                                        <input id="txttoh3" type="text" class="hh N form-control" min="0" max="23" placeholder="hh" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="col-sm-3 mb-2">
+                                    <label class="control-label"></label>
+                                    <div class="timepicker timepicker4" dir="ltr">
+                                        <input type="text" id="txttoh4" class="mm N form-control" min="0" max="59" placeholder="mm" maxlength="2" />
+                                    </div>
+                                </div>
+                                <div class="modal-footer justify-content-center">
+                                    <button type="button" class="btn btn-primary btn-modal-add-tpq"><i class="fas fa-add" aria-hidden="true"></i> เพิ่มรายการ</button>
+
+                                </div>
+                                <div class="row col-sm-12 mt-2">
+                                    <table class="table no-footer" id="tb-trans-queue" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th class="hidecol"><span>id</span></th>
+                                                <th class="hidecol"><span>masterid</span></th>
+                                                <th class="hidecol"><span>orderid</span></th>
+                                                <th><span>ลำดับ</span></th>
+                                                <th><span>ชื่อลูกค้า</span></th>
+                                                <th><span>รายการ</span></th>
+                                                <th><span>เวลา To</span></th>
+                                                <th><span>เวลา Out</span></th>
+                                                <th><span>ที่อยู่</span></th>
+                                                <th id="delete-action"><span>ลบ</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-primary btn-modal-save-tpq"><i class="fas fa-save" aria-hidden="true"></i> บันทึก</button>
+                <button type="button" class="btn btn-default-custom btn-modal-cancel-tpq" data-bs-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> ยกเลิก</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(".hh").blur(function () {
+        if ($(this).val() >= 24)
+            $(this).val($(this).val() % 24);
+
+        if ($(this).val() == "")
+            $(this).val("");
+        else
+            if ($(this).val() < 10)
+                $(this).val("0" + parseInt($(this).val()));
+        // validateTime(x);
+    });
+    $(".mm").blur(function () {
+        if ($(this).val() >= 60)
+            $(this).val($(this).val() % 60);
+
+        if ($(this).val() == "")
+            $(this).val("");
+        else
+            if ($(this).val() < 10)
+                $(this).val("0" + parseInt($(this).val()));
+
+        var x = $(this).parent().attr("class").split(" ")[1];
+        // validateTime(x);
+    });
+
+    $(".hh").on("input", function () {
+        $(this).parent().removeClass("invalid").removeClass("valid");
+        if ($(this).val().length == 2)
+            $(this).siblings(".mm").focus().select();
+    });
+    $(".mm").on("input", function () {
+        $(this).parent().removeClass("invalid").removeClass("valid");
+        if ($(this).val().length == 2)
+            $(this).blur();
+    });
+    $(".hh").on("focus", function () {
+        $(this).parent().removeClass("invalid").removeClass("valid");
+    });
+    $(".mm").on("focus", function () {
+        $(this).parent().removeClass("invalid").removeClass("valid");
+    });
+
+    function getTime(x) {
+        var t = $(".timepicker." + x).find(".hh").val() + ":" + $(".timepicker." + x).find(".mm").val();
+        var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(t);
+        var res = t;
+        if (!isValid)
+            res = null;
+        return res;
+    }
+
+    function validateTime(x) {
+        var t = $(".timepicker." + x).find(".hh").val() + ":" + $(".timepicker." + x).find(".mm").val();
+        var isValid = /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(t);
+        if (isValid) {
+            $(".timepicker." + x).removeClass("invalid").addClass("valid");
+        } else {
+            $(".timepicker." + x).removeClass("valid").addClass("invalid");
+        }
+
+    }
+
+    function setTime(x, t) {
+        $(".timepicker." + x).children(".hh").val(t.substring(0, 2));
+        $(".timepicker." + x).children(".mm").val(t.substring(3, 5));
+        validateTime(x);
+    }
+
+    $(".btnGetTime").click(function () {
+        alert(getTime("timepicker1"));
+    });
+
+    $(".btnSetTime").click(function () {
+        setTime("timepicker1", "10:35");
+    });
+
+    $("html").on('input', ".N", function () {
+        $(this).val($(this).val().replace(/[^0-9.]/g, ""));
+    });
+</script>

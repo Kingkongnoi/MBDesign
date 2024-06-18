@@ -39,6 +39,16 @@ namespace BusinessLogicMBDesign.Spec
             }
         }
 
+        public PlankWithCode GetPlanksItemByOrderId(int orderid)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+
+                return _planksRepository.GetFirstByOrderID(orderid, conn);
+            }
+        }
+
         public List<tbPlanksDetails> GetPlanksDetailItemByID(int id) 
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))

@@ -49,7 +49,7 @@ namespace DataLayerMBDesign
                                 woodendowel = @woodendowel,
                                 otherdescription = @otherdescription,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and fittingcode = @fittingcode
                                 select @@ROWCOUNT;";
 
@@ -61,11 +61,11 @@ namespace DataLayerMBDesign
                                 set othertext = @othertext,
                                 amount = @amount,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
-                                where isDeleted = 0 and id=@id and fittingid = @fittingid and hingetype = @hingetype
+                                updateBy = @updateBy
+                                where isDeleted = 0 and fittingid = @fittingid and hingetype = @hingetype
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.othertext, obj.amount, obj.updateDate, obj.updateBy,obj.id, obj.fittingid,obj.hingetype }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.othertext, obj.amount, obj.updateDate, obj.updateBy, obj.fittingid,obj.hingetype }, transaction: trans);
         }
         public int UpdateElec(tbElectrical obj, SqlConnection conn, SqlTransaction? trans = null)
         {
@@ -73,11 +73,11 @@ namespace DataLayerMBDesign
                                 set color = @color,
                                 amount = @amount,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
-                                where isDeleted = 0 and id=@id and fittingid = @fittingid and electricaltype = @electricaltype
+                                updateBy = @updateBy
+                                where isDeleted = 0  and fittingid = @fittingid and electricaltype = @electricaltype
                                 select @@ROWCOUNT;";
 
-            return conn.QueryFirstOrDefault<int>(queryString, new { obj.color, obj.amount, obj.updateDate, obj.updateBy, obj.id, obj.fittingid, obj.electricaltype }, transaction: trans);
+            return conn.QueryFirstOrDefault<int>(queryString, new { obj.color, obj.amount, obj.updateDate, obj.updateBy, obj.fittingid, obj.electricaltype }, transaction: trans);
         }
         public int UpdateDrawerRail(tbDrawerRail obj, SqlConnection conn, SqlTransaction? trans = null)
         {
@@ -86,8 +86,8 @@ namespace DataLayerMBDesign
                                 amount = @amount,
                                 othersize = @othersize,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
-                                where isDeleted = 0 and id=@id and fittingid = @fittingid and drawerrailtype = @drawerrailtype
+                                updateBy = @updateBy
+                                where isDeleted = 0 and fittingid = @fittingid and drawerrailtype = @drawerrailtype
                                 select @@ROWCOUNT;";
 
             return conn.QueryFirstOrDefault<int>(queryString, new { obj.pressbounceamount, obj.amount,obj.othersize, obj.updateDate, obj.updateBy, obj.id, obj.fittingid, obj.drawerrailtype }, transaction: trans);
@@ -98,7 +98,7 @@ namespace DataLayerMBDesign
                                 set length = @length,
                                 amount = @amount,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and id=@id and fittingid = @fittingid and slidingdoortype = @slidingdoortype
                                 select @@ROWCOUNT;";
 
@@ -111,7 +111,7 @@ namespace DataLayerMBDesign
                                 amount = @amount,
                                 seqno = @seqno,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and id=@id and fittingid = @fittingid and edgelaminatetype = @edgelaminatetype
                                 select @@ROWCOUNT;";
 
@@ -126,7 +126,7 @@ namespace DataLayerMBDesign
                                 size = @size,
                                 number = @number,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and id=@id and fittingid = @fittingid and frametrimtype = @frametrimtype
                                 select @@ROWCOUNT;";
 
@@ -139,7 +139,7 @@ namespace DataLayerMBDesign
                                 amount = @amount,
                                 size = @size,
                                 updateDate = @updateDate,
-                                updateBy = @updateBy,
+                                updateBy = @updateBy
                                 where isDeleted = 0 and id=@id and fittingid = @fittingid and otherfittingtype = @otherfittingtype
                                 select @@ROWCOUNT;";
 
@@ -251,7 +251,7 @@ namespace DataLayerMBDesign
                 condition += string.Format(" and co.quotationNumber like N'%{0}%'", quotation);
             }
 
-            string queryString = string.Format(@"select co.orderId
+            string queryString = string.Format(@"select f.id,co.orderId
 	                                            ,f.fittingcode
 	                                            ,co.quotationNumber
 	                                            ,c.custFirstName + ' ' + c.custSurName as fullname
@@ -269,11 +269,20 @@ namespace DataLayerMBDesign
         public EditFittingItemModel getFittingByID(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             EditFittingItemModel _result = new EditFittingItemModel();
-            string queryString = string.Format(@"select *
-                                                FROM tbFitting 
-                                                where id = {0} and ISNULL(isDeleted,0) =0 
+            string queryString = string.Format(@"select f.id
+                                                ,f.fittingcode
+                                                ,co.orderId
+                                                ,f.minifixset
+                                                ,f.woodendowel
+                                                ,f.otherdescription
+                                                ,co.quotationNumber 
+                                                ,c.custFirstName + ' ' + c.custSurName as fullname 
+                                                FROM tbFitting f
+                                                inner join tbCustorder co on f.orderId = co.orderId
+                                                inner join tbCust c on c.custId = co.custId
+                                                where f.id = {0} and ISNULL(f.isDeleted,0) =0 
                                               ", id);
-            tbFitting fitting = conn.QueryFirstOrDefault<tbFitting>(queryString, transaction: trans);
+            EditMainFittingModel fitting = conn.QueryFirstOrDefault<EditMainFittingModel>(queryString, transaction: trans);
             if (fitting != null) 
             {
                 _result.id = fitting.id;
@@ -282,7 +291,8 @@ namespace DataLayerMBDesign
                 _result.minifixset = fitting.minifixset;
                 _result.woodendowel =  fitting.woodendowel;
                 _result.otherdescription = fitting.otherdescription;
-
+                _result.quotationNumber = fitting.quotationNumber;
+                _result.fullname = fitting.fullname;
                 queryString = string.Format(@"select *
                                                 FROM tbHinge 
                                                 where fittingid = {0} and ISNULL(isDeleted,0) =0 

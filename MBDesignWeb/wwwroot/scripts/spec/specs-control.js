@@ -55,6 +55,9 @@
 
     $('.btn-add-fitting').on('click', function () {
         _product_item_action = 'add';
+        clearFormSpec('modal-createFitting');
+        $(`#form-createFitting #select-fitting-quotation-no`).css('display', '');
+        $("#form-createFitting #input-quotation-no").css("display", 'none');
         $(`#modal-createFitting #itemHeader`).text('เพิ่มรายการจัดฟิตติ้ง');
         $('#modal-createFitting').modal('show');
     });
@@ -63,7 +66,7 @@
         $(`#modal-createPlanks #itemHeader`).text('แก้ไขรายการสั่งไม้');
         $(`#modal-createPlanks`).modal('show');
         _product_item_action = 'edit';
-        clearForm('modal-createPlanks');
+        clearFormSpec('modal-createPlanks');
         if (_product_item_action == "edit") {
             $(`#select-quotation-no`).css('display', 'none');
             $("#input-quotation-no").css("display", "");
@@ -79,19 +82,25 @@
     });
 
     $(document).on('click', '.btn-edit-fitting', function () {
-        $(`#modal-createFitting #itemHeader`).text('แก้ไขรายการสั่งไม้');
-        $(`#modal-createFitting`).modal('show');
+
         _product_item_action = 'edit';
-        clearForm('modal-createFitting');
+        clearFormSpec('modal-createFitting');
+        $('#form-createFitting #input-fitting-no').val('');
         if (_product_item_action == "edit") {
             $('#form-createFitting #select-fitting-quotation-no').attr("disabled");
-
+            $(`#form-createFitting #select-fitting-quotation-no`).css('display', 'none');
+            $("#form-createFitting #input-quotation-no").css("display", "");
+           
         }
         else {
             $('#form-createFitting #select-fitting-quotation-no').removeAttr("disabled");
+            $(`#form-createFitting #select-fitting-quotation-no`).css('display', '');
+            $("#form-createFitting #input-quotation-no").css("display", 'none');
         }
         //$('#modal-createProduct #divOptions').empty();
         callGetFittingById($(this).data('id'), 'modal-createFitting');
+        $(`#modal-createFitting #itemHeader`).text('แก้ไขรายการสั่งไม้');
+        $(`#modal-createFitting`).modal('show');
     });
 
     $('.btn-modal-save-planks').on('click', function () {
@@ -152,6 +161,7 @@
         $('#form-editSpec #select-edit-spec-quotation').removeAttr("disabled");
         /* $('#form-editSpec #select-edit-spec-quotation').attr("onchange", "yourFunction()");*/
         $('#modal-editSpec').modal('show');
+       
     });
 
     $('.btn-modal-save-spec').on('click', function () {
@@ -397,6 +407,12 @@
 
         //$('#modal-createProduct #divOptions').empty();
         printPlanks($(this).data('id'));
+    });
+
+    $(document).on('click', '.btn-print-fitting', function () {
+
+        //$('#modal-createProduct #divOptions').empty();
+        printFitting($(this).data('id'));
     });
 
     $('#form-createPlanks .btn-modal-add-planks').on('click', function () {

@@ -137,7 +137,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddHinge(addedObject, conn, transaction);
-                            
+
                         }
                         transaction.Commit();
                     }
@@ -169,7 +169,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbHinge
                             {
-                                id = item.id,
+                                fittingid = model.id,
+                                hingetype = item.hingetype,
                                 amount = item.amount,
                                 othertext = item.othertext,
                                 status = true,
@@ -177,7 +178,7 @@ namespace BusinessLogicMBDesign.Spec
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateHinge(addedObject, conn, transaction);
-                            
+
                         }
                         transaction.Commit();
                     }
@@ -218,7 +219,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddElec(addedObject, conn, transaction);
-                           
+
                         }
                         transaction.Commit();
                     }
@@ -250,7 +251,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbElectrical
                             {
-                                id = item.id,
+                                fittingid = model.id,
+                                electricaltype = item.electricaltype,
                                 amount = item.amount,
                                 color = item.color,
                                 status = true,
@@ -258,7 +260,7 @@ namespace BusinessLogicMBDesign.Spec
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateElec(addedObject, conn, transaction);
-                            
+
                         }
                         transaction.Commit();
                     }
@@ -300,7 +302,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddDrawerRail(addedObject, conn, transaction);
-                          
+
                         }
                         transaction.Commit();
                     }
@@ -332,16 +334,17 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbDrawerRail
                             {
-                                id = item.id,
+                                fittingid = model.id,
                                 pressbounceamount = item.pressbounceamount,
                                 amount = item.amount,
+                                drawerrailtype = item.drawerrailtype,
                                 othersize = item.othersize,
                                 status = true,
                                 updateDate = DateTime.UtcNow,
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateDrawerRail(addedObject, conn, transaction);
-                           
+
                         }
                         transaction.Commit();
                     }
@@ -382,7 +385,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddSlideDoor(addedObject, conn, transaction);
-                            
+
                         }
                         transaction.Commit();
                     }
@@ -414,7 +417,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbSlidingDoorEquipment
                             {
-                                id = item.id,
+                                fittingid = model.id,
+                                slidingdoortype = item.slidingdoortype,
                                 amount = item.amount,
                                 length = item.length,
                                 status = true,
@@ -422,7 +426,7 @@ namespace BusinessLogicMBDesign.Spec
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateSlideDoor(addedObject, conn, transaction);
-                         
+
                         }
                         transaction.Commit();
                     }
@@ -464,7 +468,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddOtherFitiing(addedObject, conn, transaction);
-                           
+
                         }
                         transaction.Commit();
                     }
@@ -496,7 +500,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbOtherFitting
                             {
-                                id = item.id,
+                                fittingid = model.id,
+                                otherfittingtype = item.otherfittingtype,
                                 amount = item.amount,
                                 color = item.color,
                                 size = item.size,
@@ -505,7 +510,7 @@ namespace BusinessLogicMBDesign.Spec
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateOtherFitiing(addedObject, conn, transaction);
-                            
+
                         }
                         transaction.Commit();
                     }
@@ -547,7 +552,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddEdgeLaminate(addedObject, conn, transaction);
-                          
+
                         }
                         transaction.Commit();
                     }
@@ -579,7 +584,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbEdgeLaminate
                             {
-                                id = item.id,
+                               fittingid = model.id,
+                               edgelaminatetype=item.edgelaminatetype,
                                 seqno = item.seqno,
                                 color = item.color,
                                 amount = item.amount,
@@ -588,7 +594,7 @@ namespace BusinessLogicMBDesign.Spec
                                 updateBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateEdgeLaminate(addedObject, conn, transaction);
-                          
+
                         }
                         transaction.Commit();
                     }
@@ -632,7 +638,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             added = _fittingRepository.AddFrameTrim(addedObject, conn, transaction);
-                           
+
                         }
                         transaction.Commit();
                     }
@@ -664,7 +670,8 @@ namespace BusinessLogicMBDesign.Spec
                         {
                             var addedObject = new tbFrameTrim
                             {
-                                id = item.id,
+                               fittingid = model.id,
+                               frametrimtype = item.frametrimtype,
                                 size = item.size,
                                 number = item.number,
                                 seqno = item.seqno,
@@ -675,7 +682,7 @@ namespace BusinessLogicMBDesign.Spec
                                 createBy = model.loginCode
                             };
                             updated = _fittingRepository.UpdateFrameTrim(addedObject, conn, transaction);
-                           
+
                         }
                         transaction.Commit();
                     }
@@ -748,6 +755,10 @@ namespace BusinessLogicMBDesign.Spec
                 if (getID > 0)
                 {
                     stockproductcode = string.Format("FIT{0:D4}", getID);
+                }
+                else
+                {
+                    stockproductcode = string.Format("FIT{0:D4}", 1);
                 }
                 return stockproductcode;
             }

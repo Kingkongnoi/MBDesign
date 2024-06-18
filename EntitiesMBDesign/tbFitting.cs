@@ -27,6 +27,7 @@ namespace EntitiesMBDesign
     public class FittingListModel
     {
         public int id { get; set; }
+        public int orderId { get; set; }
         public string fittingcode { get; set;} = string.Empty;
         public string quotationNumber { get; set;} = string.Empty;
         public string fullname { get; set;} = string.Empty; 
@@ -36,6 +37,7 @@ namespace EntitiesMBDesign
 
     public class AddFittingItemModel
     {
+        public int id { get; set; }
         public string fittingcode { get; set; } = string.Empty;
         public int orderid { get; set; }
         public int minifixset { get; set; }
@@ -51,6 +53,18 @@ namespace EntitiesMBDesign
         public List<tbFrameTrim> FrameTrim { get; set; } = new List<tbFrameTrim>();
 
     }
+
+    public class EditMainFittingModel
+    {
+        public int id { get; set; }
+        public string fittingcode { get; set; } = string.Empty;
+        public int orderid { get; set; }
+        public int minifixset { get; set; }
+        public int woodendowel { get; set; }
+        public string otherdescription { get; set; } = string.Empty;
+        public string quotationNumber { get; set; } = string.Empty;
+        public string fullname { get; set; } = string.Empty;
+    }
     public class EditFittingItemModel
     {
         public int id { get; set; }
@@ -59,6 +73,8 @@ namespace EntitiesMBDesign
         public int minifixset { get; set; }
         public int woodendowel { get; set; }
         public string otherdescription { get; set; } = string.Empty;
+        public string quotationNumber { get; set; } = string.Empty;
+        public string fullname { get; set; } = string.Empty;
         public List<tbHinge> Hinge { get; set; } = new List<tbHinge>();
         public List<tbSlidingDoorEquipment> SlideDoor { get; set; } = new List<tbSlidingDoorEquipment>();
         public List<tbElectrical> Electrical { get; set; } = new List<tbElectrical>();

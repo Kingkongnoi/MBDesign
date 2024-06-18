@@ -948,7 +948,7 @@ function renderWithdrawItemStockinList(data) {
                     data: 'actiondate',
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return type === 'sort' ? data : row.actiondate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                        return type === 'sort' ? data : row.actiondate ? convertDateTimeFormat(row.actiondate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {
@@ -1100,7 +1100,7 @@ function renderGetItemStockinList(data) {
                     data: 'actiondate',
                     className: "dt-center",
                     render: function (data, type, row) {
-                        return type === 'sort' ? data : row.actiondate ? convertDateTimeFormat(row.createDate, 'DD/MM/YYYY HH:mm') : "";
+                        return type === 'sort' ? data : row.actiondate ? convertDateTimeFormat(row.actiondate, 'DD/MM/YYYY HH:mm') : "";
                     },
                 },
                 {

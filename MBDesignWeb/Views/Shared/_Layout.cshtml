@@ -89,6 +89,9 @@
                         <i href="~/images/accounting.png"></i> ภาพรวมข้อมูล
                         </a>
                         </li>*@
+                        <li class="nav-item" id="nav-hr">
+                            <a class="nav-link" asp-area="" asp-controller="HR" asp-action="Index" onmouseover="onmouseoverAction('imgHR','hr-manager')" onmouseout="onmouseoutAction('imgHR','hr-manager')" id="navHR"><img id="imgHR" src="~/images/hr-manager.png" width="20px" /> <span id="spnHR"> ฝ่ายบุคคล</span></a>
+                        </li>
                         <li class="nav-item" id="nav-sale">
                             <a class="nav-link" asp-area="" asp-controller="Sale" asp-action="Index" onmouseover="onmouseoverAction('imgSale','sales')" onmouseout="onmouseoutAction('imgSale','sales')" id="navSale"><img id="imgSale" src="~/images/sales.png" width="20px" /> <span id="spnSale"> การขาย</span></a>
                         </li>
@@ -110,8 +113,12 @@
                         <li class="nav-item" id="nav-spec">
                             <a class="nav-link" asp-area="" asp-controller="Spec" asp-action="Index" onmouseover="onmouseoverAction('imgSpec','spec')" onmouseout="onmouseoutAction('imgSpec','spec')" id="navSpec"><img id="imgSpec" src="~/images/spec.png" width="20px" /> <span id="spnSpec"> การออกแบบ Spec</span></a>
                         </li>
-                        <li class="nav-item" id="nav-hr">
-                            <a class="nav-link" asp-area="" asp-controller="HR" asp-action="Index" onmouseover="onmouseoverAction('imgHR','hr-manager')" onmouseout="onmouseoutAction('imgHR','hr-manager')" id="navHR"><img id="imgHR" src="~/images/hr-manager.png" width="20px" /> <span id="spnHR"> ฝ่ายบุคคล</span></a>
+                      
+                        <li class="nav-item" id="nav-pd">
+                            <a class="nav-link" asp-area="" asp-controller="ProductionDepartment" asp-action="Index" onmouseover="onmouseoverAction('imgHR','hr-manager')" onmouseout="onmouseoutAction('imgHR','hr-manager')" id="navPD"><img id="imgPD" src="~/images/hr-manager.png" width="20px" /> <span id="spnPD"> ฝ่ายผลิต</span></a>
+                        </li>
+                        <li class="nav-item" id="nav-td">
+                            <a class="nav-link" asp-area="" asp-controller="Transportation" asp-action="Index" onmouseover="onmouseoverAction('imgHR','hr-manager')" onmouseout="onmouseoutAction('imgHR','hr-manager')" id="navTD"><img id="imgTD" src="~/images/hr-manager.png" width="20px" /> <span id="spnTD"> ฝ่ายขนส่ง</span></a>
                         </li>
                     </ul>
 

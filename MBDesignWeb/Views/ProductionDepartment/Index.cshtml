@@ -1,12 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "การออกแบบ Spec";
+    ViewData["Title"] = "ฝ่ายผลิต";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
 <script src="~/scripts/config.js"></script>
-<script src="~/scripts/spec/specs-function.js"></script>
-<script src="~/scripts/spec/specs-control.js"></script>
+<script src="~/scripts/pd/pd-function.js"></script>
+<script src="~/scripts/pd/pd-control.js"></script>
 
 <style>
     .nav-tabs .nav-link {
@@ -34,8 +34,10 @@
         let imageUrl = localStorage.getItem('imageUrl');
         let path = (imageUrl == "") ? ".." : imageUrl;
 
-        $('#spnSpec').addClass('mnu-active');
-        $('#imgSpec').attr('src', `${path}/images/spec_2.png`);
+        $('#spnPD').addClass('mnu-active');
+        $('#imgPD').attr('src', `${path}/images/spec_2.png`);
+        $('#spnSpec').removeClass('mnu-active');
+        $('#imgSpec').attr('src', `${path}/images/spec.png`);
         $('#navSpec').removeAttr("onmouseover");
         $('#navSpec').removeAttr("onmouseout");
 
@@ -53,45 +55,36 @@
         $('#imgForeman').attr('src', `${path}/images/foreman.png`);
         $('#imgAccounting').attr('src', `${path}/images/accounting.png`);
         $('#imgHR').attr('src', `${path}/images/hr-manager.png`);
-      
+
         $('#img3D').attr('src', `${path}/images/graphic-design.png`);
         $('#imgStore').attr('src', `${path}/images/stores.png`);
     });
 </script>
 
 <div class="row">
-    <h4>การออกแบบ Spec</h4>
+    <h4>ฝ่ายผลิต</h4>
 
     <div class="col-sm-12">
 
         <!-- Nav pills -->
         <ul class="nav nav-pills bg-primary mb-3" style="padding-top: 0.25rem;padding-bottom: 0.25rem;padding-left: 0.25rem;">
             <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="pill" href="#nav-spec-queue-tab">การออกแบบ Spec</a>
-            </li>
-            <li class="nav-item" id="nav-planks">
-                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-planks-tab">ใบสั่งไม้</a>
-            </li>
-            <li class="nav-item" id="nav-fitting">
-                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-fitting-tab">ใบจัดฟิตติ้ง</a>
-            </li>
-            <li class="nav-item" id="nav-calculate">
-                <a class="nav-link" data-bs-toggle="pill" href="#nav-spec-calculate-tab">ตั้งค่าสูตรคำนวณ</a>
+                <a class="nav-link active" data-bs-toggle="pill" href="#nav-pd-queue-tab">ฝ่ายผลิต Checklist</a>
             </li>
           
+
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
-            <div class="tab-pane active" id="nav-spec-queue-tab">@Html.Partial("_SpecList.cshtml")</div>
-            <div class="tab-pane fade" id="nav-spec-planks-tab">@Html.Partial("_Planks.cshtml")</div>
+            <div class="tab-pane active" id="nav-pd-queue-tab">@Html.Partial("_ProductionDepartment.cshtml")</div>
+          @*   <div class="tab-pane fade" id="nav-spec-planks-tab">@Html.Partial("_Planks.cshtml")</div>
             <div class="tab-pane fade" id="nav-spec-fitting-tab">@Html.Partial("_Fitting.cshtml")</div>
-            <div class="tab-pane fade" id="nav-spec-calculate-tab">@Html.Partial("_Calculate.cshtml")</div>
+            <div class="tab-pane fade" id="nav-spec-calculate-tab">@Html.Partial("_Calculate.cshtml")</div> *@
         </div>
 
     </div>
 </div>
-
 <div class="" style="display:none;">
     @Html.Partial("~/Views/Spec/_PlanksPrint.cshtml")
 </div>

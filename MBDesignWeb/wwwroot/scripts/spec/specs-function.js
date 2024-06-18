@@ -338,31 +338,36 @@ function renderGetFittingList(data) {
                 },
                 {
                     targets: 1,
+                    data: 'orderId',
+                    className: "hidecol",
+                },
+                {
+                    targets: 2,
                     data: 'fittingcode',
                     className: "item-details"
                 },
                 {
-                    targets: 2,
+                    targets: 3,
                     data: 'quotationNumber',
                     className: "item-details"
                 },
                 {
-                    targets: 3,
+                    targets: 4,
                     data: 'fullname',
                     className: "dt-center",
                 },
                 {
-                    targets: 4,
+                    targets: 5,
                     data: 'custTel',
                     className: "dt-center",
                 },
                 {
-                    targets: 5,
+                    targets: 6,
                     data: 'createby',
                     className: "dt-center",
                 },
                 {
-                    targets: 6,
+                    targets: 7,
                     data: null,
                     orderable: false,
                     className: `dt-center ${_role_product_class_display}`,
@@ -370,6 +375,17 @@ function renderGetFittingList(data) {
                     render: function (data, type, row) {
                         return `<button type="button" class="btn btn-primary btn-circle-xs btn-edit-fitting" data-id="${row.id}" title="แก้ไข">
                     <i class="fa fa-edit"></i></button>`;
+                    },
+                },
+                {
+                    targets: 8,
+                    data: null,
+                    orderable: false,
+                    className: `dt-center ${_role_product_class_display}`,
+                    //className: cls,
+                    render: function (data, type, row) {
+                        return `<button type="button" class="btn btn-primary btn-circle-xs btn-print-fitting" data-id="${row.id}" title="พิมพ์">
+                    <i class="fa fa-print"></i></button>`;
                     },
                 },
             ],
@@ -394,7 +410,7 @@ function callGetFittingById(id, modal, isView = false) {
         type: 'GET',
         url: `${app_settings.api_url}/api/Fitting/GetItemByItemId?id=${id}`,
         success: function (data) {
-            renderFitting(data.item);
+            generateFittingFrm(data);
         },
         error: function (err) {
         }
@@ -437,12 +453,22 @@ function renderPlanksForm(data) {
     //$('#form-createPlanks #select-brand-status').val(status).trigger('change');
 }
 
-function renderFitting(data) {
+async function generateFittingFrm(data) {
+    await renderFitting(data);
+}
+
+async function renderFitting(data) {
+    console.log(data);
+
+    $('#form-createFitting #input-fitting-no').val(data.fittingcode);
+    $('#form-createFitting #input-fitting-id').val(data.id);
     $('#form-createFitting #input-minifixset-amount').val(data.minifixset);
     $('#form-createFitting #input-woodendowel-amount').val(data.woodendowel);
     $('#form-createFitting #input-other-desc').val(data.otherdescription);
+    $(`#form-createFitting #input-quotation-no`).val(data.quotationNumber);
+    $("#form-createFitting #lblfullname").text(data.fullname);
 
-    data.Hinge.forEach((item) => {
+    data.hinge.forEach((item) => {
         switch (item.hingetype) {
             case 1:
                 $('#form-createFitting #input-hinge1-amount').val(item.amount);
@@ -461,7 +487,7 @@ function renderFitting(data) {
         };
     });
 
-    data.DrawerRail.forEach((item) => {
+    data.drawerRail.forEach((item) => {
         switch (item.drawerrailtype) {
             case 1:
                 $('#form-createFitting #input-drawerrail1-amount').val(item.amount);
@@ -478,7 +504,7 @@ function renderFitting(data) {
         };
     });
 
-    data.SlideDoor.forEach((item) => {
+    data.slideDoor.forEach((item) => {
         switch (item.slidingdoortype) {
             case 1:
                 $('#form-createFitting #input-slidedoor1-amount').val(item.amount);
@@ -504,7 +530,7 @@ function renderFitting(data) {
         };
     });
 
-    data.Electrical.forEach((item) => {
+    data.electrical.forEach((item) => {
         switch (item.electricaltype) {
             case 1:
                 $('#form-createFitting #input-elec1-amount').val(item.amount);
@@ -552,7 +578,7 @@ function renderFitting(data) {
         };
     });
 
-    data.EdgeLaminate.forEach((item) => {
+    data.edgeLaminate.forEach((item) => {
         switch (item.edgelaminatetype) {
             case 1:
                 if (item.seqno == 1) {
@@ -593,7 +619,7 @@ function renderFitting(data) {
         };
     });
 
-    data.OtherFitting.forEach((item) => {
+    data.otherFitting.forEach((item) => {
         switch (item.otherfittingtype) {
             case 1:
                 $('#form-createFitting #input-other1-amount').val(item.amount);
@@ -631,7 +657,7 @@ function renderFitting(data) {
         };
     });
 
-    data.FrameTrim.forEach((item) => {
+    data.frameTrim.forEach((item) => {
         switch (item.frametrimtype) {
             case 1:
                 $('#form-createFitting #input-fandc1-amount').val(item.amount);
@@ -712,14 +738,130 @@ function clearSearchForm(area) {
     }
 }
 
-function clearForm(modal) {
+function clearFormSpec(modal) {
     switch (modal) {
-        case "modal-createPlanks" || "modal-viewPlanks":
-            $('#form-createPlanks #select-quotation-no').val(0).trigger('change');
-            $('#form-createPlanks input[name="input-color-code"]').val('');
-            //$('#form-createPlanks input[name="input-18mm-amount]').val('');
-            //$('#form-createPlanks input[name="input-9mm-amount]').val('');
-            $('#form-createPlanks #select-planks-status').val(1).trigger('change');
+        case "modal-createFitting":
+            callGetFittingCode();
+            $("#form-createFitting #lblfullname").text('');
+            $('#input-hinge1-amount').val('');
+            $('#input-hinge2-amount').val('');
+            $('#input-hinge3-amount').val('');
+            $('#input-hinge4-amount').val('');
+            $('#input-hinge4-desc').val('');
+            $('#input-drawerrail1-amount').val('');
+            $('#input-bouncepress-amount').val('');
+            $('#input-drawerrail2-amount').val('');
+            $('#input-drawerrail3-amount').val('');
+            $('input-drawerrailsize-desc').val('');
+            $('#input-slidedoor1-amount').val('');
+            $('#input-slidedoorrail1-amount').val('');
+            $('#input-slidedoor1-size').val('')
+            $('#input-slidedoor2-amount').val('');
+            $('#input-slidedoorrail2-amount').val('');
+            $('#input-slidedoor2-size').val('')
+
+            $('#input-slidedoor3-amount').val('');
+
+            $('#input-slidedoorrail3-amount').val('');
+            $('#input-slidedoor3-size').val('')
+
+            $('#input-elec1-amount').val('');
+            $('#input-elec2-amount').val('');
+            $('#input-elec3-amount').val('');
+            $('#input-elec1-color').val()
+
+            $('#input-elec4-amount').val('');
+
+            $('#input-elec5-amount').val('');
+            $('#input-elec6-amount').val('');
+            $('#input-elec7-amount').val('');
+            $('#input-elec8-amount').val('');
+            $('#input-elec9-amount').val('');
+            $('#input-elec10-amount').val('');
+            $('#input-elec11-amount').val('');
+            $('#input-elec12-amount').val('');
+            $('#input-elec13-amount').val('');
+            $('#input-elec14-amount').val('');
+
+            $('#input-edge1-color').val('');
+            $('#input-edge2-color').val('');
+            $('#input-edge3-color').val('');
+            $('#input-edge4-color').val('');
+            $('#input-edge5-color').val('');
+            $('#input-edge6-color').val('');
+            $('#input-edge7-color').val('');
+            $('#input-edge8-color').val('');
+            $('#input-edge9-color').val('');
+            $('#input-edge10-amount').val('')
+
+            $('#input-other1-color').val('');
+            $('#input-other1-amount').val('');
+
+            $('#input-other2-color').val('');
+            $('#input-other2-amount').val('');
+
+            $('#input-other3-amount').val('');
+            $('#input-other3-size').val()
+
+            $('#input-other4-amount').val('');
+
+            $('#input-other5-amount').val('');
+
+            $('#input-other6-amount').val('');
+
+            $('#input-other7-amount').val('');
+
+            $('#input-other8-amount').val('');
+
+            $('#input-other9-amount').val('');
+
+            $('#input-other10-amount').val('');
+
+            $('#input-fandc1-color').val('');
+            $('#input-fandc1-amount').val('')
+            $('#input-fandc2-amount').val('')
+
+
+            $('#input-fandc3-color').val('');
+            $('#input-fandc3-amount').val('');
+            $('#input-fandc3-size').val('');
+
+            $('#input-fandc4-color').val('');
+            $('#input-fandc4-amount').val('');
+            $('#input-fandc4-size').val('');
+
+            $('#input-fandc5-amount').val('');
+            $('#input-fandc5-size').val('');
+
+            $('#input-fandc6-color').val('');
+            $('#input-fandc6-amount').val('');
+            $('#input-fandc6-size').val('');
+
+            $('#input-fandc7-amount').val('');
+            $('#input-fandc7-size').val('');
+            $('#input-fandc7-number').val('');
+
+            $('#input-fandc8-amount').val('');
+            $('#input-fandc8-size').val();
+            $('#input-fandc8-number').val('');
+            $('#input-fandc9-amount').val('');
+
+            $('#input-fandc9-number').val('');
+
+            $('#input-fandc10-color').val('');
+            $('#input-fandc10-amount').val('');
+
+            $('#input-fandc11-color').val('');
+            $('#input-fandc11-amount').val('');
+
+            $('#input-fandc12-amount').val('');
+
+            $('#input-fitting-id').val('')
+            $('#select-fitting-quotation-no').val('');
+            $('#input-minifixset-amount').val('');
+            $('#input-woodendowel-amount').val('');
+            $('#input-other-desc').val('');
+
             break;
     }
 }
@@ -1051,7 +1193,7 @@ let validateInputSpec = function (modal) {
             else { return true; }
             break;
         case "modal-createFitting":
-            if ($('#form-createFitting #select-fitting-quotation-no').val() == "") {
+            if ($('#form-createFitting #select-fitting-quotation-no').val() == "" && _product_item_action != "edit") {
                 Swal.fire({
                     text: "กรุณาเลือกเลขใบเสนอราคา",
                     icon: 'warning',
@@ -1203,7 +1345,7 @@ function callAddOrUpdateFitting() {
         drawerrailtype: 3,
         amount: $('#input-drawerrail3-amount').val(),
         /*     pressbounceamount: $('#input-bouncepress-amount').val(),*/
-        othersize: $('input-drawerrailsize-desc').val(),
+        othersize: $('#input-drawerrailsize-desc').val()
     });
 
     var SlideDoor = [];
@@ -1534,8 +1676,8 @@ function callAddOrUpdateFitting() {
 
     var obj = {
         id: ($('#input-fitting-id').val() == "") ? 0 : $('#input-fitting-id').val(),
-        fittingcode: $('#input-fitting-id').val(),
-        orderid: $('#select-fitting-quotation-no').val(),
+        fittingcode:  $('#input-fitting-no').val(),
+        orderid: _product_item_action != "edit" ? $('#select-fitting-quotation-no').val() : $('input-quotation-no').val(),
         minifixset: $('#input-minifixset-amount').val(),
         woodendowel: $('#input-woodendowel-amount').val(),
         otherdescription: $('#input-other-desc').val(),
@@ -1548,7 +1690,7 @@ function callAddOrUpdateFitting() {
         EdgeLaminate: EdgeLaminate,
         FrameTrim: FrameTrim
     };
-    /*   console.log(obj);*/
+       console.log(obj);
     $('.btn-modal-save-fitting').addLoading();
 
     $.ajax({
@@ -1695,7 +1837,7 @@ function renderGetSpecQueueList(data) {
             searching: false,
             data: data,
             dom: 'Bflrtip',
-            order:[],
+            order: [],
             oLanguage: {
                 oPaginate: {
                     sPrevious: "«",
@@ -1808,10 +1950,6 @@ function renderEditSpec(orderid, specid, statusid) {
             //loaded.find(loader).remove();
         }
     });
-}
-
-function renderEditChecklistStatus(checklistID) {
-
 }
 
 function renderSpecToForm(data, specid) {
@@ -3851,6 +3989,21 @@ function printPlanks(id) {
 
 }
 
+function printFitting(id) {
+    $.ajax({
+        type: 'GET',
+        url: `${app_settings.api_url}/api/Fitting/GetItemByItemId?id=${id}`,
+        success: function (data) {
+
+            generatePrintFittingDocument(data);
+
+        },
+        error: function (err) {
+        }
+    });
+
+}
+
 async function generatePrintDocument(data) {
     await renderPrinttHtml(data);
 }
@@ -3884,7 +4037,7 @@ async function renderPrinttHtml(data) {
         //        <td class="column4 style6 s" style="padding-left:1%;">FFFFFFFFFFFF</td>
         row.append($('<td class="column0 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.item.quotationNumber));
         row.append($('<td class="column1 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].colorcode));
-        row.append($('<td class="column2 style6 n" style="padding-right:1%;">0.05</td><span style="font-family:KaLaTeXaTEXT; ">').html(data.list[i].thicknesstype == 1 ? '18MM':'9MM'));
+        row.append($('<td class="column2 style6 n" style="padding-right:1%;">0.05</td><span style="font-family:KaLaTeXaTEXT; ">').html(data.list[i].thicknesstype == 1 ? '18MM' : '9MM'));
         row.append($('<td class="column3 style6 n" style="padding-right:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].amount));
         row.append($('<td class="column4 style6 s" style="padding-left:1%;"><span style="font-family:KaLaTeXaTEXT;">').html(data.list[i].remark));
         $('#tbl-planks-print').append(row);
@@ -3934,6 +4087,299 @@ async function renderPrinttHtml(data) {
 
 
     var element = document.getElementById("printPlanks");
+    html2pdf()
+        .set(options)
+        .from(element)
+        .toPdf()
+        .get('pdf')
+        .then(function (pdf) {
+            window.open(pdf.output('bloburl'), '_blank');
+        });
+}
+
+async function generatePrintFittingDocument(data) {
+    await renderPrintFittingtHtml(data);
+}
+async function renderPrintFittingtHtml(data) {
+    console.log(data);
+    //$('#input-fitting-no').val(data.fittingcode);
+    //$('#input-fitting-id').val(data.id);
+    $('#txtminifixset').val(data.minifixset);
+    $('#txtwoodendowel').val(data.woodendowel);
+    $('#txtotherdesc').val(data.otherdescription);
+/*    $(`#input-quotation-no`).val(data.quotationNumber);*/
+    $("#txtAddress").val(data.fullname);
+
+    data.hinge.forEach((item) => {
+        switch (item.hingetype) {
+            case 1:
+                $('#txtHinge1').val(item.amount);
+                break;
+            case 2:
+                $('#txtHinge2').val(item.amount);
+
+                break;
+            case 3:
+                $('#txtHinge3').val(item.amount);
+                break;
+            case 4:
+                $('#txtHinge4').val(item.amount);
+                $('#txtHingeOther').val(item.othertext);
+                break;
+        };
+    });
+
+    data.drawerRail.forEach((item) => {
+        switch (item.drawerrailtype) {
+            case 1:
+                $('#txtDrawerRail1').val(item.amount);
+                $('#txtDrawerRail2').val(item.pressbounceamount);
+                break;
+            case 2:
+                $('#txtDrawerRail3').val(item.amount);
+
+                break;
+            case 3:
+                $('#txtDrawerRail5').val(item.amount);
+                $('#txtDrawerRail4').val(item.othersize);
+                break;
+        };
+    });
+
+    data.slideDoor.forEach((item) => {
+        switch (item.slidingdoortype) {
+            case 1:
+                $('#txtSlideDoor1').val(item.amount);
+                break;
+            case 2:
+                $('#txtSlideDoor3').val(item.amount);
+                $('#txtSlideDoor2').val(item.length);
+                break;
+            case 3:
+                $('#txtSlideDoor4').val(item.amount);
+                break;
+            case 4:
+                $('#txtSlideDoor6').val(item.amount);
+                $('#txtSlideDoor5').val(item.length);
+                break;
+            case 5:
+                $('#txtSlideDoor7').val(item.amount);
+                break;
+            case 6:
+                $('#txtSlideDoor9').val(item.amount);
+                $('#txtSlideDoor8').val(item.length);
+                break;
+        };
+    });
+
+    data.electrical.forEach((item) => {
+        switch (item.electricaltype) {
+            case 1:
+                $('#txtElec1').val(item.amount);
+                break;
+            case 2:
+                $('#txtElec2').val(item.amount);
+                break;
+            case 3:
+                $('#txtElec4').val(item.amount);
+                $('#txtElec3').val(item.color);
+                break;
+            case 4:
+                $('#txtElec5').val(item.amount);
+                break;
+            case 5:
+                $('#txtElec6').val(item.amount);
+                break;
+            case 6:
+                $('#txtElec7').val(item.amount);
+                break;
+            case 7:
+                $('#txtElec8').val(item.amount);
+                break;
+            case 8:
+                $('#txtElec9').val(item.amount);
+                break;
+            case 9:
+                $('#txtElec10').val(item.amount);
+                break;
+            case 10:
+                $('#txtElec11').val(item.amount);
+                break;
+            case 11:
+                $('#txtElec12').val(item.amount);
+                break;
+            case 12:
+                $('#txtElec13').val(item.amount);
+                break;
+            case 13:
+                $('#txtElec14').val(item.amount);
+                break;
+            case 14:
+                $('#txtElec15').val(item.amount);
+                break;
+        };
+    });
+
+    data.edgeLaminate.forEach((item) => {
+        switch (item.edgelaminatetype) {
+            case 1:
+                if (item.seqno == 1) {
+                    $('#txtEdge1').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#txtEdge2').val(item.color);
+                }
+                else {
+                    $('#txtEdge3').val(item.color);
+                }
+                break;
+            case 2:
+                if (item.seqno == 1) {
+                    $('#txtEdge4').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#txtEdge5').val(item.color);
+                }
+                else {
+                    $('#txtEdge6').val(item.color);
+                }
+                break;
+            case 3:
+                if (item.seqno == 1) {
+                    $('#txtEdge7').val(item.color);
+                }
+                else if (item.seqno == 2) {
+                    $('#txtEdge8').val(item.color);
+                }
+                else {
+                    $('#txtEdge9').val(item.color);
+                }
+                break;
+            case 4:
+                $('#txtEdge10').val(item.amount);
+                break;
+        };
+    });
+
+    data.otherFitting.forEach((item) => {
+        switch (item.otherfittingtype) {
+            case 1:
+                $('#txtOther2').val(item.amount);
+                $('#txtOther1').val(item.color);
+                break;
+            case 2:
+                $('#txtOther4').val(item.amount);
+                $('#txtOther3').val(item.color);
+                break;
+            case 3:
+                $('#txtOther6').val(item.amount);
+                $('#txtOther5').val(item.size);
+                break;
+            case 4:
+                $('#txtOther7').val(item.amount);
+                break;
+            case 5:
+                $('#txtOther8').val(item.amount);
+                break;
+            case 6:
+                $('#txtOther9').val(item.amount);
+                break;
+            case 7:
+                $('#txtOther10').val(item.amount);
+                break;
+            case 8:
+                $('#txtOther11').val(item.amount);
+                break;
+            case 9:
+                $('#txtOther12').val(item.amount);
+                break;
+            case 10:
+                $('#txtOther13').val(item.amount);
+                break;
+        };
+    });
+
+    data.frameTrim.forEach((item) => {
+        switch (item.frametrimtype) {
+            case 1:
+                $('#txtFrame2').val(item.amount);
+                $('#txtFrame1').val(item.color);
+                break;
+            case 2:
+                $('#txtFrame3').val(item.amount);
+                break;
+            case 3:
+                $('#txtFrame6').val(item.amount);
+                $('#txtFrame4').val(item.color);
+                $('#txtFrame5').val(item.size);
+                break;
+            case 4:
+                $('#txtFrame9').val(item.amount);
+                $('#txtFrame7').val(item.color);
+                $('#txtFrame8').val(item.size);
+                break;
+            case 5:
+                $('#txtFrame11').val(item.amount);
+                $('#txtFrame10').val(item.size);
+                break;
+            case 6:
+                $('#txtFrame14').val(item.amount);
+                $('#txtFrame12').val(item.color);
+                $('#txtFrame13').val(item.size);
+                break;
+            case 7:
+                if (item.seqno == 1) {
+                    $('#txtFrame16').val(item.amount);
+                    $('#txtFrame15').val(item.number);
+                /*    $('#form-createFitting #input-fandc7-size').val(item.size);*/
+                }
+                else {
+                    $('#txtFrame18').val(item.amount);
+                    $('#txtFrame17').val(item.number);
+                 /*   $('#form-createFitting #input-fandc8-size').val(item.size);*/
+                }
+                break;
+            case 8:
+                $('#txtFrame20').val(item.amount);
+                $('#txtFrame19').val(item.number);
+                break;
+            case 9:
+                if (item.seqno == 1) {
+                    $('#txtFrame22').val(item.amount);
+                    $('#txtFrame21').val(item.color);
+
+                }
+                else {
+                    $('#txtFrame24').val(item.amount);
+                    $('#txtFrame23').val(item.color);
+                }
+                break;
+            case 10:
+                $('#txtFrame25').val(item.amount);
+                break;
+        };
+    });
+    
+
+    const options = {
+        margin: 0.3,
+        filename: 'OUT.pdf',
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+    }
+
+
+    var element = document.getElementById("printFitting");
     html2pdf()
         .set(options)
         .from(element)

@@ -76,6 +76,7 @@
                     <thead>
                         <tr>
                             <th><span>id</span></th>
+                            <th><span>orderid</span></th>
                             <th><span>เลขที่ใบจัดฟิตติ้ง</span></th>
                             <th><span>เลขที่ใบเสนอราคา</span></th>
                             <th><span>ชื่อ - นามสกุล</span></th>
@@ -83,6 +84,7 @@
                            @*  <th><span>สถานะ</span></th> *@
                             <th><span>ผู้สร้าง</span></th>
                             <th id="edit-action"><span>แก้ไข</span></th>
+                            <th id="edit-action"><span>พิมพ์</span></th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -113,6 +115,7 @@
                                 <div class="col-sm-6 mb-2">
                                     <label class="control-label">เลขที่ใบเสนอราคา<span class="text-danger">*</span></label>
                                     <select class="form-select" id="select-fitting-quotation-no" data-selected="" name="select-fitting-quotation-no" onchange="onFittingQuotatiChange();"></select>
+                                    <input id="input-quotation-no" name="input-quotation-no" class="form-control" style="display:none;" type="text" disabled />
                                 </div>
                                 <div class="col-sm-12 mb-2" style="text-align:center;padding-top: 3%;padding-bottom:1%;">
                                     <h5><label class="control-label" style="padding-right:1%;">อุปกรณ์ติดตั้ง บ้านคุณ</label><u class="dotted"><label id="lblfullname" class="control-label"></label></u></h5>
@@ -234,7 +237,7 @@
                                 </div>
                                 <div class="col-sm-3 mb-2">
                                     <label class="control-label">ไฟตาแมวสี ระบุ</label>
-                                    <input id="input-elec3-color" name="input-elec1-color" class="form-control" />
+                                    <input id="input-elec1-color" name="input-elec1-color" class="form-control" />
                                 </div>
                                 <div class="col-sm-3 mb-2">
                                     <label class="control-label">จำนวน(ดวง)</label>

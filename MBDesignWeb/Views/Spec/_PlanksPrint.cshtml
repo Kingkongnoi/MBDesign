@@ -1,7 +1,7 @@
 ﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style type="text/css">
-    html {
+   /*  html {
         font-family: Calibri, Arial, Helvetica, sans-serif;
         font-size: 11pt;
         background-color: white
@@ -25,70 +25,70 @@
 
     div.comment {
         display: none
-    }
+    } */
 
-    table {
+    #printPlanks table {
         border-collapse: collapse;
         page-break-after: always
     }
 
-    .gridlines td {
+    #printPlanks .gridlines td {
         border: 1px dotted black
     }
 
-    .gridlines th {
+    #printPlanks .gridlines th {
         border: 1px dotted black
     }
 
-    .b {
+    #printPlanks .b {
         text-align: center
     }
 
-    .e {
+   #printPlanks .e {
         text-align: center
     }
 
-    .f {
+    #printPlanks .f {
         text-align: right
     }
 
-    .inlineStr {
+    #printPlanks .inlineStr {
         text-align: left
     }
 
-    .n {
+    #printPlanks .n {
         text-align: right
     }
 
-    .s {
+    #printPlanks .s {
         text-align: left
     }
 
-    td.style0 {
+    #printPlanks table td.style0 {
         vertical-align: bottom;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style0 {
+    #printPlanks table th.style0 {
         vertical-align: bottom;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style1 {
+    #printPlanks table td.style1 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -96,12 +96,12 @@
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style1 {
+    #printPlanks table th.style1 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -109,60 +109,60 @@
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style2 {
+    #printPlanks table td.style2 {
         vertical-align: bottom;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style2 {
+    #printPlanks table th.style2 {
         vertical-align: bottom;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style3 {
+    #printPlanks table td.style3 {
         vertical-align: middle;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style3 {
+    #printPlanks table th.style3 {
         vertical-align: middle;
         border-bottom: none #000000;
         border-top: none #000000;
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Tahoma';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style4 {
+    #printPlanks table td.style4 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -171,12 +171,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 16pt;
         background-color: white
     }
 
-    th.style4 {
+    #printPlanks table th.style4 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -185,12 +185,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 16pt;
         background-color: white
     }
 
-    td.style5 {
+    #printPlanks table td.style5 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -198,12 +198,12 @@
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style5 {
+    #printPlanks table th.style5 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -211,36 +211,36 @@
         border-left: none #000000;
         border-right: none #000000;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style6 {
+    #printPlanks table td.style6 {
         vertical-align: bottom;
         border-bottom: 1px solid #000000 !important;
         border-top: 1px solid #000000 !important;
         border-left: 1px solid #000000 !important;
         border-right: 1px solid #000000 !important;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    th.style6 {
+    #printPlanks table th.style6 {
         vertical-align: bottom;
         border-bottom: 1px solid #000000 !important;
         border-top: 1px solid #000000 !important;
         border-left: 1px solid #000000 !important;
         border-right: 1px solid #000000 !important;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 11pt;
         background-color: white
     }
 
-    td.style7 {
+    #printPlanks table td.style7 {
         vertical-align: middle;
         border-bottom: 1px solid #000000 !important;
         border-top: 1px solid #000000 !important;
@@ -248,12 +248,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    th.style7 {
+    #printPlanks table th.style7 {
         vertical-align: middle;
         border-bottom: 1px solid #000000 !important;
         border-top: 1px solid #000000 !important;
@@ -261,12 +261,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    td.style8 {
+    #printPlanks table td.style8 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -276,12 +276,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    th.style8 {
+    #printPlanks table th.style8 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -291,12 +291,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    td.style9 {
+    #printPlanks table td.style9 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -306,12 +306,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    th.style9 {
+    #printPlanks table th.style9 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -321,12 +321,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    td.style10 {
+    #printPlanks table td.style10 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -336,12 +336,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    th.style10 {
+    #printPlanks table th.style10 {
         vertical-align: middle;
         text-align: left;
         padding-left: 0px;
@@ -351,12 +351,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    td.style11 {
+    #printPlanks table td.style11 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -365,12 +365,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    th.style11 {
+    #printPlanks table th.style11 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -379,12 +379,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 14pt;
         background-color: white
     }
 
-    td.style12 {
+    #printPlanks table td.style12 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -393,12 +393,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style12 {
+    #printPlanks table th.style12 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -407,12 +407,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style13 {
+    #printPlanks table td.style13 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -421,12 +421,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style13 {
+    #printPlanks table th.style13 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -435,12 +435,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style14 {
+    #printPlanks table td.style14 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -449,12 +449,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style14 {
+    #printPlanks table th.style14 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -463,12 +463,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style15 {
+    #printPlanks table td.style15 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -477,12 +477,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style15 {
+    #printPlanks table th.style15 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -491,12 +491,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style16 {
+    #printPlanks table td.style16 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -505,12 +505,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style16 {
+    #printPlanks table th.style16 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -519,12 +519,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style17 {
+    #printPlanks table td.style17 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -533,12 +533,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style17 {
+    #printPlanks table th.style17 {
         vertical-align: middle;
         text-align: center;
         border-bottom: none #000000;
@@ -547,12 +547,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style18 {
+    #printPlanks table td.style18 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -561,12 +561,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style18 {
+    #printPlanks table th.style18 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -575,12 +575,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style19 {
+    #printPlanks table td.style19 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -589,12 +589,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style19 {
+    #printPlanks table th.style19 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -603,12 +603,12 @@
         border-right: none #000000;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    td.style20 {
+    #printPlanks table td.style20 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -617,12 +617,12 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    th.style20 {
+    #printPlanks table th.style20 {
         vertical-align: middle;
         text-align: center;
         border-bottom: 1px solid #000000 !important;
@@ -631,92 +631,92 @@
         border-right: 1px solid #000000 !important;
         font-weight: bold;
         color: #000000;
-        font-family: 'Angsana New';
+        font-family: 'KaLaTeXaTEXT';
         font-size: 18pt;
         background-color: white
     }
 
-    table.sheet0 col.col0 {
+    #printPlanks table.sheet0 col.col0 {
         width: 170.12222027pt
     }
 
-    table.sheet0 col.col1 {
+    #printPlanks table.sheet0 col.col1 {
         width: 107.76666543pt
     }
 
-    table.sheet0 col.col2 {
+    #printPlanks table.sheet0 col.col2 {
         width: 67.777777pt
     }
 
-    table.sheet0 col.col3 {
+    #printPlanks table.sheet0 col.col3 {
         width: 98.27777665pt
     }
 
-    table.sheet0 col.col4 {
+    #printPlanks table.sheet0 col.col4 {
         width: 131.48888738pt
     }
 
-    table.sheet0 col.col5 {
+    #printPlanks table.sheet0 col.col5 {
         width: 42pt
     }
 
-    table.sheet0 col.col6 {
+    #printPlanks table.sheet0 col.col6 {
         width: 42pt
     }
 
-    table.sheet0 col.col7 {
+    #printPlanks table.sheet0 col.col7 {
         width: 42pt
     }
 
-    table.sheet0 tr {
+    #printPlanks table.sheet0 tr {
         height: 15pt
     }
 
-        table.sheet0 tr.row0 {
+        #printPlanks table.sheet0 tr.row0 {
             height: 18pt
         }
 
-        table.sheet0 tr.row1 {
+        #printPlanks table.sheet0 tr.row1 {
             height: 14pt
         }
 
-        table.sheet0 tr.row2 {
+        #printPlanks table.sheet0 tr.row2 {
             height: 14pt
         }
 
-        table.sheet0 tr.row3 {
+        #printPlanks table.sheet0 tr.row3 {
             height: 23pt
         }
 
-        table.sheet0 tr.row4 {
+        #printPlanks table.sheet0 tr.row4 {
             height: 20.5pt
         }
 
-        table.sheet0 tr.row5 {
+        #printPlanks table.sheet0 tr.row5 {
             height: 16pt
         }
 
-        table.sheet0 tr.row6 {
+        #printPlanks table.sheet0 tr.row6 {
             height: 16pt
         }
 
-        table.sheet0 tr.row7 {
+        #printPlanks table.sheet0 tr.row7 {
             height: 16pt
         }
 
-        table.sheet0 tr.row8 {
+        #printPlanks table.sheet0 tr.row8 {
             height: 16pt
         }
 
-        table.sheet0 tr.row9 {
+        #printPlanks table.sheet0 tr.row9 {
             height: 16pt
         }
 
-        table.sheet0 tr.row10 {
+        #printPlanks table.sheet0 tr.row10 {
             height: 16pt
         }
 
-        table.sheet0 tr.row11 {
+        #printPlanks table.sheet0 tr.row11 {
             height: 16pt
         }
 </style>

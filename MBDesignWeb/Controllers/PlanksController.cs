@@ -44,6 +44,14 @@ namespace MBDesignWeb.Controllers
         }
 
         [HttpGet]
+        public JsonResult GetItemByOrderId(int orderid)
+        {
+            var item = _planksService.GetPlanksItemByOrderId(orderid);
+            var list = _planksService.GetPlanksDetailItemByID(item.id);
+            return new JsonResult(new { item = item, list = list });
+        }
+
+        [HttpGet]
         public JsonResult GetQuatationList()
         {
             var item = _planksService.GetQuatationNoList();

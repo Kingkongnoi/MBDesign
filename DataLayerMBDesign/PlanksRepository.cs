@@ -90,6 +90,19 @@ namespace DataLayerMBDesign
             return conn.QueryFirstOrDefault<PlankWithCode>(queryString.ToString(), new { id }, transaction: trans);
         }
 
+        public PlankWithCode GetFirstByOrderID(int orderid, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            StringBuilder queryString = new StringBuilder();
+            queryString.Append(" SELECT TOP 1 a.*,b.quotationNumber");
+            queryString.Append(" FROM tbPlanks a");
+            queryString.Append(" INNER JOIN tbCustOrder b on a.orderid = b.orderid");
+
+            queryString.AppendFormat(" where a.isDeleted = 0 and a.orderid = {0}", orderid);
+
+
+            return conn.QueryFirstOrDefault<PlankWithCode>(queryString.ToString(), new { orderid }, transaction: trans);
+        }
+
         public List<tbPlanksDetails> GetDetailsByID(int id, SqlConnection conn, SqlTransaction? trans = null)
         {
             string sql = string.Format(@"SELECT * From tbPlanksDetails
