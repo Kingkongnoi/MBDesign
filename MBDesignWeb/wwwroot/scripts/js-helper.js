@@ -353,33 +353,48 @@ function setShowAndHiddenNavMenu(menuName, parentMenuName, obj) {
             $('#nav-stores').removeClass('nav-no-display');
         }
 
-        //$('.btn-add-invoice').addClass('no-display');
-        //if (obj.canAdd) {
-        //    $('#nav-cert').removeClass('no-display');
-        //    $('.btn-add-invoice').removeClass('no-display');
-        //}
+        $('.btn-add-viewstock').addClass('no-display');
+        $('.btn-add-getin').addClass('no-display');
+        $('.btn-add-getout').addClass('no-display');
+        $('.btn-add-group').addClass('no-display');
+        $('.btn-add-subgroup').addClass('no-display');
+        $('.btn-add-brand').addClass('no-display');
+        $('.btn-add-unit').addClass('no-display');
+        $('.btn-add-receiver').addClass('no-display');
+        $('.btn-add-stock').addClass('no-display');
+        if (obj.canAdd) {
+            $('.btn-add-viewstock').removeClass('no-display');
+            $('.btn-add-getin').removeClass('no-display');
+            $('.btn-add-getout').removeClass('no-display');
+            $('.btn-add-group').removeClass('no-display');
+            $('.btn-add-subgroup').removeClass('no-display');
+            $('.btn-add-brand').removeClass('no-display');
+            $('.btn-add-unit').removeClass('no-display');
+            $('.btn-add-receiver').removeClass('no-display');
+            $('.btn-add-stock').removeClass('no-display');
+        }
 
-        //_role_account_class_display = "no-display"
-        //if (obj.canEdit) {
-        //    _role_account_class_display = ""
-        //}
+        _role_stores_class_display = "no-display"
+        if (obj.canEdit) {
+            _role_stores_class_display = ""
+        }
     }
     else if (menuName == "การออกแบบ Spec" || parentMenuName == "การออกแบบ Spec") {
         if (obj.canView) {
             $('#nav-spec').removeClass('nav-no-display');
         }
 
-        //$('#nav-cert').addClass('no-display');
-        //$('.btn-add-invoice').addClass('no-display');
-        //if (obj.canAdd) {
-        //    $('#nav-cert').removeClass('no-display');
-        //    $('.btn-add-invoice').removeClass('no-display');
-        //}
+        $('.btn-add-planks').addClass('no-display');
+        $('.btn-add-fitting').addClass('no-display');
+        if (obj.canAdd) {
+            $('.btn-add-planks').removeClass('no-display');
+            $('.btn-add-fitting').removeClass('no-display');
+        }
 
-        //_role_account_class_display = "no-display"
-        //if (obj.canEdit) {
-        //    _role_account_class_display = ""
-        //}
+        _role_spec_class_display = "no-display"
+        if (obj.canEdit) {
+            _role_spec_class_display = ""
+        }
     }
     else if (menuName == "ฝ่ายบุคคล" || parentMenuName == "ฝ่ายบุคคล") {
         if (obj.canView) {
