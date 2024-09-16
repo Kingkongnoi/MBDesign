@@ -101,5 +101,18 @@ namespace DataLayerMBDesign
 
             return conn.QueryFirstOrDefault<SalaryView>(queryString, new { salaryId }, transaction: trans);
         }
+
+        public IEnumerable<SalaryView> GetAllByParams(string empCode, string empName, string startDate, string endDate, SqlConnection conn, SqlTransaction? trans = null)
+        {
+            if (empCode == "null" || string.IsNullOrEmpty(empCode)) { empCode = string.Empty; }
+            if (empName == "null" || string.IsNullOrEmpty(empName)) { empName = string.Empty; }
+            if (startDate == "null" || string.IsNullOrEmpty(startDate)) { startDate = string.Empty; }
+            if (endDate == "null" || string.IsNullOrEmpty(endDate)) { endDate = string.Empty; }
+
+            return conn.Query<SalaryView>("spGenerateSalary",
+                    param: new { empCode, empName, startDate, endDate },
+                    commandType: System.Data.CommandType.StoredProcedure,
+                    transaction: trans);
+        }
     }
 }

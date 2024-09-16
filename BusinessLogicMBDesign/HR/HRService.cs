@@ -442,13 +442,15 @@ namespace BusinessLogicMBDesign.HR
         #endregion Attendance
 
         #region Salary 
-        public List<SalaryView> GetSalaryList(string empCode, string empName, string startDate, string endDate)
+        //public List<SalaryView> GetSalaryList(string empCode, string empName, string startDate, string endDate)
+        public IEnumerable<SalaryView> GetSalaryList(string empCode, string empName, string startDate, string endDate)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                return _salaryRepository.GetAll(empCode, empName, startDate, endDate, conn);
+                //return _salaryRepository.GetAll(empCode, empName, startDate, endDate, conn);
+                return _salaryRepository.GetAllByParams(empCode, empName, startDate, endDate, conn);
             }
         }
 
