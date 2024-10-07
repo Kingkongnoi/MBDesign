@@ -1,4 +1,11 @@
-﻿<div class="container-fluid">
+﻿<style>
+    .file-preview-frame {
+        width: 220px;
+        height: 200px;
+    }
+</style>
+
+<div class="container-fluid">
     <div class="card mt-4">
         <div class="card-body">
             <div class="row">
@@ -6,11 +13,12 @@
                     <nav>
                         <div class="nav nav-tabs" id="nav-tab-invoice" role="tablist">
                             <button class="nav-link active" id="nav-idcard-tab" data-bs-toggle="tab" data-bs-target="#nav-idcard" type="button" role="tab" aria-controls="nav-idcard" aria-selected="true" style="margin-right:2px;">บัตรประชาชนกรรมการ</button>
-                            <button class="nav-link" id="nav-cert-tab" data-bs-toggle="tab" data-bs-target="#nav-cert" type="button" role="tab" aria-controls="nav-cert" aria-selected="false" style="margin-right:2px;">หนังสือรับรองบริษัท</button>
+                            <button class="nav-link" id="nav-certificate-tab" data-bs-toggle="tab" data-bs-target="#nav-certificate" type="button" role="tab" aria-controls="nav-certificate" aria-selected="false" style="margin-right:2px;">หนังสือรับรองบริษัท</button>
 
                         </div>
                     </nav>
                     <div class="tab-content" id="nav-tab-cert-tabContent">
+
                         <div class="tab-pane fade show active" id="nav-idcard" role="tabpanel" aria-labelledby="nav-idcard-tab">
                             <div class="container-fluid">
                                 <div class="card mt-4">
@@ -43,7 +51,7 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="nav-cert" role="tabpanel" aria-labelledby="nav-cert-tab">
+                        <div class="tab-pane fade" id="nav-certificate" role="tabpanel" aria-labelledby="nav-certificate-tab">
                             <div class="container-fluid">
                                 <div class="card mt-4">
                                     <div class="card-header">

@@ -1298,12 +1298,16 @@ function callIdCardComCert() {
         success: function (data) {
             let idCardFileName = "";
             let comcertFileName = "";
+            let id = 0;
+            let idCardComCertId = 0
             if (data != null) {
                 idCardFileName = data.imgIdCardFileName;
                 comcertFileName = data.imgComCertFileName;
+                id = data.id;
+                idCardComCertId = data.idCardComCertId;
             }
-            renderIdCard(idCardFileName);
-            renderComcert(comcertFileName);
+            renderIdCard(idCardFileName, id);
+            renderComcert(comcertFileName, idCardComCertId);
             //loaded.find(loader).remove();
         },
         error: function (err) {
@@ -1311,7 +1315,7 @@ function callIdCardComCert() {
         }
     });
 }
-function renderIdCard(imgIdCardFileName) {
+function renderIdCard(imgIdCardFileName, id) {
     var lstUrl = [];
     var lstPreviewImg = [];
     if (imgIdCardFileName != "") {
@@ -1320,12 +1324,8 @@ function renderIdCard(imgIdCardFileName) {
 
         var addPreview = {
             caption: "Id Card",
-            //width: '120px',
-            //url: '/localhost/public/delete',
-            //key: data.uploadId,
-            //extra: {
-            //    id: data.uploadId
-            //},
+            key: id,
+            extra: { id: id },
         };
 
         lstPreviewImg.push(addPreview);
@@ -1369,7 +1369,7 @@ function renderComcert(imgComCertFileName) {
         var addPreview = {
             caption: "CompanyCertificate.pdf",
             type: "pdf",
-            size: 8000,
+            //size: 1000,
         };
 
         lstPreviewImg.push(addPreview);
@@ -1384,7 +1384,7 @@ function renderComcert(imgComCertFileName) {
             showCaption: true,
             initialPreview: lstUrl,
             initialPreviewAsData: true,
-            initialPreviewFileType: 'image', 
+            initialPreviewFileType: 'pdf', 
             initialPreviewConfig: [
                 lstPreviewImg
             ],

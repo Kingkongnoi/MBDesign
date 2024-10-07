@@ -126,7 +126,7 @@
         });
     });
 
-    $('#nav-cert .btn-save-company-cert').on('click', function () {
+    $('#nav-certificate .btn-save-company-cert').on('click', function () {
         Swal.fire({
             title: 'คุณต้องการบันทึกข้อมูลหรือไม่?',
             showDenyButton: false,
